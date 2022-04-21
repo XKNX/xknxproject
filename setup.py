@@ -9,7 +9,7 @@ with open(path.join(THIS_DIRECTORY, "README.md"), encoding="utf-8") as f:
 
 VERSION = {}
 # pylint: disable=exec-used
-with open(path.join(THIS_DIRECTORY, "ets/__version__.py"), encoding="utf-8") as fp:
+with open(path.join(THIS_DIRECTORY, "ets-project/__version__.py"), encoding="utf-8") as fp:
     exec(fp.read(), VERSION)
 
 REQUIRES = []
@@ -31,8 +31,8 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
     ],
-    packages=find_packages(include=["ets", "ets.*"]),
-    package_data={"ets": ["py.typed"]},
+    packages=find_packages(include=["ets-project", "ets-project.*"]),
+    package_data={"ets-project": ["py.typed"]},
     include_package_data=True,
     install_requires=REQUIRES,
     keywords="knx eib ets ets5 ets6",
