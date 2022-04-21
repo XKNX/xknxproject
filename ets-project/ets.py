@@ -9,7 +9,7 @@ logger = logging.getLogger("xknx.log")
 
 
 class ETSProjectParser:
-    """Class for parsing ETS project files"""
+    """Class for parsing ETS project files."""
 
     @staticmethod
     def setup_logging(log_directory: str) -> None:

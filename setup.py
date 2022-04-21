@@ -15,7 +15,7 @@ with open(path.join(THIS_DIRECTORY, "ets/__version__.py"), encoding="utf-8") as 
 REQUIRES = []
 
 setup(
-    name="ets",
+    name="ets-project",
     description="A library to gather information from ETS project files used for KNX",
     version=VERSION["__version__"],
     long_description=LONG_DESCRIPTION,

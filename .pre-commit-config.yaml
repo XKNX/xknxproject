@@ -12,7 +12,7 @@ repos:
         args:
           - --safe
           - --quiet
-        files: ^((ets|test)/.+)?[^/]+\.py$
+        files: ^((ets-project|test)/.+)?[^/]+\.py$
   - repo: https://github.com/pycqa/flake8
     rev: 4.0.1
     hooks:
@@ -20,7 +20,7 @@ repos:
         additional_dependencies:
           - flake8-docstrings==1.6.0
           - pydocstyle==6.0.0
-        files: ^(ets|examples|docs)/.+\.py$
+        files: ^(ets-project|examples|docs)/.+\.py$
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
     hooks:
@@ -33,9 +33,6 @@ repos:
       - id: check-executables-have-shebangs
         stages: [manual]
       - id: check-json
-      - id: no-commit-to-branch
-        args:
-          - --branch=main
       - id: trailing-whitespace
   - repo: https://github.com/cdce8p/python-typing-update
     rev: v0.3.5
@@ -49,7 +46,7 @@ repos:
           - --py39-plus
           - --force
           - --keep-updates
-        files: ^(ets)/.+\.py$
+        files: ^(ets-project)/.+\.py$
   - repo: local
     hooks:
       # Run mypy through our wrapper script in order to get the possible
@@ -62,4 +59,4 @@ repos:
         language: script
         types: [python]
         require_serial: true
-        files: ^ets/.+\.py$
+        files: ^ets-project/.+\.py$
