@@ -9,18 +9,18 @@ with open(path.join(THIS_DIRECTORY, "README.md"), encoding="utf-8") as f:
 
 VERSION = {}
 # pylint: disable=exec-used
-with open(path.join(THIS_DIRECTORY, "ets-project/__version__.py"), encoding="utf-8") as fp:
+with open(path.join(THIS_DIRECTORY, "knxproj-parser/__version__.py"), encoding="utf-8") as fp:
     exec(fp.read(), VERSION)
 
 REQUIRES = []
 
 setup(
-    name="ets-project",
+    name="knxproj-parser",
     description="A library to gather information from ETS project files used for KNX",
     version=VERSION["__version__"],
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
-    download_url=f"https://github.com/XKNX/ets-project-parser/archive/{VERSION['__version__']}.zip",
+    download_url=f"https://github.com/XKNX/knxproj-parser/archive/{VERSION['__version__']}.zip",
     author="Marvin Wichmann",
     author_email="me@marvin-wichmann.de",
     license="GNU GPL",
@@ -31,8 +31,8 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
     ],
-    packages=find_packages(include=["ets-project", "ets-project.*"]),
-    package_data={"ets-project": ["py.typed"]},
+    packages=find_packages(include=["knxproj-parser", "knxproj-parser.*"]),
+    package_data={"knxproj-parser": ["py.typed"]},
     include_package_data=True,
     install_requires=REQUIRES,
     keywords="knx eib ets ets5 ets6",
