@@ -12,7 +12,7 @@ repos:
         args:
           - --safe
           - --quiet
-        files: ^((knxproj-parser|test)/.+)?[^/]+\.py$
+        files: ^((xknxproject|test)/.+)?[^/]+\.py$
   - repo: https://github.com/pycqa/flake8
     rev: 4.0.1
     hooks:
@@ -20,7 +20,7 @@ repos:
         additional_dependencies:
           - flake8-docstrings==1.6.0
           - pydocstyle==6.0.0
-        files: ^(knxproj-parser|examples|docs)/.+\.py$
+        files: ^(xknxproject|examples|docs)/.+\.py$
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
     hooks:
@@ -46,7 +46,7 @@ repos:
           - --py39-plus
           - --force
           - --keep-updates
-        files: ^(knxproj-parser)/.+\.py$
+        files: ^(xknxproject)/.+\.py$
   - repo: local
     hooks:
       # Run mypy through our wrapper script in order to get the possible
@@ -59,4 +59,4 @@ repos:
         language: script
         types: [python]
         require_serial: true
-        files: ^knxproj-parser/.+\.py$
+        files: ^xknxproject/.+\.py$
