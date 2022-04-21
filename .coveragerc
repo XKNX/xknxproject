@@ -1,0 +1,25 @@
+[run]
+source = ets
+relative_files = True
+
+omit =
+
+
+[report]
+precision = 2
+# Regexes for lines to exclude from consideration
+exclude_lines =
+    # Don't complain about type checking imports:
+    if TYPE_CHECKING:
+
+    # Don't complain if tests don't hit defensive assertion code:
+    raise NotImplementedError
+
+    # Don't complain about logs
+    logger.debug
+    logger.info
+    logger.warning
+    logger.error
+
+    # Don't complain about missing debug-only code:
+    def __repr__
