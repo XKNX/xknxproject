@@ -5,11 +5,17 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 import os
 
-logger = logging.getLogger("xknx.log")
+from xknxproject.zip import KNXProjExtractor
+
+logger = logging.getLogger("xknxproject.log")
 
 
-class ETSProjectParser:
+class KNXProjParser:
     """Class for parsing ETS project files."""
+
+    def __init__(self, archive_name: str, archive_password: str | None = None):
+        """Initialize a KNXProjParser."""
+        self.reader = KNXProjExtractor(archive_name, archive_password)
 
     @staticmethod
     def setup_logging(log_directory: str) -> None:
@@ -32,7 +38,7 @@ class ETSProjectParser:
         _handler.setLevel(logging.DEBUG)
 
         for log_namespace in [
-            "ets.log",
+            "xknxproject.log",
         ]:
             _logger = logging.getLogger(log_namespace)
             _logger.addHandler(_handler)

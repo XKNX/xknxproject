@@ -1,7 +1,7 @@
 """ETS Project Parser is a library to parse ETS project files."""
 # flake8: noqa
-from .ets import ETSProjectParser
+from .knxproj import KNXProjParser
 
 __all__ = [
-    "ETSProjectParser",
+    "KNXProjParser",
 ]

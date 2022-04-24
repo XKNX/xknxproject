@@ -9,6 +9,8 @@ This project aims to provide a library that can be used to extract and parse KNX
 the group addresses, device descriptions and possibly more. The main use case will be in our custom panel to provide
 installation specific context information for ones KNX installation.
 
+Note: The specified KNX project file will be extracted to /tmp during the process. Once parsing is done all files will be deleted from /tmp again.
+
 ## Documentation
 
 TBD
