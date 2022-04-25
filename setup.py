@@ -14,7 +14,7 @@ with open(
 ) as fp:
     exec(fp.read(), VERSION)
 
-REQUIRES = []
+REQUIRES = ["cryptography>=35.0.0"]
 
 setup(
     name="xknxproject",

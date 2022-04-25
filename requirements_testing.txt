@@ -1,3 +1,4 @@
+-r requirements_production.txt
 pre-commit==2.18.1
 isort==5.10.1
 flake8==4.0.1
