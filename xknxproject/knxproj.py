@@ -5,6 +5,7 @@ import logging
 
 from xknxproject import __version__
 from xknxproject.xml import XMLParser
+from xknxproject.xml.models import Area
 from xknxproject.zip import KNXProjExtractor
 
 logger = logging.getLogger("xknxproject.log")
@@ -18,3 +19,10 @@ class KNXProjParser:
         self.extractor = KNXProjExtractor(archive_name, archive_password)
         self.parser = XMLParser(self.extractor)
         self.version = __version__
+
+    def parse(self) -> list[Area]:
+        """Parse the KNX project."""
+        self.extractor.extract()
+        self.parser.parse()
+        self.extractor.cleanup()
+        return self.parser.areas
