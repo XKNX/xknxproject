@@ -14,7 +14,7 @@ with open(
 ) as fp:
     exec(fp.read(), VERSION)
 
-REQUIRES = ["cryptography>=35.0.0"]
+REQUIRES = ["cryptography>=35.0.0", "pyzipper>=0.3.5"]
 
 setup(
     name="xknxproject",
