@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 
 from xknxproject import __version__
+from xknxproject.xml import XMLParser
 from xknxproject.zip import KNXProjExtractor
 
 logger = logging.getLogger("xknxproject.log")
@@ -14,5 +15,6 @@ class KNXProjParser:
 
     def __init__(self, archive_name: str, archive_password: str | None = None):
         """Initialize a KNXProjParser."""
-        self.reader = KNXProjExtractor(archive_name, archive_password)
+        self.extractor = KNXProjExtractor(archive_name, archive_password)
+        self.parser = XMLParser(self.extractor)
         self.version = __version__

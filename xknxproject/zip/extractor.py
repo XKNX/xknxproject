@@ -11,7 +11,7 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import pyzipper
 
 from xknxproject.const import ETS6_SCHEMA_VERSION
-from xknxproject.exceptions import InvalidPasswordException
+from xknxproject.exceptions import InvalidPasswordException, ProjectNotFoundException
 
 
 class KNXProjExtractor:
@@ -23,20 +23,36 @@ class KNXProjExtractor:
         """Initialize a KNXProjReader class."""
         self.archive_name = archive_name
         self.password = password
+        self.infos: list[ZipInfo] = []
+
+    def get_project_id(self) -> str:
+        """Get the project id from a list of ZipInfos."""
+        for info in self.infos:
+            if info.filename.startswith("P-") and info.filename.endswith(".signature"):
+                return info.filename.removesuffix(".signature")
+
+        raise ProjectNotFoundException()
 
     def extract(self, extract_secure_project: bool = True) -> None:
         """Read the ZIP file."""
         with ZipFile(self.archive_name) as zip_archive:
             zip_archive.extractall(self.extraction_path)
-            infos: list[ZipInfo] = zip_archive.infolist()
-            for info in infos:
+            self.infos = zip_archive.infolist()
+            for info in self.infos:
                 if ".zip" in info.filename and self.password and extract_secure_project:
                     self.unzip_protected_project_file(info)
+
+        self._verify()
 
     def cleanup(self) -> None:
         """Cleanup the extracted files."""
         if exists(self.extraction_path):
             shutil.rmtree(self.extraction_path)
+
+    def _verify(self) -> None:
+        """Verify the extracted ETS files."""
+        if not exists(self.extraction_path + self.get_project_id() + "/0.xml"):
+            raise ProjectNotFoundException()
 
     def unzip_protected_project_file(self, info: ZipInfo) -> None:
         """Unzip a protected ETS5/6 project file."""

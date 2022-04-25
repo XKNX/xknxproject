@@ -1,4 +1,12 @@
 """Package for exception handling."""
-from .exceptions import InvalidPasswordException
+from .exceptions import (
+    InvalidPasswordException,
+    ProjectNotFoundException,
+    XknxProjectException,
+)
 
-__all__ = ["InvalidPasswordException"]
+__all__ = [
+    "XknxProjectException",
+    "InvalidPasswordException",
+    "ProjectNotFoundException",
+]
