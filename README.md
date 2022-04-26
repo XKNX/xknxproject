@@ -7,11 +7,28 @@
 Extracts KNX projects and parses the underlying XML.
 
 This project aims to provide a library that can be used to extract and parse KNX project files and read out useful information including
-the group addresses, device descriptions and possibly more. The main use case will be in our custom panel to provide
-installation specific context information for ones KNX installation.
+the group addresses, devices and their descriptions and possibly more.
 
 Note: The specified KNX project file will be extracted to /tmp during the process. Once parsing is done all files will be deleted from /tmp again.
 
 ## Documentation
 
-TBD
+Currently, xknxproject supports extracting (password protected) ETS5 and ETS6 files and can obtain the following information from your project:
+
+* Areas, Lines, Devices and their individual address
+* CommunicationObjectInstance references for their devices (GA assignments)
+* Group Addresses and their DPT type if set
+
+Installation:
+
+    pip install xknxproject
+
+Usage:
+
+    from xknxproject import KNXProj
+
+
+    def main():
+        """Extract and parse a KNX project file."""
+        knxproj: KNXProj = KNXProj("path/to/your/file.knxproj", "optional_password")
+        areas, group_addresses = knxproj.parse()
