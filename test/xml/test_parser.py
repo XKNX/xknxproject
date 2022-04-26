@@ -25,9 +25,9 @@ def test_parse_project_ets6():
     extractor.cleanup()
 
     assert len(parser.group_addresses) == 3
-    assert parser.group_addresses[0].nice_address == "0/1/0"
-    assert parser.group_addresses[1].nice_address == "0/1/1"
-    assert parser.group_addresses[2].nice_address == "0/1/2"
+    assert parser.group_addresses[0].address == "0/1/0"
+    assert parser.group_addresses[1].address == "0/1/1"
+    assert parser.group_addresses[2].address == "0/1/2"
 
     assert len(parser.areas) == 2
     assert len(parser.areas[1].lines) == 2
@@ -46,13 +46,13 @@ def test_parse_project_ets5():
 
     assert len(parser.group_addresses) == 7
     assert len(parser.group_addresses) == 7
-    assert parser.group_addresses[0].nice_address == "1/0/0"
-    assert parser.group_addresses[1].nice_address == "1/0/1"
-    assert parser.group_addresses[2].nice_address == "1/0/2"
-    assert parser.group_addresses[3].nice_address == "1/0/3"
-    assert parser.group_addresses[4].nice_address == "1/0/4"
-    assert parser.group_addresses[5].nice_address == "1/0/5"
-    assert parser.group_addresses[6].nice_address == "2/0/6"
+    assert parser.group_addresses[0].address == "1/0/0"
+    assert parser.group_addresses[1].address == "1/0/1"
+    assert parser.group_addresses[2].address == "1/0/2"
+    assert parser.group_addresses[3].address == "1/0/3"
+    assert parser.group_addresses[4].address == "1/0/4"
+    assert parser.group_addresses[5].address == "1/0/5"
+    assert parser.group_addresses[6].address == "2/0/6"
 
     assert len(parser.areas) == 2
     assert len(parser.areas[1].lines) == 2

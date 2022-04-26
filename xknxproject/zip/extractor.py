@@ -17,17 +17,21 @@ from xknxproject.exceptions import InvalidPasswordException, ProjectNotFoundExce
 class KNXProjExtractor:
     """Class for reading a KNX Project file."""
 
-    extraction_path = "/tmp/xknxproj/"
-
-    def __init__(self, archive_name: str, password: str | None = None):
+    def __init__(
+        self,
+        archive_name: str,
+        password: str | None = None,
+        extraction_path: str = "/tmp/xknxproj/",
+    ):
         """Initialize a KNXProjReader class."""
         self.archive_name = archive_name
         self.password = password
-        self.infos: list[ZipInfo] = []
+        self.extraction_path = extraction_path
+        self._infos: list[ZipInfo] = []
 
     def get_project_id(self) -> str:
-        """Get the project id from a list of ZipInfos."""
-        for info in self.infos:
+        """Get the project id."""
+        for info in self._infos:
             if info.filename.startswith("P-") and info.filename.endswith(".signature"):
                 return info.filename.removesuffix(".signature")
 
@@ -37,8 +41,8 @@ class KNXProjExtractor:
         """Read the ZIP file."""
         with ZipFile(self.archive_name) as zip_archive:
             zip_archive.extractall(self.extraction_path)
-            self.infos = zip_archive.infolist()
-            for info in self.infos:
+            self._infos = zip_archive.infolist()
+            for info in self._infos:
                 if ".zip" in info.filename and self.password and extract_secure_project:
                     self.unzip_protected_project_file(info)
 
@@ -73,7 +77,6 @@ class KNXProjExtractor:
         if self._is_project_ets6():
             try:
                 with pyzipper.AESZipFile(self.extraction_path + info.filename) as file:
-                    file.pwd = self.generate_ets6_zip_password()
                     file.extractall(
                         self.extraction_path + info.filename.replace(".zip", ""),
                         pwd=self.generate_ets6_zip_password(),

@@ -5,13 +5,13 @@ import logging
 
 from xknxproject import __version__
 from xknxproject.xml import XMLParser
-from xknxproject.xml.models import Area
+from xknxproject.xml.models import Area, GroupAddress
 from xknxproject.zip import KNXProjExtractor
 
 logger = logging.getLogger("xknxproject.log")
 
 
-class KNXProjParser:
+class KNXProj:
     """Class for parsing ETS project files."""
 
     def __init__(self, archive_name: str, archive_password: str | None = None):
@@ -20,9 +20,9 @@ class KNXProjParser:
         self.parser = XMLParser(self.extractor)
         self.version = __version__
 
-    def parse(self) -> list[Area]:
+    def parse(self) -> tuple[list[Area], list[GroupAddress]]:
         """Parse the KNX project."""
         self.extractor.extract()
         self.parser.parse()
         self.extractor.cleanup()
-        return self.parser.areas
+        return self.parser.areas, self.parser.group_addresses
