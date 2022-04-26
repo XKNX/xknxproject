@@ -22,7 +22,6 @@ class KNXProj:
 
     def parse(self) -> tuple[list[Area], list[GroupAddress]]:
         """Parse the KNX project."""
-        self.extractor.extract()
-        self.parser.parse()
-        self.extractor.cleanup()
+        with self.extractor:
+            self.parser.parse()
         return self.parser.areas, self.parser.group_addresses

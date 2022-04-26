@@ -19,11 +19,11 @@ Currently, xknxproject supports extracting (password protected) ETS5 and ETS6 fi
 * CommunicationObjectInstance references for their devices (GA assignments)
 * Group Addresses and their DPT type if set
 
-Installation:
+## Installation
 
     pip install xknxproject
 
-Usage:
+## Usage
 
     from xknxproject import KNXProj
 

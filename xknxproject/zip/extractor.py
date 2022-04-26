@@ -4,6 +4,7 @@ from __future__ import annotations
 import base64
 from os.path import exists
 import shutil
+from typing import Any
 from zipfile import ZipFile, ZipInfo
 
 from cryptography.hazmat.primitives import hashes
@@ -37,13 +38,22 @@ class KNXProjExtractor:
 
         raise ProjectNotFoundException()
 
-    def extract(self, extract_secure_project: bool = True) -> None:
+    def __enter__(self) -> KNXProjExtractor:
+        """Context manager enter."""
+        self.extract()
+        return self
+
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        """Context manager exit."""
+        self.cleanup()
+
+    def extract(self) -> None:
         """Read the ZIP file."""
         with ZipFile(self.archive_name) as zip_archive:
             zip_archive.extractall(self.extraction_path)
             self._infos = zip_archive.infolist()
             for info in self._infos:
-                if ".zip" in info.filename and self.password and extract_secure_project:
+                if ".zip" in info.filename and self.password:
                     self.unzip_protected_project_file(info)
 
         self._verify()
