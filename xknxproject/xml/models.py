@@ -13,7 +13,7 @@ class GroupAddress:
     def __init__(self, name: str, identifier: str, address: str, dpt_type: str | None):
         """Initialize a group address."""
         self.name = name
-        self.identifier = identifier
+        self.identifier = identifier.split("_")[1]
         self._address = int(address)
         self.dpt_type = dpt_type
         self.address = self._parse_address()
@@ -98,6 +98,7 @@ class DeviceInstance:
     last_modified: str
     hardware_program_ref: str
     line: Line
+    manufacturer: str
     additional_addresses: list[str]
     com_object_instance_refs: list[ComObjectInstanceRef]
 
@@ -129,6 +130,7 @@ class DeviceInstance:
             line=line,
             additional_addresses=[],
             com_object_instance_refs=[],
+            manufacturer=hardware_program_ref.split("_")[0],
         )
 
         for sub_node in filter(lambda x: x.nodeType != 3, node.childNodes):
@@ -168,4 +170,4 @@ class ComObjectInstanceRef:
         text: str = attr(attrs.get("Text"))
         dpt_type: str = attr(attrs.get("DatapointType"))
         links = attr(attrs.get("Links", ""))
-        return ComObjectInstanceRef(ref_id, text, links.split(","), dpt_type)
+        return ComObjectInstanceRef(ref_id, text, links.split(" "), dpt_type)
