@@ -11,3 +11,4 @@ pytest-cov==3.0.0
 setuptools==62.1.0
 tox==3.25.0
 mypy==0.950
+types-aiofiles==0.8.8

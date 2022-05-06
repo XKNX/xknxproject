@@ -1,11 +1,16 @@
 """Parser logic for ETS XML files."""
-from xml.dom.minidom import Document, parse
-from xml.sax import make_parser
+from __future__ import annotations
 
+from xknxproject.loader import (
+    ApplicationProgramLoader,
+    GroupAddressLoader,
+    HardwareLoader,
+    TopologyLoader,
+    XMLLoader,
+)
+from xknxproject.models import Area, GroupAddress, Hardware
+from xknxproject.util import flatten
 from xknxproject.zip import KNXProjExtractor
-
-from .models import Area, GroupAddress
-from .sax_content_handler_0 import GroupAddressSAXContentHandler
 
 
 class XMLParser:
@@ -14,32 +19,32 @@ class XMLParser:
     def __init__(self, extractor: KNXProjExtractor):
         """Initialize the parser."""
         self.extractor = extractor
+        self.hardware_loader: XMLLoader = HardwareLoader()
+        self.group_address_loader: XMLLoader | None = None
+        self.topology_loader: XMLLoader | None = None
         self.group_addresses: list[GroupAddress] = []
+        self.hardware: list[Hardware] = []
         self.areas: list[Area] = []
 
-    def parse(self) -> None:
+    async def parse(self) -> None:
         """Parse ETS files."""
-        handler = GroupAddressSAXContentHandler()
-        with open(
-            self.extractor.extraction_path + self.extractor.get_project_id() + "/0.xml",
-            encoding="utf-8",
-        ) as file:
-            parser = make_parser()
-            parser.setContentHandler(handler)  # type: ignore[no-untyped-call]
-            parser.parse(file)  # type: ignore[no-untyped-call]
+        self.group_address_loader = GroupAddressLoader(self.extractor.get_project_id())
+        self.topology_loader = TopologyLoader(self.extractor.get_project_id())
 
-        self.group_addresses = handler.group_addresses
-        self._parse_topology()
+        self.group_addresses = await self.group_address_loader.load(
+            self.extractor.extraction_path
+        )
+        self.hardware = await self.hardware_loader.load(self.extractor.extraction_path)
+        self.areas = await self.topology_loader.load(self.extractor.extraction_path)
 
-    def _parse_topology(self) -> None:
-        """Parse the topology."""
-        with open(
-            self.extractor.extraction_path + self.extractor.get_project_id() + "/0.xml",
-            encoding="utf-8",
-        ) as file:
-            dom: Document = parse(file)
-            node: Document = dom.getElementsByTagName("Topology")[0]
-
-            for sub_node in filter(lambda x: x.nodeType != 3, node.childNodes):
-                if sub_node.nodeName == "Area":
-                    self.areas.append(Area.from_xml(sub_node))
+        # TODO: Make this nicer... Noone will understand this in a months time :-)
+        devices = flatten(
+            [
+                line.devices
+                for line in flatten(
+                    [line for line in [area.lines for area in self.areas]]
+                )
+            ]
+        )
+        application_program_loader = ApplicationProgramLoader(devices)
+        await application_program_loader.load(self.extractor.extraction_path)

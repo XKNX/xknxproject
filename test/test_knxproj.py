@@ -1,18 +1,16 @@
 import os
 
 from xknxproject import KNXProj
-from xknxproject.xml.parser import XMLParser
-from xknxproject.zip import KNXProjExtractor
 
 xknx_test_project_protected_ets5 = os.path.join(
     os.path.dirname(__file__), "resources/xknx_test_project.knxproj"
 )
 
 
-def test_parse_project_ets5():
+async def test_parse_project_ets5():
     """Test parsing of ETS5 project."""
     knxproj = KNXProj(xknx_test_project_protected_ets5, "test")
-    areas, group_addresses = knxproj.parse()
+    areas, group_addresses = await knxproj.parse()
 
     assert len(group_addresses) == 7
     assert len(group_addresses) == 7

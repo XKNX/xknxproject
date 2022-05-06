@@ -16,13 +16,11 @@ xknx_test_project_protected_ets6 = os.path.join(
 )
 
 
-def test_parse_project_ets6():
+async def test_parse_project_ets6():
     """Test parsing of group adresses."""
-    extractor = KNXProjExtractor(xknx_test_project_protected_ets6, "test")
-    extractor.extract()
-    parser = XMLParser(extractor)
-    parser.parse()
-    extractor.cleanup()
+    with KNXProjExtractor(xknx_test_project_protected_ets6, "test") as extractor:
+        parser = XMLParser(extractor)
+        await parser.parse()
 
     assert len(parser.group_addresses) == 3
     assert parser.group_addresses[0].address == "0/1/0"
@@ -36,13 +34,11 @@ def test_parse_project_ets6():
     assert len(parser.areas[1].lines[1].devices[1].com_object_instance_refs) == 8
 
 
-def test_parse_project_ets5():
+async def test_parse_project_ets5():
     """Test parsing of ETS5 project."""
-    extractor = KNXProjExtractor(xknx_test_project_protected_ets5, "test")
-    extractor.extract()
-    parser = XMLParser(extractor)
-    parser.parse()
-    extractor.cleanup()
+    with KNXProjExtractor(xknx_test_project_protected_ets5, "test") as extractor:
+        parser = XMLParser(extractor)
+        await parser.parse()
 
     assert len(parser.group_addresses) == 7
     assert len(parser.group_addresses) == 7

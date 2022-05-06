@@ -14,7 +14,7 @@ with open(
 ) as fp:
     exec(fp.read(), VERSION)
 
-REQUIRES = ["cryptography>=35.0.0", "pyzipper>=0.3.5"]
+REQUIRES = ["cryptography>=35.0.0", "pyzipper>=0.3.5", "aiofiles>=0.8.0", "lxml>=4.8.0"]
 
 setup(
     name="xknxproject",
@@ -27,7 +27,7 @@ setup(
     author_email="me@marvin-wichmann.de",
     license="GNU GPL",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 3 - Beta",
         "Intended Audience :: End Users/Desktop",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3.9",
