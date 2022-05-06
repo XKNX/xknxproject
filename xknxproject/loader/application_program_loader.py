@@ -1,7 +1,7 @@
 """Application Program Loader."""
 from typing import Any
 
-from lxml.etree import iterparse
+from lxml.etree import iterparse  # pylint: disable=no-name-in-module
 
 from xknxproject.models import ComObject, DeviceInstance
 

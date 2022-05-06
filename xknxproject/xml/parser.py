@@ -42,7 +42,7 @@ class XMLParser:
             [
                 line.devices
                 for line in flatten(
-                    [line for line in [area.lines for area in self.areas]]
+                    list(line for line in list(area.lines for area in self.areas))
                 )
             ]
         )

@@ -9,4 +9,3 @@ class XMLLoader(abc.ABC):
     @abc.abstractmethod
     async def load(self, extraction_path: str) -> list[Any]:
         """Load via the given loader implementation."""
-        pass

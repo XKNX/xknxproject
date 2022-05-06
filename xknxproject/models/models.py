@@ -148,7 +148,7 @@ class ComObject:
 class Hardware:
     """Model a Hardware instance."""
 
-    id: str
+    identifier: str
     name: str
     product_name: str
     is_choke: bool
