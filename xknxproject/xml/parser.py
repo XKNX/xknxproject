@@ -8,7 +8,7 @@ from xknxproject.loader import (
     TopologyLoader,
     XMLLoader,
 )
-from xknxproject.models import Area, GroupAddress, Hardware
+from xknxproject.models import Area, DeviceInstance, GroupAddress, Hardware
 from xknxproject.util import flatten
 from xknxproject.zip import KNXProjExtractor
 
@@ -38,7 +38,7 @@ class XMLParser:
         self.areas = await self.topology_loader.load(self.extractor.extraction_path)
 
         # TODO: Make this nicer... Noone will understand this in a months time :-)
-        devices = flatten(
+        devices: list[DeviceInstance] = flatten(
             [
                 line.devices
                 for line in flatten(
@@ -48,3 +48,9 @@ class XMLParser:
         )
         application_program_loader = ApplicationProgramLoader(devices)
         await application_program_loader.load(self.extractor.extraction_path)
+
+        for hardware in self.hardware:
+            for device in devices:
+                if device.hardware_program_ref == hardware.identifier:
+                    device.product_name = hardware.name
+                    device.hardware_name = hardware.product_name

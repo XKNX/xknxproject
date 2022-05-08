@@ -33,15 +33,10 @@ class HardwareLoader(XMLLoader):
         """Parse hardware mapping."""
         identifier: str = attr(hardware_node.attributes.get("Id"))
         name: str = attr(hardware_node.attributes.get("Name"))
-        is_choke: bool = attr(hardware_node.attributes.get("IsChoke", False))
-        is_power_supply: bool = attr(
-            hardware_node.attributes.get("IsPowerSupply", False)
-        )
-        is_coupler: bool = attr(hardware_node.attributes.get("IsCoupler", False))
         product_node = hardware_node.getElementsByTagName("Product")[0]
         text: str = attr(product_node.attributes.get("Text"))
 
-        return Hardware(identifier, name, text, is_choke, is_power_supply, is_coupler)
+        return Hardware(identifier, name, text)
 
     @staticmethod
     def _get_relevant_files(extraction_path: str) -> list[str]:

@@ -12,7 +12,7 @@ class ApplicationProgramLoader(XMLLoader):
     """Load the application program from KNX XML."""
 
     def __init__(self, devices: list[DeviceInstance]):
-        """Initialize the GroupAddressLoader."""
+        """Initialize the ApplicationProgramLoader."""
         self.devices = devices
 
     async def load(self, extraction_path: str) -> list[Any]:
@@ -21,7 +21,7 @@ class ApplicationProgramLoader(XMLLoader):
             str, list[DeviceInstance]
         ] = self._get_optimized_application_program_struct()
         for application_program, devices in application_programs.items():
-            com_object_mapping: dict[str, str] = {}
+            com_object_mapping: dict[str, dict[str, str]] = {}
             com_objects: dict[str, ComObject] = {}
             with open(
                 extraction_path + application_program, mode="rb"
@@ -50,7 +50,12 @@ class ApplicationProgramLoader(XMLLoader):
                             ),
                         )
                     if elem.tag.endswith("ComObjectRef"):
-                        com_object_mapping[elem.attrib["Id"]] = elem.attrib["RefId"]
+                        com_object_mapping[elem.attrib["Id"]] = {
+                            "RefId": elem.attrib["RefId"],
+                            "FunctionText": elem.attrib.get("FunctionText", None),
+                            "DPTType": elem.attrib.get("DatapointType", None),
+                            "Text": elem.attrib.get("Text", None),
+                        }
 
                 for device in devices:
                     device.add_com_object_id(com_object_mapping)

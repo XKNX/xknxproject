@@ -76,7 +76,8 @@ class TopologyLoader(XMLLoader):
         address: str = attr(attrs.get("Address"))
         name: str = attr(attrs.get("Name"))
         last_modified: str = attr(attrs.get("LastModified"))
-        hardware_program_ref: str = attr(attrs.get("Hardware2ProgramRefId"))
+        hardware_parts = attr(attrs.get("Hardware2ProgramRefId")).split("_")
+        hardware_program_ref: str = hardware_parts[0] + "_" + hardware_parts[1]
         device: DeviceInstance = DeviceInstance(
             identifier=identifier,
             address=address,

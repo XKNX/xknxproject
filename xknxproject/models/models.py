@@ -79,6 +79,8 @@ class DeviceInstance:
         self.individual_address = (
             f"{self.line.area.address}/{self.line.address}/{self.address}"
         )
+        self.product_name: str = ""
+        self.hardware_name: str = ""
 
     def add_additional_address(self, address: str) -> None:
         """Add an additional individual address."""
@@ -86,22 +88,27 @@ class DeviceInstance:
             f"{self.line.area.address}/{self.line.address}/{address}"
         )
 
-    def add_com_object_id(self, mapping: dict[str, str]) -> None:
+    def add_com_object_id(self, mapping: dict[str, dict[str, str]]) -> None:
         """Add com object id to com object refs."""
         for ref in self.com_object_instance_refs:
-            ref.com_object_id = mapping.get(
+            ref.com_object_ref = mapping.get(
                 self.manufacturer
                 + "_"
                 + self.application_program_ref
                 + "_"
                 + ref.ref_id,
-                "",
+                None,
             )
 
     def add_com_objects(self, com_objects_lookup_table: dict[str, ComObject]) -> None:
         """Add communication objects to device instance."""
         for ref in self.com_object_instance_refs:
-            if com_object := com_objects_lookup_table.get(str(ref.com_object_id), None):
+            if ref.com_object_ref is None:
+                continue
+
+            if com_object := com_objects_lookup_table.get(
+                str(ref.com_object_ref.get("RefId")), None
+            ):
                 self.com_objects.append(com_object)
 
     def application_program_xml(self) -> str:
@@ -124,7 +131,7 @@ class ComObjectInstanceRef:
     text: str
     links: list[str]
     data_point_type: str
-    com_object_id: str | None = None
+    com_object_ref: dict[str, str] | None = None
 
 
 @dataclasses.dataclass
@@ -151,6 +158,3 @@ class Hardware:
     identifier: str
     name: str
     product_name: str
-    is_choke: bool
-    is_power_supply: bool
-    is_coupler: bool
