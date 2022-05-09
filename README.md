@@ -41,6 +41,10 @@ lxml requires libxml2 to be installed in the underlying system. You can read mor
 
     asyncio.run_until_complete(main())
 
+The `KNXProject` is a typed dictionary and can be used just like a dictionary, or, exported as JSON.
+You can find an example file (exported JSON) in our test suite under https://github.com/XKNX/xknxproject/tree/main/test/resources/stubs
+
+The full type definition can be found here: https://github.com/XKNX/xknxproject/blob/main/xknxproject/models/knxproject.py
 
 ## TODOs / Ideas
 
