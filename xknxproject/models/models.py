@@ -4,22 +4,22 @@ from __future__ import annotations
 import dataclasses
 
 
-class GroupAddress:
+class XMLGroupAddress:
     """Class that represents a group address."""
 
     def __init__(self, name: str, identifier: str, address: str, dpt_type: str | None):
         """Initialize a group address."""
         self.name = name
         self.identifier = identifier.split("_")[1]
-        self._address = int(address)
+        self.raw_address = int(address)
         self.dpt_type = dpt_type
         self.address = self._parse_address()
 
     def _parse_address(self) -> str:
         """Parse a given address and returns a string representation of it."""
-        main = (self._address & 0b1111100000000000) >> 11
-        middle = (self._address & 0b11100000000) >> 8
-        sub = self._address & 0b11111111
+        main = (self.raw_address & 0b1111100000000000) >> 11
+        middle = (self.raw_address & 0b11100000000) >> 8
+        sub = self.raw_address & 0b11111111
         return f"{main}/{middle}/{sub}"
 
     def __repr__(self) -> str:
@@ -28,22 +28,25 @@ class GroupAddress:
 
 
 @dataclasses.dataclass
-class Area:
+class XMLArea:
     """Class that represents a area."""
 
-    address: str
-    lines: list[Line]
+    address: int
+    name: str
+    description: str
+    lines: list[XMLLine]
 
 
 @dataclasses.dataclass
-class Line:
+class XMLLine:
     """Class that represents a Line."""
 
-    address: str
+    address: int
+    description: str
     name: str
     medium_type: str
     devices: list[DeviceInstance]
-    area: Area
+    area: XMLArea
 
 
 class DeviceInstance:
@@ -57,7 +60,7 @@ class DeviceInstance:
         name: str,
         last_modified: str,
         hardware_program_ref: str,
-        line: Line,
+        line: XMLLine,
         manufacturer: str,
         additional_addresses: list[str] | None = None,
         com_object_instance_refs: list[ComObjectInstanceRef] | None = None,
@@ -77,7 +80,7 @@ class DeviceInstance:
         self.application_program_ref: str = ""
 
         self.individual_address = (
-            f"{self.line.area.address}/{self.line.address}/{self.address}"
+            f"{self.line.area.address}.{self.line.address}.{self.address}"
         )
         self.product_name: str = ""
         self.hardware_name: str = ""

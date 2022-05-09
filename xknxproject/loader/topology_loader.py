@@ -1,9 +1,11 @@
 """Group Address Loader."""
+from __future__ import annotations
+
 from xml.dom.minidom import Document, parseString
 
 import aiofiles
 
-from xknxproject.models import Area, ComObjectInstanceRef, DeviceInstance, Line
+from xknxproject.models import ComObjectInstanceRef, DeviceInstance, XMLArea, XMLLine
 from xknxproject.util import attr, child_nodes
 
 from . import XMLLoader
@@ -16,9 +18,9 @@ class TopologyLoader(XMLLoader):
         """Initialize the GroupAddressLoader."""
         self.project_id = project_id
 
-    async def load(self, extraction_path: str) -> list[Area]:
+    async def load(self, extraction_path: str) -> list[XMLArea]:
         """Load Hardware mappings."""
-        areas: list[Area] = []
+        areas: list[XMLArea] = []
         async with aiofiles.open(
             extraction_path + self.project_id + "/0.xml", encoding="utf-8"
         ) as project_xml:
@@ -32,10 +34,12 @@ class TopologyLoader(XMLLoader):
         return areas
 
     @staticmethod
-    def _create_area(node: Document) -> Area:
+    def _create_area(node: Document) -> XMLArea:
         """Create an Area."""
-        address: str = attr(node.attributes.get("Address"))
-        area: Area = Area(address, [])
+        address: int = int(attr(node.attributes.get("Address")))
+        name: str = attr(node.attributes.get("Name"))
+        description: str = attr(node.attributes.get("Description"))
+        area: XMLArea = XMLArea(address, name, description, [])
 
         for sub_node in child_nodes(node):
             if sub_node.nodeName == "Line":
@@ -44,17 +48,20 @@ class TopologyLoader(XMLLoader):
         return area
 
     @staticmethod
-    def _create_line(node: Document, area: Area) -> Line:
+    def _create_line(node: Document, area: XMLArea) -> XMLLine:
         """Create a Line."""
         attrs = node.attributes
-        address: str = attr(attrs.get("Address"))
+        address: int = int(attr(attrs.get("Address")))
         name: str = attr(attrs.get("Name"))
+        description: str = attr(attrs.get("Description"))
         medium_type: str = attr(attrs.get("MediumTypeRefId"))
-        line: Line = Line(address, name, medium_type, [], area)
+        line: XMLLine = XMLLine(address, description, name, medium_type, [], area)
 
         for sub_node in child_nodes(node):
             if sub_node.nodeName == "DeviceInstance":
-                line.devices.append(TopologyLoader._create_device(sub_node, line))
+                device = TopologyLoader._create_device(sub_node, line)
+                if device is not None:
+                    line.devices.append(device)
             if sub_node.nodeName == "Segment":
                 #  ETS-6 had to change the format :-)
                 attrs = sub_node.attributes
@@ -62,18 +69,23 @@ class TopologyLoader(XMLLoader):
                 line.medium_type = _medium_type
                 for sub_sub_node in child_nodes(sub_node):
                     if sub_sub_node.nodeName == "DeviceInstance":
-                        line.devices.append(
-                            TopologyLoader._create_device(sub_sub_node, line)
-                        )
+                        device = TopologyLoader._create_device(sub_sub_node, line)
+                        if device is not None:
+                            line.devices.append(device)
 
         return line
 
     @staticmethod
-    def _create_device(node: Document, line: Line) -> DeviceInstance:
+    def _create_device(node: Document, line: XMLLine) -> DeviceInstance | None:
         """Create device."""
         attrs = node.attributes
         identifier: str = attr(attrs.get("Id"))
-        address: str = attr(attrs.get("Address"))
+        address: str | None = attr(attrs.get("Address"))
+
+        #  devices like power supplies do usually not have an IA.
+        if address is None:
+            return None
+
         name: str = attr(attrs.get("Name"))
         last_modified: str = attr(attrs.get("LastModified"))
         hardware_parts = attr(attrs.get("Hardware2ProgramRefId")).split("_")
@@ -97,9 +109,9 @@ class TopologyLoader(XMLLoader):
                         )
             if sub_node.nodeName == "ComObjectInstanceRefs":
                 for com_object in child_nodes(sub_node):
-                    device.com_object_instance_refs.append(
-                        TopologyLoader._create_com_object_instance(com_object)
-                    )
+                    instance = TopologyLoader._create_com_object_instance(com_object)
+                    if instance:
+                        device.com_object_instance_refs.append(instance)
             if sub_node.nodeName == "ParameterInstanceRefs":
                 for param_object in child_nodes(sub_node):
                     if param_object.nodeName == "ParameterInstanceRef":
@@ -111,11 +123,15 @@ class TopologyLoader(XMLLoader):
         return device
 
     @staticmethod
-    def _create_com_object_instance(node: Document) -> ComObjectInstanceRef:
+    def _create_com_object_instance(node: Document) -> ComObjectInstanceRef | None:
         """Create ComObjectInstanceRef."""
         attrs = node.attributes
         ref_id: str = attr(attrs.get("RefId"))
         text: str = attr(attrs.get("Text"))
         dpt_type: str = attr(attrs.get("DatapointType"))
-        links = attr(attrs.get("Links", ""))
+        links: str | None = attr(attrs.get("Links", None))
+
+        if not links:
+            return None
+
         return ComObjectInstanceRef(ref_id, text, links.split(" "), dpt_type)

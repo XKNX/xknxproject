@@ -1,20 +1,39 @@
 """Xknxproj models."""
-from .models import (
+from .knxproject import (
     Area,
+    Device,
+    Flags,
+    GroupAddress,
+    GroupAddressAssignment,
+    KNXProject,
+    Line,
+)
+from .models import (
     ComObject,
     ComObjectInstanceRef,
     DeviceInstance,
-    GroupAddress,
     Hardware,
-    Line,
+    XMLArea,
+    XMLGroupAddress,
+    XMLLine,
 )
+from .static import MANUFACTURERS, MEDIUM_TYPES
 
 __all__ = [
     "Area",
+    "Line",
+    "GroupAddressAssignment",
+    "GroupAddress",
+    "Device",
+    "Flags",
+    "KNXProject",
+    "XMLArea",
     "ComObject",
     "ComObjectInstanceRef",
     "DeviceInstance",
-    "GroupAddress",
-    "Line",
+    "XMLGroupAddress",
+    "XMLLine",
     "Hardware",
+    "MANUFACTURERS",
+    "MEDIUM_TYPES",
 ]

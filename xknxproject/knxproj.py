@@ -4,7 +4,7 @@ from __future__ import annotations
 import logging
 
 from xknxproject import __version__
-from xknxproject.models import Area, GroupAddress
+from xknxproject.models import KNXProject
 from xknxproject.xml import XMLParser
 from xknxproject.zip import KNXProjExtractor
 
@@ -20,8 +20,7 @@ class KNXProj:
         self.parser = XMLParser(self.extractor)
         self.version = __version__
 
-    async def parse(self) -> tuple[list[Area], list[GroupAddress]]:
+    async def parse(self) -> KNXProject:
         """Parse the KNX project."""
         with self.extractor:
-            await self.parser.parse()
-        return self.parser.areas, self.parser.group_addresses
+            return await self.parser.parse()

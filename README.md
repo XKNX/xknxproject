@@ -30,21 +30,20 @@ lxml requires libxml2 to be installed in the underlying system. You can read mor
 ## Usage
 
     import asyncio
+    from xknxproject.models import KNXProject
     from xknxproject import KNXProj
 
 
     async def main():
         """Extract and parse a KNX project file."""
         knxproj: KNXProj = KNXProj("path/to/your/file.knxproj", "optional_password")
-        areas, group_addresses = await knxproj.parse()
+        project: KNXProject = await knxproj.parse()
 
     asyncio.run_until_complete(main())
 
 
 ## TODOs / Ideas
 
-- Adjust parser return types, maybe create one big JSON with all infos we need
 - Parse location information (which device is in which room) - caution: not all devices may be mapped to a room
 - Since parsing is rather expensive we could add a callback to inform the user (over the HA websocket) what the current steps are and what is being parsed. Might be cool for UX.
 - Migrate remaining minidom logic to lxml
-- Maybe drop all XML logic and use XSLT instead (feel free to open a PR :-))

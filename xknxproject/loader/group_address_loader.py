@@ -3,7 +3,7 @@ from xml.dom.minidom import Document, parseString
 
 import aiofiles
 
-from xknxproject.models import GroupAddress
+from xknxproject.models import XMLGroupAddress
 from xknxproject.util import attr
 
 from .loader import XMLLoader
@@ -16,9 +16,9 @@ class GroupAddressLoader(XMLLoader):
         """Initialize the GroupAddressLoader."""
         self.project_id = project_id
 
-    async def load(self, extraction_path: str) -> list[GroupAddress]:
+    async def load(self, extraction_path: str) -> list[XMLGroupAddress]:
         """Load Hardware mappings."""
-        group_address_list: list[GroupAddress] = []
+        group_address_list: list[XMLGroupAddress] = []
         async with aiofiles.open(
             extraction_path + self.project_id + "/0.xml", encoding="utf-8"
         ) as project_xml:
@@ -26,7 +26,7 @@ class GroupAddressLoader(XMLLoader):
             nodes: list[Document] = dom.getElementsByTagName("GroupAddress")
             for node in nodes:
                 group_address_list.append(
-                    GroupAddress(
+                    XMLGroupAddress(
                         name=attr(node.attributes.get("Name")),
                         identifier=attr(node.attributes.get("Id")),
                         address=attr(node.attributes.get("Address")),
