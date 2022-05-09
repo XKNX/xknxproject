@@ -27,7 +27,7 @@ setup(
     author_email="me@marvin-wichmann.de",
     license="GNU GPL",
     classifiers=[
-        "Development Status :: 3 - Beta",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: End Users/Desktop",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3.9",
