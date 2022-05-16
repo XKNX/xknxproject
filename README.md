@@ -29,6 +29,7 @@ lxml requires libxml2 to be installed in the underlying system. You can read mor
 
 ## Usage
 
+```python
     import asyncio
     from xknxproject.models import KNXProject
     from xknxproject import KNXProj
@@ -40,14 +41,9 @@ lxml requires libxml2 to be installed in the underlying system. You can read mor
         project: KNXProject = await knxproj.parse()
 
     asyncio.run_until_complete(main())
+```
 
 The `KNXProject` is a typed dictionary and can be used just like a dictionary, or, exported as JSON.
 You can find an example file (exported JSON) in our test suite under https://github.com/XKNX/xknxproject/tree/main/test/resources/stubs
 
 The full type definition can be found here: https://github.com/XKNX/xknxproject/blob/main/xknxproject/models/knxproject.py
-
-## TODOs / Ideas
-
-- Parse location information (which device is in which room) - caution: not all devices may be mapped to a room
-- Since parsing is rather expensive we could add a callback to inform the user (over the HA websocket) what the current steps are and what is being parsed. Might be cool for UX.
-- Migrate remaining minidom logic to lxml
