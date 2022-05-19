@@ -6,6 +6,7 @@ from xknxproject.loader import (
     ApplicationProgramLoader,
     GroupAddressLoader,
     HardwareLoader,
+    LocationLoader,
     TopologyLoader,
     XMLLoader,
 )
@@ -21,8 +22,10 @@ from xknxproject.models import (
     Hardware,
     KNXProject,
     Line,
+    Space,
     XMLArea,
     XMLGroupAddress,
+    XMLSpace,
 )
 from xknxproject.zip import KNXProjExtractor
 
@@ -36,6 +39,7 @@ class XMLParser:
         self.hardware_loader: XMLLoader = HardwareLoader()
         self.group_address_loader: XMLLoader | None = None
         self.topology_loader: XMLLoader | None = None
+        self.spaces: list[XMLSpace] = []
         self.group_addresses: list[XMLGroupAddress] = []
         self.hardware: list[Hardware] = []
         self.areas: list[XMLArea] = []
@@ -102,12 +106,25 @@ class XMLParser:
                 dpt_type=group_address.dpt_type,
             )
 
+        space_dict: dict[str, Space] = {}
+        for space in self.spaces:
+            space_dict[space.name] = self.recursive_convert_spaces(space)
+
         return KNXProject(
             version=__version__,
             topology=topology_dict,
             devices=devices_dict,
             group_addresses=group_address_dict,
+            locations=space_dict,
         )
+
+    def recursive_convert_spaces(self, space: XMLSpace) -> Space:
+        """Convert spaces to the final output format."""
+        subspaces: dict[str, Space] = {}
+        for subspace in space.spaces:
+            subspaces[subspace.name] = self.recursive_convert_spaces(subspace)
+
+        return Space(type=space.type.value, devices=space.devices, spaces=subspaces)
 
     async def load(self) -> None:
         """Load XML files."""
@@ -126,6 +143,9 @@ class XMLParser:
 
         application_program_loader = ApplicationProgramLoader(self.devices)
         await application_program_loader.load(self.extractor.extraction_path)
+
+        location_loader = LocationLoader(self.extractor.get_project_id(), self.devices)
+        self.spaces = await location_loader.load(self.extractor.extraction_path)
 
         for hardware in self.hardware:
             for device in self.devices:

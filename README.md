@@ -17,6 +17,7 @@ Currently, xknxproject supports extracting (password protected) ETS5 and ETS6 fi
 * CommunicationObjectInstance references for their devices (GA assignments)
 * Group Addresses and their DPT type if set
 * The application programs communication objects and their respective flags and the DPT Type
+* Location information of your devices (in which rooms they are)
 
 Caution: Loading a middle-sized project with this tool takes about 1.5 seconds. For bigger projects this might as well be >3s.
 

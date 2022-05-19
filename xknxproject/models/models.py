@@ -3,6 +3,9 @@ from __future__ import annotations
 
 import dataclasses
 
+from xknxproject.models.static import SpaceType
+from xknxproject.util import parse_dpt_types
+
 
 class XMLGroupAddress:
     """Class that represents a group address."""
@@ -12,7 +15,10 @@ class XMLGroupAddress:
         self.name = name
         self.identifier = identifier.split("_")[1]
         self.raw_address = int(address)
-        self.dpt_type = dpt_type
+        self.dpt_type = (
+            None if dpt_type is None else parse_dpt_types(dpt_type.split(" "))
+        )
+
         self.address = self._parse_address()
 
     def _parse_address(self) -> str:
@@ -133,7 +139,7 @@ class ComObjectInstanceRef:
     ref_id: str
     text: str
     links: list[str]
-    data_point_type: str
+    data_point_type: dict[str, int]
     com_object_ref: dict[str, str] | None = None
 
 
@@ -151,7 +157,17 @@ class ComObject:
     transmit_flag: bool
     update_flag: bool
     read_on_init_flag: bool
-    datapoint_types: list[str]
+    datapoint_type: dict[str, int]
+
+
+@dataclasses.dataclass
+class XMLSpace:
+    """A space in the location XML."""
+
+    spaces: list[XMLSpace]
+    type: SpaceType
+    name: str
+    devices: list[str]
 
 
 @dataclasses.dataclass

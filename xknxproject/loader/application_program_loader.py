@@ -5,6 +5,7 @@ from lxml.etree import iterparse  # pylint: disable=no-name-in-module
 
 from xknxproject.models import ComObject, DeviceInstance
 
+from ..util import parse_dpt_types
 from .loader import XMLLoader
 
 
@@ -45,8 +46,8 @@ class ApplicationProgramLoader(XMLLoader):
                             == "Enabled",
                             read_on_init_flag=elem.attrib.get("ReadOnInitFlag", False)
                             == "Enabled",
-                            datapoint_types=elem.attrib.get("DatapointType", "").split(
-                                " "
+                            datapoint_type=parse_dpt_types(
+                                elem.attrib.get("DatapointType", "").split(" ")
                             ),
                         )
                     if elem.tag.endswith("ComObjectRef"):

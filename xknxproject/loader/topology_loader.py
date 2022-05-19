@@ -6,7 +6,7 @@ from xml.dom.minidom import Document, parseString
 import aiofiles
 
 from xknxproject.models import ComObjectInstanceRef, DeviceInstance, XMLArea, XMLLine
-from xknxproject.util import attr, child_nodes
+from xknxproject.util import attr, child_nodes, parse_dpt_types
 
 from . import XMLLoader
 
@@ -128,10 +128,12 @@ class TopologyLoader(XMLLoader):
         attrs = node.attributes
         ref_id: str = attr(attrs.get("RefId"))
         text: str = attr(attrs.get("Text"))
-        dpt_type: str = attr(attrs.get("DatapointType"))
+        dpt_type: str = attr(attrs.get("DatapointType", ""))
         links: str | None = attr(attrs.get("Links", None))
 
         if not links:
             return None
 
-        return ComObjectInstanceRef(ref_id, text, links.split(" "), dpt_type)
+        return ComObjectInstanceRef(
+            ref_id, text, links.split(" "), parse_dpt_types(dpt_type.split(" "))
+        )

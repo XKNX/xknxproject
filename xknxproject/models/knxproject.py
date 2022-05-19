@@ -1,5 +1,5 @@
 """Define output type for parsed KNX project."""
-from typing import Optional, TypedDict
+from typing import Any, Optional, TypedDict
 
 
 class Flags(TypedDict):
@@ -17,7 +17,7 @@ class GroupAddressAssignment(TypedDict):
     """Group address assignments dictionary."""
 
     co_name: str
-    dpt_type: str
+    dpt_type: dict[str, int]
     group_address_links: list[str]
     flags: Flags
 
@@ -57,7 +57,15 @@ class GroupAddress(TypedDict):
     identifier: str
     raw_address: int
     address: str
-    dpt_type: Optional[str]
+    dpt_type: Optional[dict[str, int]]
+
+
+class Space(TypedDict):
+    """Space typed dict."""
+
+    type: str
+    devices: list[str]
+    spaces: dict[str, Any]
 
 
 class KNXProject(TypedDict):
@@ -66,4 +74,5 @@ class KNXProject(TypedDict):
     version: str
     devices: dict[str, Device]
     topology: dict[str, Area]
+    locations: dict[str, Space]
     group_addresses: dict[str, GroupAddress]
