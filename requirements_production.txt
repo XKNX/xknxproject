@@ -1,4 +1,4 @@
 cryptography==37.0.2
 pyzipper==0.3.5
 aiofiles==0.8.0
-lxml==4.8.0
+lxml==4.9.0
