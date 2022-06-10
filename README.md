@@ -41,7 +41,7 @@ lxml requires libxml2 to be installed in the underlying system. You can read mor
         knxproj: KNXProj = KNXProj("path/to/your/file.knxproj", "optional_password")
         project: KNXProject = await knxproj.parse()
 
-    asyncio.run_until_complete(main())
+    asyncio.run(main())
 ```
 
 The `KNXProject` is a typed dictionary and can be used just like a dictionary, or, exported as JSON.
