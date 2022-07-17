@@ -3,7 +3,8 @@ from __future__ import annotations
 
 import base64
 from os.path import exists
-import shutil
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Any
 from zipfile import ZipFile, ZipInfo
 
@@ -22,12 +23,12 @@ class KNXProjExtractor:
         self,
         archive_name: str,
         password: str | None = None,
-        extraction_path: str = "/tmp/xknxproj/",
     ):
         """Initialize a KNXProjReader class."""
-        self.archive_name = archive_name
+        self.archive_path = Path(archive_name)
         self.password = password
-        self.extraction_path = extraction_path
+        self._temp_dir = TemporaryDirectory()  # pylint: disable=consider-using-with
+        self.extraction_path = Path(self._temp_dir.name)
         self._infos: list[ZipInfo] = []
 
     def get_project_id(self) -> str:
@@ -49,7 +50,7 @@ class KNXProjExtractor:
 
     def extract(self) -> None:
         """Read the ZIP file."""
-        with ZipFile(self.archive_name) as zip_archive:
+        with ZipFile(self.archive_path) as zip_archive:
             zip_archive.extractall(self.extraction_path)
             self._infos = zip_archive.infolist()
             for info in self._infos:
@@ -60,12 +61,11 @@ class KNXProjExtractor:
 
     def cleanup(self) -> None:
         """Cleanup the extracted files."""
-        if exists(self.extraction_path):
-            shutil.rmtree(self.extraction_path)
+        self._temp_dir.cleanup()
 
     def _verify(self) -> None:
         """Verify the extracted ETS files."""
-        if not exists(self.extraction_path + self.get_project_id() + "/0.xml"):
+        if not exists(self.extraction_path / self.get_project_id() / "0.xml"):
             raise ProjectNotFoundException()
 
     def unzip_protected_project_file(self, info: ZipInfo) -> None:
@@ -75,9 +75,9 @@ class KNXProjExtractor:
 
         if not self._is_project_ets6():
             try:
-                with ZipFile(self.extraction_path + info.filename) as project_file:
+                with ZipFile(self.extraction_path / info.filename) as project_file:
                     project_file.extractall(
-                        self.extraction_path + info.filename.replace(".zip", ""),
+                        self.extraction_path / info.filename.replace(".zip", ""),
                         pwd=self.password.encode("utf-8"),
                     )
                 return
@@ -86,9 +86,9 @@ class KNXProjExtractor:
 
         if self._is_project_ets6():
             try:
-                with pyzipper.AESZipFile(self.extraction_path + info.filename) as file:
+                with pyzipper.AESZipFile(self.extraction_path / info.filename) as file:
                     file.extractall(
-                        self.extraction_path + info.filename.replace(".zip", ""),
+                        self.extraction_path / info.filename.replace(".zip", ""),
                         pwd=self.generate_ets6_zip_password(),
                     )
             except Exception as exception:
@@ -96,7 +96,7 @@ class KNXProjExtractor:
 
     def _is_project_ets6(self) -> bool:
         """Check if the project is an ETS6 project."""
-        with open(self.extraction_path + "knx_master.xml", encoding="utf-8") as master:
+        with open(self.extraction_path / "knx_master.xml", encoding="utf-8") as master:
             for value in [next(master) for _ in range(2)]:
                 if ETS6_SCHEMA_VERSION in value:
                     return True

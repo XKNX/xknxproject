@@ -1,4 +1,5 @@
 """Group Address Loader."""
+from pathlib import Path
 from xml.dom.minidom import Document, parseString
 
 import aiofiles
@@ -16,11 +17,11 @@ class GroupAddressLoader(XMLLoader):
         """Initialize the GroupAddressLoader."""
         self.project_id = project_id
 
-    async def load(self, extraction_path: str) -> list[XMLGroupAddress]:
+    async def load(self, extraction_path: Path) -> list[XMLGroupAddress]:
         """Load Hardware mappings."""
         group_address_list: list[XMLGroupAddress] = []
         async with aiofiles.open(
-            extraction_path + self.project_id + "/0.xml", encoding="utf-8"
+            extraction_path / self.project_id / "0.xml", encoding="utf-8"
         ) as project_xml:
             dom: Document = parseString(await project_xml.read())
             nodes: list[Document] = dom.getElementsByTagName("GroupAddress")

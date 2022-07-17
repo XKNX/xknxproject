@@ -1,4 +1,5 @@
 """Application Program Loader."""
+from pathlib import Path
 from typing import Any
 
 from lxml.etree import iterparse  # pylint: disable=no-name-in-module
@@ -16,7 +17,7 @@ class ApplicationProgramLoader(XMLLoader):
         """Initialize the ApplicationProgramLoader."""
         self.devices = devices
 
-    async def load(self, extraction_path: str) -> list[Any]:
+    async def load(self, extraction_path: Path) -> list[Any]:
         """Load Hardware mappings and assign to devices."""
         application_programs: dict[
             str, list[DeviceInstance]
@@ -25,7 +26,7 @@ class ApplicationProgramLoader(XMLLoader):
             com_object_mapping: dict[str, dict[str, str]] = {}
             com_objects: dict[str, ComObject] = {}
             with open(
-                extraction_path + application_program, mode="rb"
+                extraction_path / application_program, mode="rb"
             ) as application_xml:
                 for _, elem in iterparse(application_xml):
                     if elem.tag.endswith("ComObject"):

@@ -1,4 +1,5 @@
 """Location Loader."""
+from pathlib import Path
 from xml.dom.minidom import Document, parseString
 
 import aiofiles
@@ -19,11 +20,11 @@ class LocationLoader(XMLLoader):
         for device in devices:
             self.devices[device.identifier] = device.individual_address
 
-    async def load(self, extraction_path: str) -> list[XMLSpace]:
+    async def load(self, extraction_path: Path) -> list[XMLSpace]:
         """Load Location mappings."""
         spaces: list[XMLSpace] = []
         async with aiofiles.open(
-            extraction_path + self.project_id + "/0.xml", encoding="utf-8"
+            extraction_path / self.project_id / "0.xml", encoding="utf-8"
         ) as project_xml:
             dom: Document = parseString(await project_xml.read())
             node: Document = dom.getElementsByTagName("Locations")[0]

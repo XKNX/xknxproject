@@ -1,6 +1,7 @@
 """Group Address Loader."""
 from __future__ import annotations
 
+from pathlib import Path
 from xml.dom.minidom import Document, parseString
 
 import aiofiles
@@ -18,11 +19,11 @@ class TopologyLoader(XMLLoader):
         """Initialize the GroupAddressLoader."""
         self.project_id = project_id
 
-    async def load(self, extraction_path: str) -> list[XMLArea]:
+    async def load(self, extraction_path: Path) -> list[XMLArea]:
         """Load Hardware mappings."""
         areas: list[XMLArea] = []
         async with aiofiles.open(
-            extraction_path + self.project_id + "/0.xml", encoding="utf-8"
+            extraction_path / self.project_id / "0.xml", encoding="utf-8"
         ) as project_xml:
             dom: Document = parseString(await project_xml.read())
             node: Document = dom.getElementsByTagName("Topology")[0]

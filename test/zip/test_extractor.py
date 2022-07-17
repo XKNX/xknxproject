@@ -1,5 +1,4 @@
 import os
-from os.path import exists
 
 from xknxproject.zip import KNXProjExtractor
 
@@ -21,10 +20,10 @@ def test_extract_protected_knx_project_ets5():
     reader = KNXProjExtractor(xknx_test_project_protected_ets5, "test")
     reader.extract()
 
-    assert exists(reader.extraction_path + "P-0242/project.xml")
+    assert reader.extraction_path.joinpath("P-0242/project.xml").exists()
 
     reader.cleanup()
-    assert not exists(reader.extraction_path + "P-0242/project.xml")
+    assert not reader.extraction_path.joinpath("P-0242/project.xml").exists()
 
 
 def test_extract_knx_project_ets5():
@@ -32,10 +31,10 @@ def test_extract_knx_project_ets5():
     reader = KNXProjExtractor(xknx_test_project_protected_ets5, "test")
     reader.extract()
 
-    assert exists(reader.extraction_path + "P-0242/project.xml")
+    assert reader.extraction_path.joinpath("P-0242/project.xml").exists()
 
     reader.cleanup()
-    assert not exists(reader.extraction_path + "P-0242/project.xml")
+    assert not reader.extraction_path.joinpath("P-0242/project.xml").exists()
 
 
 def test_ets6_password_generation():
@@ -57,6 +56,8 @@ def test_extract_protected_knx_project_ets6():
     reader = KNXProjExtractor(xknx_test_project_protected_ets6, "test")
     reader.extract()
     assert reader.get_project_id() == "P-04BF"
-    assert exists(reader.extraction_path + reader.get_project_id() + "/project.xml")
+    assert reader.extraction_path.joinpath(
+        reader.get_project_id(), "project.xml"
+    ).exists()
     reader.cleanup()
-    assert not exists(reader.extraction_path + "P-04BF/project.xml")
+    assert not reader.extraction_path.joinpath("P-04BF/project.xml").exists()
