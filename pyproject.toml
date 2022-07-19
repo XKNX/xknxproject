@@ -27,7 +27,6 @@ extension-pkg-whitelist = "netifaces"
 # locally-disabled - it spams too much
 # duplicate-code - unavoidable
 # cyclic-import - doesn't test if both import on load
-# abstract-class-little-used - prevents from setting right foundation
 # unused-argument - generic callbacks and setup methods create a lot of warnings
 # raise-missing-from - we use this in order to avoid too generic exception to the user
 # too-many-* - are not enforced for the sake of readability
@@ -39,7 +38,6 @@ extension-pkg-whitelist = "netifaces"
 # fixme - TODO
 disable = [
   "format",
-  "abstract-class-little-used",
   "abstract-method",
   "cyclic-import",
   "duplicate-code",

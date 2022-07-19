@@ -1,5 +1,6 @@
 """Hardware Loader."""
-import os
+from pathlib import Path
+from typing import Iterator
 from xml.dom.minidom import Document, parseString
 
 import aiofiles
@@ -13,7 +14,7 @@ from .loader import XMLLoader
 class HardwareLoader(XMLLoader):
     """Load hardware from KNX XML."""
 
-    async def load(self, extraction_path: str) -> list[Hardware]:
+    async def load(self, extraction_path: Path) -> list[Hardware]:
         """Load Hardware mappings."""
         hardware_list: list[Hardware] = []
         for file in self._get_relevant_files(extraction_path):
@@ -39,10 +40,6 @@ class HardwareLoader(XMLLoader):
         return Hardware(identifier, name, text)
 
     @staticmethod
-    def _get_relevant_files(extraction_path: str) -> list[str]:
+    def _get_relevant_files(extraction_path: Path) -> Iterator[Path]:
         """Get all manufactures Hardware.xml in given KNX ZIP file."""
-        return [
-            f"{directory[0]}/Hardware.xml"
-            for directory in os.walk(extraction_path)
-            if os.path.basename(directory[0]).startswith("M-")
-        ]
+        return extraction_path.glob("**/M-*/Hardware.xml")
