@@ -25,7 +25,9 @@ class ApplicationProgramLoader(XMLLoader):
         for application_program_file, devices in application_programs.items():
             com_object_mapping: dict[str, dict[str, str]] = {}
             com_objects: dict[str, ComObject] = {}
-            with (project_root_path / application_program_file).open(mode="rb") as application_xml:
+            with (project_root_path / application_program_file).open(
+                mode="rb"
+            ) as application_xml:
                 for elem in etree.parse(application_xml).iter():
                     if elem.tag.endswith("ComObject"):
                         com_objects[elem.attrib.get("Id", "")] = ComObject(

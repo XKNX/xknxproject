@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 
 from xknxproject import __version__
 from xknxproject.models import KNXProject
@@ -23,5 +24,5 @@ class KNXProj:
 
     def parse(self) -> KNXProject:
         """Parse the KNX project."""
-        with extract(self.archive_name, self.password) as knx_project_content:
+        with extract(Path(self.archive_name), self.password) as knx_project_content:
             return XMLParser(knx_project_content).parse()

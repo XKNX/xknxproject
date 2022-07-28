@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import base64
 from contextlib import contextmanager
-from io import TextIOWrapper
 from pathlib import Path
+from typing import IO, Iterator
 from zipfile import Path as ZipPath, ZipFile, ZipInfo
 
 from cryptography.hazmat.primitives import hashes
@@ -17,7 +17,8 @@ from xknxproject.exceptions import InvalidPasswordException, ProjectNotFoundExce
 
 class KNXProjContents:
     """Class for holding the contents of a KNXProj file."""
-    def __init__(self, root_zip: ZipFile, project_0: TextIOWrapper):
+
+    def __init__(self, root_zip: ZipFile, project_0: IO[bytes]):
         """Initialize a KNXProjContents."""
         self.project_0 = project_0
         self.root = root_zip
@@ -25,7 +26,10 @@ class KNXProjContents:
 
 
 @contextmanager
-def extract(archive_path: Path, password: str | None = None) -> KNXProjContents:
+def extract(
+    archive_path: Path, password: str | None = None
+) -> Iterator[KNXProjContents]:
+    """Provide the contents of a KNXProj file."""
     with ZipFile(archive_path, mode="r") as zip_archive:
         project_id = _get_project_id(zip_archive)
         try:
@@ -38,7 +42,9 @@ def extract(archive_path: Path, password: str | None = None) -> KNXProjContents:
             project_0.close()
         else:
             # ZipPath is not supported by pyzipper
-            with _extract_protected_project_file(zip_archive, protected_info, password) as project_zip:
+            with _extract_protected_project_file(
+                zip_archive, protected_info, password
+            ) as project_zip:
                 project_0 = project_zip.open("0.xml", mode="r")
                 yield KNXProjContents(zip_archive, project_0)
                 project_0.close()
@@ -54,7 +60,9 @@ def _get_project_id(zip_archive: ZipFile) -> str:
 
 
 @contextmanager
-def _extract_protected_project_file(archive_zip: ZipFile, info: ZipInfo, password: str | None) -> ZipFile:
+def _extract_protected_project_file(
+    archive_zip: ZipFile, info: ZipInfo, password: str | None
+) -> Iterator[ZipFile]:
     """Unzip a protected ETS5/6 project file."""
     if not password:
         raise InvalidPasswordException()
@@ -69,7 +77,9 @@ def _extract_protected_project_file(archive_zip: ZipFile, info: ZipInfo, passwor
             raise InvalidPasswordException from exception
     else:
         try:
-            project_archive = pyzipper.AESZipFile(archive_zip.open(info, mode="r"), mode="r")
+            project_archive = pyzipper.AESZipFile(
+                archive_zip.open(info, mode="r"), mode="r"
+            )
             project_archive.setpassword(_generate_ets6_zip_password(password))
             yield project_archive
         except Exception as exception:

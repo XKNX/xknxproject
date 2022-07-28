@@ -29,12 +29,13 @@ from xknxproject.models import (
     XMLGroupAddress,
     XMLSpace,
 )
+from xknxproject.zip.extractor import KNXProjContents
 
 
 class XMLParser:
     """Class that parses XMLs and returns useful information."""
 
-    def __init__(self, knx_proj_contents):
+    def __init__(self, knx_proj_contents: KNXProjContents) -> None:
         """Initialize the parser."""
         self.knx_proj_contents = knx_proj_contents
         self.hardware_loader: XMLLoader = HardwareLoader()

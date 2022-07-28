@@ -1,7 +1,6 @@
 """Hardware Loader."""
-from pathlib import Path
-from typing import Iterator
 from xml.dom.minidom import Document, parse
+from zipfile import Path
 
 from xknxproject.models import Hardware
 from xknxproject.util import attr, child_nodes
@@ -39,8 +38,16 @@ class HardwareLoader(XMLLoader):
         return Hardware(identifier, name, text)
 
     @staticmethod
-    def _get_relevant_files(project_contents: KNXProjContents) -> Iterator[Path]:
+    def _get_relevant_files(project_contents: KNXProjContents) -> list[Path]:
         """Get all manufactures Hardware.xml in given KNX ZIP file."""
         # M-*/Hardware.xml
-        manufacturer_dirs = [child for child in project_contents.root_path.iterdir() if child.is_dir() and child.name.startswith('M-')]
-        return [xml_file for manufacturer in manufacturer_dirs if (xml_file := (manufacturer / 'Hardware.xml')).exists()]
+        manufacturer_dirs = [
+            child
+            for child in project_contents.root_path.iterdir()
+            if child.is_dir() and child.name.startswith("M-")
+        ]
+        return [
+            xml_file
+            for manufacturer in manufacturer_dirs
+            if (xml_file := (manufacturer / "Hardware.xml")).exists()
+        ]
