@@ -6,7 +6,7 @@ import logging
 from xknxproject import __version__
 from xknxproject.models import KNXProject
 from xknxproject.xml import XMLParser
-from xknxproject.zip import KNXProjExtractor
+from xknxproject.zip.extractor import extract
 
 logger = logging.getLogger("xknxproject.log")
 
@@ -16,11 +16,12 @@ class KNXProj:
 
     def __init__(self, archive_name: str, archive_password: str | None = None):
         """Initialize a KNXProjParser."""
-        self.extractor = KNXProjExtractor(archive_name, archive_password)
-        self.parser = XMLParser(self.extractor)
+        self.archive_name = archive_name
+        self.password = archive_password
+
         self.version = __version__
 
-    async def parse(self) -> KNXProject:
+    def parse(self) -> KNXProject:
         """Parse the KNX project."""
-        with self.extractor:
-            return await self.parser.parse()
+        with extract(self.archive_name, self.password) as knx_project_content:
+            return XMLParser(knx_project_content).parse()

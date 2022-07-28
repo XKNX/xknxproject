@@ -1,8 +1,8 @@
 """Application Program Loader."""
-from pathlib import Path
 from typing import Any
+from zipfile import Path
 
-from lxml.etree import iterparse  # pylint: disable=no-name-in-module
+from lxml import etree
 
 from xknxproject.models import ComObject, DeviceInstance
 
@@ -17,18 +17,16 @@ class ApplicationProgramLoader(XMLLoader):
         """Initialize the ApplicationProgramLoader."""
         self.devices = devices
 
-    async def load(self, extraction_path: Path) -> list[Any]:
+    def load(self, project_root_path: Path) -> list[Any]:
         """Load Hardware mappings and assign to devices."""
         application_programs: dict[
             str, list[DeviceInstance]
         ] = self._get_optimized_application_program_struct()
-        for application_program, devices in application_programs.items():
+        for application_program_file, devices in application_programs.items():
             com_object_mapping: dict[str, dict[str, str]] = {}
             com_objects: dict[str, ComObject] = {}
-            with open(
-                extraction_path / application_program, mode="rb"
-            ) as application_xml:
-                for _, elem in iterparse(application_xml):
+            with (project_root_path / application_program_file).open(mode="rb") as application_xml:
+                for elem in etree.parse(application_xml).iter():
                     if elem.tag.endswith("ComObject"):
                         com_objects[elem.attrib.get("Id", "")] = ComObject(
                             identifier=elem.attrib.get("Id"),
@@ -58,7 +56,6 @@ class ApplicationProgramLoader(XMLLoader):
                             "DPTType": elem.attrib.get("DatapointType", None),
                             "Text": elem.attrib.get("Text", None),
                         }
-
                 for device in devices:
                     device.add_com_object_id(com_object_mapping)
                     device.add_com_objects(com_objects)
