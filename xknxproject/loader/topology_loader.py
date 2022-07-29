@@ -6,10 +6,8 @@ from xml.dom.minidom import Document
 from xknxproject.models import ComObjectInstanceRef, DeviceInstance, XMLArea, XMLLine
 from xknxproject.util import attr, child_nodes, parse_dpt_types
 
-from . import XMLLoader
 
-
-class TopologyLoader(XMLLoader):
+class TopologyLoader:
     """Load topology from KNX XML."""
 
     def load(self, project_dom: Document) -> list[XMLArea]:

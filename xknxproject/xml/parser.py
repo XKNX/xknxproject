@@ -10,7 +10,6 @@ from xknxproject.loader import (
     HardwareLoader,
     LocationLoader,
     TopologyLoader,
-    XMLLoader,
 )
 from xknxproject.models import (
     MANUFACTURERS,
@@ -38,9 +37,9 @@ class XMLParser:
     def __init__(self, knx_proj_contents: KNXProjContents) -> None:
         """Initialize the parser."""
         self.knx_proj_contents = knx_proj_contents
-        self.hardware_loader: XMLLoader = HardwareLoader()
-        self.group_address_loader: XMLLoader | None = None
-        self.topology_loader: XMLLoader | None = None
+        self.hardware_loader = HardwareLoader()
+        self.group_address_loader = GroupAddressLoader()
+        self.topology_loader = TopologyLoader()
         self.spaces: list[XMLSpace] = []
         self.group_addresses: list[XMLGroupAddress] = []
         self.hardware: list[Hardware] = []
@@ -131,9 +130,6 @@ class XMLParser:
     def load(self) -> None:
         """Load XML files."""
         project_dom: Document = parse(self.knx_proj_contents.project_0)
-
-        self.group_address_loader = GroupAddressLoader()
-        self.topology_loader = TopologyLoader()
 
         self.group_addresses = self.group_address_loader.load(project_dom)
         self.hardware = self.hardware_loader.load(self.knx_proj_contents)

@@ -4,10 +4,8 @@ from xml.dom.minidom import Document
 from xknxproject.models import DeviceInstance, SpaceType, XMLSpace
 from xknxproject.util import attr, child_nodes
 
-from .loader import XMLLoader
 
-
-class LocationLoader(XMLLoader):
+class LocationLoader:
     """Load location infos from KNX XML."""
 
     def __init__(self, devices: list[DeviceInstance]):

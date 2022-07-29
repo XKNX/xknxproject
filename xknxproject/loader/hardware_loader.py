@@ -6,10 +6,8 @@ from xknxproject.models import Hardware
 from xknxproject.util import attr, child_nodes
 from xknxproject.zip import KNXProjContents
 
-from .loader import XMLLoader
 
-
-class HardwareLoader(XMLLoader):
+class HardwareLoader:
     """Load hardware from KNX XML."""
 
     def load(self, project_contents: KNXProjContents) -> list[Hardware]:

@@ -5,12 +5,10 @@ from zipfile import Path
 from lxml import etree
 
 from xknxproject.models import ComObject, DeviceInstance
-
-from ..util import parse_dpt_types
-from .loader import XMLLoader
+from xknxproject.util import parse_dpt_types
 
 
-class ApplicationProgramLoader(XMLLoader):
+class ApplicationProgramLoader:
     """Load the application program from KNX XML."""
 
     def __init__(self, devices: list[DeviceInstance]):

@@ -4,10 +4,8 @@ from xml.dom.minidom import Document
 from xknxproject.models import XMLGroupAddress
 from xknxproject.util import attr
 
-from .loader import XMLLoader
 
-
-class GroupAddressLoader(XMLLoader):
+class GroupAddressLoader:
     """Load hardware from KNX XML."""
 
     def load(self, project_dom: Document) -> list[XMLGroupAddress]:
