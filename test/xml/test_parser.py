@@ -1,26 +1,18 @@
-import os
+from test import RESOURCES_PATH
 
 from xknxproject.xml.parser import XMLParser
-from xknxproject.zip import KNXProjExtractor
+from xknxproject.zip import extract
 
-xknx_test_project_protected_ets5 = os.path.join(
-    os.path.dirname(__file__), "../resources/xknx_test_project.knxproj"
-)
-
-xknx_test_project_ets5 = os.path.join(
-    os.path.dirname(__file__), "../resources/xknx_test_project_no_password.knxproj"
-)
-
-xknx_test_project_protected_ets6 = os.path.join(
-    os.path.dirname(__file__), "../resources/testprojekt-ets6.knxproj"
-)
+xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
+xknx_test_project_ets5 = RESOURCES_PATH / "xknx_test_project_no_password.knxproj"
+xknx_test_project_protected_ets6 = RESOURCES_PATH / "testprojekt-ets6.knxproj"
 
 
-async def test_parse_project_ets6():
+def test_parse_project_ets6():
     """Test parsing of group adresses."""
-    with KNXProjExtractor(xknx_test_project_protected_ets6, "test") as extractor:
-        parser = XMLParser(extractor)
-        await parser.parse()
+    with extract(xknx_test_project_protected_ets6, "test") as knx_project_contents:
+        parser = XMLParser(knx_project_contents)
+        parser.parse()
 
     assert len(parser.group_addresses) == 3
     assert parser.group_addresses[0].address == "0/1/0"
@@ -34,11 +26,11 @@ async def test_parse_project_ets6():
     assert len(parser.areas[1].lines[1].devices[1].com_object_instance_refs) == 2
 
 
-async def test_parse_project_ets5():
+def test_parse_project_ets5():
     """Test parsing of ETS5 project."""
-    with KNXProjExtractor(xknx_test_project_protected_ets5, "test") as extractor:
-        parser = XMLParser(extractor)
-        await parser.parse()
+    with extract(xknx_test_project_protected_ets5, "test") as knx_project_contents:
+        parser = XMLParser(knx_project_contents)
+        parser.parse()
 
     assert len(parser.group_addresses) == 7
     assert len(parser.group_addresses) == 7
