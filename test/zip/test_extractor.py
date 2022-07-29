@@ -51,5 +51,11 @@ def test_ets6_password_generation():
 def test_extract_protected_knx_project_ets6():
     """Test reading a KNX ETS6 project without an error."""
     with extract(xknx_test_project_protected_ets6, "test") as knx_project_contents:
-        assert knx_project_contents.root_path.joinpath("P-04BF/project.xml").exists()
-    assert not knx_project_contents.root_path.joinpath("P-04BF/project.xml").exists()
+        assert knx_project_contents.root.read("P-04BF.signature")
+        assert (
+            '<?xml version="1.0" encoding="utf-8"?>'
+            in knx_project_contents.project_0.readline().decode("utf-8")
+        )
+
+    with raises(ValueError):
+        knx_project_contents.root.read("P-04BF.signature")
