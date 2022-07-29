@@ -73,7 +73,7 @@ def _extract_protected_project_file(
             project_archive = ZipFile(archive_zip.open(info, mode="r"), mode="r")
             project_archive.setpassword(password.encode("utf-8"))
             yield project_archive
-        except Exception as exception:
+        except RuntimeError as exception:
             raise InvalidPasswordException from exception
     else:
         try:
@@ -82,7 +82,7 @@ def _extract_protected_project_file(
             )
             project_archive.setpassword(_generate_ets6_zip_password(password))
             yield project_archive
-        except Exception as exception:
+        except RuntimeError as exception:
             raise InvalidPasswordException from exception
 
 
