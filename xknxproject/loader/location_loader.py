@@ -1,37 +1,27 @@
 """Location Loader."""
-from pathlib import Path
-from xml.dom.minidom import Document, parseString
-
-import aiofiles
+from xml.dom.minidom import Document
 
 from xknxproject.models import DeviceInstance, SpaceType, XMLSpace
 from xknxproject.util import attr, child_nodes
 
-from .loader import XMLLoader
 
-
-class LocationLoader(XMLLoader):
+class LocationLoader:
     """Load location infos from KNX XML."""
 
-    def __init__(self, project_id: str, devices: list[DeviceInstance]):
+    def __init__(self, devices: list[DeviceInstance]):
         """Initialize the LocationLoader."""
-        self.project_id = project_id
         self.devices: dict[str, str] = {}
         for device in devices:
             self.devices[device.identifier] = device.individual_address
 
-    async def load(self, extraction_path: Path) -> list[XMLSpace]:
+    def load(self, project_dom: Document) -> list[XMLSpace]:
         """Load Location mappings."""
         spaces: list[XMLSpace] = []
-        async with aiofiles.open(
-            extraction_path / self.project_id / "0.xml", encoding="utf-8"
-        ) as project_xml:
-            dom: Document = parseString(await project_xml.read())
-            node: Document = dom.getElementsByTagName("Locations")[0]
+        node: Document = project_dom.getElementsByTagName("Locations")[0]
 
-            for sub_node in child_nodes(node):
-                if sub_node.nodeName == "Space":
-                    spaces.append(self.parse_space(sub_node))
+        for sub_node in child_nodes(node):
+            if sub_node.nodeName == "Space":
+                spaces.append(self.parse_space(sub_node))
 
         return spaces
 

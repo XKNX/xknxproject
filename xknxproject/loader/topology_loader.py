@@ -1,36 +1,23 @@
 """Group Address Loader."""
 from __future__ import annotations
 
-from pathlib import Path
-from xml.dom.minidom import Document, parseString
-
-import aiofiles
+from xml.dom.minidom import Document
 
 from xknxproject.models import ComObjectInstanceRef, DeviceInstance, XMLArea, XMLLine
 from xknxproject.util import attr, child_nodes, parse_dpt_types
 
-from . import XMLLoader
 
-
-class TopologyLoader(XMLLoader):
+class TopologyLoader:
     """Load topology from KNX XML."""
 
-    def __init__(self, project_id: str):
-        """Initialize the GroupAddressLoader."""
-        self.project_id = project_id
-
-    async def load(self, extraction_path: Path) -> list[XMLArea]:
+    def load(self, project_dom: Document) -> list[XMLArea]:
         """Load Hardware mappings."""
         areas: list[XMLArea] = []
-        async with aiofiles.open(
-            extraction_path / self.project_id / "0.xml", encoding="utf-8"
-        ) as project_xml:
-            dom: Document = parseString(await project_xml.read())
-            node: Document = dom.getElementsByTagName("Topology")[0]
+        node: Document = project_dom.getElementsByTagName("Topology")[0]
 
-            for sub_node in child_nodes(node):
-                if sub_node.nodeName == "Area":
-                    areas.append(TopologyLoader._create_area(sub_node))
+        for sub_node in child_nodes(node):
+            if sub_node.nodeName == "Area":
+                areas.append(TopologyLoader._create_area(sub_node))
 
         return areas
 

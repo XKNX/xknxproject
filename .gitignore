@@ -130,3 +130,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# OS and helper files
+.DS_Store
+/main.py
+/*.knxproj
+.vscode/

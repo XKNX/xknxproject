@@ -1,13 +1,13 @@
 """Conftest for xknxproject."""
 import json
-import os
+from test import STUBS_PATH
 
 from xknxproject.models import KNXProject
 
 
 def assert_stub(to_be_verified: KNXProject, stub_name: str) -> None:
     """Assert input matched loaded stub file."""
-    stub_path = os.path.join(os.path.dirname(__file__), "resources/stubs/" + stub_name)
+    stub_path = STUBS_PATH / stub_name
 
     with open(stub_path, encoding="utf-8") as stub_file:
         stub = json.load(stub_file)

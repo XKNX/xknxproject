@@ -1,4 +1,4 @@
 """Package for reading KNXProj ZIP."""
-from .extractor import KNXProjExtractor
+from .extractor import KNXProjContents, extract
 
-__all__ = ["KNXProjExtractor"]
+__all__ = ["KNXProjContents", "extract"]

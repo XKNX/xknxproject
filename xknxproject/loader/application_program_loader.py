@@ -1,34 +1,30 @@
 """Application Program Loader."""
-from pathlib import Path
 from typing import Any
+from zipfile import Path
 
-from lxml.etree import iterparse  # pylint: disable=no-name-in-module
+from lxml import etree
 
 from xknxproject.models import ComObject, DeviceInstance
-
-from ..util import parse_dpt_types
-from .loader import XMLLoader
+from xknxproject.util import parse_dpt_types
 
 
-class ApplicationProgramLoader(XMLLoader):
+class ApplicationProgramLoader:
     """Load the application program from KNX XML."""
 
     def __init__(self, devices: list[DeviceInstance]):
         """Initialize the ApplicationProgramLoader."""
         self.devices = devices
 
-    async def load(self, extraction_path: Path) -> list[Any]:
+    def load(self, project_root_path: Path) -> list[Any]:
         """Load Hardware mappings and assign to devices."""
-        application_programs: dict[
-            str, list[DeviceInstance]
-        ] = self._get_optimized_application_program_struct()
-        for application_program, devices in application_programs.items():
+        application_programs = self._get_optimized_application_program_struct(
+            project_root_path
+        )
+        for application_program_file_path, devices in application_programs.items():
             com_object_mapping: dict[str, dict[str, str]] = {}
             com_objects: dict[str, ComObject] = {}
-            with open(
-                extraction_path / application_program, mode="rb"
-            ) as application_xml:
-                for _, elem in iterparse(application_xml):
+            with application_program_file_path.open(mode="rb") as application_xml:
+                for _, elem in etree.iterparse(application_xml):
                     if elem.tag.endswith("ComObject"):
                         com_objects[elem.attrib.get("Id", "")] = ComObject(
                             identifier=elem.attrib.get("Id"),
@@ -58,6 +54,7 @@ class ApplicationProgramLoader(XMLLoader):
                             "DPTType": elem.attrib.get("DatapointType", None),
                             "Text": elem.attrib.get("Text", None),
                         }
+                    elem.clear()
 
                 for device in devices:
                     device.add_com_object_id(com_object_mapping)
@@ -67,11 +64,17 @@ class ApplicationProgramLoader(XMLLoader):
 
     def _get_optimized_application_program_struct(
         self,
-    ) -> dict[str, list[DeviceInstance]]:
+        project_root_path: Path,
+    ) -> dict[Path, list[DeviceInstance]]:
         """Do not load the same application program multiple times."""
-        result: dict[str, list[DeviceInstance]] = {}
+        _result: dict[str, list[DeviceInstance]] = {}
         for device in self.devices:
             if device.application_program_ref != "":
-                result.setdefault(device.application_program_xml(), []).append(device)
+                # zipfile.Path hashes are not equal, therefore we use str to create the struct
+                xml_file_name = device.application_program_xml()
+                _result.setdefault(xml_file_name, []).append(device)
 
-        return result
+        return {
+            (project_root_path / xml_file): devices
+            for xml_file, devices in _result.items()
+        }

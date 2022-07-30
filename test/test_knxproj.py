@@ -1,16 +1,13 @@
-import os
-
 from xknxproject import KNXProj
 
+from . import RESOURCES_PATH
 from .conftest import assert_stub
 
-xknx_test_project_protected_ets5 = os.path.join(
-    os.path.dirname(__file__), "resources/xknx_test_project.knxproj"
-)
+xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
 
 
-async def test_parse_project_ets5():
+def test_parse_project_ets5():
     """Test parsing of ETS5 project."""
     knxproj = KNXProj(xknx_test_project_protected_ets5, "test")
-    project = await knxproj.parse()
+    project = knxproj.parse()
     assert_stub(project, "xknx_test_project.json")

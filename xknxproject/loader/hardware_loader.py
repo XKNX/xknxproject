@@ -1,25 +1,21 @@
 """Hardware Loader."""
-from pathlib import Path
-from typing import Iterator
-from xml.dom.minidom import Document, parseString
-
-import aiofiles
+from xml.dom.minidom import Document, parse
+from zipfile import Path
 
 from xknxproject.models import Hardware
 from xknxproject.util import attr, child_nodes
+from xknxproject.zip import KNXProjContents
 
-from .loader import XMLLoader
 
-
-class HardwareLoader(XMLLoader):
+class HardwareLoader:
     """Load hardware from KNX XML."""
 
-    async def load(self, extraction_path: Path) -> list[Hardware]:
+    def load(self, project_contents: KNXProjContents) -> list[Hardware]:
         """Load Hardware mappings."""
         hardware_list: list[Hardware] = []
-        for file in self._get_relevant_files(extraction_path):
-            async with aiofiles.open(file, encoding="utf-8") as hardware_xml:
-                dom: Document = parseString(await hardware_xml.read())
+        for xml_file in self._get_relevant_files(project_contents):
+            with xml_file.open() as hardware_xml:
+                dom: Document = parse(hardware_xml)
                 node: Document = dom.getElementsByTagName("Manufacturer")[0]
 
                 for sub_node in child_nodes(node):
@@ -40,6 +36,16 @@ class HardwareLoader(XMLLoader):
         return Hardware(identifier, name, text)
 
     @staticmethod
-    def _get_relevant_files(extraction_path: Path) -> Iterator[Path]:
+    def _get_relevant_files(project_contents: KNXProjContents) -> list[Path]:
         """Get all manufactures Hardware.xml in given KNX ZIP file."""
-        return extraction_path.glob("**/M-*/Hardware.xml")
+        # M-*/Hardware.xml
+        manufacturer_dirs = [
+            child
+            for child in project_contents.root_path.iterdir()
+            if child.is_dir() and child.name.startswith("M-")
+        ]
+        return [
+            xml_file
+            for manufacturer in manufacturer_dirs
+            if (xml_file := (manufacturer / "Hardware.xml")).exists()
+        ]

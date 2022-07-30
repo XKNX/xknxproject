@@ -1,6 +1,8 @@
 """Parser logic for ETS XML files."""
 from __future__ import annotations
 
+from xml.dom.minidom import Document, parse
+
 from xknxproject.__version__ import __version__
 from xknxproject.loader import (
     ApplicationProgramLoader,
@@ -8,7 +10,6 @@ from xknxproject.loader import (
     HardwareLoader,
     LocationLoader,
     TopologyLoader,
-    XMLLoader,
 )
 from xknxproject.models import (
     MANUFACTURERS,
@@ -27,27 +28,27 @@ from xknxproject.models import (
     XMLGroupAddress,
     XMLSpace,
 )
-from xknxproject.zip import KNXProjExtractor
+from xknxproject.zip.extractor import KNXProjContents
 
 
 class XMLParser:
     """Class that parses XMLs and returns useful information."""
 
-    def __init__(self, extractor: KNXProjExtractor):
+    def __init__(self, knx_proj_contents: KNXProjContents) -> None:
         """Initialize the parser."""
-        self.extractor = extractor
-        self.hardware_loader: XMLLoader = HardwareLoader()
-        self.group_address_loader: XMLLoader | None = None
-        self.topology_loader: XMLLoader | None = None
+        self.knx_proj_contents = knx_proj_contents
+        self.hardware_loader = HardwareLoader()
+        self.group_address_loader = GroupAddressLoader()
+        self.topology_loader = TopologyLoader()
         self.spaces: list[XMLSpace] = []
         self.group_addresses: list[XMLGroupAddress] = []
         self.hardware: list[Hardware] = []
         self.areas: list[XMLArea] = []
         self.devices: list[DeviceInstance] = []
 
-    async def parse(self) -> KNXProject:
+    def parse(self) -> KNXProject:
         """Parse ETS files."""
-        await self.load()
+        self.load()
 
         devices_dict: dict[str, Device] = {}
         for device in self.devices:
@@ -126,26 +127,23 @@ class XMLParser:
 
         return Space(type=space.type.value, devices=space.devices, spaces=subspaces)
 
-    async def load(self) -> None:
+    def load(self) -> None:
         """Load XML files."""
-        self.group_address_loader = GroupAddressLoader(self.extractor.get_project_id())
-        self.topology_loader = TopologyLoader(self.extractor.get_project_id())
+        project_dom: Document = parse(self.knx_proj_contents.project_0)
 
-        self.group_addresses = await self.group_address_loader.load(
-            self.extractor.extraction_path
-        )
-        self.hardware = await self.hardware_loader.load(self.extractor.extraction_path)
-        self.areas = await self.topology_loader.load(self.extractor.extraction_path)
+        self.group_addresses = self.group_address_loader.load(project_dom)
+        self.hardware = self.hardware_loader.load(self.knx_proj_contents)
+        self.areas = self.topology_loader.load(project_dom)
 
         for area in self.areas:
             for line in area.lines:
                 self.devices.extend(line.devices)
 
         application_program_loader = ApplicationProgramLoader(self.devices)
-        await application_program_loader.load(self.extractor.extraction_path)
+        application_program_loader.load(self.knx_proj_contents.root_path)
 
-        location_loader = LocationLoader(self.extractor.get_project_id(), self.devices)
-        self.spaces = await location_loader.load(self.extractor.extraction_path)
+        location_loader = LocationLoader(self.devices)
+        self.spaces = location_loader.load(project_dom)
 
         for hardware in self.hardware:
             for device in self.devices:
