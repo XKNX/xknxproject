@@ -101,11 +101,7 @@ class DeviceInstance:
         """Add com object id to com object refs."""
         for ref in self.com_object_instance_refs:
             ref.com_object_ref = mapping.get(
-                self.manufacturer
-                + "_"
-                + self.application_program_ref
-                + "_"
-                + ref.ref_id,
+                f"{self.manufacturer}_{self.application_program_ref}_{ref.ref_id}",
                 None,
             )
 
@@ -123,12 +119,8 @@ class DeviceInstance:
     def application_program_xml(self) -> str:
         """Obtain the file name to the application program XML."""
         return (
-            self.manufacturer
-            + "/"
-            + self.manufacturer
-            + "_"
-            + self.application_program_ref
-            + ".xml"
+            f"{self.manufacturer}/"
+            f"{self.manufacturer}_{self.application_program_ref}.xml"
         )
 
 
