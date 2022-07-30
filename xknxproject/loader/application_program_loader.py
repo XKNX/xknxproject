@@ -17,16 +17,15 @@ class ApplicationProgramLoader:
 
     def load(self, project_root_path: Path) -> list[Any]:
         """Load Hardware mappings and assign to devices."""
-        application_programs: dict[
-            str, list[DeviceInstance]
-        ] = self._get_optimized_application_program_struct()
-        for application_program_file, devices in application_programs.items():
+        application_programs = self._get_optimized_application_program_struct(
+            project_root_path
+        )
+        print(f"{len(application_programs)} application programs found.")
+        for application_program_file_path, devices in application_programs.items():
             com_object_mapping: dict[str, dict[str, str]] = {}
             com_objects: dict[str, ComObject] = {}
-            with (project_root_path / application_program_file).open(
-                mode="rb"
-            ) as application_xml:
-                for elem in etree.parse(application_xml).iter():
+            with application_program_file_path.open(mode="rb") as application_xml:
+                for _, elem in etree.iterparse(application_xml):
                     if elem.tag.endswith("ComObject"):
                         com_objects[elem.attrib.get("Id", "")] = ComObject(
                             identifier=elem.attrib.get("Id"),
@@ -56,6 +55,8 @@ class ApplicationProgramLoader:
                             "DPTType": elem.attrib.get("DatapointType", None),
                             "Text": elem.attrib.get("Text", None),
                         }
+                    elem.clear()
+
                 for device in devices:
                     device.add_com_object_id(com_object_mapping)
                     device.add_com_objects(com_objects)
@@ -64,11 +65,17 @@ class ApplicationProgramLoader:
 
     def _get_optimized_application_program_struct(
         self,
-    ) -> dict[str, list[DeviceInstance]]:
+        project_root_path: Path,
+    ) -> dict[Path, list[DeviceInstance]]:
         """Do not load the same application program multiple times."""
-        result: dict[str, list[DeviceInstance]] = {}
+        _result: dict[str, list[DeviceInstance]] = {}
         for device in self.devices:
             if device.application_program_ref != "":
-                result.setdefault(device.application_program_xml(), []).append(device)
+                # zipfile.Path hashes are not equal, therefore we use str to create the struct
+                xml_file_name = device.application_program_xml()
+                _result.setdefault(xml_file_name, []).append(device)
 
-        return result
+        return {
+            (project_root_path / xml_file): devices
+            for xml_file, devices in _result.items()
+        }
