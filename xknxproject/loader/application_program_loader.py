@@ -20,7 +20,6 @@ class ApplicationProgramLoader:
         application_programs = self._get_optimized_application_program_struct(
             project_root_path
         )
-        print(f"{len(application_programs)} application programs found.")
         for application_program_file_path, devices in application_programs.items():
             com_object_mapping: dict[str, dict[str, str]] = {}
             com_objects: dict[str, ComObject] = {}
