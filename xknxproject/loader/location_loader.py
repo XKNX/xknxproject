@@ -17,11 +17,11 @@ class LocationLoader:
     def load(self, project_dom: Document) -> list[XMLSpace]:
         """Load Location mappings."""
         spaces: list[XMLSpace] = []
-        node: Document = project_dom.getElementsByTagName("Locations")[0]
-
-        for sub_node in child_nodes(node):
-            if sub_node.nodeName == "Space":
-                spaces.append(self.parse_space(sub_node))
+        node_list = project_dom.getElementsByTagName("Locations")
+        if node_list:
+            for sub_node in child_nodes(node_list[0]):
+                if sub_node.nodeName == "Space":
+                    spaces.append(self.parse_space(sub_node))
 
         return spaces
 
