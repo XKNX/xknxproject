@@ -2,6 +2,7 @@ from test import RESOURCES_PATH
 
 from pytest import raises
 
+from xknxproject.exceptions import InvalidPasswordException
 from xknxproject.zip import extract
 from xknxproject.zip.extractor import _generate_ets6_zip_password
 
@@ -59,3 +60,17 @@ def test_extract_protected_knx_project_ets6():
 
     with raises(ValueError):
         knx_project_contents.root.read("P-04BF.signature")
+
+
+def test_wrong_password_ets5():
+    """Test reading a KNX ETS5 project with wrong password."""
+    with raises(InvalidPasswordException):
+        with extract(xknx_test_project_protected_ets5, "wrong"):
+            pass
+
+
+def test_wrong_password_ets6():
+    """Test reading a KNX ETS6 project with wrong password."""
+    with raises(InvalidPasswordException):
+        with extract(xknx_test_project_protected_ets6, "wrong"):
+            pass
