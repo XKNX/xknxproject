@@ -33,22 +33,28 @@ def extract(
     """Provide the contents of a KNXProj file."""
     with ZipFile(archive_path, mode="r") as zip_archive:
         project_id = _get_project_id(zip_archive)
+        password_protected: bool
         try:
             protected_info = zip_archive.getinfo(name=project_id + ".zip")
         except KeyError:
-            # Unprotected project
+            password_protected = False
+        else:
+            password_protected = True
+
+        if not password_protected:
             project = ZipPath(zip_archive, at=project_id)
             project_0 = (project / "0.xml").open(mode="r")
             yield KNXProjContents(zip_archive, project_0)
             project_0.close()
-        else:
+            return
+        # Password protected project
+        with _extract_protected_project_file(
+            zip_archive, protected_info, password
+        ) as project_zip:
             # ZipPath is not supported by pyzipper
-            with _extract_protected_project_file(
-                zip_archive, protected_info, password
-            ) as project_zip:
-                project_0 = project_zip.open("0.xml", mode="r")
-                yield KNXProjContents(zip_archive, project_0)
-                project_0.close()
+            project_0 = project_zip.open("0.xml", mode="r")
+            yield KNXProjContents(zip_archive, project_0)
+            project_0.close()
 
 
 def _get_project_id(zip_archive: ZipFile) -> str:
