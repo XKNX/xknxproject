@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 import base64
+from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import IO, Iterator
+from typing import IO
 from zipfile import Path as ZipPath, ZipFile, ZipInfo
 
 from cryptography.hazmat.primitives import hashes
