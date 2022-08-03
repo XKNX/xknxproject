@@ -1,8 +1,6 @@
 """Parser logic for ETS XML files."""
 from __future__ import annotations
 
-from xml.dom.minidom import Document, parse
-
 from xknxproject.__version__ import __version__
 from xknxproject.loader import (
     ApplicationProgramLoader,
@@ -129,11 +127,9 @@ class XMLParser:
 
     def load(self) -> None:
         """Load XML files."""
-        project_dom: Document = parse(self.knx_proj_contents.project_0)
-
-        self.group_addresses = self.group_address_loader.load(project_dom)
+        self.group_addresses = self.group_address_loader.load(self.knx_proj_contents)
         self.hardware = self.hardware_loader.load(self.knx_proj_contents)
-        self.areas = self.topology_loader.load(project_dom)
+        self.areas = self.topology_loader.load(self.knx_proj_contents)
 
         for area in self.areas:
             for line in area.lines:
@@ -143,7 +139,7 @@ class XMLParser:
         application_program_loader.load(self.knx_proj_contents.root_path)
 
         location_loader = LocationLoader(self.devices)
-        self.spaces = location_loader.load(project_dom)
+        self.spaces = location_loader.load(self.knx_proj_contents)
 
         for hardware in self.hardware:
             for device in self.devices:

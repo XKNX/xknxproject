@@ -1,25 +1,28 @@
 """Group Address Loader."""
-from xml.dom.minidom import Document
+from lxml import etree
 
 from xknxproject.models import XMLGroupAddress
-from xknxproject.util import attr
+from xknxproject.zip import KNXProjContents
 
 
 class GroupAddressLoader:
-    """Load hardware from KNX XML."""
+    """Load GroupAddress info from KNX XML."""
 
-    def load(self, project_dom: Document) -> list[XMLGroupAddress]:
-        """Load Hardware mappings."""
+    def load(self, knx_proj_contents: KNXProjContents) -> list[XMLGroupAddress]:
+        """Load GroupAddress mappings."""
         group_address_list: list[XMLGroupAddress] = []
-        nodes: list[Document] = project_dom.getElementsByTagName("GroupAddress")
-        for node in nodes:
-            group_address_list.append(
-                XMLGroupAddress(
-                    name=attr(node.attributes.get("Name")),
-                    identifier=attr(node.attributes.get("Id")),
-                    address=attr(node.attributes.get("Address")),
-                    dpt_type=attr(node.attributes.get("DatapointType")),
-                )
-            )
+
+        with knx_proj_contents.open_project_0() as project_file:
+            for _, elem in etree.iterparse(project_file):
+                if elem.tag.endswith("GroupAddress"):
+                    group_address_list.append(
+                        XMLGroupAddress(
+                            name=elem.get("Name"),
+                            identifier=elem.get("Id"),
+                            address=elem.get("Address"),
+                            dpt_type=elem.get("DatapointType"),
+                        )
+                    )
+                elem.clear()
 
         return group_address_list

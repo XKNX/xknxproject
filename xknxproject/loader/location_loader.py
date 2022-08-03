@@ -1,8 +1,8 @@
 """Location Loader."""
-from xml.dom.minidom import Document
+from lxml import etree
 
 from xknxproject.models import DeviceInstance, SpaceType, XMLSpace
-from xknxproject.util import attr, child_nodes
+from xknxproject.zip import KNXProjContents
 
 
 class LocationLoader:
@@ -10,38 +10,34 @@ class LocationLoader:
 
     def __init__(self, devices: list[DeviceInstance]):
         """Initialize the LocationLoader."""
-        self.devices: dict[str, str] = {}
-        for device in devices:
-            self.devices[device.identifier] = device.individual_address
+        self.devices: dict[str, str] = {
+            device.identifier: device.individual_address for device in devices
+        }
 
-    def load(self, project_dom: Document) -> list[XMLSpace]:
+    def load(self, knx_proj_contents: KNXProjContents) -> list[XMLSpace]:
         """Load Location mappings."""
         spaces: list[XMLSpace] = []
-        node_list = project_dom.getElementsByTagName("Locations")
-        if node_list:
-            for sub_node in child_nodes(node_list[0]):
-                if sub_node.nodeName == "Space":
-                    spaces.append(self.parse_space(sub_node))
+
+        with knx_proj_contents.open_project_0() as project_file:
+            for _, elem in etree.iterparse(project_file, tag="{*}Locations"):
+                for space in elem.findall("{*}Space"):
+                    spaces.append(self.parse_space(space))
+                elem.clear()
 
         return spaces
 
-    def parse_space(self, node: Document) -> XMLSpace:
+    def parse_space(self, node: etree.Element) -> XMLSpace:
         """Parse a space from the document."""
-        attrs = node.attributes
-        name: str = attr(attrs.get("Name"))
-        space_type: SpaceType = SpaceType(attr(attrs.get("Type")))
+        name: str = node.get("Name")
+        space_type = SpaceType(node.get("Type"))
 
         space: XMLSpace = XMLSpace([], space_type, name, [])
-
-        for sub_node in child_nodes(node):
-            if sub_node.nodeName == "Space":
+        for sub_node in node:
+            if sub_node.tag.endswith("Space"):
                 # recursively call parse space since this can be nested for an unbound time in the XSD
                 space.spaces.append(self.parse_space(sub_node))
-            if sub_node.nodeName == "DeviceInstanceRef":
-                individual_address = self.devices.get(
-                    sub_node.attributes.get("RefId").value
-                )
-                if individual_address:
+            elif sub_node.tag.endswith("DeviceInstanceRef"):
+                if individual_address := self.devices.get(sub_node.get("RefId")):
                     space.devices.append(individual_address)
 
         return space

@@ -24,10 +24,10 @@ def test_extract_protected_knx_project_ets5():
     """Test reading a KNX ETS5 project without an error."""
     with extract(xknx_test_project_protected_ets5, "test") as knx_project_contents:
         assert knx_project_contents.root.read("P-0242.signature")
-        assert (
-            '<?xml version="1.0" encoding="utf-8"?>'
-            in knx_project_contents.project_0.readline().decode("utf-8")
-        )
+        with knx_project_contents.open_project_0() as proj_0:
+            assert '<?xml version="1.0" encoding="utf-8"?>' in proj_0.readline().decode(
+                "utf-8"
+            )
 
     with raises(ValueError):
         knx_project_contents.root.read("P-0242.signature")
@@ -53,10 +53,10 @@ def test_extract_protected_knx_project_ets6():
     """Test reading a KNX ETS6 project without an error."""
     with extract(xknx_test_project_protected_ets6, "test") as knx_project_contents:
         assert knx_project_contents.root.read("P-04BF.signature")
-        assert (
-            '<?xml version="1.0" encoding="utf-8"?>'
-            in knx_project_contents.project_0.readline().decode("utf-8")
-        )
+        with knx_project_contents.open_project_0() as proj_0:
+            assert '<?xml version="1.0" encoding="utf-8"?>' in proj_0.readline().decode(
+                "utf-8"
+            )
 
     with raises(ValueError):
         knx_project_contents.root.read("P-04BF.signature")
@@ -65,12 +65,14 @@ def test_extract_protected_knx_project_ets6():
 def test_wrong_password_ets5():
     """Test reading a KNX ETS5 project with wrong password."""
     with raises(InvalidPasswordException):
-        with extract(xknx_test_project_protected_ets5, "wrong"):
-            pass
+        with extract(xknx_test_project_protected_ets5, "wrong") as knx_project_contents:
+            with knx_project_contents.open_project_0():
+                pass
 
 
 def test_wrong_password_ets6():
     """Test reading a KNX ETS6 project with wrong password."""
     with raises(InvalidPasswordException):
-        with extract(xknx_test_project_protected_ets6, "wrong"):
-            pass
+        with extract(xknx_test_project_protected_ets6, "wrong") as knx_project_contents:
+            with knx_project_contents.open_project_0():
+                pass

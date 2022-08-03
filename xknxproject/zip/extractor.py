@@ -19,11 +19,18 @@ from xknxproject.exceptions import InvalidPasswordException, ProjectNotFoundExce
 class KNXProjContents:
     """Class for holding the contents of a KNXProj file."""
 
-    def __init__(self, root_zip: ZipFile, project_0: IO[bytes]):
+    def __init__(
+        self, root_zip: ZipFile, project_0_archive: ZipFile, project_0_name: str
+    ):
         """Initialize a KNXProjContents."""
-        self.project_0 = project_0
+        self._project_0_archive = project_0_archive
+        self._project_0_name = project_0_name
         self.root = root_zip
         self.root_path = ZipPath(root_zip)
+
+    def open_project_0(self) -> IO[bytes]:
+        """Open the project 0 archive."""
+        return self._project_0_archive.open(self._project_0_name, mode="r")
 
 
 @contextmanager
@@ -42,19 +49,16 @@ def extract(
             password_protected = True
 
         if not password_protected:
-            project = ZipPath(zip_archive, at=project_id)
-            project_0 = (project / "0.xml").open(mode="r")
-            yield KNXProjContents(zip_archive, project_0)
-            project_0.close()
+            project_0_name = f"{project_id}/0.xml"
+            yield KNXProjContents(zip_archive, zip_archive, project_0_name)
             return
         # Password protected project
         with _extract_protected_project_file(
             zip_archive, protected_info, password
         ) as project_zip:
-            # ZipPath is not supported by pyzipper
-            project_0 = project_zip.open("0.xml", mode="r")
-            yield KNXProjContents(zip_archive, project_0)
-            project_0.close()
+            # ZipPath is not supported by pyzipper thus we use string name
+            project_0_name = "0.xml"
+            yield KNXProjContents(zip_archive, project_zip, project_0_name)
 
 
 def _get_project_id(zip_archive: ZipFile) -> str:

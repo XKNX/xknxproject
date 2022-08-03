@@ -136,3 +136,4 @@ dmypy.json
 /main.py
 /*.knxproj
 .vscode/
+fil-result/
