@@ -1,8 +1,4 @@
 """XML utilities."""
-from __future__ import annotations
-
-from typing import Any
-
 from xknxproject.const import MAIN_AND_SUB_DPT, MAIN_DPT
 
 
