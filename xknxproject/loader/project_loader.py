@@ -1,25 +1,84 @@
-"""Group Address Loader."""
+"""Project file loader."""
 from __future__ import annotations
+
+from copy import copy
 
 from lxml import etree
 
-from xknxproject.models import ComObjectInstanceRef, DeviceInstance, XMLArea, XMLLine
+from xknxproject.models import (
+    ComObjectInstanceRef,
+    DeviceInstance,
+    SpaceType,
+    XMLArea,
+    XMLGroupAddress,
+    XMLLine,
+    XMLSpace,
+)
 from xknxproject.util import parse_dpt_types
 from xknxproject.zip import KNXProjContents
 
 
-class TopologyLoader:
+class ProjectLoader:
+    """Load Project file."""
+
+    @staticmethod
+    def load(
+        knx_proj_contents: KNXProjContents,
+    ) -> tuple[
+        list[XMLGroupAddress], list[XMLArea], list[DeviceInstance], list[XMLSpace]
+    ]:
+        """Load topology mappings."""
+        areas: list[XMLArea] = []
+        group_address_list: list[XMLGroupAddress] = []
+
+        with knx_proj_contents.open_project_0() as project_file:
+            for _, elem in etree.iterparse(
+                project_file, tag=("{*}GroupAddress", "{*}Topology", "{*}Locations")
+            ):
+                if elem.tag.endswith("GroupAddress"):
+                    group_address_list.append(
+                        _GroupAddressLoader.load(group_address_element=elem)
+                    )
+                elif elem.tag.endswith("Topology"):
+                    areas = _TopologyLoader.load(topology_element=elem)
+                elif elem.tag.endswith("Locations"):
+                    _topology_element = copy(elem)
+                elem.clear()
+
+        devices = []
+        for area in areas:
+            for line in area.lines:
+                devices.extend(line.devices)
+        spaces = _LocationLoader(devices).load(topology_element=_topology_element)
+
+        return group_address_list, areas, devices, spaces
+
+
+class _GroupAddressLoader:
+    """Load GroupAddress info from KNX XML."""
+
+    @staticmethod
+    def load(group_address_element: etree.Element) -> XMLGroupAddress:
+        """Load GroupAddress mappings."""
+
+        return XMLGroupAddress(
+            name=group_address_element.get("Name"),
+            identifier=group_address_element.get("Id"),
+            address=group_address_element.get("Address"),
+            dpt_type=group_address_element.get("DatapointType"),
+        )
+
+
+class _TopologyLoader:
     """Load topology from KNX XML."""
 
-    def load(self, knx_proj_contents: KNXProjContents) -> list[XMLArea]:
+    @staticmethod
+    def load(topology_element: etree.Element) -> list[XMLArea]:
         """Load topology mappings."""
         areas: list[XMLArea] = []
 
-        with knx_proj_contents.open_project_0() as project_file:
-            for _, elem in etree.iterparse(project_file, tag="{*}Topology"):
-                for area in elem.findall("{*}Area"):
-                    areas.append(TopologyLoader._create_area(area))
-                elem.clear()
+        for area in topology_element.findall("{*}Area"):
+            areas.append(_TopologyLoader._create_area(area))
 
         return areas
 
@@ -32,7 +91,7 @@ class TopologyLoader:
         area: XMLArea = XMLArea(address, name, description, [])
 
         for line_element in area_element:
-            area.lines.append(TopologyLoader._create_line(line_element, area))
+            area.lines.append(_TopologyLoader._create_line(line_element, area))
 
         return area
 
@@ -50,7 +109,7 @@ class TopologyLoader:
         line: XMLLine = XMLLine(address, description, name, medium_type, [], area)
 
         for device_element in line_element.iterdescendants(tag="{*}DeviceInstance"):
-            if device := TopologyLoader._create_device(device_element, line):
+            if device := _TopologyLoader._create_device(device_element, line):
                 line.devices.append(device)
 
         return line
@@ -87,7 +146,7 @@ class TopologyLoader:
                     device.add_additional_address(address_node.get("Address"))
             if sub_node.tag.endswith("ComObjectInstanceRefs"):
                 for com_object in sub_node:
-                    if instance := TopologyLoader._create_com_object_instance(
+                    if instance := _TopologyLoader._create_com_object_instance(
                         com_object
                     ):
                         device.com_object_instance_refs.append(instance)
@@ -117,3 +176,35 @@ class TopologyLoader:
         return ComObjectInstanceRef(
             ref_id, text, links.split(" "), parse_dpt_types(dpt_type.split(" "))
         )
+
+
+class _LocationLoader:
+    """Load location infos from KNX XML."""
+
+    def __init__(self, devices: list[DeviceInstance]):
+        """Initialize the LocationLoader."""
+        self.devices: dict[str, str] = {
+            device.identifier: device.individual_address for device in devices
+        }
+
+    def load(self, topology_element: etree.Element) -> list[XMLSpace]:
+        """Load Location mappings."""
+        return [
+            self.parse_space(space) for space in topology_element.findall("{*}Space")
+        ]
+
+    def parse_space(self, node: etree.Element) -> XMLSpace:
+        """Parse a space from the document."""
+        name: str = node.get("Name")
+        space_type = SpaceType(node.get("Type"))
+        space: XMLSpace = XMLSpace([], space_type, name, [])
+
+        for sub_node in node:
+            if sub_node.tag.endswith("Space"):
+                # recursively call parse space since this can be nested for an unbound time in the XSD
+                space.spaces.append(self.parse_space(sub_node))
+            elif sub_node.tag.endswith("DeviceInstanceRef"):
+                if individual_address := self.devices.get(sub_node.get("RefId")):
+                    space.devices.append(individual_address)
+
+        return space
