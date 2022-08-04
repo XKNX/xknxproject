@@ -1,9 +1,9 @@
 """Hardware Loader."""
-from xml.dom.minidom import Document, parse
 from zipfile import Path
 
+from lxml import etree
+
 from xknxproject.models import Hardware
-from xknxproject.util import attr, child_nodes
 from xknxproject.zip import KNXProjContents
 
 
@@ -13,25 +13,25 @@ class HardwareLoader:
     def load(self, project_contents: KNXProjContents) -> list[Hardware]:
         """Load Hardware mappings."""
         hardware_list: list[Hardware] = []
-        for xml_file in self._get_relevant_files(project_contents):
-            with xml_file.open() as hardware_xml:
-                dom: Document = parse(hardware_xml)
-                node: Document = dom.getElementsByTagName("Manufacturer")[0]
 
-                for sub_node in child_nodes(node):
-                    if sub_node.nodeName == "Hardware":
-                        for hardware in child_nodes(sub_node):
-                            hardware_list.append(self.parse_hardware_mapping(hardware))
+        for xml_file in HardwareLoader._get_relevant_files(project_contents):
+            with xml_file.open(mode="rb") as hardware_xml:
+                for _, elem in etree.iterparse(hardware_xml, tag="{*}Manufacturer"):
+                    for hardware in elem.find("{*}Hardware"):
+                        hardware_list.append(
+                            HardwareLoader.parse_hardware_element(hardware)
+                        )
+                    elem.clear()
 
         return hardware_list
 
     @staticmethod
-    def parse_hardware_mapping(hardware_node: Document) -> Hardware:
+    def parse_hardware_element(hardware_node: etree.Element) -> Hardware:
         """Parse hardware mapping."""
-        identifier: str = attr(hardware_node.attributes.get("Id"))
-        name: str = attr(hardware_node.attributes.get("Name"))
-        product_node = hardware_node.getElementsByTagName("Product")[0]
-        text: str = attr(product_node.attributes.get("Text"))
+        identifier: str = hardware_node.get("Id")
+        name: str = hardware_node.get("Name")
+        _product_node = hardware_node.find(".//{*}Product")
+        text: str = _product_node.get("Text") if _product_node is not None else ""
 
         return Hardware(identifier, name, text)
 

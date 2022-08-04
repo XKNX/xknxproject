@@ -26,33 +26,29 @@ class ApplicationProgramLoader:
             with application_program_file_path.open(mode="rb") as application_xml:
                 for _, elem in etree.iterparse(application_xml):
                     if elem.tag.endswith("ComObject"):
-                        com_objects[elem.attrib.get("Id", "")] = ComObject(
-                            identifier=elem.attrib.get("Id"),
-                            name=elem.attrib.get("Name"),
-                            text=elem.attrib.get("Text"),
-                            object_size=elem.attrib.get("ObjectSize"),
-                            read_flag=elem.attrib.get("ReadFlag", False) == "Enabled",
-                            write_flag=elem.attrib.get("WriteFlag", False) == "Enabled",
-                            communication_flag=elem.attrib.get(
-                                "CommunicationFlag", False
-                            )
+                        com_objects[elem.get("Id", "")] = ComObject(
+                            identifier=elem.get("Id"),
+                            name=elem.get("Name"),
+                            text=elem.get("Text"),
+                            object_size=elem.get("ObjectSize"),
+                            read_flag=elem.get("ReadFlag", False) == "Enabled",
+                            write_flag=elem.get("WriteFlag", False) == "Enabled",
+                            communication_flag=elem.get("CommunicationFlag", False)
                             == "Enabled",
-                            transmit_flag=elem.attrib.get("TransmitFlag", False)
-                            == "Enabled",
-                            update_flag=elem.attrib.get("UpdateFlag", False)
-                            == "Enabled",
-                            read_on_init_flag=elem.attrib.get("ReadOnInitFlag", False)
+                            transmit_flag=elem.get("TransmitFlag", False) == "Enabled",
+                            update_flag=elem.get("UpdateFlag", False) == "Enabled",
+                            read_on_init_flag=elem.get("ReadOnInitFlag", False)
                             == "Enabled",
                             datapoint_type=parse_dpt_types(
-                                elem.attrib.get("DatapointType", "").split(" ")
+                                elem.get("DatapointType", "").split(" ")
                             ),
                         )
                     if elem.tag.endswith("ComObjectRef"):
-                        com_object_mapping[elem.attrib["Id"]] = {
-                            "RefId": elem.attrib["RefId"],
-                            "FunctionText": elem.attrib.get("FunctionText", None),
-                            "DPTType": elem.attrib.get("DatapointType", None),
-                            "Text": elem.attrib.get("Text", None),
+                        com_object_mapping[elem.get("Id")] = {
+                            "RefId": elem.get("RefId"),
+                            "FunctionText": elem.get("FunctionText", None),
+                            "DPTType": elem.get("DatapointType", None),
+                            "Text": elem.get("Text", None),
                         }
                     elem.clear()
 
