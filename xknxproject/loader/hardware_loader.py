@@ -10,7 +10,8 @@ from xknxproject.zip import KNXProjContents
 class HardwareLoader:
     """Load hardware from KNX XML."""
 
-    def load(self, project_contents: KNXProjContents) -> list[Hardware]:
+    @staticmethod
+    def load(project_contents: KNXProjContents) -> list[Hardware]:
         """Load Hardware mappings."""
         hardware_list: list[Hardware] = []
 
