@@ -11,18 +11,17 @@ class HardwareLoader:
     """Load hardware from KNX XML."""
 
     @staticmethod
-    def load(project_contents: KNXProjContents) -> list[Hardware]:
+    def load(hardware_file: Path) -> list[Hardware]:
         """Load Hardware mappings."""
         hardware_list: list[Hardware] = []
 
-        for xml_file in HardwareLoader._get_relevant_files(project_contents):
-            with xml_file.open(mode="rb") as hardware_xml:
-                for _, elem in etree.iterparse(hardware_xml, tag="{*}Manufacturer"):
-                    for hardware in elem.find("{*}Hardware"):
-                        hardware_list.append(
-                            HardwareLoader.parse_hardware_element(hardware)
-                        )
-                    elem.clear()
+        with hardware_file.open(mode="rb") as hardware_xml:
+            for _, elem in etree.iterparse(hardware_xml, tag="{*}Manufacturer"):
+                for hardware in elem.find("{*}Hardware"):
+                    hardware_list.append(
+                        HardwareLoader.parse_hardware_element(hardware)
+                    )
+                elem.clear()
 
         return hardware_list
 
@@ -37,7 +36,7 @@ class HardwareLoader:
         return Hardware(identifier, name, text)
 
     @staticmethod
-    def _get_relevant_files(project_contents: KNXProjContents) -> list[Path]:
+    def get_hardware_files(project_contents: KNXProjContents) -> list[Path]:
         """Get all manufactures Hardware.xml in given KNX ZIP file."""
         # M-*/Hardware.xml
         manufacturer_dirs = [

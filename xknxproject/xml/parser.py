@@ -124,7 +124,14 @@ class XMLParser:
             self.devices,
             self.spaces,
         ) = ProjectLoader.load(self.knx_proj_contents)
-        self.hardware = HardwareLoader.load(self.knx_proj_contents)
+
+        for _hardware in [
+            HardwareLoader.load(hardware_file)
+            for hardware_file in HardwareLoader.get_hardware_files(
+                self.knx_proj_contents
+            )
+        ]:
+            self.hardware.extend(_hardware)
 
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(
