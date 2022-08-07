@@ -20,7 +20,6 @@ warn_unreachable = true
 ignore = "test"
 persistent = "no"
 reports = "no"
-extension-pkg-whitelist = "lxml"
 
 [tool.pylint.message_control]
 # Reasons disabled:

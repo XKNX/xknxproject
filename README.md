@@ -24,9 +24,6 @@ Caution: Loading a middle-sized project with this tool takes about 1.5 seconds. 
 
 `pip install xknxproject`
 
-In order to parse XML and to overcome the performance issues that parsing application programs with over 800k lines of XML has we use `lxml`.
-`lxml` requires libxml2 to be installed in the underlying system. You can read more on their documentation on this topic.
-
 ## Usage
 
 ```python

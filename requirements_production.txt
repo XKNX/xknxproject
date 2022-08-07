@@ -1,3 +1,2 @@
 cryptography==37.0.4
 pyzipper==0.3.6
-lxml==4.9.1

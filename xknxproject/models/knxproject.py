@@ -1,7 +1,7 @@
 """Define output type for parsed KNX project."""
 from __future__ import annotations
 
-from typing import Any, Optional, TypedDict
+from typing import Any, TypedDict
 
 
 class Flags(TypedDict):
