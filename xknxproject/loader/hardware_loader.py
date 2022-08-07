@@ -1,7 +1,6 @@
 """Hardware Loader."""
+from xml.etree import ElementTree
 from zipfile import Path
-
-from lxml import etree
 
 from xknxproject.models import Hardware
 from xknxproject.zip import KNXProjContents
@@ -16,22 +15,19 @@ class HardwareLoader:
         hardware_list: list[Hardware] = []
 
         with hardware_file.open(mode="rb") as hardware_xml:
-            for _, elem in etree.iterparse(hardware_xml, tag="{*}Manufacturer"):
-                for hardware in elem.find("{*}Hardware"):
-                    hardware_list.append(
-                        HardwareLoader.parse_hardware_element(hardware)
-                    )
-                elem.clear()
+            tree = ElementTree.parse(hardware_xml)
+            for hardware in tree.findall(".//{*}Manufacturer/{*}Hardware/{*}Hardware"):
+                hardware_list.append(HardwareLoader.parse_hardware_element(hardware))
 
         return hardware_list
 
     @staticmethod
-    def parse_hardware_element(hardware_node: etree.Element) -> Hardware:
+    def parse_hardware_element(hardware_node: ElementTree.Element) -> Hardware:
         """Parse hardware mapping."""
-        identifier: str = hardware_node.get("Id")
-        name: str = hardware_node.get("Name")
+        identifier: str = hardware_node.get("Id", "")
+        name: str = hardware_node.get("Name", "")
         _product_node = hardware_node.find(".//{*}Product")
-        text: str = _product_node.get("Text") if _product_node is not None else ""
+        text: str = _product_node.get("Text", "") if _product_node is not None else ""
 
         return Hardware(identifier, name, text)
 

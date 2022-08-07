@@ -1,7 +1,6 @@
 """Application Program Loader."""
+from xml.etree import ElementTree
 from zipfile import Path
-
-from lxml import etree
 
 from xknxproject.models import ComObject, DeviceInstance
 from xknxproject.util import parse_dpt_types
@@ -16,7 +15,7 @@ class ApplicationProgramLoader:
         com_object_mapping: dict[str, dict[str, str]] = {}
         com_objects: dict[str, ComObject] = {}
         with application_program_path.open(mode="rb") as application_xml:
-            for _, elem in etree.iterparse(application_xml):
+            for _, elem in ElementTree.iterparse(application_xml):
                 if elem.tag.endswith("ComObject"):
                     com_objects[elem.get("Id", "")] = ComObject(
                         identifier=elem.get("Id"),
@@ -56,7 +55,7 @@ class ApplicationProgramLoader:
         """Do not load the same application program multiple times."""
         _result: dict[str, list[DeviceInstance]] = {}
         for device in devices:
-            if device.application_program_ref != "":
+            if device.application_program_ref:
                 # zipfile.Path hashes are not equal, therefore we use str to create the struct
                 xml_file_name = device.application_program_xml()
                 _result.setdefault(xml_file_name, []).append(device)

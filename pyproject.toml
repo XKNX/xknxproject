@@ -11,6 +11,7 @@ combine_as_imports = true
 [tool.mypy]
 python_version = "3.9"
 strict = true
+show_error_codes = true
 ignore_missing_imports = true
 implicit_reexport = true
 warn_unreachable = true

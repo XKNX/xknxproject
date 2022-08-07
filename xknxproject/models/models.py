@@ -39,7 +39,7 @@ class XMLArea:
 
     address: int
     name: str
-    description: str
+    description: str | None
     lines: list[XMLLine]
 
 
@@ -48,7 +48,7 @@ class XMLLine:
     """Class that represents a Line."""
 
     address: int
-    description: str
+    description: str | None
     name: str
     medium_type: str
     devices: list[DeviceInstance]
@@ -129,7 +129,7 @@ class ComObjectInstanceRef:
     """Class that represents a ComObjectInstanceRef instance."""
 
     ref_id: str
-    text: str
+    text: str | None
     links: list[str]
     data_point_type: dict[str, int]
     com_object_ref: dict[str, str] | None = None
