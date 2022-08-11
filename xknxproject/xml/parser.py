@@ -133,6 +133,12 @@ class XMLParser:
         ]:
             self.hardware.extend(_hardware)
 
+        for hardware in self.hardware:
+            for device in self.devices:
+                if device.hardware_program_ref == hardware.identifier:
+                    device.product_name = hardware.name
+                    device.hardware_name = hardware.product_name
+
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(
                 self.knx_proj_contents.root_path, self.devices
@@ -140,9 +146,3 @@ class XMLParser:
         )
         for application_program_file, devices in application_programs.items():
             ApplicationProgramLoader.load(application_program_file, devices)
-
-        for hardware in self.hardware:
-            for device in self.devices:
-                if device.hardware_program_ref == hardware.identifier:
-                    device.product_name = hardware.name
-                    device.hardware_name = hardware.product_name
