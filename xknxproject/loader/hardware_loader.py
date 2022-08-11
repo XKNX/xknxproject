@@ -1,4 +1,6 @@
 """Hardware Loader."""
+from __future__ import annotations
+
 from xml.etree import ElementTree
 from zipfile import Path
 
@@ -28,8 +30,19 @@ class HardwareLoader:
         name: str = hardware_node.get("Name", "")
         _product_node = hardware_node.find(".//{*}Product")
         text: str = _product_node.get("Text", "") if _product_node is not None else ""
+        application_program_ref: dict[str, str] = {}
+        for hardware2program_element in hardware_node.findall(
+            ".//{*}Hardware2Programs/{*}Hardware2Program[@Id]/{*}ApplicationProgramRef[@RefId]/.."
+        ):
+            application_program_ref[
+                hardware2program_element.get("Id")  # type: ignore[index]
+            ] = hardware2program_element.find(
+                "{*}ApplicationProgramRef"
+            ).get(  # type: ignore[union-attr]
+                "RefId"
+            )  # type: ignore[assignment]
 
-        return Hardware(identifier, name, text)
+        return Hardware(identifier, name, text, application_program_ref)
 
     @staticmethod
     def get_hardware_files(project_contents: KNXProjContents) -> list[Path]:

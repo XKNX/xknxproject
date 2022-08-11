@@ -133,16 +133,18 @@ class _TopologyLoader:
 
         name: str = device_element.get("Name", "")
         last_modified: str = device_element.get("LastModified", "")
-        hardware_parts = device_element.get("Hardware2ProgramRefId", "").split("_")
-        hardware_program_ref: str = hardware_parts[0] + "_" + hardware_parts[1]
+        _product_ref_parts = device_element.get("ProductRefId", "").split("_")
+        hardware_ref = _product_ref_parts[0] + "_" + _product_ref_parts[1]
+        hardware_program_ref = device_element.get("Hardware2ProgramRefId", "")
         device: DeviceInstance = DeviceInstance(
             identifier=identifier,
             address=address,
             name=name,
             last_modified=last_modified,
+            hardware_ref=hardware_ref,
             hardware_program_ref=hardware_program_ref,
             line=line,
-            manufacturer=hardware_parts[0],
+            manufacturer=_product_ref_parts[0],
         )
 
         for sub_node in device_element:
@@ -156,13 +158,6 @@ class _TopologyLoader:
                         com_object
                     ):
                         device.com_object_instance_refs.append(instance)
-            if sub_node.tag.endswith("ParameterInstanceRefs"):
-                if (
-                    param_instance_ref := sub_node.find("{*}ParameterInstanceRef")
-                ) is not None:
-                    device.application_program_ref = param_instance_ref.get(
-                        "RefId", ""
-                    ).split("_")[1]
 
         return device
 
