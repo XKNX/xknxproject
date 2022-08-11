@@ -1,7 +1,6 @@
 """Hardware Loader."""
+from xml.etree import ElementTree
 from zipfile import Path
-
-from lxml import etree
 
 from xknxproject.models import Hardware
 from xknxproject.zip import KNXProjContents
@@ -10,33 +9,30 @@ from xknxproject.zip import KNXProjContents
 class HardwareLoader:
     """Load hardware from KNX XML."""
 
-    def load(self, project_contents: KNXProjContents) -> list[Hardware]:
+    @staticmethod
+    def load(hardware_file: Path) -> list[Hardware]:
         """Load Hardware mappings."""
         hardware_list: list[Hardware] = []
 
-        for xml_file in HardwareLoader._get_relevant_files(project_contents):
-            with xml_file.open(mode="rb") as hardware_xml:
-                for _, elem in etree.iterparse(hardware_xml, tag="{*}Manufacturer"):
-                    for hardware in elem.find("{*}Hardware"):
-                        hardware_list.append(
-                            HardwareLoader.parse_hardware_element(hardware)
-                        )
-                    elem.clear()
+        with hardware_file.open(mode="rb") as hardware_xml:
+            tree = ElementTree.parse(hardware_xml)
+            for hardware in tree.findall(".//{*}Manufacturer/{*}Hardware/{*}Hardware"):
+                hardware_list.append(HardwareLoader.parse_hardware_element(hardware))
 
         return hardware_list
 
     @staticmethod
-    def parse_hardware_element(hardware_node: etree.Element) -> Hardware:
+    def parse_hardware_element(hardware_node: ElementTree.Element) -> Hardware:
         """Parse hardware mapping."""
-        identifier: str = hardware_node.get("Id")
-        name: str = hardware_node.get("Name")
+        identifier: str = hardware_node.get("Id", "")
+        name: str = hardware_node.get("Name", "")
         _product_node = hardware_node.find(".//{*}Product")
-        text: str = _product_node.get("Text") if _product_node is not None else ""
+        text: str = _product_node.get("Text", "") if _product_node is not None else ""
 
         return Hardware(identifier, name, text)
 
     @staticmethod
-    def _get_relevant_files(project_contents: KNXProjContents) -> list[Path]:
+    def get_hardware_files(project_contents: KNXProjContents) -> list[Path]:
         """Get all manufactures Hardware.xml in given KNX ZIP file."""
         # M-*/Hardware.xml
         manufacturer_dirs = [
