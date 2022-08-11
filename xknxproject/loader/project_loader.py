@@ -33,7 +33,10 @@ class ProjectLoader:
 
         with knx_proj_contents.open_project_0() as project_file:
             tree = ElementTree.parse(project_file)
-            for ga_element in tree.findall(".//{*}GroupAddress"):
+            for ga_element in tree.findall(
+                # `//` to ignore <GroupRange> tags to support different GA level formats
+                "{*}Project/{*}Installations/{*}Installation/{*}GroupAddresses//{*}GroupAddress"
+            ):
                 group_address_list.append(
                     _GroupAddressLoader.load(group_address_element=ga_element),
                 )
@@ -46,7 +49,9 @@ class ProjectLoader:
             for area in areas:
                 for line in area.lines:
                     devices.extend(line.devices)
-            for location_element in tree.findall(".//{*}Locations"):
+            for location_element in tree.findall(
+                "{*}Project/{*}Installations/{*}Installation/{*}Locations"
+            ):
                 spaces.extend(
                     _LocationLoader(devices).load(location_element=location_element),
                 )
