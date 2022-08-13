@@ -65,6 +65,7 @@ class DeviceInstance:
         address: str,
         name: str,
         last_modified: str,
+        hardware_ref: str,
         hardware_program_ref: str,
         line: XMLLine,
         manufacturer: str,
@@ -77,13 +78,14 @@ class DeviceInstance:
         self.address = address
         self.name = name
         self.last_modified = last_modified
+        self.hardware_ref = hardware_ref
         self.hardware_program_ref = hardware_program_ref
         self.line = line
         self.manufacturer = manufacturer
         self.additional_addresses = additional_addresses or []
         self.com_object_instance_refs = com_object_instance_refs or []
         self.com_objects = com_objects or []
-        self.application_program_ref: str = ""
+        self.application_program_ref: str | None = None
 
         self.individual_address = (
             f"{self.line.area.address}.{self.line.address}.{self.address}"
@@ -118,10 +120,7 @@ class DeviceInstance:
 
     def application_program_xml(self) -> str:
         """Obtain the file name to the application program XML."""
-        return (
-            f"{self.manufacturer}/"
-            f"{self.manufacturer}_{self.application_program_ref}.xml"
-        )
+        return f"{self.manufacturer}/{self.application_program_ref}.xml"
 
 
 @dataclasses.dataclass
@@ -169,3 +168,6 @@ class Hardware:
     identifier: str
     name: str
     product_name: str
+    application_program_ref: dict[
+        str, str
+    ]  # {Hardware2ProgramRefID: ApplicationProgramRef}

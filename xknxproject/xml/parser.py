@@ -135,9 +135,14 @@ class XMLParser:
 
         for hardware in self.hardware:
             for device in self.devices:
-                if device.hardware_program_ref == hardware.identifier:
+                if device.hardware_ref == hardware.identifier:
                     device.product_name = hardware.name
                     device.hardware_name = hardware.product_name
+                    device.application_program_ref = (
+                        hardware.application_program_ref.get(
+                            device.hardware_program_ref
+                        )
+                    )
 
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(
