@@ -12,7 +12,7 @@ from xknxproject.models import (
     XMLLine,
     XMLSpace,
 )
-from xknxproject.util import parse_dpt_types
+from xknxproject.util import parse_dpt_types, parse_xml_flag
 from xknxproject.zip import KNXProjContents
 
 
@@ -166,16 +166,26 @@ class _TopologyLoader:
         com_object: ElementTree.Element,
     ) -> ComObjectInstanceRef | None:
         """Create ComObjectInstanceRef."""
-        ref_id: str = com_object.get("RefId", "")
-        text: str | None = com_object.get("Text")
-        dpt_type: str = com_object.get("DatapointType", "")
-        links: str | None = com_object.get("Links")
-
-        if not links:
+        if not (links := com_object.get("Links")):
             return None
 
+        _dpt_type = com_object.get("DatapointType")
+        datapoint_type = parse_dpt_types(_dpt_type.split(" ")) if _dpt_type else None
+
         return ComObjectInstanceRef(
-            ref_id, text, links.split(" "), parse_dpt_types(dpt_type.split(" "))
+            identifier=com_object.get("Id"),
+            ref_id=com_object.get("RefId"),  # type: ignore[arg-type]
+            text=com_object.get("Text"),
+            function_text=com_object.get("FunctionText"),
+            read_flag=parse_xml_flag(com_object.get("ReadFlag")),
+            write_flag=parse_xml_flag(com_object.get("WriteFlag")),
+            communication_flag=parse_xml_flag(com_object.get("CommunicationFlag")),
+            transmit_flag=parse_xml_flag(com_object.get("TransmitFlag")),
+            update_flag=parse_xml_flag(com_object.get("UpdateFlag")),
+            read_on_init_flag=parse_xml_flag(com_object.get("ReadOnInitFlag")),
+            datapoint_type=datapoint_type,
+            description=com_object.get("Description"),
+            links=links.split(" "),
         )
 
 

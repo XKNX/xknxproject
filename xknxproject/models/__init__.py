@@ -12,6 +12,7 @@ from .knxproject import (
 from .models import (
     ComObject,
     ComObjectInstanceRef,
+    ComObjectRef,
     DeviceInstance,
     Hardware,
     XMLArea,
@@ -32,6 +33,7 @@ __all__ = [
     "XMLArea",
     "ComObject",
     "ComObjectInstanceRef",
+    "ComObjectRef",
     "SpaceType",
     "Space",
     "DeviceInstance",
