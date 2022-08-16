@@ -42,21 +42,21 @@ class XMLParser:
         devices_dict: dict[str, Device] = {}
         for device in self.devices:
             group_address_assignments: list[GroupAddressAssignment] = []
-            for link in device.com_object_instance_refs:
-                if len(link.links) > 0:
+            for com_object in device.com_object_instance_refs:
+                if com_object.links:
                     group_address_assignments.append(
                         GroupAddressAssignment(
-                            co_name=link.text,
-                            dpt_type=link.data_point_type,
+                            co_name=com_object.name or com_object.text,
+                            dpt_type=com_object.datapoint_type,  # type: ignore[typeddict-item]
                             flags=Flags(
-                                read=True,
-                                write=True,
-                                communication=True,
-                                update=True,
-                                read_on_init=True,
-                                transmit=False,
+                                read=com_object.read_flag,  # type: ignore[typeddict-item]
+                                write=com_object.write_flag,  # type: ignore[typeddict-item]
+                                communication=com_object.communication_flag,  # type: ignore[typeddict-item]
+                                update=com_object.update_flag,  # type: ignore[typeddict-item]
+                                read_on_init=com_object.read_on_init_flag,  # type: ignore[typeddict-item]
+                                transmit=com_object.transmit_flag,  # type: ignore[typeddict-item]
                             ),
-                            group_address_links=link.links,
+                            group_address_links=com_object.links,
                         )
                     )
 
@@ -138,11 +138,13 @@ class XMLParser:
                 if device.hardware_ref == hardware.identifier:
                     device.product_name = hardware.name
                     device.hardware_name = hardware.product_name
-                    device.application_program_ref = (
-                        hardware.application_program_ref.get(
-                            device.hardware_program_ref
-                        )
-                    )
+
+                    if application_program_ref := hardware.application_program_refs.get(
+                        device.hardware_program_ref
+                    ):
+                        device.application_program_ref = application_program_ref
+                        for com_object in device.com_object_instance_refs:
+                            com_object.update_ref_id(application_program_ref)
 
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(

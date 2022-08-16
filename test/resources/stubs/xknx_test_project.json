@@ -26,10 +26,7 @@
         "1": {
           "name": "Neue Linie",
           "description": null,
-          "devices": [
-            "1.1.0",
-            "1.1.5"
-          ],
+          "devices": ["1.1.0", "1.1.5"],
           "medium_type": "Twisted Pair (TP)"
         }
       }
@@ -52,109 +49,95 @@
       "manufacturer_name": "ABB",
       "group_address_assignments": [
         {
-          "co_name": null,
+          "co_name": "Ausgang B",
           "dpt_type": {},
           "flags": {
-            "read": true,
+            "read": false,
             "write": true,
             "communication": true,
-            "update": true,
-            "read_on_init": true,
+            "update": false,
+            "read_on_init": false,
             "transmit": false
           },
-          "group_address_links": [
-            "GA-6"
-          ]
+          "group_address_links": ["GA-6"]
         },
         {
-          "co_name": null,
+          "co_name": "Ausgang B",
           "dpt_type": {},
           "flags": {
-            "read": true,
+            "read": false,
             "write": true,
             "communication": true,
-            "update": true,
-            "read_on_init": true,
+            "update": false,
+            "read_on_init": false,
             "transmit": false
           },
-          "group_address_links": [
-            "GA-5"
-          ]
+          "group_address_links": ["GA-5"]
         },
         {
-          "co_name": null,
-          "dpt_type": {"main": 1, "sub": 8},
+          "co_name": "Ausgang C",
+          "dpt_type": { "main": 1, "sub": 8 },
           "flags": {
-            "read": true,
+            "read": false,
             "write": true,
             "communication": true,
-            "update": true,
-            "read_on_init": true,
+            "update": false,
+            "read_on_init": false,
             "transmit": false
           },
-          "group_address_links": [
-            "GA-4"
-          ]
+          "group_address_links": ["GA-4"]
         },
         {
-          "co_name": null,
-          "dpt_type": {"main": 1, "sub": 8},
+          "co_name": "Ausgang C",
+          "dpt_type": { "main": 1, "sub": 8 },
           "flags": {
-            "read": true,
+            "read": false,
             "write": true,
             "communication": true,
-            "update": true,
-            "read_on_init": true,
+            "update": false,
+            "read_on_init": false,
             "transmit": false
           },
-          "group_address_links": [
-            "GA-3"
-          ]
+          "group_address_links": ["GA-3"]
         },
         {
-          "co_name": null,
+          "co_name": "Ausgang D",
           "dpt_type": {},
           "flags": {
-            "read": true,
+            "read": false,
             "write": true,
             "communication": true,
-            "update": true,
-            "read_on_init": true,
+            "update": false,
+            "read_on_init": false,
             "transmit": false
           },
-          "group_address_links": [
-            "GA-2"
-          ]
+          "group_address_links": ["GA-2"]
         },
         {
-          "co_name": null,
-          "dpt_type": {"main": 1, "sub": 8},
+          "co_name": "Ausgang D",
+          "dpt_type": { "main": 1, "sub": 8 },
           "flags": {
-            "read": true,
+            "read": false,
             "write": true,
             "communication": true,
-            "update": true,
-            "read_on_init": true,
+            "update": false,
+            "read_on_init": false,
             "transmit": false
           },
-          "group_address_links": [
-            "GA-1"
-          ]
+          "group_address_links": ["GA-1"]
         },
         {
-          "co_name": null,
-          "dpt_type": {"main": 1, "sub": 1},
+          "co_name": "Ausgang A-X",
+          "dpt_type": { "main": 1, "sub": 1 },
           "flags": {
-            "read": true,
+            "read": false,
             "write": true,
             "communication": true,
             "update": true,
-            "read_on_init": true,
-            "transmit": false
+            "read_on_init": false,
+            "transmit": true
           },
-          "group_address_links": [
-            "GA-7"
-          ]
+          "group_address_links": ["GA-7"]
         }
       ]
     }

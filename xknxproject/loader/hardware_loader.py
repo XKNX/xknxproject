@@ -30,11 +30,11 @@ class HardwareLoader:
         name: str = hardware_node.get("Name", "")
         _product_node = hardware_node.find(".//{*}Product")
         text: str = _product_node.get("Text", "") if _product_node is not None else ""
-        application_program_ref: dict[str, str] = {}
+        application_program_refs: dict[str, str] = {}
         for hardware2program_element in hardware_node.findall(
             ".//{*}Hardware2Programs/{*}Hardware2Program[@Id]/{*}ApplicationProgramRef[@RefId]/.."
         ):
-            application_program_ref[
+            application_program_refs[
                 hardware2program_element.get("Id")  # type: ignore[index]
             ] = hardware2program_element.find(
                 "{*}ApplicationProgramRef"
@@ -42,7 +42,7 @@ class HardwareLoader:
                 "RefId"
             )  # type: ignore[assignment]
 
-        return Hardware(identifier, name, text, application_program_ref)
+        return Hardware(identifier, name, text, application_program_refs)
 
     @staticmethod
     def get_hardware_files(project_contents: KNXProjContents) -> list[Path]:

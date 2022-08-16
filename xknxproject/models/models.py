@@ -1,7 +1,7 @@
 """Handles Group adresses."""
 from __future__ import annotations
 
-import dataclasses
+from dataclasses import dataclass
 
 from xknxproject.models.static import SpaceType
 from xknxproject.util import parse_dpt_types
@@ -33,7 +33,7 @@ class XMLGroupAddress:
         return f"{self.address} ({self.name}) - [DPT: {self.dpt_type}, ID: {self.identifier}]"
 
 
-@dataclasses.dataclass
+@dataclass
 class XMLArea:
     """Class that represents a area."""
 
@@ -43,7 +43,7 @@ class XMLArea:
     lines: list[XMLLine]
 
 
-@dataclasses.dataclass
+@dataclass
 class XMLLine:
     """Class that represents a Line."""
 
@@ -99,59 +99,140 @@ class DeviceInstance:
             f"{self.line.area.address}/{self.line.address}/{address}"
         )
 
-    def add_com_object_id(self, mapping: dict[str, dict[str, str]]) -> None:
-        """Add com object id to com object refs."""
-        for ref in self.com_object_instance_refs:
-            ref.com_object_ref = mapping.get(
-                f"{self.manufacturer}_{self.application_program_ref}_{ref.ref_id}",
-                None,
-            )
-
-    def add_com_objects(self, com_objects_lookup_table: dict[str, ComObject]) -> None:
-        """Add communication objects to device instance."""
-        for ref in self.com_object_instance_refs:
-            if ref.com_object_ref is None:
-                continue
-
-            if com_object := com_objects_lookup_table.get(
-                str(ref.com_object_ref.get("RefId")), None
-            ):
-                self.com_objects.append(com_object)
-
     def application_program_xml(self) -> str:
         """Obtain the file name to the application program XML."""
         return f"{self.manufacturer}/{self.application_program_ref}.xml"
 
 
-@dataclasses.dataclass
+@dataclass
 class ComObjectInstanceRef:
     """Class that represents a ComObjectInstanceRef instance."""
 
+    identifier: str | None  # "Id" - xs:ID
+    # "RefId" - knx:RELIDREF - required - points to a ComObjectRef Id
+    # initially stripped by the devices application_program_ref
     ref_id: str
-    text: str | None
-    links: list[str]
-    data_point_type: dict[str, int]
-    com_object_ref: dict[str, str] | None = None
+    text: str | None  # "Text"
+    function_text: str | None  # "FunctionText"
+    read_flag: bool | None  # "ReadFlag" - knx:Enable_t
+    write_flag: bool | None  # "WriteFlag" - knx:Enable_t
+    communication_flag: bool | None  # "CommunicationFlag" - knx:Enable_t
+    transmit_flag: bool | None  # "TransmitFlag" - knx:Enable_t
+    update_flag: bool | None  # "UpdateFlag" - knx:Enable_t
+    read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
+    datapoint_type: dict[str, int] | None  # "DataPointType" - knx:IDREFS
+    description: str | None  # "Description" - language dependent
+    links: list[str] | None  # "Links" - knx:RELIDREFS
+
+    # only available form ComObject and ComObjectRef
+    name: str | None = None
+    number: int | None = None
+    object_size: str | None = None
+
+    def update_ref_id(self, application_program_ref: str) -> None:
+        """Prepend the ref_id with the application program ref."""
+        self.ref_id = f"{application_program_ref}_{self.ref_id}"
+
+    def merge_from_application(self, com_object: ComObject | ComObjectRef) -> None:
+        """Fill missing information with information parsed from the application program."""
+        if self.name is None:
+            self.name = com_object.name
+        if self.text is None:
+            self.text = com_object.text
+        if self.function_text is None:
+            self.function_text = com_object.function_text
+        if self.object_size is None:
+            self.object_size = com_object.object_size
+        if self.read_flag is None:
+            self.read_flag = com_object.read_flag
+        if self.write_flag is None:
+            self.write_flag = com_object.write_flag
+        if self.communication_flag is None:
+            self.communication_flag = com_object.communication_flag
+        if self.transmit_flag is None:
+            self.transmit_flag = com_object.transmit_flag
+        if self.update_flag is None:
+            self.update_flag = com_object.update_flag
+        if self.read_on_init_flag is None:
+            self.read_on_init_flag = com_object.read_on_init_flag
+        if self.datapoint_type is None:
+            self.datapoint_type = com_object.datapoint_type
+        if isinstance(com_object, ComObject):
+            self.number = com_object.number
 
 
-@dataclasses.dataclass
+@dataclass(frozen=True)
 class ComObject:
     """Class that represents a ComObject instance."""
 
-    identifier: str
-    name: str
-    text: str
-    object_size: str
-    read_flag: bool
-    write_flag: bool
-    communication_flag: bool
-    transmit_flag: bool
-    update_flag: bool
-    read_on_init_flag: bool
-    datapoint_type: dict[str, int]
+    __slots__ = (
+        "identifier",
+        "name",
+        "text",
+        "number",
+        "function_text",
+        "object_size",
+        "read_flag",
+        "write_flag",
+        "communication_flag",
+        "transmit_flag",
+        "update_flag",
+        "read_on_init_flag",
+        "datapoint_type",
+    )
+
+    # all items required in the XML
+    identifier: str  # "Id" - xs:ID
+    name: str  # "Name"
+    text: str  # "Text" - language dependent
+    number: int  # "Number" - xs:unsignedInt
+    function_text: str  # "FunctionText" - language dependent
+    object_size: str  # "ObjectSize" - knx:ComObjectSize_t
+    read_flag: bool  # "ReadFlag" - knx:Enable_t
+    write_flag: bool  # "WriteFlag" - knx:Enable_t
+    communication_flag: bool  # "CommunicationFlag" - knx:Enable_t
+    transmit_flag: bool  # "TransmitFlag" - knx:Enable_t
+    update_flag: bool  # "UpdateFlag" - knx:Enable_t
+    read_on_init_flag: bool  # "ReadOnInitFlag" - knx:Enable_t
+    datapoint_type: dict[str, int]  # "DataPointType" - knx:IDREFS
 
 
-@dataclasses.dataclass
+@dataclass(frozen=True)
+class ComObjectRef:
+    """Class that represents a ComObjectRef instance."""
+
+    __slots__ = (
+        "identifier",
+        "ref_id",
+        "name",
+        "text",
+        "function_text",
+        "object_size",
+        "read_flag",
+        "write_flag",
+        "communication_flag",
+        "transmit_flag",
+        "update_flag",
+        "read_on_init_flag",
+        "datapoint_type",
+    )
+
+    identifier: str  # "Id" - xs:ID - required
+    ref_id: str  # "RefId" - knx:IDREF - required - points to a ComObject Id
+    name: str | None  # "Name"
+    text: str | None  # "Text" - language dependent
+    function_text: str | None  # "FunctionText" - language dependent
+    object_size: str | None  # "ObjectSize" - knx:ComObjectSize_t
+    read_flag: bool | None  # "ReadFlag" - knx:Enable_t
+    write_flag: bool | None  # "WriteFlag" - knx:Enable_t
+    communication_flag: bool | None  # "CommunicationFlag" - knx:Enable_t
+    transmit_flag: bool | None  # "TransmitFlag" - knx:Enable_t
+    update_flag: bool | None  # "UpdateFlag" - knx:Enable_t
+    read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
+    datapoint_type: dict[str, int] | None  # "DataPointType" - knx:IDREFS
+
+
+@dataclass
 class XMLSpace:
     """A space in the location XML."""
 
@@ -161,13 +242,13 @@ class XMLSpace:
     devices: list[str]
 
 
-@dataclasses.dataclass
+@dataclass
 class Hardware:
     """Model a Hardware instance."""
 
     identifier: str
     name: str
     product_name: str
-    application_program_ref: dict[
+    application_program_refs: dict[
         str, str
     ]  # {Hardware2ProgramRefID: ApplicationProgramRef}
