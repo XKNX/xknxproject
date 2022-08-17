@@ -7,11 +7,11 @@ from xknxproject.models import (
     MANUFACTURERS,
     MEDIUM_TYPES,
     Area,
+    CommunicationObject,
     Device,
     DeviceInstance,
     Flags,
     GroupAddress,
-    GroupAddressAssignment,
     Hardware,
     KNXProject,
     Line,
@@ -41,12 +41,12 @@ class XMLParser:
 
         devices_dict: dict[str, Device] = {}
         for device in self.devices:
-            group_address_assignments: list[GroupAddressAssignment] = []
+            device_com_objects: list[CommunicationObject] = []
             for com_object in device.com_object_instance_refs:
                 if com_object.links:
-                    group_address_assignments.append(
-                        GroupAddressAssignment(
-                            co_name=com_object.name or com_object.text,
+                    device_com_objects.append(
+                        CommunicationObject(
+                            name=com_object.name or com_object.text,
                             dpt_type=com_object.datapoint_type,  # type: ignore[typeddict-item]
                             flags=Flags(
                                 read=com_object.read_flag,  # type: ignore[typeddict-item]
@@ -66,7 +66,7 @@ class XMLParser:
                 description=device.hardware_name,
                 individual_address=device.individual_address,
                 manufacturer_name=MANUFACTURERS.get(device.manufacturer, "Unknown"),
-                group_address_assignments=group_address_assignments,
+                communication_objects=device_com_objects,
             )
 
         topology_dict: dict[str, Area] = {}

@@ -15,10 +15,10 @@ class Flags(TypedDict):
     read_on_init: bool
 
 
-class GroupAddressAssignment(TypedDict):
-    """Group address assignments dictionary."""
+class CommunicationObject(TypedDict):
+    """Communication object dictionary."""
 
-    co_name: str | None
+    name: str | None
     dpt_type: dict[str, int]
     group_address_links: list[str]
     flags: Flags
@@ -32,7 +32,7 @@ class Device(TypedDict):
     description: str
     manufacturer_name: str
     individual_address: str
-    group_address_assignments: list[GroupAddressAssignment]
+    communication_objects: list[CommunicationObject]
 
 
 class Line(TypedDict):

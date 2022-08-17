@@ -1,10 +1,10 @@
 """Xknxproj models."""
 from .knxproject import (
     Area,
+    CommunicationObject,
     Device,
     Flags,
     GroupAddress,
-    GroupAddressAssignment,
     KNXProject,
     Line,
     Space,
@@ -25,7 +25,7 @@ from .static import MANUFACTURERS, MEDIUM_TYPES, SpaceType
 __all__ = [
     "Area",
     "Line",
-    "GroupAddressAssignment",
+    "CommunicationObject",
     "GroupAddress",
     "Device",
     "Flags",

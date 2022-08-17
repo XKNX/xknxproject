@@ -39,7 +39,7 @@
       "description": "SCN-IP100.03 IP Router with Secure",
       "individual_address": "1.1.0",
       "manufacturer_name": "MDT technologies",
-      "group_address_assignments": []
+      "communication_objects": []
     },
     "1.1.5": {
       "name": "JRA/S4.230.2.1 Jal./Rol.Akt.man.4f,230V,REG",
@@ -47,9 +47,9 @@
       "description": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
       "individual_address": "1.1.5",
       "manufacturer_name": "ABB",
-      "group_address_assignments": [
+      "communication_objects": [
         {
-          "co_name": "Ausgang B",
+          "name": "Ausgang B",
           "dpt_type": {},
           "flags": {
             "read": false,
@@ -62,7 +62,7 @@
           "group_address_links": ["GA-6"]
         },
         {
-          "co_name": "Ausgang B",
+          "name": "Ausgang B",
           "dpt_type": {},
           "flags": {
             "read": false,
@@ -75,7 +75,7 @@
           "group_address_links": ["GA-5"]
         },
         {
-          "co_name": "Ausgang C",
+          "name": "Ausgang C",
           "dpt_type": { "main": 1, "sub": 8 },
           "flags": {
             "read": false,
@@ -88,7 +88,7 @@
           "group_address_links": ["GA-4"]
         },
         {
-          "co_name": "Ausgang C",
+          "name": "Ausgang C",
           "dpt_type": { "main": 1, "sub": 8 },
           "flags": {
             "read": false,
@@ -101,7 +101,7 @@
           "group_address_links": ["GA-3"]
         },
         {
-          "co_name": "Ausgang D",
+          "name": "Ausgang D",
           "dpt_type": {},
           "flags": {
             "read": false,
@@ -114,7 +114,7 @@
           "group_address_links": ["GA-2"]
         },
         {
-          "co_name": "Ausgang D",
+          "name": "Ausgang D",
           "dpt_type": { "main": 1, "sub": 8 },
           "flags": {
             "read": false,
@@ -127,7 +127,7 @@
           "group_address_links": ["GA-1"]
         },
         {
-          "co_name": "Ausgang A-X",
+          "name": "Ausgang A-X",
           "dpt_type": { "main": 1, "sub": 1 },
           "flags": {
             "read": false,
