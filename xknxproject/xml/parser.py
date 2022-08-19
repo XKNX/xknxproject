@@ -39,26 +39,27 @@ class XMLParser:
         """Parse ETS files."""
         self.load()
 
+        communication_objects: dict[str, CommunicationObject] = {}
         devices_dict: dict[str, Device] = {}
         for device in self.devices:
-            device_com_objects: list[CommunicationObject] = []
+            device_com_objects: list[str] = []
             for com_object in device.com_object_instance_refs:
                 if com_object.links:
-                    device_com_objects.append(
-                        CommunicationObject(
-                            name=com_object.name or com_object.text,
-                            dpt_type=com_object.datapoint_type,  # type: ignore[typeddict-item]
-                            flags=Flags(
-                                read=com_object.read_flag,  # type: ignore[typeddict-item]
-                                write=com_object.write_flag,  # type: ignore[typeddict-item]
-                                communication=com_object.communication_flag,  # type: ignore[typeddict-item]
-                                update=com_object.update_flag,  # type: ignore[typeddict-item]
-                                read_on_init=com_object.read_on_init_flag,  # type: ignore[typeddict-item]
-                                transmit=com_object.transmit_flag,  # type: ignore[typeddict-item]
-                            ),
-                            group_address_links=com_object.links,
-                        )
+                    communication_objects[com_object.ref_id] = CommunicationObject(
+                        name=com_object.name or com_object.text,
+                        device_address=device.individual_address,
+                        dpt_type=com_object.datapoint_type,  # type: ignore[typeddict-item]
+                        flags=Flags(
+                            read=com_object.read_flag,  # type: ignore[typeddict-item]
+                            write=com_object.write_flag,  # type: ignore[typeddict-item]
+                            communication=com_object.communication_flag,  # type: ignore[typeddict-item]
+                            update=com_object.update_flag,  # type: ignore[typeddict-item]
+                            read_on_init=com_object.read_on_init_flag,  # type: ignore[typeddict-item]
+                            transmit=com_object.transmit_flag,  # type: ignore[typeddict-item]
+                        ),
+                        group_address_links=com_object.links,
                     )
+                    device_com_objects.append(com_object.ref_id)
 
             devices_dict[device.individual_address] = Device(
                 name=device.name or device.product_name,
@@ -66,7 +67,7 @@ class XMLParser:
                 description=device.hardware_name,
                 individual_address=device.individual_address,
                 manufacturer_name=MANUFACTURERS.get(device.manufacturer, "Unknown"),
-                communication_objects=device_com_objects,
+                communication_object_ids=device_com_objects,
             )
 
         topology_dict: dict[str, Area] = {}
@@ -88,12 +89,18 @@ class XMLParser:
 
         group_address_dict: dict[str, GroupAddress] = {}
         for group_address in self.group_addresses:
+            _com_object_ids = [
+                com_object_id
+                for com_object_id, com_object in communication_objects.items()
+                if group_address.identifier in com_object["group_address_links"]
+            ]
             group_address_dict[group_address.identifier] = GroupAddress(
                 name=group_address.name,
                 identifier=group_address.identifier,
                 raw_address=group_address.raw_address,
                 address=group_address.address,
                 dpt_type=group_address.dpt_type,
+                communication_object_ids=_com_object_ids,
             )
 
         space_dict: dict[str, Space] = {}
@@ -102,6 +109,7 @@ class XMLParser:
 
         return KNXProject(
             version=__version__,
+            communication_objects=communication_objects,
             topology=topology_dict,
             devices=devices_dict,
             group_addresses=group_address_dict,

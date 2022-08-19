@@ -194,7 +194,7 @@ class ComObject:
     transmit_flag: bool  # "TransmitFlag" - knx:Enable_t
     update_flag: bool  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool  # "ReadOnInitFlag" - knx:Enable_t
-    datapoint_type: dict[str, int]  # "DataPointType" - knx:IDREFS
+    datapoint_type: dict[str, int] | None  # "DataPointType" - knx:IDREFS - optional
 
 
 @dataclass(frozen=True)

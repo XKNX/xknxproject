@@ -1,5 +1,105 @@
 {
-  "version": "0.0.1",
+  "version": "1.1.0",
+  "communication_objects": {
+    "M-0002_A-A066-14-550B_O-40_R-1433": {
+      "name": "Ausgang B",
+      "device_address": "1.1.5",
+      "dpt_type": {},
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": ["GA-6"]
+    },
+    "M-0002_A-A066-14-550B_O-41_R-1434": {
+      "name": "Ausgang B",
+      "device_address": "1.1.5",
+      "dpt_type": {},
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": ["GA-5"]
+    },
+    "M-0002_A-A066-14-550B_O-70_R-1505": {
+      "name": "Ausgang C",
+      "device_address": "1.1.5",
+      "dpt_type": { "main": 1, "sub": 8 },
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": ["GA-4"]
+    },
+    "M-0002_A-A066-14-550B_O-71_R-1506": {
+      "name": "Ausgang C",
+      "device_address": "1.1.5",
+      "dpt_type": { "main": 1, "sub": 8 },
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": ["GA-3"]
+    },
+    "M-0002_A-A066-14-550B_O-100_R-1577": {
+      "name": "Ausgang D",
+      "device_address": "1.1.5",
+      "dpt_type": {},
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": ["GA-2"]
+    },
+    "M-0002_A-A066-14-550B_O-101_R-1578": {
+      "name": "Ausgang D",
+      "device_address": "1.1.5",
+      "dpt_type": { "main": 1, "sub": 8 },
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": ["GA-1"]
+    },
+    "M-0002_A-A066-14-550B_O-4_R-1417": {
+      "name": "Ausgang A-X",
+      "device_address": "1.1.5",
+      "dpt_type": { "main": 1, "sub": 1 },
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": ["GA-7"]
+    }
+  },
   "topology": {
     "0": {
       "name": "Backbone Bereich",
@@ -39,7 +139,7 @@
       "description": "SCN-IP100.03 IP Router with Secure",
       "individual_address": "1.1.0",
       "manufacturer_name": "MDT technologies",
-      "communication_objects": []
+      "communication_object_ids": []
     },
     "1.1.5": {
       "name": "JRA/S4.230.2.1 Jal./Rol.Akt.man.4f,230V,REG",
@@ -47,150 +147,76 @@
       "description": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
       "individual_address": "1.1.5",
       "manufacturer_name": "ABB",
-      "communication_objects": [
-        {
-          "name": "Ausgang B",
-          "dpt_type": {},
-          "flags": {
-            "read": false,
-            "write": true,
-            "communication": true,
-            "update": false,
-            "read_on_init": false,
-            "transmit": false
-          },
-          "group_address_links": ["GA-6"]
-        },
-        {
-          "name": "Ausgang B",
-          "dpt_type": {},
-          "flags": {
-            "read": false,
-            "write": true,
-            "communication": true,
-            "update": false,
-            "read_on_init": false,
-            "transmit": false
-          },
-          "group_address_links": ["GA-5"]
-        },
-        {
-          "name": "Ausgang C",
-          "dpt_type": { "main": 1, "sub": 8 },
-          "flags": {
-            "read": false,
-            "write": true,
-            "communication": true,
-            "update": false,
-            "read_on_init": false,
-            "transmit": false
-          },
-          "group_address_links": ["GA-4"]
-        },
-        {
-          "name": "Ausgang C",
-          "dpt_type": { "main": 1, "sub": 8 },
-          "flags": {
-            "read": false,
-            "write": true,
-            "communication": true,
-            "update": false,
-            "read_on_init": false,
-            "transmit": false
-          },
-          "group_address_links": ["GA-3"]
-        },
-        {
-          "name": "Ausgang D",
-          "dpt_type": {},
-          "flags": {
-            "read": false,
-            "write": true,
-            "communication": true,
-            "update": false,
-            "read_on_init": false,
-            "transmit": false
-          },
-          "group_address_links": ["GA-2"]
-        },
-        {
-          "name": "Ausgang D",
-          "dpt_type": { "main": 1, "sub": 8 },
-          "flags": {
-            "read": false,
-            "write": true,
-            "communication": true,
-            "update": false,
-            "read_on_init": false,
-            "transmit": false
-          },
-          "group_address_links": ["GA-1"]
-        },
-        {
-          "name": "Ausgang A-X",
-          "dpt_type": { "main": 1, "sub": 1 },
-          "flags": {
-            "read": false,
-            "write": true,
-            "communication": true,
-            "update": true,
-            "read_on_init": false,
-            "transmit": true
-          },
-          "group_address_links": ["GA-7"]
-        }
+      "communication_object_ids": [
+        "M-0002_A-A066-14-550B_O-40_R-1433",
+        "M-0002_A-A066-14-550B_O-41_R-1434",
+        "M-0002_A-A066-14-550B_O-70_R-1505",
+        "M-0002_A-A066-14-550B_O-71_R-1506",
+        "M-0002_A-A066-14-550B_O-100_R-1577",
+        "M-0002_A-A066-14-550B_O-101_R-1578",
+        "M-0002_A-A066-14-550B_O-4_R-1417"
       ]
     }
   },
   "group_addresses": {
     "GA-1": {
+      "address": "1/0/0",
+      "communication_object_ids": ["M-0002_A-A066-14-550B_O-101_R-1578"],
       "name": "Test",
       "identifier": "GA-1",
       "raw_address": 2048,
-      "address": "1/0/0",
       "dpt_type": null
     },
     "GA-2": {
+      "address": "1/0/1",
+      "communication_object_ids": ["M-0002_A-A066-14-550B_O-100_R-1577"],
       "name": "Behang D auf/ab",
       "identifier": "GA-2",
       "raw_address": 2049,
-      "address": "1/0/1",
       "dpt_type": null
     },
     "GA-3": {
+      "address": "1/0/2",
+      "communication_object_ids": ["M-0002_A-A066-14-550B_O-71_R-1506"],
       "name": "Lamelle C auf/ab",
       "identifier": "GA-3",
       "raw_address": 2050,
-      "address": "1/0/2",
       "dpt_type": null
     },
     "GA-4": {
+      "address": "1/0/3",
+      "communication_object_ids": ["M-0002_A-A066-14-550B_O-70_R-1505"],
       "name": "Behang C auf/ab",
       "identifier": "GA-4",
       "raw_address": 2051,
-      "address": "1/0/3",
       "dpt_type": null
     },
     "GA-5": {
+      "address": "1/0/4",
+      "communication_object_ids": ["M-0002_A-A066-14-550B_O-41_R-1434"],
       "name": "Lamelle B auf/ab",
       "identifier": "GA-5",
       "raw_address": 2052,
-      "address": "1/0/4",
       "dpt_type": null
     },
     "GA-6": {
+      "address": "1/0/5",
+      "communication_object_ids": ["M-0002_A-A066-14-550B_O-40_R-1433"],
       "name": "BehangB auf/ab",
       "identifier": "GA-6",
       "raw_address": 2053,
-      "address": "1/0/5",
       "dpt_type": null
     },
     "GA-7": {
+      "address": "2/0/6",
+      "communication_object_ids": ["M-0002_A-A066-14-550B_O-4_R-1417"],
       "name": "Windalarm",
       "identifier": "GA-7",
       "raw_address": 4102,
-      "address": "2/0/6",
       "dpt_type": null
     }
+  },
+  "locations": {
+    "Test (1)": { "type": "Building", "devices": [], "spaces": {} }
   }
 }
