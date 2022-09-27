@@ -11,6 +11,9 @@ def assert_stub(to_be_verified: KNXProject, stub_name: str) -> None:
 
     with open(stub_path, encoding="utf-8") as stub_file:
         stub = json.load(stub_file)
-        assert stub["topology"] == to_be_verified["topology"]
-        assert stub["group_addresses"] == to_be_verified["group_addresses"]
-        assert stub["devices"] == to_be_verified["devices"]
+        for key, value in stub.items():
+            assert key in to_be_verified, f"`{key}` key missing in generated object"
+            assert value == to_be_verified[key], f"`{key}` item does not match"
+
+        for key in to_be_verified.keys():
+            assert key in stub, f"`{key}` key of generated object missing in stub"

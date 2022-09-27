@@ -15,10 +15,11 @@ class Flags(TypedDict):
     read_on_init: bool
 
 
-class GroupAddressAssignment(TypedDict):
-    """Group address assignments dictionary."""
+class CommunicationObject(TypedDict):
+    """Communication object dictionary."""
 
-    co_name: str | None
+    name: str | None
+    device_address: str
     dpt_type: dict[str, int]
     group_address_links: list[str]
     flags: Flags
@@ -32,7 +33,7 @@ class Device(TypedDict):
     description: str
     manufacturer_name: str
     individual_address: str
-    group_address_assignments: list[GroupAddressAssignment]
+    communication_object_ids: list[str]
 
 
 class Line(TypedDict):
@@ -60,6 +61,7 @@ class GroupAddress(TypedDict):
     raw_address: int
     address: str
     dpt_type: dict[str, int] | None
+    communication_object_ids: list[str]
 
 
 class Space(TypedDict):
@@ -74,6 +76,7 @@ class KNXProject(TypedDict):
     """KNXProject typed dictionary."""
 
     version: str
+    communication_objects: dict[str, CommunicationObject]
     devices: dict[str, Device]
     topology: dict[str, Area]
     locations: dict[str, Space]
