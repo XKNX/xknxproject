@@ -78,6 +78,10 @@ class ApplicationProgramLoader:
                             ),
                             datapoint_type=datapoint_type,
                         )
+                if elem.tag.endswith("Dynamic"):
+                    # We don't need anything after dynamic
+                    elem.clear()
+                    break
                 elem.clear()
 
             for com_instance in com_object_instance_refs:
