@@ -92,6 +92,7 @@ class DeviceInstance:
         )
         self.product_name: str = ""
         self.hardware_name: str = ""
+        self.manufacturer_name: str = ""
 
     def add_additional_address(self, address: str) -> None:
         """Add an additional individual address."""

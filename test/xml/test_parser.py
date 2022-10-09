@@ -24,6 +24,7 @@ def test_parse_project_ets6():
     assert len(parser.areas[1].lines[1].devices) == 3
     assert len(parser.areas[1].lines[1].devices[0].additional_addresses) == 4
     assert len(parser.areas[1].lines[1].devices[1].com_object_instance_refs) == 2
+    assert parser.areas[1].lines[1].devices[0].manufacturer_name == "MDT technologies"
 
 
 def test_parse_project_ets5():

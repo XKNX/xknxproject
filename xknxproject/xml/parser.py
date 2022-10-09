@@ -2,9 +2,13 @@
 from __future__ import annotations
 
 from xknxproject.__version__ import __version__
-from xknxproject.loader import ApplicationProgramLoader, HardwareLoader, ProjectLoader
+from xknxproject.loader import (
+    ApplicationProgramLoader,
+    HardwareLoader,
+    ManufacturerLoader,
+    ProjectLoader,
+)
 from xknxproject.models import (
-    MANUFACTURERS,
     MEDIUM_TYPES,
     Area,
     CommunicationObject,
@@ -66,7 +70,7 @@ class XMLParser:
                 product_name=device.product_name,
                 description=device.hardware_name,
                 individual_address=device.individual_address,
-                manufacturer_name=MANUFACTURERS.get(device.manufacturer, "Unknown"),
+                manufacturer_name=device.manufacturer_name,
                 communication_object_ids=device_com_objects,
             )
 
@@ -132,6 +136,10 @@ class XMLParser:
             self.devices,
             self.spaces,
         ) = ProjectLoader.load(self.knx_proj_contents)
+
+        ManufacturerLoader.load(
+            self.knx_proj_contents.root_path / "knx_master.xml", self.devices
+        )
 
         for _hardware in [
             HardwareLoader.load(hardware_file)

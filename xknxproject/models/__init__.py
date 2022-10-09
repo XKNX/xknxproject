@@ -20,7 +20,7 @@ from .models import (
     XMLLine,
     XMLSpace,
 )
-from .static import MANUFACTURERS, MEDIUM_TYPES, SpaceType
+from .static import MEDIUM_TYPES, SpaceType
 
 __all__ = [
     "Area",
@@ -41,6 +41,5 @@ __all__ = [
     "XMLLine",
     "XMLSpace",
     "Hardware",
-    "MANUFACTURERS",
     "MEDIUM_TYPES",
 ]
