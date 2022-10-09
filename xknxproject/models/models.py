@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import re
 
 from xknxproject.models.static import SpaceType
 from xknxproject.util import parse_dpt_types
@@ -131,6 +132,7 @@ class ComObjectInstanceRef:
 
     def update_ref_id(self, application_program_ref: str) -> None:
         """Prepend the ref_id with the application program ref."""
+        self.ref_id = re.sub("(M-.*?_MI-.+?_)", "", self.ref_id)
         self.ref_id = f"{application_program_ref}_{self.ref_id}"
 
     def merge_from_application(self, com_object: ComObject | ComObjectRef) -> None:

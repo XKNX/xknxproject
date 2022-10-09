@@ -78,10 +78,6 @@ class ApplicationProgramLoader:
                             ),
                             datapoint_type=datapoint_type,
                         )
-                if elem.tag.endswith("Static"):
-                    # we don't need anything after Static tag (Dynamic, Languages)
-                    elem.clear()
-                    break
                 elem.clear()
 
             for com_instance in com_object_instance_refs:

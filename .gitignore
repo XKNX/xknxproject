@@ -5,6 +5,7 @@ __pycache__/
 .idea/
 
 test/resources/private.knxproj
+test/resources/test
 
 # C extensions
 *.so
