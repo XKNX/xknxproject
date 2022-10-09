@@ -17,8 +17,8 @@ class ManufacturerLoader:
             {device.manufacturer for device in devices}
         )
 
-        with knx_master_file.open(mode="rb") as hardware_xml:
-            tree = ElementTree.parse(hardware_xml)
+        with knx_master_file.open(mode="rb") as master_xml:
+            tree = ElementTree.parse(master_xml)
             for manufacturer in tree.findall(".//{*}Manufacturers/{*}Manufacturer"):
                 identifier = manufacturer.get("Id", "")
                 if identifier in manufacturer_mapping:
