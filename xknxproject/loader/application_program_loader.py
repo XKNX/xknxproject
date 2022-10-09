@@ -78,8 +78,8 @@ class ApplicationProgramLoader:
                             ),
                             datapoint_type=datapoint_type,
                         )
-                if elem.tag.endswith("Dynamic"):
-                    # We don't need anything after dynamic
+                if elem.tag.endswith("ApplicationPrograms"):
+                    # We don't need anything after ApplicationPrograms
                     elem.clear()
                     break
                 elem.clear()
