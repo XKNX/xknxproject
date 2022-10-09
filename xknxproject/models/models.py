@@ -132,7 +132,8 @@ class ComObjectInstanceRef:
 
     def update_ref_id(self, application_program_ref: str) -> None:
         """Prepend the ref_id with the application program ref."""
-        self.ref_id = re.sub("(M-.*?_MI-.+?_)", "", self.ref_id)
+        # Remove module and ModuleInstance occurence as they will not be in the application program directly
+        self.ref_id = re.sub(r"(M-\d+?_MI-\d+?_)", "", self.ref_id)
         self.ref_id = f"{application_program_ref}_{self.ref_id}"
 
     def merge_from_application(self, com_object: ComObject | ComObjectRef) -> None:
