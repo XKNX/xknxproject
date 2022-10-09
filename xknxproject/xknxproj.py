@@ -12,7 +12,7 @@ from xknxproject.zip.extractor import extract
 logger = logging.getLogger("xknxproject.log")
 
 
-class KNXProj:
+class XKNXProj:
     """Class for parsing ETS project files."""
 
     def __init__(

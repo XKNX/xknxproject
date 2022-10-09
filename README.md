@@ -29,10 +29,10 @@ Caution: Loading a middle-sized project with this tool takes about 1.5 seconds. 
 ```python
 """Extract and parse a KNX project file."""
 from xknxproject.models import KNXProject
-from xknxproject import KNXProj
+from xknxproject import XKNXProj
 
 
-knxproj: KNXProj = KNXProj("path/to/your/file.knxproj", "optional_password")
+knxproj: XKNXProj = XKNXProj("path/to/your/file.knxproj", "optional_password")
 project: KNXProject = knxproj.parse()
 ```
 
