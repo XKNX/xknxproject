@@ -165,7 +165,8 @@
       "name": "Test",
       "identifier": "GA-1",
       "raw_address": 2048,
-      "dpt_type": null
+      "dpt_type": null,
+      "description": ""
     },
     "GA-2": {
       "address": "1/0/1",
@@ -173,7 +174,8 @@
       "name": "Behang D auf/ab",
       "identifier": "GA-2",
       "raw_address": 2049,
-      "dpt_type": null
+      "dpt_type": null,
+      "description": ""
     },
     "GA-3": {
       "address": "1/0/2",
@@ -181,7 +183,8 @@
       "name": "Lamelle C auf/ab",
       "identifier": "GA-3",
       "raw_address": 2050,
-      "dpt_type": null
+      "dpt_type": null,
+      "description": ""
     },
     "GA-4": {
       "address": "1/0/3",
@@ -189,7 +192,8 @@
       "name": "Behang C auf/ab",
       "identifier": "GA-4",
       "raw_address": 2051,
-      "dpt_type": null
+      "dpt_type": null,
+      "description": ""
     },
     "GA-5": {
       "address": "1/0/4",
@@ -197,7 +201,8 @@
       "name": "Lamelle B auf/ab",
       "identifier": "GA-5",
       "raw_address": 2052,
-      "dpt_type": null
+      "dpt_type": null,
+      "description": ""
     },
     "GA-6": {
       "address": "1/0/5",
@@ -205,7 +210,8 @@
       "name": "BehangB auf/ab",
       "identifier": "GA-6",
       "raw_address": 2053,
-      "dpt_type": null
+      "dpt_type": null,
+      "description": ""
     },
     "GA-7": {
       "address": "2/0/6",
@@ -213,7 +219,8 @@
       "name": "Windalarm",
       "identifier": "GA-7",
       "raw_address": 4102,
-      "dpt_type": null
+      "dpt_type": null,
+      "description": ""
     }
   },
   "locations": {
