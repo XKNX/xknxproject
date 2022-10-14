@@ -105,6 +105,7 @@ class XMLParser:
                 address=group_address.address,
                 dpt_type=group_address.dpt_type,
                 communication_object_ids=_com_object_ids,
+                description=group_address.description,
             )
 
         space_dict: dict[str, Space] = {}

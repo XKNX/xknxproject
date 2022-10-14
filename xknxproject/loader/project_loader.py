@@ -71,6 +71,7 @@ class _GroupAddressLoader:
             identifier=group_address_element.get("Id", ""),
             address=group_address_element.get("Address", ""),
             dpt_type=group_address_element.get("DatapointType"),
+            description=group_address_element.get("Description", ""),
         )
 
 
