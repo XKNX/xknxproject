@@ -11,11 +11,19 @@ from xknxproject.util import parse_dpt_types
 class XMLGroupAddress:
     """Class that represents a group address."""
 
-    def __init__(self, name: str, identifier: str, address: str, dpt_type: str | None):
+    def __init__(
+        self,
+        name: str,
+        identifier: str,
+        address: str,
+        description: str,
+        dpt_type: str | None,
+    ):
         """Initialize a group address."""
         self.name = name
         self.identifier = identifier.split("_")[1]
         self.raw_address = int(address)
+        self.description = description
         self.dpt_type = (
             None if dpt_type is None else parse_dpt_types(dpt_type.split(" "))
         )

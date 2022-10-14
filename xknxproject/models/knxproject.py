@@ -62,6 +62,7 @@ class GroupAddress(TypedDict):
     address: str
     dpt_type: dict[str, int] | None
     communication_object_ids: list[str]
+    description: str
 
 
 class Space(TypedDict):
