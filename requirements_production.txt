@@ -1,2 +1,2 @@
-cryptography==38.0.3
+cryptography==38.0.4
 pyzipper==0.3.6
