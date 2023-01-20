@@ -7,6 +7,6 @@ pydocstyle==6.3.0
 pylint==2.15.10
 pytest==7.2.1
 pytest-cov==4.0.0
-setuptools==66.0.0
+setuptools==66.1.1
 tox==4.3.5
 mypy==0.991
