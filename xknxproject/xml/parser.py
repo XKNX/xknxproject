@@ -49,7 +49,7 @@ class XMLParser:
             device_com_objects: list[str] = []
             for com_object in device.com_object_instance_refs:
                 if com_object.links:
-                    if not com_object.ref_id in communication_objects:
+                    if com_object.ref_id not in communication_objects:
                         communication_objects[com_object.ref_id] = CommunicationObject(
                             name=com_object.name or com_object.text,
                             device_address=device.individual_address,
