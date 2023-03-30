@@ -49,21 +49,26 @@ class XMLParser:
             device_com_objects: list[str] = []
             for com_object in device.com_object_instance_refs:
                 if com_object.links:
-                    communication_objects[com_object.ref_id] = CommunicationObject(
-                        name=com_object.name or com_object.text,
-                        device_address=device.individual_address,
-                        dpt_type=com_object.datapoint_type,  # type: ignore[typeddict-item]
-                        flags=Flags(
-                            read=com_object.read_flag,  # type: ignore[typeddict-item]
-                            write=com_object.write_flag,  # type: ignore[typeddict-item]
-                            communication=com_object.communication_flag,  # type: ignore[typeddict-item]
-                            update=com_object.update_flag,  # type: ignore[typeddict-item]
-                            read_on_init=com_object.read_on_init_flag,  # type: ignore[typeddict-item]
-                            transmit=com_object.transmit_flag,  # type: ignore[typeddict-item]
-                        ),
-                        group_address_links=com_object.links,
-                    )
-                    device_com_objects.append(com_object.ref_id)
+                    if not com_object.ref_id in communication_objects:
+                        communication_objects[com_object.ref_id] = CommunicationObject(
+                            name=com_object.name or com_object.text,
+                            device_address=device.individual_address,
+                            dpt_type=com_object.datapoint_type,  # type: ignore[typeddict-item]
+                            flags=Flags(
+                                read=com_object.read_flag,  # type: ignore[typeddict-item]
+                                write=com_object.write_flag,  # type: ignore[typeddict-item]
+                                communication=com_object.communication_flag,  # type: ignore[typeddict-item]
+                                update=com_object.update_flag,  # type: ignore[typeddict-item]
+                                read_on_init=com_object.read_on_init_flag,  # type: ignore[typeddict-item]
+                                transmit=com_object.transmit_flag,  # type: ignore[typeddict-item]
+                            ),
+                            group_address_links=com_object.links,
+                        )
+                        device_com_objects.append(com_object.ref_id)
+                    else:
+                        communication_objects[com_object.ref_id][
+                            "group_address_links"
+                        ] += com_object.links
 
             devices_dict[device.individual_address] = Device(
                 name=device.name or device.product_name,
