@@ -1,5 +1,5 @@
 [run]
-source = ets
+source = xknxproject
 relative_files = True
 
 omit =
