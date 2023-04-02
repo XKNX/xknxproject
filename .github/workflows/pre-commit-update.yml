@@ -1,0 +1,38 @@
+name: Pre-commit auto-update
+
+on:
+  schedule:
+    - cron: "0 8 15 * *"
+  # on demand
+  workflow_dispatch:
+
+jobs:
+  auto-update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+          cache: "pip"
+          cache-dependency-path: |
+            requirements/production.txt
+            requirements/testing.txt
+            .pre-commit-config.yaml
+      - name: Install dependencies
+        # needed for the mypy hook
+        run: |
+          pip install -r requirements/testing.txt
+      - name: Pre-commit auto-update
+        env:
+          # new branch is created in create-pull-request step
+          SKIP: no-commit-to-branch
+        uses: browniebroke/pre-commit-autoupdate-action@v1.0.0
+      - uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: update/pre-commit-hooks
+          title: Update pre-commit hooks
+          commit-message: "update pre-commit hooks"
+          body: Update versions of pre-commit hooks to latest version.
