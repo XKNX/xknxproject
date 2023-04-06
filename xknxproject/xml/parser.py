@@ -1,6 +1,8 @@
 """Parser logic for ETS XML files."""
 from __future__ import annotations
 
+import logging
+
 from xknxproject.__version__ import __version__
 from xknxproject.loader import (
     ApplicationProgramLoader,
@@ -26,6 +28,8 @@ from xknxproject.models import (
 )
 from xknxproject.zip.extractor import KNXProjContents
 
+_LOGGER = logging.getLogger("xknxproject.log")
+
 
 class XMLParser:
     """Class that parses XMLs and returns useful information."""
@@ -35,7 +39,6 @@ class XMLParser:
         self.knx_proj_contents = knx_proj_contents
         self.spaces: list[XMLSpace] = []
         self.group_addresses: list[XMLGroupAddress] = []
-        self.hardware: list[Hardware] = []
         self.areas: list[XMLArea] = []
         self.devices: list[DeviceInstance] = []
 
@@ -49,7 +52,8 @@ class XMLParser:
             device_com_objects: list[str] = []
             for com_object in device.com_object_instance_refs:
                 if com_object.links:
-                    communication_objects[com_object.ref_id] = CommunicationObject(
+                    com_object_key = f"{device.individual_address}/{com_object.ref_id}"
+                    communication_objects[com_object_key] = CommunicationObject(
                         name=com_object.name or com_object.text,
                         device_address=device.individual_address,
                         dpt_type=com_object.datapoint_type,  # type: ignore[typeddict-item]
@@ -63,7 +67,7 @@ class XMLParser:
                         ),
                         group_address_links=com_object.links,
                     )
-                    device_com_objects.append(com_object.ref_id)
+                    device_com_objects.append(com_object_key)
 
             devices_dict[device.individual_address] = Device(
                 name=device.name or device.product_name,
@@ -142,26 +146,42 @@ class XMLParser:
             self.knx_proj_contents.root_path / "knx_master.xml", self.devices
         )
 
+        hardware_dict: dict[str, Hardware] = {}
         for _hardware in [
             HardwareLoader.load(hardware_file)
             for hardware_file in HardwareLoader.get_hardware_files(
                 self.knx_proj_contents
             )
         ]:
-            self.hardware.extend(_hardware)
+            hardware_dict.update(_hardware)
 
-        for hardware in self.hardware:
-            for device in self.devices:
-                if device.hardware_ref == hardware.identifier:
-                    device.product_name = hardware.name
-                    device.hardware_name = hardware.product_name
+        for device in self.devices:
+            try:
+                hardware = hardware_dict[device.hardware_ref]
+            except KeyError:
+                _LOGGER.warning(
+                    "Could not find hardware for device %s with hardware_ref %s",
+                    device.individual_address,
+                    device.hardware_ref,
+                )
+                continue
+            device.product_name = hardware.name
+            device.hardware_name = hardware.product_name
 
-                    if application_program_ref := hardware.application_program_refs.get(
-                        device.hardware_program_ref
-                    ):
-                        device.application_program_ref = application_program_ref
-                        for com_object in device.com_object_instance_refs:
-                            com_object.update_ref_id(application_program_ref)
+            try:
+                application_program_ref = hardware.application_program_refs[
+                    device.hardware_program_ref
+                ]
+            except KeyError:
+                _LOGGER.warning(
+                    "Could not find application_program_ref for device %s with hardware_program_ref %s",
+                    device.individual_address,
+                    device.hardware_program_ref,
+                )
+                continue
+            device.application_program_ref = application_program_ref
+            for com_object in device.com_object_instance_refs:
+                com_object.resolve_com_object_ref_id(application_program_ref)
 
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(

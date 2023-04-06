@@ -12,16 +12,19 @@ class HardwareLoader:
     """Load hardware from KNX XML."""
 
     @staticmethod
-    def load(hardware_file: Path) -> list[Hardware]:
+    def load(hardware_file: Path) -> dict[str, Hardware]:
         """Load Hardware mappings."""
-        hardware_list: list[Hardware] = []
+        hardware_dict: dict[str, Hardware] = {}
 
         with hardware_file.open(mode="rb") as hardware_xml:
             tree = ElementTree.parse(hardware_xml)
-            for hardware in tree.findall(".//{*}Manufacturer/{*}Hardware/{*}Hardware"):
-                hardware_list.append(HardwareLoader.parse_hardware_element(hardware))
+            for hardware_node in tree.findall(
+                ".//{*}Manufacturer/{*}Hardware/{*}Hardware"
+            ):
+                _hardware = HardwareLoader.parse_hardware_element(hardware_node)
+                hardware_dict[_hardware.identifier] = _hardware
 
-        return hardware_list
+        return hardware_dict
 
     @staticmethod
     def parse_hardware_element(hardware_node: ElementTree.Element) -> Hardware:

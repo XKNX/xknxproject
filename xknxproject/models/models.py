@@ -134,16 +134,19 @@ class ComObjectInstanceRef:
     description: str | None  # "Description" - language dependent
     links: list[str] | None  # "Links" - knx:RELIDREFS
 
+    # resolved via Hardware.xml from the containing DeviceInstance
+    com_object_ref_id: str | None = None
+
     # only available form ComObject and ComObjectRef
     name: str | None = None
     number: int | None = None
     object_size: str | None = None
 
-    def update_ref_id(self, application_program_ref: str) -> None:
+    def resolve_com_object_ref_id(self, application_program_ref: str) -> None:
         """Prepend the ref_id with the application program ref."""
         # Remove module and ModuleInstance occurence as they will not be in the application program directly
-        self.ref_id = re.sub(r"(M-\d+?_MI-\d+?_)", "", self.ref_id)
-        self.ref_id = f"{application_program_ref}_{self.ref_id}"
+        ref_id = re.sub(r"(M-\d+?_MI-\d+?_)", "", self.ref_id)
+        self.com_object_ref_id = f"{application_program_ref}_{ref_id}"
 
     def merge_from_application(self, com_object: ComObject | ComObjectRef) -> None:
         """Fill missing information with information parsed from the application program."""

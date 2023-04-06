@@ -1,7 +1,7 @@
 {
   "version": "2.1.0",
   "communication_objects": {
-    "M-0002_A-A066-14-550B_O-40_R-1433": {
+    "1.1.5/O-40_R-1433": {
       "name": "Ausgang B",
       "device_address": "1.1.5",
       "dpt_type": {},
@@ -15,7 +15,7 @@
       },
       "group_address_links": ["GA-6"]
     },
-    "M-0002_A-A066-14-550B_O-41_R-1434": {
+    "1.1.5/O-41_R-1434": {
       "name": "Ausgang B",
       "device_address": "1.1.5",
       "dpt_type": {},
@@ -29,7 +29,7 @@
       },
       "group_address_links": ["GA-5"]
     },
-    "M-0002_A-A066-14-550B_O-70_R-1505": {
+    "1.1.5/O-70_R-1505": {
       "name": "Ausgang C",
       "device_address": "1.1.5",
       "dpt_type": { "main": 1, "sub": 8 },
@@ -43,7 +43,7 @@
       },
       "group_address_links": ["GA-4"]
     },
-    "M-0002_A-A066-14-550B_O-71_R-1506": {
+    "1.1.5/O-71_R-1506": {
       "name": "Ausgang C",
       "device_address": "1.1.5",
       "dpt_type": { "main": 1, "sub": 8 },
@@ -57,7 +57,7 @@
       },
       "group_address_links": ["GA-3"]
     },
-    "M-0002_A-A066-14-550B_O-100_R-1577": {
+    "1.1.5/O-100_R-1577": {
       "name": "Ausgang D",
       "device_address": "1.1.5",
       "dpt_type": {},
@@ -71,7 +71,7 @@
       },
       "group_address_links": ["GA-2"]
     },
-    "M-0002_A-A066-14-550B_O-101_R-1578": {
+    "1.1.5/O-101_R-1578": {
       "name": "Ausgang D",
       "device_address": "1.1.5",
       "dpt_type": { "main": 1, "sub": 8 },
@@ -85,7 +85,7 @@
       },
       "group_address_links": ["GA-1"]
     },
-    "M-0002_A-A066-14-550B_O-4_R-1417": {
+    "1.1.5/O-4_R-1417": {
       "name": "Ausgang A-X",
       "device_address": "1.1.5",
       "dpt_type": { "main": 1, "sub": 1 },
@@ -148,20 +148,20 @@
       "individual_address": "1.1.5",
       "manufacturer_name": "ABB",
       "communication_object_ids": [
-        "M-0002_A-A066-14-550B_O-40_R-1433",
-        "M-0002_A-A066-14-550B_O-41_R-1434",
-        "M-0002_A-A066-14-550B_O-70_R-1505",
-        "M-0002_A-A066-14-550B_O-71_R-1506",
-        "M-0002_A-A066-14-550B_O-100_R-1577",
-        "M-0002_A-A066-14-550B_O-101_R-1578",
-        "M-0002_A-A066-14-550B_O-4_R-1417"
+        "1.1.5/O-40_R-1433",
+        "1.1.5/O-41_R-1434",
+        "1.1.5/O-70_R-1505",
+        "1.1.5/O-71_R-1506",
+        "1.1.5/O-100_R-1577",
+        "1.1.5/O-101_R-1578",
+        "1.1.5/O-4_R-1417"
       ]
     }
   },
   "group_addresses": {
     "GA-1": {
       "address": "1/0/0",
-      "communication_object_ids": ["M-0002_A-A066-14-550B_O-101_R-1578"],
+      "communication_object_ids": ["1.1.5/O-101_R-1578"],
       "name": "Test",
       "identifier": "GA-1",
       "raw_address": 2048,
@@ -170,7 +170,7 @@
     },
     "GA-2": {
       "address": "1/0/1",
-      "communication_object_ids": ["M-0002_A-A066-14-550B_O-100_R-1577"],
+      "communication_object_ids": ["1.1.5/O-100_R-1577"],
       "name": "Behang D auf/ab",
       "identifier": "GA-2",
       "raw_address": 2049,
@@ -179,7 +179,7 @@
     },
     "GA-3": {
       "address": "1/0/2",
-      "communication_object_ids": ["M-0002_A-A066-14-550B_O-71_R-1506"],
+      "communication_object_ids": ["1.1.5/O-71_R-1506"],
       "name": "Lamelle C auf/ab",
       "identifier": "GA-3",
       "raw_address": 2050,
@@ -188,7 +188,7 @@
     },
     "GA-4": {
       "address": "1/0/3",
-      "communication_object_ids": ["M-0002_A-A066-14-550B_O-70_R-1505"],
+      "communication_object_ids": ["1.1.5/O-70_R-1505"],
       "name": "Behang C auf/ab",
       "identifier": "GA-4",
       "raw_address": 2051,
@@ -197,7 +197,7 @@
     },
     "GA-5": {
       "address": "1/0/4",
-      "communication_object_ids": ["M-0002_A-A066-14-550B_O-41_R-1434"],
+      "communication_object_ids": ["1.1.5/O-41_R-1434"],
       "name": "Lamelle B auf/ab",
       "identifier": "GA-5",
       "raw_address": 2052,
@@ -206,7 +206,7 @@
     },
     "GA-6": {
       "address": "1/0/5",
-      "communication_object_ids": ["M-0002_A-A066-14-550B_O-40_R-1433"],
+      "communication_object_ids": ["1.1.5/O-40_R-1433"],
       "name": "BehangB auf/ab",
       "identifier": "GA-6",
       "raw_address": 2053,
@@ -215,7 +215,7 @@
     },
     "GA-7": {
       "address": "2/0/6",
-      "communication_object_ids": ["M-0002_A-A066-14-550B_O-4_R-1417"],
+      "communication_object_ids": ["1.1.5/O-4_R-1417"],
       "name": "Windalarm",
       "identifier": "GA-7",
       "raw_address": 4102,
