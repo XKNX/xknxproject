@@ -16,10 +16,7 @@ exclude_lines =
     raise NotImplementedError
 
     # Don't complain about logs
-    logger.debug
-    logger.info
-    logger.warning
-    logger.error
+    _LOGGER.
 
     # Don't complain about missing debug-only code:
     def __repr__
