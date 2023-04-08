@@ -14,7 +14,8 @@ from .models import (
     ComObjectInstanceRef,
     ComObjectRef,
     DeviceInstance,
-    Hardware,
+    HardwareToPrograms,
+    Product,
     XMLArea,
     XMLGroupAddress,
     XMLLine,
@@ -40,6 +41,7 @@ __all__ = [
     "XMLGroupAddress",
     "XMLLine",
     "XMLSpace",
-    "Hardware",
+    "HardwareToPrograms",
+    "Product",
     "MEDIUM_TYPES",
 ]

@@ -134,18 +134,17 @@ class _TopologyLoader:
 
         name: str = device_element.get("Name", "")
         last_modified: str = device_element.get("LastModified", "")
-        _product_ref_parts = device_element.get("ProductRefId", "").split("_")
-        hardware_ref = _product_ref_parts[0] + "_" + _product_ref_parts[1]
+        product_ref = device_element.get("ProductRefId", "")
         hardware_program_ref = device_element.get("Hardware2ProgramRefId", "")
         device: DeviceInstance = DeviceInstance(
             identifier=identifier,
             address=address,
             name=name,
             last_modified=last_modified,
-            hardware_ref=hardware_ref,
+            product_ref=product_ref,
             hardware_program_ref=hardware_program_ref,
             line=line,
-            manufacturer=_product_ref_parts[0],
+            manufacturer=product_ref.split("_", 1)[0],
         )
 
         for sub_node in device_element:

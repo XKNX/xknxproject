@@ -18,9 +18,10 @@ from xknxproject.models import (
     DeviceInstance,
     Flags,
     GroupAddress,
-    Hardware,
+    HardwareToPrograms,
     KNXProject,
     Line,
+    Product,
     Space,
     XMLArea,
     XMLGroupAddress,
@@ -146,30 +147,32 @@ class XMLParser:
             self.knx_proj_contents.root_path / "knx_master.xml", self.devices
         )
 
-        hardware_dict: dict[str, Hardware] = {}
-        for _hardware in [
+        products_dict: dict[str, Product] = {}
+        hardware_application_map: HardwareToPrograms = {}
+        for _products, _hardware_programs in [
             HardwareLoader.load(hardware_file)
             for hardware_file in HardwareLoader.get_hardware_files(
                 self.knx_proj_contents
             )
         ]:
-            hardware_dict.update(_hardware)
+            products_dict.update(_products)
+            hardware_application_map.update(_hardware_programs)
 
         for device in self.devices:
             try:
-                hardware = hardware_dict[device.hardware_ref]
+                product = products_dict[device.product_ref]
             except KeyError:
                 _LOGGER.warning(
-                    "Could not find hardware for device %s with hardware_ref %s",
+                    "Could not find hardware product for device %s with product_ref %s",
                     device.individual_address,
-                    device.hardware_ref,
+                    device.product_ref,
                 )
                 continue
-            device.product_name = hardware.name
-            device.hardware_name = hardware.product_name
+            device.product_name = product.text
+            device.hardware_name = product.hardware_name
 
             try:
-                application_program_ref = hardware.application_program_refs[
+                application_program_ref = hardware_application_map[
                     device.hardware_program_ref
                 ]
             except KeyError:
