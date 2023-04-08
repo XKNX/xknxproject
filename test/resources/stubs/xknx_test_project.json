@@ -3,6 +3,9 @@
   "communication_objects": {
     "1.1.5/O-40_R-1433": {
       "name": "Ausgang B",
+      "text": "Output B",
+      "function_text": "Move blinds/shutter up-down",
+      "description": "",
       "device_address": "1.1.5",
       "dpt_type": {},
       "flags": {
@@ -17,6 +20,9 @@
     },
     "1.1.5/O-41_R-1434": {
       "name": "Ausgang B",
+      "text": "Output B",
+      "function_text": "Slat adjustm./stop up-down",
+      "description": "",
       "device_address": "1.1.5",
       "dpt_type": {},
       "flags": {
@@ -31,6 +37,9 @@
     },
     "1.1.5/O-70_R-1505": {
       "name": "Ausgang C",
+      "text": "Output C",
+      "function_text": "Move blinds/shutter up-down",
+      "description": "",
       "device_address": "1.1.5",
       "dpt_type": { "main": 1, "sub": 8 },
       "flags": {
@@ -45,6 +54,9 @@
     },
     "1.1.5/O-71_R-1506": {
       "name": "Ausgang C",
+      "text": "Output C",
+      "function_text": "Slat adjustm./stop up-down",
+      "description": "",
       "device_address": "1.1.5",
       "dpt_type": { "main": 1, "sub": 8 },
       "flags": {
@@ -59,6 +71,9 @@
     },
     "1.1.5/O-100_R-1577": {
       "name": "Ausgang D",
+      "text": "Output D",
+      "function_text": "Move blinds/shutter up-down",
+      "description": "",
       "device_address": "1.1.5",
       "dpt_type": {},
       "flags": {
@@ -73,6 +88,9 @@
     },
     "1.1.5/O-101_R-1578": {
       "name": "Ausgang D",
+      "text": "Output D",
+      "function_text": "Slat adjustm./stop up-down",
+      "description": "",
       "device_address": "1.1.5",
       "dpt_type": { "main": 1, "sub": 8 },
       "flags": {
@@ -87,6 +105,9 @@
     },
     "1.1.5/O-4_R-1417": {
       "name": "Ausgang A-X",
+      "text": "Output A-X",
+      "function_text": "Wind alarm no. 1",
+      "description": "",
       "device_address": "1.1.5",
       "dpt_type": { "main": 1, "sub": 1 },
       "flags": {
@@ -160,66 +181,66 @@
   },
   "group_addresses": {
     "GA-1": {
-      "address": "1/0/0",
-      "communication_object_ids": ["1.1.5/O-101_R-1578"],
       "name": "Test",
       "identifier": "GA-1",
       "raw_address": 2048,
+      "address": "1/0/0",
       "dpt_type": null,
+      "communication_object_ids": ["1.1.5/O-101_R-1578"],
       "description": ""
     },
     "GA-2": {
-      "address": "1/0/1",
-      "communication_object_ids": ["1.1.5/O-100_R-1577"],
       "name": "Behang D auf/ab",
       "identifier": "GA-2",
       "raw_address": 2049,
+      "address": "1/0/1",
       "dpt_type": null,
+      "communication_object_ids": ["1.1.5/O-100_R-1577"],
       "description": ""
     },
     "GA-3": {
-      "address": "1/0/2",
-      "communication_object_ids": ["1.1.5/O-71_R-1506"],
       "name": "Lamelle C auf/ab",
       "identifier": "GA-3",
       "raw_address": 2050,
+      "address": "1/0/2",
       "dpt_type": null,
+      "communication_object_ids": ["1.1.5/O-71_R-1506"],
       "description": ""
     },
     "GA-4": {
-      "address": "1/0/3",
-      "communication_object_ids": ["1.1.5/O-70_R-1505"],
       "name": "Behang C auf/ab",
       "identifier": "GA-4",
       "raw_address": 2051,
+      "address": "1/0/3",
       "dpt_type": null,
+      "communication_object_ids": ["1.1.5/O-70_R-1505"],
       "description": ""
     },
     "GA-5": {
-      "address": "1/0/4",
-      "communication_object_ids": ["1.1.5/O-41_R-1434"],
       "name": "Lamelle B auf/ab",
       "identifier": "GA-5",
       "raw_address": 2052,
+      "address": "1/0/4",
       "dpt_type": null,
+      "communication_object_ids": ["1.1.5/O-41_R-1434"],
       "description": ""
     },
     "GA-6": {
-      "address": "1/0/5",
-      "communication_object_ids": ["1.1.5/O-40_R-1433"],
       "name": "BehangB auf/ab",
       "identifier": "GA-6",
       "raw_address": 2053,
+      "address": "1/0/5",
       "dpt_type": null,
+      "communication_object_ids": ["1.1.5/O-40_R-1433"],
       "description": ""
     },
     "GA-7": {
-      "address": "2/0/6",
-      "communication_object_ids": ["1.1.5/O-4_R-1417"],
       "name": "Windalarm",
       "identifier": "GA-7",
       "raw_address": 4102,
+      "address": "2/0/6",
       "dpt_type": null,
+      "communication_object_ids": ["1.1.5/O-4_R-1417"],
       "description": ""
     }
   },

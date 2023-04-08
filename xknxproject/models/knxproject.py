@@ -19,6 +19,9 @@ class CommunicationObject(TypedDict):
     """Communication object dictionary."""
 
     name: str | None
+    text: str
+    function_text: str
+    description: str
     device_address: str
     dpt_type: dict[str, int]
     group_address_links: list[str]

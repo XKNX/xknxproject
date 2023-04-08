@@ -54,7 +54,10 @@ class XMLParser:
                 if com_object.links:
                     com_object_key = f"{device.individual_address}/{com_object.ref_id}"
                     communication_objects[com_object_key] = CommunicationObject(
-                        name=com_object.name or com_object.text,
+                        name=com_object.name,
+                        text=com_object.text or "",
+                        function_text=com_object.function_text or "",
+                        description=com_object.description or "",
                         device_address=device.individual_address,
                         dpt_type=com_object.datapoint_type,  # type: ignore[typeddict-item]
                         flags=Flags(
@@ -188,5 +191,6 @@ class XMLParser:
                 self.knx_proj_contents.root_path, self.devices
             )
         )
+        # update self.devices items with its inherited values from their application programs
         for application_program_file, devices in application_programs.items():
             ApplicationProgramLoader.load(application_program_file, devices)
