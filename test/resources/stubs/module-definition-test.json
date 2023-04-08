@@ -3,6 +3,9 @@
   "communication_objects": {
     "1.1.1/O-334_R-21": {
       "name": "FuehrungsWert",
+      "text": "Outside temperature / Reference value",
+      "function_text": "Receive measured value",
+      "description": "",
       "device_address": "1.1.1",
       "dpt_type": {
         "main": 9,
@@ -20,6 +23,9 @@
     },
     "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1": {
       "name": "IstWert",
+      "text": "Kanal A: Wohnzimmer",
+      "function_text": "Receive temperature value",
+      "description": "",
       "device_address": "1.1.1",
       "dpt_type": {
         "main": 9,
@@ -37,6 +43,9 @@
     },
     "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3": {
       "name": "SollWert",
+      "text": "Kanal A: Wohnzimmer",
+      "function_text": "Preset setpoint",
+      "description": "",
       "device_address": "1.1.1",
       "dpt_type": {
         "main": 9,
@@ -54,6 +63,9 @@
     },
     "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1": {
       "name": "IstWert",
+      "text": "Kanal B: Küche",
+      "function_text": "Receive temperature value",
+      "description": "Beschreibung KO 41",
       "device_address": "1.1.1",
       "dpt_type": {
         "main": 9,
@@ -71,6 +83,9 @@
     },
     "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3": {
       "name": "SollWert",
+      "text": "Kanal B: Küche",
+      "function_text": "Preset setpoint",
+      "description": "Beschreibung KO 42 (U-Flag)",
       "device_address": "1.1.1",
       "dpt_type": {
         "main": 9,
@@ -88,6 +103,9 @@
     },
     "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3": {
       "name": "SollWert",
+      "text": "Kanal A: Bad",
+      "function_text": "Preset setpoint",
+      "description": "",
       "device_address": "1.1.2",
       "dpt_type": {
         "main": 9,
