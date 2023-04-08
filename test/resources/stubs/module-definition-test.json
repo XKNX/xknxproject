@@ -138,9 +138,9 @@
   },
   "devices": {
     "1.1.1": {
-      "name": "Heizungsaktor 8-fach",
-      "product_name": "Heizungsaktor 8-fach",
-      "description": "AKH-0800.03 Heating Actuator 8-fold, 4SU MDRC, 24/230VAC",
+      "name": "AKH-0800.03 Heating Actuator 8-fold, 4SU MDRC, 24/230VAC",
+      "hardware_name": "Heizungsaktor 8-fach",
+      "description": "",
       "individual_address": "1.1.1",
       "manufacturer_name": "MDT technologies",
       "communication_object_ids": [
@@ -152,9 +152,9 @@
       ]
     },
     "1.1.2": {
-      "name": "Heizungsaktor 8-fach",
-      "product_name": "Heizungsaktor 8-fach",
-      "description": "AKH-0800.03 Heating Actuator 8-fold, 4SU MDRC, 24/230VAC",
+      "name": "AKH-0800.03 Heating Actuator 8-fold, 4SU MDRC, 24/230VAC",
+      "hardware_name": "Heizungsaktor 8-fach",
+      "description": "",
       "individual_address": "1.1.2",
       "manufacturer_name": "MDT technologies",
       "communication_object_ids": ["1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"]

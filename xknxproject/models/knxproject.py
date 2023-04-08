@@ -29,7 +29,7 @@ class Device(TypedDict):
     """Devices dictionary."""
 
     name: str
-    product_name: str
+    hardware_name: str
     description: str
     manufacturer_name: str
     individual_address: str

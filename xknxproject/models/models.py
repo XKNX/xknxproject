@@ -73,6 +73,7 @@ class DeviceInstance:
         identifier: str,
         address: str,
         name: str,
+        description: str,
         last_modified: str,
         product_ref: str,
         hardware_program_ref: str,
@@ -86,6 +87,7 @@ class DeviceInstance:
         self.identifier = identifier
         self.address = address
         self.name = name
+        self.description = description
         self.last_modified = last_modified
         self.product_ref = product_ref
         self.hardware_program_ref = hardware_program_ref
