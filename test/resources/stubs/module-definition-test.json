@@ -1,5 +1,6 @@
 {
   "version": "2.1.0",
+  "language_code": "de-DE",
   "communication_objects": {
     "1.1.1/O-334_R-21": {
       "name": "FuehrungsWert",
@@ -156,7 +157,7 @@
   },
   "devices": {
     "1.1.1": {
-      "name": "AKH-0800.03 Heating Actuator 8-fold, 4SU MDRC, 24/230VAC",
+      "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "hardware_name": "Heizungsaktor 8-fach",
       "description": "",
       "individual_address": "1.1.1",
@@ -170,7 +171,7 @@
       ]
     },
     "1.1.2": {
-      "name": "AKH-0800.03 Heating Actuator 8-fold, 4SU MDRC, 24/230VAC",
+      "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "hardware_name": "Heizungsaktor 8-fach",
       "description": "",
       "individual_address": "1.1.2",

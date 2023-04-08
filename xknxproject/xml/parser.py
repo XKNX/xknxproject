@@ -43,9 +43,9 @@ class XMLParser:
         self.areas: list[XMLArea] = []
         self.devices: list[DeviceInstance] = []
 
-    def parse(self) -> KNXProject:
+    def parse(self, language_code: str | None = None) -> KNXProject:
         """Parse ETS files."""
-        self.load()
+        self.load(language_code=language_code)
 
         communication_objects: dict[str, CommunicationObject] = {}
         devices_dict: dict[str, Device] = {}
@@ -122,6 +122,7 @@ class XMLParser:
 
         return KNXProject(
             version=__version__,
+            language_code=language_code,
             communication_objects=communication_objects,
             topology=topology_dict,
             devices=devices_dict,
@@ -137,7 +138,7 @@ class XMLParser:
 
         return Space(type=space.type.value, devices=space.devices, spaces=subspaces)
 
-    def load(self) -> None:
+    def load(self, language_code: str | None) -> None:
         """Load XML files."""
         (
             self.group_addresses,
@@ -153,7 +154,7 @@ class XMLParser:
         products_dict: dict[str, Product] = {}
         hardware_application_map: HardwareToPrograms = {}
         for _products, _hardware_programs in [
-            HardwareLoader.load(hardware_file)
+            HardwareLoader.load(hardware_file, language_code=language_code)
             for hardware_file in HardwareLoader.get_hardware_files(
                 self.knx_proj_contents
             )

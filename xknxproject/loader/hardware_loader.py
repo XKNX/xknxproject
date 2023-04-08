@@ -14,6 +14,7 @@ class HardwareLoader:
     @staticmethod
     def load(
         hardware_file: Path,
+        language_code: str | None,
     ) -> tuple[dict[str, Product], HardwareToPrograms]:
         """Load Hardware mappings."""
         product_dict: dict[str, Product] = {}
@@ -29,6 +30,19 @@ class HardwareLoader:
                 )
                 product_dict |= _products
                 hardware_programs |= _hardware_programs
+
+            if language_code:
+                for translation_element in tree.findall(
+                    ".//{*}Manufacturer/{*}Languages"
+                    f"/{{*}}Language[@Identifier='{language_code}']"
+                    "/{*}TranslationUnit/{*}TranslationElement"
+                ):
+                    _ref_id = translation_element.get("RefId")
+                    if _ref_id not in product_dict:
+                        continue
+                    HardwareLoader.apply_product_translation(
+                        product_dict[_ref_id], translation_element
+                    )
 
         return product_dict, hardware_programs
 
@@ -63,6 +77,19 @@ class HardwareLoader:
             identifier=product_node.get("Id", ""),
             text=product_node.get("Text", ""),
         )
+
+    @staticmethod
+    def apply_product_translation(
+        product: Product,
+        translation_element_node: ElementTree.Element,
+    ) -> None:
+        """Apply translation to product."""
+        if (
+            text_node := translation_element_node.find(
+                "{*}Translation[@AttributeName='Text']"
+            )
+        ) is not None:
+            product.text = text_node.get("Text", "")
 
     @staticmethod
     def parse_hardware2program_element(

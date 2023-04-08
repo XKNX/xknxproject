@@ -16,14 +16,16 @@ class XKNXProj:
         self,
         archive_name: str | Path,
         archive_password: str | None = None,
+        language_code: str | None = None,
     ):
         """Initialize a KNXProjParser."""
         self.archive_path = Path(archive_name)
         self.password = archive_password
+        self.language_code = language_code
 
         self.version = __version__
 
     def parse(self) -> KNXProject:
         """Parse the KNX project."""
         with extract(self.archive_path, self.password) as knx_project_content:
-            return XMLParser(knx_project_content).parse()
+            return XMLParser(knx_project_content).parse(self.language_code)

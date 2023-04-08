@@ -80,6 +80,7 @@ class KNXProject(TypedDict):
     """KNXProject typed dictionary."""
 
     version: str
+    language_code: str | None
     communication_objects: dict[str, CommunicationObject]
     devices: dict[str, Device]
     topology: dict[str, Area]

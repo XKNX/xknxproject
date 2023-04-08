@@ -1,5 +1,6 @@
 {
   "version": "2.1.0",
+  "language_code": null,
   "communication_objects": {
     "1.1.5/O-40_R-1433": {
       "name": "Ausgang B",
