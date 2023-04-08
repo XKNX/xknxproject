@@ -1,9 +1,12 @@
 """Application Program Loader."""
+import logging
 from xml.etree import ElementTree
 from zipfile import Path
 
 from xknxproject.models import ComObject, ComObjectRef, DeviceInstance
 from xknxproject.util import parse_dpt_types, parse_xml_flag
+
+_LOGGER = logging.getLogger("xknxproject.log")
 
 
 class ApplicationProgramLoader:
@@ -20,7 +23,9 @@ class ApplicationProgramLoader:
             for instance_ref in device.com_object_instance_refs
         ]
         used_com_object_ref_ids = {
-            instance_ref.ref_id for instance_ref in com_object_instance_refs
+            instance_ref.com_object_ref_id
+            for instance_ref in com_object_instance_refs
+            if instance_ref.com_object_ref_id is not None
         }
         com_object_refs: dict[str, ComObjectRef] = {}  # {Id: ComObjectRef}
         com_objects: dict[str, ComObject] = {}  # {Id: ComObject}
@@ -85,7 +90,13 @@ class ApplicationProgramLoader:
                 elem.clear()
 
             for com_instance in com_object_instance_refs:
-                _com_object_ref = com_object_refs[com_instance.ref_id]
+                if com_instance.com_object_ref_id is None:
+                    _LOGGER.warning(
+                        "ComObjectInstanceRef %s has no ComObjectRefId",
+                        com_instance.identifier,
+                    )
+                    continue
+                _com_object_ref = com_object_refs[com_instance.com_object_ref_id]
                 com_instance.merge_from_application(_com_object_ref)
                 com_instance.merge_from_application(com_objects[_com_object_ref.ref_id])
 

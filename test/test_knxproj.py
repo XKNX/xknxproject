@@ -3,11 +3,16 @@ from xknxproject import XKNXProj
 from . import RESOURCES_PATH
 from .conftest import assert_stub
 
-xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
-
 
 def test_parse_project_ets5():
     """Test parsing of ETS5 project."""
-    knxproj = XKNXProj(xknx_test_project_protected_ets5, "test")
+    knxproj = XKNXProj(RESOURCES_PATH / "xknx_test_project.knxproj", "test")
     project = knxproj.parse()
     assert_stub(project, "xknx_test_project.json")
+
+
+def test_parse_project_modules():
+    """Test parsing of ETS5 project including 2 identical devices with module definitions."""
+    knxproj = XKNXProj(RESOURCES_PATH / "module-definition-test.knxproj")
+    project = knxproj.parse()
+    assert_stub(project, "module-definition-test.json")

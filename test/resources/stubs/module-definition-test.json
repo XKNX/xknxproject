@@ -1,0 +1,260 @@
+{
+  "version": "2.1.0",
+  "communication_objects": {
+    "1.1.1/O-334_R-21": {
+      "name": "FuehrungsWert",
+      "device_address": "1.1.1",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": ["GA-3"]
+    },
+    "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1": {
+      "name": "IstWert",
+      "device_address": "1.1.1",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": ["GA-1"]
+    },
+    "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3": {
+      "name": "SollWert",
+      "device_address": "1.1.1",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": ["GA-2", "GA-6"]
+    },
+    "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1": {
+      "name": "IstWert",
+      "device_address": "1.1.1",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": ["GA-7"]
+    },
+    "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3": {
+      "name": "SollWert",
+      "device_address": "1.1.1",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": ["GA-4", "GA-6"]
+    },
+    "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3": {
+      "name": "SollWert",
+      "device_address": "1.1.2",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": ["GA-5", "GA-6"]
+    }
+  },
+  "topology": {
+    "0": {
+      "name": "Backbone Bereich",
+      "description": null,
+      "lines": {
+        "0": {
+          "name": "Bereichslinie",
+          "description": null,
+          "devices": [],
+          "medium_type": "KNXnet/IP (IP)"
+        }
+      }
+    },
+    "1": {
+      "name": "Neuer Bereich",
+      "description": null,
+      "lines": {
+        "0": {
+          "name": "Hauptlinie",
+          "description": null,
+          "devices": [],
+          "medium_type": "KNXnet/IP (IP)"
+        },
+        "1": {
+          "name": "Neue Linie",
+          "description": null,
+          "devices": ["1.1.1", "1.1.2"],
+          "medium_type": "Twisted Pair (TP)"
+        }
+      }
+    }
+  },
+  "devices": {
+    "1.1.1": {
+      "name": "Heizungsaktor 8-fach",
+      "product_name": "Heizungsaktor 8-fach",
+      "description": "AKH-0800.03 Heating Actuator 8-fold, 4SU MDRC, 24/230VAC",
+      "individual_address": "1.1.1",
+      "manufacturer_name": "MDT technologies",
+      "communication_object_ids": [
+        "1.1.1/O-334_R-21",
+        "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1",
+        "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3",
+        "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1",
+        "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"
+      ]
+    },
+    "1.1.2": {
+      "name": "Heizungsaktor 8-fach",
+      "product_name": "Heizungsaktor 8-fach",
+      "description": "AKH-0800.03 Heating Actuator 8-fold, 4SU MDRC, 24/230VAC",
+      "individual_address": "1.1.2",
+      "manufacturer_name": "MDT technologies",
+      "communication_object_ids": ["1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"]
+    }
+  },
+  "group_addresses": {
+    "GA-1": {
+      "name": "Temperatur Ist",
+      "identifier": "GA-1",
+      "raw_address": 1,
+      "address": "0/0/1",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "communication_object_ids": ["1.1.1/MD-2_M-1_MI-1_O-2-1_R-1"],
+      "description": ""
+    },
+    "GA-2": {
+      "name": "Temperatur Soll",
+      "identifier": "GA-2",
+      "raw_address": 2,
+      "address": "0/0/2",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "communication_object_ids": ["1.1.1/MD-2_M-1_MI-1_O-2-2_R-3"],
+      "description": ""
+    },
+    "GA-3": {
+      "name": "Reglerwert",
+      "identifier": "GA-3",
+      "raw_address": 3,
+      "address": "0/0/3",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "communication_object_ids": ["1.1.1/O-334_R-21"],
+      "description": ""
+    },
+    "GA-4": {
+      "name": "Temperatur Soll",
+      "identifier": "GA-4",
+      "raw_address": 258,
+      "address": "0/1/2",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "communication_object_ids": ["1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"],
+      "description": ""
+    },
+    "GA-7": {
+      "name": "Temperatur Ist",
+      "identifier": "GA-7",
+      "raw_address": 257,
+      "address": "0/1/1",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "communication_object_ids": ["1.1.1/MD-2_M-2_MI-1_O-2-1_R-1"],
+      "description": ""
+    },
+    "GA-5": {
+      "name": "Temperatur Soll",
+      "identifier": "GA-5",
+      "raw_address": 514,
+      "address": "0/2/2",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "communication_object_ids": ["1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"],
+      "description": ""
+    },
+    "GA-6": {
+      "name": "Temperatur Soll",
+      "identifier": "GA-6",
+      "raw_address": 1794,
+      "address": "0/7/2",
+      "dpt_type": {
+        "main": 9,
+        "sub": 1
+      },
+      "communication_object_ids": [
+        "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3",
+        "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3",
+        "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
+      ],
+      "description": ""
+    }
+  },
+  "locations": {
+    "ModuleDefinitionTest": {
+      "type": "Building",
+      "devices": [],
+      "spaces": {}
+    }
+  }
+}
