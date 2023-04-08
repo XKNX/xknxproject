@@ -134,17 +134,17 @@
   },
   "devices": {
     "1.1.0": {
-      "name": "IP Router Secure",
-      "product_name": "IP Router Secure",
-      "description": "SCN-IP100.03 IP Router with Secure",
+      "name": "SCN-IP100.03 IP Router with Secure",
+      "hardware_name": "IP Router Secure",
+      "description": "",
       "individual_address": "1.1.0",
       "manufacturer_name": "MDT technologies",
       "communication_object_ids": []
     },
     "1.1.5": {
-      "name": "JRA/S4.230.2.1 Jal./Rol.Akt.man.4f,230V,REG",
-      "product_name": "JRA/S4.230.2.1 Jal./Rol.Akt.man.4f,230V,REG",
-      "description": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
+      "name": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
+      "hardware_name": "JRA/S4.230.2.1 Jal./Rol.Akt.man.4f,230V,REG",
+      "description": "",
       "individual_address": "1.1.5",
       "manufacturer_name": "ABB",
       "communication_object_ids": [

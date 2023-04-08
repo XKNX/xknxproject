@@ -125,27 +125,22 @@ class _TopologyLoader:
         device_element: ElementTree.Element, line: XMLLine
     ) -> DeviceInstance | None:
         """Create device."""
-        identifier: str = device_element.get("Id", "")
         address: str | None = device_element.get("Address")
-
         #  devices like power supplies do usually not have an IA.
         if address is None:
             return None
 
-        name: str = device_element.get("Name", "")
-        last_modified: str = device_element.get("LastModified", "")
-        _product_ref_parts = device_element.get("ProductRefId", "").split("_")
-        hardware_ref = _product_ref_parts[0] + "_" + _product_ref_parts[1]
-        hardware_program_ref = device_element.get("Hardware2ProgramRefId", "")
+        product_ref = device_element.get("ProductRefId", "")
         device: DeviceInstance = DeviceInstance(
-            identifier=identifier,
+            identifier=device_element.get("Id", ""),
             address=address,
-            name=name,
-            last_modified=last_modified,
-            hardware_ref=hardware_ref,
-            hardware_program_ref=hardware_program_ref,
+            name=device_element.get("Name", ""),
+            description=device_element.get("Description", ""),
+            last_modified=device_element.get("LastModified", ""),
+            product_ref=product_ref,
+            hardware_program_ref=device_element.get("Hardware2ProgramRefId", ""),
             line=line,
-            manufacturer=_product_ref_parts[0],
+            manufacturer=product_ref.split("_", 1)[0],
         )
 
         for sub_node in device_element:

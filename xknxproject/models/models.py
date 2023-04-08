@@ -73,8 +73,9 @@ class DeviceInstance:
         identifier: str,
         address: str,
         name: str,
+        description: str,
         last_modified: str,
-        hardware_ref: str,
+        product_ref: str,
         hardware_program_ref: str,
         line: XMLLine,
         manufacturer: str,
@@ -86,8 +87,9 @@ class DeviceInstance:
         self.identifier = identifier
         self.address = address
         self.name = name
+        self.description = description
         self.last_modified = last_modified
-        self.hardware_ref = hardware_ref
+        self.product_ref = product_ref
         self.hardware_program_ref = hardware_program_ref
         self.line = line
         self.manufacturer = manufacturer
@@ -258,12 +260,12 @@ class XMLSpace:
 
 
 @dataclass
-class Hardware:
-    """Model a Hardware instance."""
+class Product:
+    """Model a Product instance."""
 
     identifier: str
-    name: str
-    product_name: str
-    application_program_refs: dict[
-        str, str
-    ]  # {Hardware2ProgramRefID: ApplicationProgramRef}
+    text: str
+    hardware_name: str = ""
+
+
+HardwareToPrograms = dict[str, str]
