@@ -35,7 +35,8 @@ class ApplicationProgramLoader:
         com_objects: dict[str, ComObject] = {}  # {Id: ComObject}
 
         in_language = False
-        in_translation_ref: dict[str, str] | None = None
+        in_translation_ref: str | None = None  # TranslationElement RefId
+        # translation_map: {TranslationElement RefId: {AttributeName: Text}}
         translation_map: dict[str, dict[str, str]] = {}
 
         with application_program_path.open(mode="rb") as application_xml:
@@ -99,13 +100,15 @@ class ApplicationProgramLoader:
                         break
                     in_language = elem.get("Identifier") == language_code
                 elif in_language and elem.tag.endswith("TranslationElement"):
-                    in_translation_ref = translation_map[elem.get("RefId")] = {}
+                    in_translation_ref = elem.get("RefId")
                 elif (
                     in_language
                     and in_translation_ref is not None
                     and elem.tag.endswith("Translation")
                 ):
-                    in_translation_ref[elem.get("AttributeName")] = elem.get("Text")
+                    translation_map.setdefault(in_translation_ref, {})[
+                        elem.get("AttributeName")
+                    ] = elem.get("Text")
                 elem.clear()
 
             if translation_map:
