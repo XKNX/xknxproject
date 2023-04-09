@@ -18,12 +18,14 @@ class Flags(TypedDict):
 class CommunicationObject(TypedDict):
     """Communication object dictionary."""
 
-    name: str | None
+    name: str
+    number: int
     text: str
     function_text: str
     description: str
     device_address: str
     dpt_type: dict[str, int]
+    object_size: str
     group_address_links: list[str]
     flags: Flags
 

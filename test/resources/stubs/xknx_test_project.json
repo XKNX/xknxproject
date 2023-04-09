@@ -4,11 +4,13 @@
   "communication_objects": {
     "1.1.5/O-40_R-1433": {
       "name": "Ausgang B",
+      "number": 40,
       "text": "Output B",
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
       "dpt_type": {},
+      "object_size": "1 Bit",
       "flags": {
         "read": false,
         "write": true,
@@ -21,11 +23,13 @@
     },
     "1.1.5/O-41_R-1434": {
       "name": "Ausgang B",
+      "number": 41,
       "text": "Output B",
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
       "dpt_type": {},
+      "object_size": "1 Bit",
       "flags": {
         "read": false,
         "write": true,
@@ -38,11 +42,16 @@
     },
     "1.1.5/O-70_R-1505": {
       "name": "Ausgang C",
+      "number": 70,
       "text": "Output C",
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": { "main": 1, "sub": 8 },
+      "dpt_type": {
+        "main": 1,
+        "sub": 8
+      },
+      "object_size": "1 Bit",
       "flags": {
         "read": false,
         "write": true,
@@ -55,11 +64,16 @@
     },
     "1.1.5/O-71_R-1506": {
       "name": "Ausgang C",
+      "number": 71,
       "text": "Output C",
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": { "main": 1, "sub": 8 },
+      "dpt_type": {
+        "main": 1,
+        "sub": 8
+      },
+      "object_size": "1 Bit",
       "flags": {
         "read": false,
         "write": true,
@@ -72,11 +86,13 @@
     },
     "1.1.5/O-100_R-1577": {
       "name": "Ausgang D",
+      "number": 100,
       "text": "Output D",
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
       "dpt_type": {},
+      "object_size": "1 Bit",
       "flags": {
         "read": false,
         "write": true,
@@ -89,11 +105,16 @@
     },
     "1.1.5/O-101_R-1578": {
       "name": "Ausgang D",
+      "number": 101,
       "text": "Output D",
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": { "main": 1, "sub": 8 },
+      "dpt_type": {
+        "main": 1,
+        "sub": 8
+      },
+      "object_size": "1 Bit",
       "flags": {
         "read": false,
         "write": true,
@@ -106,11 +127,16 @@
     },
     "1.1.5/O-4_R-1417": {
       "name": "Ausgang A-X",
+      "number": 4,
       "text": "Output A-X",
       "function_text": "Wind alarm no. 1",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": { "main": 1, "sub": 1 },
+      "dpt_type": {
+        "main": 1,
+        "sub": 1
+      },
+      "object_size": "1 Bit",
       "flags": {
         "read": false,
         "write": true,
@@ -246,6 +272,10 @@
     }
   },
   "locations": {
-    "Test (1)": { "type": "Building", "devices": [], "spaces": {} }
+    "Test (1)": {
+      "type": "Building",
+      "devices": [],
+      "spaces": {}
+    }
   }
 }

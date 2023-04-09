@@ -178,7 +178,7 @@ class ComObjectInstanceRef:
             self.number = com_object.number
 
 
-@dataclass(frozen=True)
+@dataclass
 class ComObject:
     """Class that represents a ComObject instance."""
 
@@ -214,7 +214,7 @@ class ComObject:
     datapoint_type: dict[str, int] | None  # "DataPointType" - knx:IDREFS - optional
 
 
-@dataclass(frozen=True)
+@dataclass
 class ComObjectRef:
     """Class that represents a ComObjectRef instance."""
 

@@ -55,12 +55,14 @@ class XMLParser:
                 if com_object.links:
                     com_object_key = f"{device.individual_address}/{com_object.ref_id}"
                     communication_objects[com_object_key] = CommunicationObject(
-                        name=com_object.name,
-                        text=com_object.text or "",
-                        function_text=com_object.function_text or "",
+                        name=com_object.name,  # type: ignore[typeddict-item]
+                        number=com_object.number,  # type: ignore[typeddict-item]
+                        text=com_object.text,  # type: ignore[typeddict-item]
+                        function_text=com_object.function_text,  # type: ignore[typeddict-item]
                         description=com_object.description or "",
                         device_address=device.individual_address,
                         dpt_type=com_object.datapoint_type,  # type: ignore[typeddict-item]
+                        object_size=com_object.object_size,  # type: ignore[typeddict-item]
                         flags=Flags(
                             read=com_object.read_flag,  # type: ignore[typeddict-item]
                             write=com_object.write_flag,  # type: ignore[typeddict-item]
@@ -145,18 +147,22 @@ class XMLParser:
             self.areas,
             self.devices,
             self.spaces,
-        ) = ProjectLoader.load(self.knx_proj_contents)
+        ) = ProjectLoader.load(knx_proj_contents=self.knx_proj_contents)
 
         ManufacturerLoader.load(
-            self.knx_proj_contents.root_path / "knx_master.xml", self.devices
+            knx_master_file=self.knx_proj_contents.root_path / "knx_master.xml",
+            devices=self.devices,
         )
 
         products_dict: dict[str, Product] = {}
         hardware_application_map: HardwareToPrograms = {}
         for _products, _hardware_programs in [
-            HardwareLoader.load(hardware_file, language_code=language_code)
+            HardwareLoader.load(
+                hardware_file=hardware_file,
+                language_code=language_code,
+            )
             for hardware_file in HardwareLoader.get_hardware_files(
-                self.knx_proj_contents
+                project_contents=self.knx_proj_contents
             )
         ]:
             products_dict.update(_products)
@@ -192,9 +198,14 @@ class XMLParser:
 
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(
-                self.knx_proj_contents.root_path, self.devices
+                project_root_path=self.knx_proj_contents.root_path,
+                devices=self.devices,
             )
         )
         # update self.devices items with its inherited values from their application programs
         for application_program_file, devices in application_programs.items():
-            ApplicationProgramLoader.load(application_program_file, devices)
+            ApplicationProgramLoader.load(
+                application_program_path=application_program_file,
+                devices=devices,
+                language_code=language_code,
+            )
