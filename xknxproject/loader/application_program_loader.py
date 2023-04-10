@@ -91,10 +91,6 @@ class ApplicationProgramLoader:
         used_com_object_ids = {
             com_object_ref.ref_id for com_object_ref in com_object_refs.values()
         }
-        # remove unused com_objects
-        for unused_key in com_objects.keys() ^ used_com_object_ids:
-            del com_objects[unused_key]
-
         used_translation_ids = used_com_object_ids | used_com_object_ref_ids
         in_language = False
         in_translation_ref: str | None = None  # TranslationElement RefId
@@ -103,7 +99,7 @@ class ApplicationProgramLoader:
         for _, elem in tree_iterator:
             if elem.tag.endswith("Language"):
                 if in_language:
-                    # Already found the language we are looking for
+                    # Already found the language we are looking for.
                     # We don't need anything after that tag (there isn't much anyway)
                     elem.clear()
                     break
@@ -121,11 +117,8 @@ class ApplicationProgramLoader:
                 ] = elem.get("Text")
             elem.clear()
 
-        if translation_map:
-            ApplicationProgramLoader.apply_translations(
-                com_object_refs, translation_map
-            )
-            ApplicationProgramLoader.apply_translations(com_objects, translation_map)
+        ApplicationProgramLoader.apply_translations(com_object_refs, translation_map)
+        ApplicationProgramLoader.apply_translations(com_objects, translation_map)
 
     @staticmethod
     def parse_com_object(
@@ -179,12 +172,13 @@ class ApplicationProgramLoader:
         translation_map: dict[str, dict[str, str]],
     ) -> None:
         """Apply translations to ComObjects and ComObjectRefs."""
-        for com_object in com_objects.values():
-            if translation := translation_map.get(com_object.identifier):
-                if _text := translation.get("Text"):
-                    com_object.text = _text
-                if _function_text := translation.get("FunctionText"):
-                    com_object.function_text = _function_text
+        for identifier in com_objects.keys() & translation_map.keys():
+            translation = translation_map[identifier]
+            com_object = com_objects[identifier]
+            if _text := translation.get("Text"):
+                com_object.text = _text
+            if _function_text := translation.get("FunctionText"):
+                com_object.function_text = _function_text
 
     @staticmethod
     def get_application_program_files_for_devices(
