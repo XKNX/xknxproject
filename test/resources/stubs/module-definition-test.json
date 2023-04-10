@@ -1,16 +1,19 @@
 {
   "version": "2.1.0",
+  "language_code": "de-DE",
   "communication_objects": {
     "1.1.1/O-334_R-21": {
       "name": "FuehrungsWert",
-      "text": "Outside temperature / Reference value",
-      "function_text": "Receive measured value",
+      "number": 334,
+      "text": "Außentemperatur / Führungswert",
+      "function_text": "Messwert empfangen",
       "description": "",
       "device_address": "1.1.1",
       "dpt_type": {
         "main": 9,
         "sub": 1
       },
+      "object_size": "2 Bytes",
       "flags": {
         "read": false,
         "write": true,
@@ -23,14 +26,16 @@
     },
     "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1": {
       "name": "IstWert",
+      "number": 1,
       "text": "Kanal A: Wohnzimmer",
-      "function_text": "Receive temperature value",
+      "function_text": "Temperaturwert empfangen",
       "description": "",
       "device_address": "1.1.1",
       "dpt_type": {
         "main": 9,
         "sub": 1
       },
+      "object_size": "2 Bytes",
       "flags": {
         "read": false,
         "write": true,
@@ -43,14 +48,16 @@
     },
     "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3": {
       "name": "SollWert",
+      "number": 2,
       "text": "Kanal A: Wohnzimmer",
-      "function_text": "Preset setpoint",
+      "function_text": "Sollwert vorgeben",
       "description": "",
       "device_address": "1.1.1",
       "dpt_type": {
         "main": 9,
         "sub": 1
       },
+      "object_size": "2 Bytes",
       "flags": {
         "read": false,
         "write": true,
@@ -63,14 +70,16 @@
     },
     "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1": {
       "name": "IstWert",
+      "number": 1,
       "text": "Kanal B: Küche",
-      "function_text": "Receive temperature value",
+      "function_text": "Temperaturwert empfangen",
       "description": "Beschreibung KO 41",
       "device_address": "1.1.1",
       "dpt_type": {
         "main": 9,
         "sub": 1
       },
+      "object_size": "2 Bytes",
       "flags": {
         "read": false,
         "write": true,
@@ -83,14 +92,16 @@
     },
     "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3": {
       "name": "SollWert",
+      "number": 2,
       "text": "Kanal B: Küche",
-      "function_text": "Preset setpoint",
+      "function_text": "Sollwert vorgeben",
       "description": "Beschreibung KO 42 (U-Flag)",
       "device_address": "1.1.1",
       "dpt_type": {
         "main": 9,
         "sub": 1
       },
+      "object_size": "2 Bytes",
       "flags": {
         "read": false,
         "write": true,
@@ -103,14 +114,16 @@
     },
     "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3": {
       "name": "SollWert",
+      "number": 2,
       "text": "Kanal A: Bad",
-      "function_text": "Preset setpoint",
+      "function_text": "Sollwert vorgeben",
       "description": "",
       "device_address": "1.1.2",
       "dpt_type": {
         "main": 9,
         "sub": 1
       },
+      "object_size": "2 Bytes",
       "flags": {
         "read": false,
         "write": true,
@@ -156,7 +169,7 @@
   },
   "devices": {
     "1.1.1": {
-      "name": "AKH-0800.03 Heating Actuator 8-fold, 4SU MDRC, 24/230VAC",
+      "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "hardware_name": "Heizungsaktor 8-fach",
       "description": "",
       "individual_address": "1.1.1",
@@ -170,7 +183,7 @@
       ]
     },
     "1.1.2": {
-      "name": "AKH-0800.03 Heating Actuator 8-fold, 4SU MDRC, 24/230VAC",
+      "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "hardware_name": "Heizungsaktor 8-fach",
       "description": "",
       "individual_address": "1.1.2",
