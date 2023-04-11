@@ -22,6 +22,7 @@ class ProjectLoader:
     @staticmethod
     def load(
         knx_proj_contents: KNXProjContents,
+        space_usage_names: dict[str, str],
     ) -> tuple[
         list[XMLGroupAddress], list[XMLArea], list[DeviceInstance], list[XMLSpace]
     ]:
@@ -53,7 +54,9 @@ class ProjectLoader:
                 "{*}Project/{*}Installations/{*}Installation/{*}Locations"
             ):
                 spaces.extend(
-                    _LocationLoader(devices).load(location_element=location_element),
+                    _LocationLoader(devices, space_usage_names).load(
+                        location_element=location_element
+                    ),
                 )
 
         return group_address_list, areas, devices, spaces
@@ -188,11 +191,16 @@ class _TopologyLoader:
 class _LocationLoader:
     """Load location infos from KNX XML."""
 
-    def __init__(self, devices: list[DeviceInstance]):
+    def __init__(
+        self,
+        devices: list[DeviceInstance],
+        space_usage_names: dict[str, str],
+    ):
         """Initialize the LocationLoader."""
         self.devices: dict[str, str] = {
             device.identifier: device.individual_address for device in devices
         }
+        self.space_usage_names = space_usage_names
 
     def load(self, location_element: ElementTree.Element) -> list[XMLSpace]:
         """Load Location mappings."""
@@ -202,9 +210,21 @@ class _LocationLoader:
 
     def parse_space(self, node: ElementTree.Element) -> XMLSpace:
         """Parse a space from the document."""
-        name: str = node.get("Name", "")
-        space_type = SpaceType(node.get("Type"))
-        space: XMLSpace = XMLSpace([], space_type, name, [])
+        identifier = node.get("Id")
+        space: XMLSpace = XMLSpace(
+            identifier=identifier,  # type: ignore[arg-type]
+            name=node.get("Name"),  # type: ignore[arg-type]
+            space_type=SpaceType(node.get("Type")),
+            usage_id=node.get("Usage"),
+            usage_text=self.space_usage_names.get(identifier, ""),  # type: ignore[arg-type]
+            number=node.get("Number", ""),
+            comment=node.get("Comment", ""),
+            description=node.get("Description", ""),
+            project_uid=int(node.get("Puid")),  # type: ignore[arg-type]
+            context=node.get("Context", ""),
+            spaces=[],
+            devices=[],
+        )
 
         for sub_node in node:
             if sub_node.tag.endswith("Space"):

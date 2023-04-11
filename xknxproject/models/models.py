@@ -253,10 +253,18 @@ class ComObjectRef:
 class XMLSpace:
     """A space in the location XML."""
 
-    spaces: list[XMLSpace]
-    type: SpaceType
+    identifier: str
     name: str
-    devices: list[str]
+    space_type: SpaceType
+    usage_id: str | None  # SU-<int> resolved from knx_master.xml (with translation)
+    usage_text: str  # default to "" - translated
+    number: str  # default to ""
+    comment: str  # default to ""
+    description: str  # default to ""
+    project_uid: int
+    context: str  # default to ""
+    spaces: list[XMLSpace]
+    devices: list[str]  # [DeviceInstance.individual_address]
 
 
 @dataclass
