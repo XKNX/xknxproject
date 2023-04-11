@@ -210,18 +210,17 @@ class _LocationLoader:
 
     def parse_space(self, node: ElementTree.Element) -> XMLSpace:
         """Parse a space from the document."""
-        identifier = node.get("Id")
+        usage_id = node.get("Usage")
+        usage_text = self.space_usage_names.get(usage_id, "") if usage_id else ""
         space: XMLSpace = XMLSpace(
-            identifier=identifier,  # type: ignore[arg-type]
+            identifier=node.get("Id"),  # type: ignore[arg-type]
             name=node.get("Name"),  # type: ignore[arg-type]
             space_type=SpaceType(node.get("Type")),
-            usage_id=node.get("Usage"),
-            usage_text=self.space_usage_names.get(identifier, ""),  # type: ignore[arg-type]
+            usage_id=usage_id,
+            usage_text=usage_text,
             number=node.get("Number", ""),
-            comment=node.get("Comment", ""),
             description=node.get("Description", ""),
             project_uid=int(node.get("Puid")),  # type: ignore[arg-type]
-            context=node.get("Context", ""),
             spaces=[],
             devices=[],
         )

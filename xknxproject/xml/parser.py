@@ -140,13 +140,20 @@ class XMLParser:
 
         return Space(
             type=space.space_type.value,
+            identifier=space.identifier,
+            name=space.name,
+            usage_id=space.usage_id,
+            usage_text=space.usage_text,
+            number=space.number,
+            description=space.description,
+            project_uid=space.project_uid,
             devices=space.devices,
             spaces=subspaces,
         )
 
     def load(self, language_code: str | None) -> None:
         """Load XML files."""
-        (manufacturer_names, space_usage_names,) = KNXMasterLoader.load(
+        (manufacturer_names, space_usage_names) = KNXMasterLoader.load(
             knx_master_file=self.knx_proj_contents.root_path / "knx_master.xml",
             language_code=language_code,
         )

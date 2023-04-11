@@ -284,8 +284,41 @@
   "locations": {
     "ModuleDefinitionTest": {
       "type": "Building",
+      "identifier": "P-080F-0_BP-1",
+      "name": "ModuleDefinitionTest",
+      "usage_id": null,
+      "usage_text": "",
+      "number": "",
+      "description": "",
+      "project_uid": 6,
       "devices": [],
-      "spaces": {}
+      "spaces": {
+        "First floor": {
+          "type": "Floor",
+          "identifier": "P-080F-0_BP-2",
+          "name": "First floor",
+          "usage_id": null,
+          "usage_text": "",
+          "number": "first floor number",
+          "description": "first floor comment",
+          "project_uid": 21,
+          "devices": [],
+          "spaces": {
+            "Office": {
+              "type": "Room",
+              "identifier": "P-080F-0_BP-3",
+              "name": "Office",
+              "usage_id": "SU-11",
+              "usage_text": "Büro",
+              "number": "office number",
+              "description": "office description",
+              "project_uid": 22,
+              "devices": [],
+              "spaces": {}
+            }
+          }
+        }
+      }
     }
   }
 }

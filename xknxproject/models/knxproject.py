@@ -1,7 +1,7 @@
 """Define output type for parsed KNX project."""
 from __future__ import annotations
 
-from typing import Any, TypedDict
+from typing import TypedDict
 
 
 class Flags(TypedDict):
@@ -74,8 +74,15 @@ class Space(TypedDict):
     """Space typed dict."""
 
     type: str
+    identifier: str
+    name: str
+    usage_id: str | None
+    usage_text: str
+    number: str
+    description: str
+    project_uid: int
     devices: list[str]
-    spaces: dict[str, Any]
+    spaces: dict[str, Space]
 
 
 class KNXProject(TypedDict):

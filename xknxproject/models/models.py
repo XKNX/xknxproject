@@ -259,10 +259,8 @@ class XMLSpace:
     usage_id: str | None  # SU-<int> resolved from knx_master.xml (with translation)
     usage_text: str  # default to "" - translated
     number: str  # default to ""
-    comment: str  # default to ""
     description: str  # default to ""
     project_uid: int
-    context: str  # default to ""
     spaces: list[XMLSpace]
     devices: list[str]  # [DeviceInstance.individual_address]
 
