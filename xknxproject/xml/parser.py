@@ -7,7 +7,7 @@ from xknxproject.__version__ import __version__
 from xknxproject.loader import (
     ApplicationProgramLoader,
     HardwareLoader,
-    ManufacturerLoader,
+    KNXMasterLoader,
     ProjectLoader,
 )
 from xknxproject.models import (
@@ -138,20 +138,33 @@ class XMLParser:
         for subspace in space.spaces:
             subspaces[subspace.name] = self.recursive_convert_spaces(subspace)
 
-        return Space(type=space.type.value, devices=space.devices, spaces=subspaces)
+        return Space(
+            type=space.space_type.value,
+            identifier=space.identifier,
+            name=space.name,
+            usage_id=space.usage_id,
+            usage_text=space.usage_text,
+            number=space.number,
+            description=space.description,
+            project_uid=space.project_uid,
+            devices=space.devices,
+            spaces=subspaces,
+        )
 
     def load(self, language_code: str | None) -> None:
         """Load XML files."""
+        (manufacturer_names, space_usage_names) = KNXMasterLoader.load(
+            knx_master_file=self.knx_proj_contents.root_path / "knx_master.xml",
+            language_code=language_code,
+        )
         (
             self.group_addresses,
             self.areas,
             self.devices,
             self.spaces,
-        ) = ProjectLoader.load(knx_proj_contents=self.knx_proj_contents)
-
-        ManufacturerLoader.load(
-            knx_master_file=self.knx_proj_contents.root_path / "knx_master.xml",
-            devices=self.devices,
+        ) = ProjectLoader.load(
+            knx_proj_contents=self.knx_proj_contents,
+            space_usage_names=space_usage_names,
         )
 
         products_dict: dict[str, Product] = {}
@@ -169,6 +182,8 @@ class XMLParser:
             hardware_application_map.update(_hardware_programs)
 
         for device in self.devices:
+            device.manufacturer_name = manufacturer_names.get(device.manufacturer, "")
+
             try:
                 product = products_dict[device.product_ref]
             except KeyError:

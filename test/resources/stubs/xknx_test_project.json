@@ -274,6 +274,13 @@
   "locations": {
     "Test (1)": {
       "type": "Building",
+      "identifier": "P-0242-0_BP-1",
+      "name": "Test (1)",
+      "usage_id": null,
+      "usage_text": "",
+      "number": "",
+      "description": "",
+      "project_uid": 6,
       "devices": [],
       "spaces": {}
     }
