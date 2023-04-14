@@ -19,7 +19,7 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["GA-6"]
+      "group_address_links": ["1/0/5"]
     },
     "1.1.5/O-41_R-1434": {
       "name": "Ausgang B",
@@ -38,7 +38,7 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["GA-5"]
+      "group_address_links": ["1/0/4"]
     },
     "1.1.5/O-70_R-1505": {
       "name": "Ausgang C",
@@ -60,7 +60,7 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["GA-4"]
+      "group_address_links": ["1/0/3"]
     },
     "1.1.5/O-71_R-1506": {
       "name": "Ausgang C",
@@ -82,7 +82,7 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["GA-3"]
+      "group_address_links": ["1/0/2"]
     },
     "1.1.5/O-100_R-1577": {
       "name": "Ausgang D",
@@ -101,7 +101,7 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["GA-2"]
+      "group_address_links": ["1/0/1"]
     },
     "1.1.5/O-101_R-1578": {
       "name": "Ausgang D",
@@ -123,7 +123,7 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["GA-1"]
+      "group_address_links": ["1/0/0"]
     },
     "1.1.5/O-4_R-1417": {
       "name": "Ausgang A-X",
@@ -145,7 +145,7 @@
         "read_on_init": false,
         "transmit": true
       },
-      "group_address_links": ["GA-7"]
+      "group_address_links": ["2/0/6"]
     }
   },
   "topology": {
@@ -207,7 +207,7 @@
     }
   },
   "group_addresses": {
-    "GA-1": {
+    "1/0/0": {
       "name": "Test",
       "identifier": "GA-1",
       "raw_address": 2048,
@@ -216,7 +216,7 @@
       "communication_object_ids": ["1.1.5/O-101_R-1578"],
       "description": ""
     },
-    "GA-2": {
+    "1/0/1": {
       "name": "Behang D auf/ab",
       "identifier": "GA-2",
       "raw_address": 2049,
@@ -225,7 +225,7 @@
       "communication_object_ids": ["1.1.5/O-100_R-1577"],
       "description": ""
     },
-    "GA-3": {
+    "1/0/2": {
       "name": "Lamelle C auf/ab",
       "identifier": "GA-3",
       "raw_address": 2050,
@@ -234,7 +234,7 @@
       "communication_object_ids": ["1.1.5/O-71_R-1506"],
       "description": ""
     },
-    "GA-4": {
+    "1/0/3": {
       "name": "Behang C auf/ab",
       "identifier": "GA-4",
       "raw_address": 2051,
@@ -243,7 +243,7 @@
       "communication_object_ids": ["1.1.5/O-70_R-1505"],
       "description": ""
     },
-    "GA-5": {
+    "1/0/4": {
       "name": "Lamelle B auf/ab",
       "identifier": "GA-5",
       "raw_address": 2052,
@@ -252,7 +252,7 @@
       "communication_object_ids": ["1.1.5/O-41_R-1434"],
       "description": ""
     },
-    "GA-6": {
+    "1/0/5": {
       "name": "BehangB auf/ab",
       "identifier": "GA-6",
       "raw_address": 2053,
@@ -261,7 +261,7 @@
       "communication_object_ids": ["1.1.5/O-40_R-1433"],
       "description": ""
     },
-    "GA-7": {
+    "2/0/6": {
       "name": "Windalarm",
       "identifier": "GA-7",
       "raw_address": 4102,
