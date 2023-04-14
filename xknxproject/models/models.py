@@ -16,6 +16,7 @@ class XMLGroupAddress:
         name: str,
         identifier: str,
         address: str,
+        project_uid: int,
         description: str,
         dpt_type: str | None,
     ):
@@ -23,6 +24,7 @@ class XMLGroupAddress:
         self.name = name
         self.identifier = identifier.split("_")[1]
         self.raw_address = int(address)
+        self.project_uid = project_uid
         self.description = description
         self.dpt_type = (
             None if dpt_type is None else parse_dpt_types(dpt_type.split(" "))
@@ -72,6 +74,7 @@ class DeviceInstance:
         *,
         identifier: str,
         address: str,
+        project_uid: int,
         name: str,
         description: str,
         last_modified: str,
@@ -88,6 +91,7 @@ class DeviceInstance:
         self.address = address
         self.name = name
         self.description = description
+        self.project_uid = project_uid
         self.last_modified = last_modified
         self.product_ref = product_ref
         self.hardware_program_ref = hardware_program_ref

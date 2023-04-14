@@ -38,6 +38,7 @@ class Device(TypedDict):
     description: str
     manufacturer_name: str
     individual_address: str
+    project_uid: int
     communication_object_ids: list[str]
 
 
@@ -65,6 +66,7 @@ class GroupAddress(TypedDict):
     identifier: str
     raw_address: int
     address: str
+    project_uid: int
     dpt_type: dict[str, int] | None
     communication_object_ids: list[str]
     description: str

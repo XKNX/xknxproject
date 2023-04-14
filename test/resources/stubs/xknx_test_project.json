@@ -185,16 +185,18 @@
       "name": "SCN-IP100.03 IP Router with Secure",
       "hardware_name": "IP Router Secure",
       "description": "",
-      "individual_address": "1.1.0",
       "manufacturer_name": "MDT technologies",
+      "individual_address": "1.1.0",
+      "project_uid": 25,
       "communication_object_ids": []
     },
     "1.1.5": {
       "name": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
       "hardware_name": "JRA/S4.230.2.1 Jal./Rol.Akt.man.4f,230V,REG",
       "description": "",
-      "individual_address": "1.1.5",
       "manufacturer_name": "ABB",
+      "individual_address": "1.1.5",
+      "project_uid": 31,
       "communication_object_ids": [
         "1.1.5/O-40_R-1433",
         "1.1.5/O-41_R-1434",
@@ -212,6 +214,7 @@
       "identifier": "GA-1",
       "raw_address": 2048,
       "address": "1/0/0",
+      "project_uid": 34,
       "dpt_type": null,
       "communication_object_ids": ["1.1.5/O-101_R-1578"],
       "description": ""
@@ -221,6 +224,7 @@
       "identifier": "GA-2",
       "raw_address": 2049,
       "address": "1/0/1",
+      "project_uid": 35,
       "dpt_type": null,
       "communication_object_ids": ["1.1.5/O-100_R-1577"],
       "description": ""
@@ -230,6 +234,7 @@
       "identifier": "GA-3",
       "raw_address": 2050,
       "address": "1/0/2",
+      "project_uid": 36,
       "dpt_type": null,
       "communication_object_ids": ["1.1.5/O-71_R-1506"],
       "description": ""
@@ -239,6 +244,7 @@
       "identifier": "GA-4",
       "raw_address": 2051,
       "address": "1/0/3",
+      "project_uid": 37,
       "dpt_type": null,
       "communication_object_ids": ["1.1.5/O-70_R-1505"],
       "description": ""
@@ -248,6 +254,7 @@
       "identifier": "GA-5",
       "raw_address": 2052,
       "address": "1/0/4",
+      "project_uid": 38,
       "dpt_type": null,
       "communication_object_ids": ["1.1.5/O-41_R-1434"],
       "description": ""
@@ -257,6 +264,7 @@
       "identifier": "GA-6",
       "raw_address": 2053,
       "address": "1/0/5",
+      "project_uid": 39,
       "dpt_type": null,
       "communication_object_ids": ["1.1.5/O-40_R-1433"],
       "description": ""
@@ -266,6 +274,7 @@
       "identifier": "GA-7",
       "raw_address": 4102,
       "address": "2/0/6",
+      "project_uid": 42,
       "dpt_type": null,
       "communication_object_ids": ["1.1.5/O-4_R-1417"],
       "description": ""
