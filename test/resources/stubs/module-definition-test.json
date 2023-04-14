@@ -22,7 +22,7 @@
         "read_on_init": false,
         "transmit": true
       },
-      "group_address_links": ["GA-3"]
+      "group_address_links": ["0/0/3"]
     },
     "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1": {
       "name": "IstWert",
@@ -44,7 +44,7 @@
         "read_on_init": false,
         "transmit": true
       },
-      "group_address_links": ["GA-1"]
+      "group_address_links": ["0/0/1"]
     },
     "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3": {
       "name": "SollWert",
@@ -66,7 +66,7 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["GA-2", "GA-6"]
+      "group_address_links": ["0/0/2", "0/7/2"]
     },
     "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1": {
       "name": "IstWert",
@@ -88,7 +88,7 @@
         "read_on_init": false,
         "transmit": true
       },
-      "group_address_links": ["GA-7"]
+      "group_address_links": ["0/1/1"]
     },
     "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3": {
       "name": "SollWert",
@@ -110,7 +110,7 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["GA-4", "GA-6"]
+      "group_address_links": ["0/1/2", "0/7/2"]
     },
     "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3": {
       "name": "SollWert",
@@ -132,7 +132,7 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["GA-5", "GA-6"]
+      "group_address_links": ["0/2/2", "0/7/2"]
     }
   },
   "topology": {
@@ -192,7 +192,7 @@
     }
   },
   "group_addresses": {
-    "GA-1": {
+    "0/0/1": {
       "name": "Temperatur Ist",
       "identifier": "GA-1",
       "raw_address": 1,
@@ -204,7 +204,7 @@
       "communication_object_ids": ["1.1.1/MD-2_M-1_MI-1_O-2-1_R-1"],
       "description": ""
     },
-    "GA-2": {
+    "0/0/2": {
       "name": "Temperatur Soll",
       "identifier": "GA-2",
       "raw_address": 2,
@@ -216,7 +216,7 @@
       "communication_object_ids": ["1.1.1/MD-2_M-1_MI-1_O-2-2_R-3"],
       "description": ""
     },
-    "GA-3": {
+    "0/0/3": {
       "name": "Reglerwert",
       "identifier": "GA-3",
       "raw_address": 3,
@@ -228,7 +228,7 @@
       "communication_object_ids": ["1.1.1/O-334_R-21"],
       "description": ""
     },
-    "GA-4": {
+    "0/1/2": {
       "name": "Temperatur Soll",
       "identifier": "GA-4",
       "raw_address": 258,
@@ -240,7 +240,7 @@
       "communication_object_ids": ["1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"],
       "description": ""
     },
-    "GA-7": {
+    "0/1/1": {
       "name": "Temperatur Ist",
       "identifier": "GA-7",
       "raw_address": 257,
@@ -252,7 +252,7 @@
       "communication_object_ids": ["1.1.1/MD-2_M-2_MI-1_O-2-1_R-1"],
       "description": ""
     },
-    "GA-5": {
+    "0/2/2": {
       "name": "Temperatur Soll",
       "identifier": "GA-5",
       "raw_address": 514,
@@ -264,7 +264,7 @@
       "communication_object_ids": ["1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"],
       "description": ""
     },
-    "GA-6": {
+    "0/7/2": {
       "name": "Temperatur Soll",
       "identifier": "GA-6",
       "raw_address": 1794,

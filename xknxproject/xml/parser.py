@@ -46,6 +46,7 @@ class XMLParser:
     def parse(self, language_code: str | None = None) -> KNXProject:
         """Parse ETS files."""
         self.load(language_code=language_code)
+        _ga_id_to_address = {ga.identifier: ga.address for ga in self.group_addresses}
 
         communication_objects: dict[str, CommunicationObject] = {}
         devices_dict: dict[str, Device] = {}
@@ -54,6 +55,9 @@ class XMLParser:
             for com_object in device.com_object_instance_refs:
                 if com_object.links:
                     com_object_key = f"{device.individual_address}/{com_object.ref_id}"
+                    group_address_links = [
+                        _ga_id_to_address[link] for link in com_object.links
+                    ]
                     communication_objects[com_object_key] = CommunicationObject(
                         name=com_object.name,  # type: ignore[typeddict-item]
                         number=com_object.number,  # type: ignore[typeddict-item]
@@ -71,7 +75,7 @@ class XMLParser:
                             read_on_init=com_object.read_on_init_flag,  # type: ignore[typeddict-item]
                             transmit=com_object.transmit_flag,  # type: ignore[typeddict-item]
                         ),
-                        group_address_links=com_object.links,
+                        group_address_links=group_address_links,
                     )
                     device_com_objects.append(com_object_key)
 
@@ -106,9 +110,9 @@ class XMLParser:
             _com_object_ids = [
                 com_object_id
                 for com_object_id, com_object in communication_objects.items()
-                if group_address.identifier in com_object["group_address_links"]
+                if group_address.address in com_object["group_address_links"]
             ]
-            group_address_dict[group_address.identifier] = GroupAddress(
+            group_address_dict[group_address.address] = GroupAddress(
                 name=group_address.name,
                 identifier=group_address.identifier,
                 raw_address=group_address.raw_address,
