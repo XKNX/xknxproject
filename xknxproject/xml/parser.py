@@ -83,8 +83,9 @@ class XMLParser:
                 name=device.product_name,
                 hardware_name=device.hardware_name,
                 description=device.description,
-                individual_address=device.individual_address,
                 manufacturer_name=device.manufacturer_name,
+                individual_address=device.individual_address,
+                project_uid=device.project_uid,
                 communication_object_ids=device_com_objects,
             )
 
@@ -117,6 +118,7 @@ class XMLParser:
                 identifier=group_address.identifier,
                 raw_address=group_address.raw_address,
                 address=group_address.address,
+                project_uid=group_address.project_uid,
                 dpt_type=group_address.dpt_type,
                 communication_object_ids=_com_object_ids,
                 description=group_address.description,

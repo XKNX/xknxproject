@@ -172,8 +172,9 @@
       "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "hardware_name": "Heizungsaktor 8-fach",
       "description": "",
-      "individual_address": "1.1.1",
       "manufacturer_name": "MDT technologies",
+      "individual_address": "1.1.1",
+      "project_uid": 12,
       "communication_object_ids": [
         "1.1.1/O-334_R-21",
         "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1",
@@ -186,8 +187,9 @@
       "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "hardware_name": "Heizungsaktor 8-fach",
       "description": "",
-      "individual_address": "1.1.2",
       "manufacturer_name": "MDT technologies",
+      "individual_address": "1.1.2",
+      "project_uid": 13,
       "communication_object_ids": ["1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"]
     }
   },
@@ -197,6 +199,7 @@
       "identifier": "GA-1",
       "raw_address": 1,
       "address": "0/0/1",
+      "project_uid": 9,
       "dpt_type": {
         "main": 9,
         "sub": 1
@@ -209,6 +212,7 @@
       "identifier": "GA-2",
       "raw_address": 2,
       "address": "0/0/2",
+      "project_uid": 10,
       "dpt_type": {
         "main": 9,
         "sub": 1
@@ -221,6 +225,7 @@
       "identifier": "GA-3",
       "raw_address": 3,
       "address": "0/0/3",
+      "project_uid": 11,
       "dpt_type": {
         "main": 9,
         "sub": 1
@@ -233,6 +238,7 @@
       "identifier": "GA-4",
       "raw_address": 258,
       "address": "0/1/2",
+      "project_uid": 16,
       "dpt_type": {
         "main": 9,
         "sub": 1
@@ -245,6 +251,7 @@
       "identifier": "GA-7",
       "raw_address": 257,
       "address": "0/1/1",
+      "project_uid": 20,
       "dpt_type": {
         "main": 9,
         "sub": 1
@@ -257,6 +264,7 @@
       "identifier": "GA-5",
       "raw_address": 514,
       "address": "0/2/2",
+      "project_uid": 17,
       "dpt_type": {
         "main": 9,
         "sub": 1
@@ -269,6 +277,7 @@
       "identifier": "GA-6",
       "raw_address": 1794,
       "address": "0/7/2",
+      "project_uid": 19,
       "dpt_type": {
         "main": 9,
         "sub": 1

@@ -73,6 +73,7 @@ class _GroupAddressLoader:
             name=group_address_element.get("Name", ""),
             identifier=group_address_element.get("Id", ""),
             address=group_address_element.get("Address", ""),
+            project_uid=int(group_address_element.get("Puid")),  # type: ignore[arg-type]
             dpt_type=group_address_element.get("DatapointType"),
             description=group_address_element.get("Description", ""),
         )
@@ -137,6 +138,7 @@ class _TopologyLoader:
         device: DeviceInstance = DeviceInstance(
             identifier=device_element.get("Id", ""),
             address=address,
+            project_uid=int(device_element.get("Puid")),  # type: ignore[arg-type]
             name=device_element.get("Name", ""),
             description=device_element.get("Description", ""),
             last_modified=device_element.get("LastModified", ""),
