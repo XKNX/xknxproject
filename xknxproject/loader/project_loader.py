@@ -151,8 +151,11 @@ class _TopologyLoader:
         for sub_node in device_element:
             if sub_node.tag.endswith("AdditionalAddresses"):
                 for address_node in sub_node:
-                    if _address := address_node.get("Address"):
-                        device.additional_addresses.append(_address)
+                    device.add_additional_address(
+                        device_address=address_node.get("Address"),  # type: ignore[arg-type]
+                        description=address_node.get("Description", ""),
+                        name=address_node.get("Name"),
+                    )
             if sub_node.tag.endswith("ComObjectInstanceRefs"):
                 for com_object in sub_node:
                     if instance := _TopologyLoader._create_com_object_instance(
