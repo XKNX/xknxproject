@@ -42,10 +42,11 @@ class XMLParser:
         self.group_addresses: list[XMLGroupAddress] = []
         self.areas: list[XMLArea] = []
         self.devices: list[DeviceInstance] = []
+        self.language_code: str | None = None
 
-    def parse(self, language_code: str | None = None) -> KNXProject:
+    def parse(self, language: str | None = None) -> KNXProject:
         """Parse ETS files."""
-        self.load(language_code=language_code)
+        self.load(language=language)
         _ga_id_to_address = {ga.identifier: ga.address for ga in self.group_addresses}
 
         communication_objects: dict[str, CommunicationObject] = {}
@@ -130,7 +131,7 @@ class XMLParser:
 
         return KNXProject(
             version=__version__,
-            language_code=language_code,
+            language_code=self.language_code,
             communication_objects=communication_objects,
             topology=topology_dict,
             devices=devices_dict,
@@ -157,11 +158,15 @@ class XMLParser:
             spaces=subspaces,
         )
 
-    def load(self, language_code: str | None) -> None:
+    def load(self, language: str | None) -> None:
         """Load XML files."""
-        (manufacturer_names, space_usage_names) = KNXMasterLoader.load(
+        (
+            manufacturer_names,
+            space_usage_names,
+            self.language_code,
+        ) = KNXMasterLoader.load(
             knx_master_file=self.knx_proj_contents.root_path / "knx_master.xml",
-            language_code=language_code,
+            language=language,
         )
         (
             self.group_addresses,
@@ -178,7 +183,7 @@ class XMLParser:
         for _products, _hardware_programs in [
             HardwareLoader.load(
                 hardware_file=hardware_file,
-                language_code=language_code,
+                language_code=self.language_code,
             )
             for hardware_file in HardwareLoader.get_hardware_files(
                 project_contents=self.knx_proj_contents
@@ -228,5 +233,5 @@ class XMLParser:
             ApplicationProgramLoader.load(
                 application_program_path=application_program_file,
                 devices=devices,
-                language_code=language_code,
+                language_code=self.language_code,
             )
