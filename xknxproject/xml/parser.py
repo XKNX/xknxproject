@@ -22,9 +22,11 @@ from xknxproject.models import (
     KNXProject,
     Line,
     Product,
+    ProjectInfo,
     Space,
     XMLArea,
     XMLGroupAddress,
+    XMLProjectInformation,
     XMLSpace,
 )
 from xknxproject.zip.extractor import KNXProjContents
@@ -43,6 +45,8 @@ class XMLParser:
         self.areas: list[XMLArea] = []
         self.devices: list[DeviceInstance] = []
         self.language_code: str | None = None
+
+        self.project_info: XMLProjectInformation
 
     def parse(self, language: str | None = None) -> KNXProject:
         """Parse ETS files."""
@@ -129,9 +133,21 @@ class XMLParser:
         for space in self.spaces:
             space_dict[space.name] = self.recursive_convert_spaces(space)
 
-        return KNXProject(
-            version=__version__,
+        info = ProjectInfo(
+            project_id=self.project_info.project_id,
+            name=self.project_info.name,
+            last_modified=self.project_info.last_modified,
+            group_address_style=self.project_info.group_address_style,
+            guid=self.project_info.guid,
+            created_by=self.project_info.created_by,
+            schema_version=self.project_info.schema_version,
+            tool_version=self.project_info.tool_version,
+            xknxproject_version=__version__,
             language_code=self.language_code,
+        )
+
+        return KNXProject(
+            info=info,
             communication_objects=communication_objects,
             topology=topology_dict,
             devices=devices_dict,
@@ -173,6 +189,7 @@ class XMLParser:
             self.areas,
             self.devices,
             self.spaces,
+            self.project_info,
         ) = ProjectLoader.load(
             knx_proj_contents=self.knx_proj_contents,
             space_usage_names=space_usage_names,

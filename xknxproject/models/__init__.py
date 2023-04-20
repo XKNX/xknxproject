@@ -7,6 +7,7 @@ from .knxproject import (
     GroupAddress,
     KNXProject,
     Line,
+    ProjectInfo,
     Space,
 )
 from .models import (
@@ -19,29 +20,32 @@ from .models import (
     XMLArea,
     XMLGroupAddress,
     XMLLine,
+    XMLProjectInformation,
     XMLSpace,
 )
 from .static import MEDIUM_TYPES, SpaceType
 
 __all__ = [
     "Area",
-    "Line",
     "CommunicationObject",
-    "GroupAddress",
     "Device",
     "Flags",
+    "GroupAddress",
     "KNXProject",
-    "XMLArea",
+    "Line",
+    "ProjectInfo",
+    "Space",
     "ComObject",
     "ComObjectInstanceRef",
     "ComObjectRef",
-    "SpaceType",
-    "Space",
     "DeviceInstance",
+    "HardwareToPrograms",
+    "Product",
+    "XMLArea",
     "XMLGroupAddress",
     "XMLLine",
     "XMLSpace",
-    "HardwareToPrograms",
-    "Product",
+    "XMLProjectInformation",
     "MEDIUM_TYPES",
+    "SpaceType",
 ]

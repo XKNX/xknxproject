@@ -1,6 +1,16 @@
 {
-  "version": "2.1.0",
-  "language_code": "de-DE",
+  "info": {
+    "project_id": "P-080F",
+    "name": "ModuleDefinitionTest",
+    "last_modified": "2023-04-11T21:06:02.8735147Z",
+    "group_address_style": "ThreeLevel",
+    "guid": "26520acd-6231-4fe4-a409-4d1610e7a251",
+    "created_by": "ETS5",
+    "schema_version": "20",
+    "tool_version": "5.7.1428.39779",
+    "xknxproject_version": "2.1.0",
+    "language_code": "de-DE"
+  },
   "communication_objects": {
     "1.1.1/O-334_R-21": {
       "name": "FuehrungsWert",

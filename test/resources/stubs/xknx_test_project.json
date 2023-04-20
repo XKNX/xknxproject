@@ -1,6 +1,16 @@
 {
-  "version": "2.1.0",
-  "language_code": null,
+  "info": {
+    "project_id": "P-0242",
+    "name": "Test (1)",
+    "last_modified": "2022-04-21T17:18:43.3042783Z",
+    "group_address_style": "ThreeLevel",
+    "guid": "7aceb083-274e-4568-806f-b8f9df992873",
+    "created_by": "ETS5",
+    "schema_version": "20",
+    "tool_version": "5.7.1428.39779",
+    "xknxproject_version": "2.1.0",
+    "language_code": null
+  },
   "communication_objects": {
     "1.1.5/O-40_R-1433": {
       "name": "Ausgang B",

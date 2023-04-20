@@ -20,17 +20,30 @@ class KNXProjContents:
     """Class for holding the contents of a KNXProj file."""
 
     def __init__(
-        self, root_zip: ZipFile, project_0_archive: ZipFile, project_0_name: str
+        self,
+        root_zip: ZipFile,
+        project_archive: ZipFile,
+        project_relative_path: str,
     ):
         """Initialize a KNXProjContents."""
-        self._project_0_archive = project_0_archive
-        self._project_0_name = project_0_name
+        self._project_archive = project_archive
+        self._project_relative_path = project_relative_path
         self.root = root_zip
         self.root_path = ZipPath(root_zip)
 
     def open_project_0(self) -> IO[bytes]:
-        """Open the project 0 archive."""
-        return self._project_0_archive.open(self._project_0_name, mode="r")
+        """Open the project 0.xml file."""
+        return self._project_archive.open(
+            f"{self._project_relative_path}0.xml",
+            mode="r",
+        )
+
+    def open_project_meta(self) -> IO[bytes]:
+        """Open the project.xml file."""
+        return self._project_archive.open(
+            f"{self._project_relative_path}project.xml",
+            mode="r",
+        )
 
 
 @contextmanager
@@ -49,16 +62,23 @@ def extract(
             password_protected = True
 
         if not password_protected:
-            project_0_name = f"{project_id}/0.xml"
-            yield KNXProjContents(zip_archive, zip_archive, project_0_name)
+            yield KNXProjContents(
+                root_zip=zip_archive,
+                project_archive=zip_archive,
+                project_relative_path=f"{project_id}/",
+            )
             return
         # Password protected project
         with _extract_protected_project_file(
             zip_archive, protected_info, password
         ) as project_zip:
-            # ZipPath is not supported by pyzipper thus we use string name
-            project_0_name = "0.xml"
-            yield KNXProjContents(zip_archive, project_zip, project_0_name)
+            # ZipPath is not supported by pyzipper thus we use
+            # string name for project_relative_path
+            yield KNXProjContents(
+                root_zip=zip_archive,
+                project_archive=project_zip,
+                project_relative_path="",
+            )
 
 
 def _get_project_id(zip_archive: ZipFile) -> str:

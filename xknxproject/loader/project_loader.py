@@ -1,6 +1,7 @@
 """Project file loader."""
 from __future__ import annotations
 
+import re
 from xml.etree import ElementTree
 
 from xknxproject.models import (
@@ -10,6 +11,7 @@ from xknxproject.models import (
     XMLArea,
     XMLGroupAddress,
     XMLLine,
+    XMLProjectInformation,
     XMLSpace,
 )
 from xknxproject.util import parse_dpt_types, parse_xml_flag
@@ -24,7 +26,11 @@ class ProjectLoader:
         knx_proj_contents: KNXProjContents,
         space_usage_names: dict[str, str],
     ) -> tuple[
-        list[XMLGroupAddress], list[XMLArea], list[DeviceInstance], list[XMLSpace]
+        list[XMLGroupAddress],
+        list[XMLArea],
+        list[DeviceInstance],
+        list[XMLSpace],
+        XMLProjectInformation,
     ]:
         """Load topology mappings."""
         areas: list[XMLArea] = []
@@ -32,8 +38,8 @@ class ProjectLoader:
         group_address_list: list[XMLGroupAddress] = []
         spaces: list[XMLSpace] = []
 
-        with knx_proj_contents.open_project_0() as project_file:
-            tree = ElementTree.parse(project_file)
+        with knx_proj_contents.open_project_0() as project_0_file:
+            tree = ElementTree.parse(project_0_file)
             for ga_element in tree.findall(
                 # `//` to ignore <GroupRange> tags to support different GA level formats
                 "{*}Project/{*}Installations/{*}Installation/{*}GroupAddresses//{*}GroupAddress"
@@ -59,7 +65,11 @@ class ProjectLoader:
                     ),
                 )
 
-        return group_address_list, areas, devices, spaces
+        with knx_proj_contents.open_project_meta() as project_file:
+            tree = ElementTree.parse(project_file)
+            project_info = load_project_info(tree)
+
+        return group_address_list, areas, devices, spaces, project_info
 
 
 class _GroupAddressLoader:
@@ -236,3 +246,34 @@ class _LocationLoader:
                     space.devices.append(individual_address)
 
         return space
+
+
+def load_project_info(tree: ElementTree.ElementTree) -> XMLProjectInformation:
+    """Load project information."""
+    knx_root = tree.getroot()
+    _namespace_match = re.match(r"{.+\/project\/(.+)}", knx_root.tag)
+    schema_version = _namespace_match.group(1) if _namespace_match else ""
+    created_by = knx_root.get("CreatedBy", "")
+    tool_version = knx_root.get("ToolVersion", "")
+
+    try:
+        project_node: ElementTree.Element = tree.find("{*}Project")  # type: ignore[assignment]
+        identifier = project_node.get("Id", "")
+        info_node: ElementTree.Element = project_node.find("{*}ProjectInformation")  # type: ignore[assignment]
+        return XMLProjectInformation(
+            project_id=identifier,
+            name=info_node.get("Name", ""),
+            last_modified=info_node.get("LastModified"),
+            group_address_style=info_node.get("GroupAddressStyle"),  # type: ignore[arg-type]
+            guid=info_node.get("Guid"),  # type: ignore[arg-type]
+            created_by=created_by,
+            schema_version=schema_version,
+            tool_version=tool_version,
+        )
+    except AttributeError:
+        # Project or ProjectInformation tag not found
+        return XMLProjectInformation(
+            created_by=created_by,
+            schema_version=schema_version,
+            tool_version=tool_version,
+        )
