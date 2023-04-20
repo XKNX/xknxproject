@@ -279,3 +279,18 @@ class Product:
 
 
 HardwareToPrograms = dict[str, str]
+
+
+@dataclass
+class XMLProjectInformation:
+    """Model a ProjectInformation instance."""
+
+    # ProjectInformation tag is not required in XSD, thus everything is optional
+    project_id: str = ""
+    name: str = ""
+    last_modified: str | None = None
+    group_address_style: str = ""
+    guid: str = ""
+    created_by: str = ""
+    schema_version: str = ""
+    tool_version: str = ""

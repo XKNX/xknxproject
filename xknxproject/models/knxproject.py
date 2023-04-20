@@ -87,11 +87,25 @@ class Space(TypedDict):
     spaces: dict[str, Space]
 
 
+class ProjectInfo(TypedDict):
+    """Information about the project."""
+
+    project_id: str
+    name: str
+    last_modified: str | None
+    group_address_style: str
+    guid: str
+    created_by: str
+    schema_version: str
+    tool_version: str
+    xknxproject_version: str
+    language_code: str | None
+
+
 class KNXProject(TypedDict):
     """KNXProject typed dictionary."""
 
-    version: str
-    language_code: str | None
+    info: ProjectInfo
     communication_objects: dict[str, CommunicationObject]
     devices: dict[str, Device]
     topology: dict[str, Area]
