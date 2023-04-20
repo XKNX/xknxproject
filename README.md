@@ -20,6 +20,8 @@ Currently, xknxproject supports extracting (password protected) ETS5 and ETS6 pr
 
 Caution: Loading a middle-sized project with this tool takes about 1.5 seconds. For bigger projects this might as well be >3s.
 
+Not all supported languages are included in project / application data. If the configured language is not found, the default language will be used - which is manufacturer / product dependent.
+
 ## Installation
 
 `pip install xknxproject`
@@ -32,11 +34,15 @@ from xknxproject.models import KNXProject
 from xknxproject import XKNXProj
 
 
-knxproj: XKNXProj = XKNXProj("path/to/your/file.knxproj", "optional_password")
+knxproj: XKNXProj = XKNXProj(
+    archive_name="path/to/your/file.knxproj",
+    archive_password="password",  # optional
+    language="de-DE",  # optional
+)
 project: KNXProject = knxproj.parse()
 ```
 
-The `KNXProject` is a typed dictionary and can be used just like a dictionary, or can be exported as JSON.
+The resulting `KNXProject` is a typed dictionary and can be used just like a dictionary, or can be exported as JSON.
 You can find an example file (exported JSON) in our test suite under https://github.com/XKNX/xknxproject/tree/main/test/resources/stubs
 
 The full type definition can be found here: https://github.com/XKNX/xknxproject/blob/main/xknxproject/models/knxproject.py

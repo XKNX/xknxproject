@@ -1,8 +1,11 @@
 """KNX Master Data Loader."""
 from __future__ import annotations
 
+import logging
 from xml.etree import ElementTree
 from zipfile import Path
+
+_LOGGER = logging.getLogger("xknxproject.log")
 
 
 class KNXMasterLoader:
@@ -65,6 +68,8 @@ class KNXMasterLoader:
             _lan.split("-", maxsplit=1) for _lan in product_languages
         ]:
             if language[:2].lower() == language_code:
+                _LOGGER.info("Using language code %s for %s", language_code, language)
                 return f"{language_code}-{country_code}"
 
+        _LOGGER.warning("No matching language code found for %s", language)
         return None
