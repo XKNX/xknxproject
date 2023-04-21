@@ -35,8 +35,8 @@ from xknxproject import XKNXProj
 
 
 knxproj: XKNXProj = XKNXProj(
-    archive_name="path/to/your/file.knxproj",
-    archive_password="password",  # optional
+    path="path/to/your/file.knxproj",
+    password="password",  # optional
     language="de-DE",  # optional
 )
 project: KNXProject = knxproj.parse()

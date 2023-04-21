@@ -14,18 +14,18 @@ class XKNXProj:
 
     def __init__(
         self,
-        archive_name: str | Path,
-        archive_password: str | None = None,
+        path: str | Path,
+        password: str | None = None,
         language: str | None = None,
     ):
         """Initialize a KNXProjParser."""
-        self.archive_path = Path(archive_name)
-        self.password = archive_password
+        self.path = Path(path)
+        self.password = password
         self.language = language
 
         self.version = __version__
 
     def parse(self) -> KNXProject:
         """Parse the KNX project."""
-        with extract(self.archive_path, self.password) as knx_project_content:
+        with extract(self.path, self.password) as knx_project_content:
             return XMLParser(knx_project_content).parse(self.language)
