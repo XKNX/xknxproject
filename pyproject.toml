@@ -14,8 +14,8 @@ classifiers  = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "cryptography",
-    "pyzipper",
+    "cryptography>=40.0.0",
+    "pyzipper>=0.3.6",
 ]
 description  = "A library to gather information from ETS project files used for KNX"
 dynamic      = ["version"]
