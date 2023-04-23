@@ -76,3 +76,11 @@ def test_wrong_password_ets6():
         with extract(xknx_test_project_protected_ets6, "wrong") as knx_project_contents:
             with knx_project_contents.open_project_0():
                 pass
+
+
+def test_required_password_ets6():
+    """Test reading a KNX ETS6 project with wrong password."""
+    with raises(InvalidPasswordException):
+        with extract(xknx_test_project_protected_ets6, "") as knx_project_contents:
+            with knx_project_contents.open_project_0():
+                pass

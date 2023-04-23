@@ -1,9 +1,9 @@
 """Constants for the library."""
 from typing import Final
 
-ETS6_SCHEMA_VERSION: Final = b"http://knx.org/xml/project/21"
-ETS57_SCHEMA_VERSION: Final = b"http://knx.org/xml/project/20"
-ETS56_SCHEMA_VERSION: Final = b"http://knx.org/xml/project/14"
+ETS_6_SCHEMA_VERSION: Final = 21
+ETS_5_7_SCHEMA_VERSION: Final = 20
+ETS_5_6_SCHEMA_VERSION: Final = 14
 
 
 MAIN_DPT: Final = "DPT-"
