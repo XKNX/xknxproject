@@ -172,11 +172,8 @@ def _is_ets6_project(schema_version: int) -> bool:
     return schema_version >= ETS_6_SCHEMA_VERSION
 
 
-def _generate_ets6_zip_password(password: str | None) -> bytes:
+def _generate_ets6_zip_password(password: str) -> bytes:
     """Generate ZIP archive password."""
-    if not password:
-        return b""
-
     return base64.b64encode(
         PBKDF2HMAC(
             algorithm=hashes.SHA256(),
