@@ -10,4 +10,8 @@ class InvalidPasswordException(XknxProjectException):
 
 
 class ProjectNotFoundException(XknxProjectException):
-    """Project files not found in /tmp directory."""
+    """Project files not found in archive."""
+
+
+class UnexpectedFileContent(XknxProjectException):
+    """Unexpected file content."""
