@@ -40,11 +40,12 @@ class XKNXProj:
         _start = time.time()
         with extract(self.path, self.password) as knx_project_content:
             project = XMLParser(knx_project_content).parse(self.language)
-            _LOGGER.info("Parsing took %s seconds", time.time() - _start)
-            _LOGGER.info(
-                "Found %s group addresses, %s devices and %s used communication objects",
-                len(project["group_addresses"]),
-                len(project["devices"]),
-                len(project["communication_objects"]),
-            )
-            return project
+
+        _LOGGER.info("Parsing took %s seconds", time.time() - _start)
+        _LOGGER.info(
+            "Found %s group addresses, %s devices and %s used communication objects",
+            len(project["group_addresses"]),
+            len(project["devices"]),
+            len(project["communication_objects"]),
+        )
+        return project
