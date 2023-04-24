@@ -4,6 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import re
 
+from xknxproject.models.knxproject import DPTType
 from xknxproject.models.static import SpaceType
 from xknxproject.util import parse_dpt_types
 
@@ -26,11 +27,9 @@ class XMLGroupAddress:
         self.raw_address = int(address)
         self.project_uid = project_uid
         self.description = description
-        self.dpt_type = (
-            None if dpt_type is None else parse_dpt_types(dpt_type.split(" "))
-        )
 
         self.address = self._parse_address()
+        self.dpt_type = parse_dpt_types(dpt_type)
 
     def _parse_address(self) -> str:
         """Parse a given address and returns a string representation of it."""
@@ -136,7 +135,7 @@ class ComObjectInstanceRef:
     transmit_flag: bool | None  # "TransmitFlag" - knx:Enable_t
     update_flag: bool | None  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
-    datapoint_type: dict[str, int] | None  # "DataPointType" - knx:IDREFS
+    datapoint_type: DPTType | None  # "DataPointType" - knx:IDREFS
     description: str | None  # "Description" - language dependent
     links: list[str] | None  # "Links" - knx:RELIDREFS
 
@@ -215,7 +214,7 @@ class ComObject:
     transmit_flag: bool  # "TransmitFlag" - knx:Enable_t
     update_flag: bool  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool  # "ReadOnInitFlag" - knx:Enable_t
-    datapoint_type: dict[str, int] | None  # "DataPointType" - knx:IDREFS - optional
+    datapoint_type: DPTType | None  # "DataPointType" - knx:IDREFS - optional
 
 
 @dataclass
@@ -250,7 +249,7 @@ class ComObjectRef:
     transmit_flag: bool | None  # "TransmitFlag" - knx:Enable_t
     update_flag: bool | None  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
-    datapoint_type: dict[str, int] | None  # "DataPointType" - knx:IDREFS
+    datapoint_type: DPTType | None  # "DataPointType" - knx:IDREFS
 
 
 @dataclass

@@ -180,9 +180,6 @@ class _TopologyLoader:
         if not (links := com_object.get("Links")):
             return None
 
-        _dpt_type = com_object.get("DatapointType")
-        datapoint_type = parse_dpt_types(_dpt_type.split(" ")) if _dpt_type else None
-
         return ComObjectInstanceRef(
             identifier=com_object.get("Id"),
             ref_id=com_object.get("RefId"),  # type: ignore[arg-type]
@@ -194,7 +191,7 @@ class _TopologyLoader:
             transmit_flag=parse_xml_flag(com_object.get("TransmitFlag")),
             update_flag=parse_xml_flag(com_object.get("UpdateFlag")),
             read_on_init_flag=parse_xml_flag(com_object.get("ReadOnInitFlag")),
-            datapoint_type=datapoint_type,
+            datapoint_type=parse_dpt_types(com_object.get("DatapointType")),
             description=com_object.get("Description"),
             links=links.split(" "),
         )

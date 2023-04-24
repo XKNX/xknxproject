@@ -19,7 +19,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": {},
+      "dpt_type": null,
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -38,7 +38,7 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": {},
+      "dpt_type": null,
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -101,7 +101,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": {},
+      "dpt_type": null,
       "object_size": "1 Bit",
       "flags": {
         "read": false,
