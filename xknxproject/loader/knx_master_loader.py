@@ -68,8 +68,11 @@ class KNXMasterLoader:
             _lan.split("-", maxsplit=1) for _lan in product_languages
         ]:
             if language[:2].lower() == language_code:
-                _LOGGER.info("Using language code %s for %s", language_code, language)
-                return f"{language_code}-{country_code}"
+                used_language = f"{language_code}-{country_code}"
+                _LOGGER.info(
+                    'Using language code "%s" for "%s"', used_language, language
+                )
+                return used_language
 
         _LOGGER.warning("No matching language code found for %s", language)
         return None
