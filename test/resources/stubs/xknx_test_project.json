@@ -19,7 +19,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": null,
+      "dpt": null,
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -38,7 +38,7 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": null,
+      "dpt": null,
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -57,7 +57,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": {
+      "dpt": {
         "main": 1,
         "sub": 8
       },
@@ -79,7 +79,7 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": {
+      "dpt": {
         "main": 1,
         "sub": 8
       },
@@ -101,7 +101,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": null,
+      "dpt": null,
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -120,7 +120,7 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": {
+      "dpt": {
         "main": 1,
         "sub": 8
       },
@@ -142,7 +142,7 @@
       "function_text": "Wind alarm no. 1",
       "description": "",
       "device_address": "1.1.5",
-      "dpt_type": {
+      "dpt": {
         "main": 1,
         "sub": 1
       },
@@ -225,7 +225,7 @@
       "raw_address": 2048,
       "address": "1/0/0",
       "project_uid": 34,
-      "dpt_type": null,
+      "dpt": null,
       "communication_object_ids": ["1.1.5/O-101_R-1578"],
       "description": ""
     },
@@ -235,7 +235,7 @@
       "raw_address": 2049,
       "address": "1/0/1",
       "project_uid": 35,
-      "dpt_type": null,
+      "dpt": null,
       "communication_object_ids": ["1.1.5/O-100_R-1577"],
       "description": ""
     },
@@ -245,7 +245,7 @@
       "raw_address": 2050,
       "address": "1/0/2",
       "project_uid": 36,
-      "dpt_type": null,
+      "dpt": null,
       "communication_object_ids": ["1.1.5/O-71_R-1506"],
       "description": ""
     },
@@ -255,7 +255,7 @@
       "raw_address": 2051,
       "address": "1/0/3",
       "project_uid": 37,
-      "dpt_type": null,
+      "dpt": null,
       "communication_object_ids": ["1.1.5/O-70_R-1505"],
       "description": ""
     },
@@ -265,7 +265,7 @@
       "raw_address": 2052,
       "address": "1/0/4",
       "project_uid": 38,
-      "dpt_type": null,
+      "dpt": null,
       "communication_object_ids": ["1.1.5/O-41_R-1434"],
       "description": ""
     },
@@ -275,7 +275,7 @@
       "raw_address": 2053,
       "address": "1/0/5",
       "project_uid": 39,
-      "dpt_type": null,
+      "dpt": null,
       "communication_object_ids": ["1.1.5/O-40_R-1433"],
       "description": ""
     },
@@ -285,7 +285,7 @@
       "raw_address": 4102,
       "address": "2/0/6",
       "project_uid": 42,
-      "dpt_type": null,
+      "dpt": null,
       "communication_object_ids": ["1.1.5/O-4_R-1417"],
       "description": ""
     }

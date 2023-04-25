@@ -10,23 +10,27 @@ from xknxproject.models import DPTType
 _LOGGER = logging.getLogger("xknxproject.log")
 
 
-def parse_dpt_types(dpt: str | None) -> DPTType | None:
-    """Parse the DPT types from the XML representation to main and sub types."""
-    if not dpt:
+def parse_dpt_type(dpt_string: str | None) -> DPTType | None:
+    """Parse a DPT type from the XML representation to main and sub types."""
+    if not dpt_string:
         return None
 
-    dpt_type: str = dpt.split(" ")[-1]
-    if MAIN_DPT in dpt_type:
-        return DPTType(
-            main=int(dpt_type.split("-")[1]),
-            sub=None,
-        )
-    if MAIN_AND_SUB_DPT in dpt_type:
-        return DPTType(
-            main=int(dpt_type.split("-")[1]),
-            sub=int(dpt_type.split("-")[2]),
-        )
-    _LOGGER.warning('Could not parse DPTType from: "%s"', dpt_type)
+    last_dpt: str = dpt_string.split(" ")[-1]
+    dpt_parts = last_dpt.split("-")
+    try:
+        if MAIN_DPT == dpt_parts[0]:
+            return DPTType(
+                main=int(dpt_parts[1]),
+                sub=None,
+            )
+        if MAIN_AND_SUB_DPT == dpt_parts[0]:
+            return DPTType(
+                main=int(dpt_parts[1]),
+                sub=int(dpt_parts[2]),
+            )
+    except IndexError:
+        pass
+    _LOGGER.warning('Could not parse DPTType from: "%s"', dpt_string)
     return None
 
 

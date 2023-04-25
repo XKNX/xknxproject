@@ -14,7 +14,7 @@ from xknxproject.models import (
     XMLProjectInformation,
     XMLSpace,
 )
-from xknxproject.util import parse_dpt_types, parse_xml_flag
+from xknxproject.util import parse_dpt_type, parse_xml_flag
 from xknxproject.zip import KNXProjContents
 
 
@@ -84,8 +84,8 @@ class _GroupAddressLoader:
             identifier=group_address_element.get("Id", ""),
             address=group_address_element.get("Address", ""),
             project_uid=int(group_address_element.get("Puid")),  # type: ignore[arg-type]
-            dpt_type=group_address_element.get("DatapointType"),
             description=group_address_element.get("Description", ""),
+            dpt=parse_dpt_type(group_address_element.get("DatapointType")),
         )
 
 
@@ -191,7 +191,7 @@ class _TopologyLoader:
             transmit_flag=parse_xml_flag(com_object.get("TransmitFlag")),
             update_flag=parse_xml_flag(com_object.get("UpdateFlag")),
             read_on_init_flag=parse_xml_flag(com_object.get("ReadOnInitFlag")),
-            datapoint_type=parse_dpt_types(com_object.get("DatapointType")),
+            datapoint_type=parse_dpt_type(com_object.get("DatapointType")),
             description=com_object.get("Description"),
             links=links.split(" "),
         )

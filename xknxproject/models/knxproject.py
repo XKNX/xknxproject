@@ -31,7 +31,7 @@ class CommunicationObject(TypedDict):
     function_text: str
     description: str
     device_address: str
-    dpt_type: dict[str, int]
+    dpt: DPTType | None
     object_size: str
     group_address_links: list[str]
     flags: Flags
@@ -74,7 +74,7 @@ class GroupAddress(TypedDict):
     raw_address: int
     address: str
     project_uid: int
-    dpt_type: DPTType | None
+    dpt: DPTType | None
     communication_object_ids: list[str]
     description: str
 

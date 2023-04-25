@@ -6,7 +6,6 @@ import re
 
 from xknxproject.models.knxproject import DPTType
 from xknxproject.models.static import SpaceType
-from xknxproject.util import parse_dpt_types
 
 
 class XMLGroupAddress:
@@ -19,7 +18,7 @@ class XMLGroupAddress:
         address: str,
         project_uid: int,
         description: str,
-        dpt_type: str | None,
+        dpt: DPTType | None,
     ):
         """Initialize a group address."""
         self.name = name
@@ -27,9 +26,9 @@ class XMLGroupAddress:
         self.raw_address = int(address)
         self.project_uid = project_uid
         self.description = description
+        self.dpt = dpt
 
         self.address = self._parse_address()
-        self.dpt_type = parse_dpt_types(dpt_type)
 
     def _parse_address(self) -> str:
         """Parse a given address and returns a string representation of it."""
@@ -40,7 +39,9 @@ class XMLGroupAddress:
 
     def __repr__(self) -> str:
         """Return string representation."""
-        return f"{self.address} ({self.name}) - [DPT: {self.dpt_type}, ID: {self.identifier}]"
+        return (
+            f"{self.address} ({self.name}) - [DPT: {self.dpt}, ID: {self.identifier}]"
+        )
 
 
 @dataclass

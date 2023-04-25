@@ -1,11 +1,11 @@
 """Test utilities."""
 import pytest
 
-from xknxproject.util import parse_dpt_types
+from xknxproject.util import parse_dpt_type
 
 
 @pytest.mark.parametrize(
-    "dpt_types,expected",
+    ("dpt_string", "expected"),
     [
         ("DPT-1", {"main": 1, "sub": None}),
         ("DPT-1 DPST-1-1", {"main": 1, "sub": 1}),
@@ -18,6 +18,6 @@ from xknxproject.util import parse_dpt_types
         ([], None),
     ],
 )
-def test_parse_dpt_types(dpt_types: list[str], expected: dict[str, int]):
+def test_parse_dpt_types(dpt_string: list[str], expected: dict[str, int]):
     """Test parsing of ETS5 project."""
-    assert parse_dpt_types(dpt_types) == expected
+    assert parse_dpt_type(dpt_string) == expected

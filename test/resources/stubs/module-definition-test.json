@@ -19,7 +19,7 @@
       "function_text": "Messwert empfangen",
       "description": "",
       "device_address": "1.1.1",
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
@@ -41,7 +41,7 @@
       "function_text": "Temperaturwert empfangen",
       "description": "",
       "device_address": "1.1.1",
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
@@ -63,7 +63,7 @@
       "function_text": "Sollwert vorgeben",
       "description": "",
       "device_address": "1.1.1",
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
@@ -85,7 +85,7 @@
       "function_text": "Temperaturwert empfangen",
       "description": "Beschreibung KO 41",
       "device_address": "1.1.1",
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
@@ -107,7 +107,7 @@
       "function_text": "Sollwert vorgeben",
       "description": "Beschreibung KO 42 (U-Flag)",
       "device_address": "1.1.1",
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
@@ -129,7 +129,7 @@
       "function_text": "Sollwert vorgeben",
       "description": "",
       "device_address": "1.1.2",
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
@@ -210,7 +210,7 @@
       "raw_address": 1,
       "address": "0/0/1",
       "project_uid": 9,
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
@@ -223,7 +223,7 @@
       "raw_address": 2,
       "address": "0/0/2",
       "project_uid": 10,
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
@@ -236,7 +236,7 @@
       "raw_address": 3,
       "address": "0/0/3",
       "project_uid": 11,
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
@@ -249,7 +249,7 @@
       "raw_address": 258,
       "address": "0/1/2",
       "project_uid": 16,
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
@@ -262,7 +262,7 @@
       "raw_address": 257,
       "address": "0/1/1",
       "project_uid": 20,
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
@@ -275,7 +275,7 @@
       "raw_address": 514,
       "address": "0/2/2",
       "project_uid": 17,
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
@@ -288,7 +288,7 @@
       "raw_address": 1794,
       "address": "0/7/2",
       "project_uid": 19,
-      "dpt_type": {
+      "dpt": {
         "main": 9,
         "sub": 1
       },
