@@ -27,13 +27,11 @@ class XKNXProj:
         self.password = password
         self.language = language
 
-        self.version = __version__
-
     def parse(self) -> KNXProject:
         """Parse the KNX project."""
         _LOGGER.info(
             'Xknxproject version %s parsing "%s" with%s password...',
-            self.version,
+            __version__,
             self.path,
             "" if self.password else "out",
         )

@@ -61,7 +61,7 @@ def extract(
     archive_path: Path, password: str | None = None
 ) -> Iterator[KNXProjContents]:
     """Provide the contents of a KNXProj file."""
-    _LOGGER.debug("Opening KNX Project file %s", archive_path)
+    _LOGGER.debug('Opening KNX Project file "%s"', archive_path)
     with ZipFile(archive_path, mode="r") as zip_archive:
         project_id = _get_project_id(zip_archive)
         xml_namespace = _get_xml_namespace(zip_archive)
