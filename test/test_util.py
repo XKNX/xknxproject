@@ -15,9 +15,13 @@ from xknxproject.util import parse_dpt_type
         ("DPT-14 DPST-14-1", {"main": 14, "sub": 1}),
         ("DPST-6-10", {"main": 6, "sub": 10}),
         ("Wrong", None),
+        ("DPT-Wrong", None),
+        ("DPST-1-Wrong", None),
+        ("DPST-5", None),
         ([], None),
+        (None, None),
     ],
 )
-def test_parse_dpt_types(dpt_string: list[str], expected: dict[str, int]):
-    """Test parsing of ETS5 project."""
+def test_parse_dpt_type(dpt_string, expected):
+    """Test parsing of DPT from ETS project."""
     assert parse_dpt_type(dpt_string) == expected

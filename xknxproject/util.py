@@ -28,7 +28,7 @@ def parse_dpt_type(dpt_string: str | None) -> DPTType | None:
                 main=int(dpt_parts[1]),
                 sub=int(dpt_parts[2]),
             )
-    except IndexError:
+    except (IndexError, ValueError):
         pass
     _LOGGER.warning('Could not parse DPTType from: "%s"', dpt_string)
     return None
