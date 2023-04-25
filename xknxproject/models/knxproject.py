@@ -4,6 +4,13 @@ from __future__ import annotations
 from typing import TypedDict
 
 
+class DPTType(TypedDict):
+    """DPT type dictionary."""
+
+    main: int
+    sub: int | None
+
+
 class Flags(TypedDict):
     """Flags for the group addresses and KOs."""
 
@@ -24,7 +31,7 @@ class CommunicationObject(TypedDict):
     function_text: str
     description: str
     device_address: str
-    dpt_type: dict[str, int]
+    dpt: DPTType | None
     object_size: str
     group_address_links: list[str]
     flags: Flags
@@ -67,7 +74,7 @@ class GroupAddress(TypedDict):
     raw_address: int
     address: str
     project_uid: int
-    dpt_type: dict[str, int] | None
+    dpt: DPTType | None
     communication_object_ids: list[str]
     description: str
 
