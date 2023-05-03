@@ -8,7 +8,7 @@
     "created_by": "ETS5",
     "schema_version": "20",
     "tool_version": "5.7.1428.39779",
-    "xknxproject_version": "2.1.0",
+    "xknxproject_version": "3.0.0",
     "language_code": "de-DE"
   },
   "communication_objects": {
@@ -19,10 +19,12 @@
       "function_text": "Messwert empfangen",
       "description": "",
       "device_address": "1.1.1",
-      "dpt": {
-        "main": 9,
-        "sub": 1
-      },
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
       "object_size": "2 Bytes",
       "flags": {
         "read": false,
@@ -41,10 +43,12 @@
       "function_text": "Temperaturwert empfangen",
       "description": "",
       "device_address": "1.1.1",
-      "dpt": {
-        "main": 9,
-        "sub": 1
-      },
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
       "object_size": "2 Bytes",
       "flags": {
         "read": false,
@@ -63,10 +67,12 @@
       "function_text": "Sollwert vorgeben",
       "description": "",
       "device_address": "1.1.1",
-      "dpt": {
-        "main": 9,
-        "sub": 1
-      },
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
       "object_size": "2 Bytes",
       "flags": {
         "read": false,
@@ -85,10 +91,12 @@
       "function_text": "Temperaturwert empfangen",
       "description": "Beschreibung KO 41",
       "device_address": "1.1.1",
-      "dpt": {
-        "main": 9,
-        "sub": 1
-      },
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
       "object_size": "2 Bytes",
       "flags": {
         "read": false,
@@ -107,10 +115,12 @@
       "function_text": "Sollwert vorgeben",
       "description": "Beschreibung KO 42 (U-Flag)",
       "device_address": "1.1.1",
-      "dpt": {
-        "main": 9,
-        "sub": 1
-      },
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
       "object_size": "2 Bytes",
       "flags": {
         "read": false,
@@ -129,10 +139,12 @@
       "function_text": "Sollwert vorgeben",
       "description": "",
       "device_address": "1.1.2",
-      "dpt": {
-        "main": 9,
-        "sub": 1
-      },
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
       "object_size": "2 Bytes",
       "flags": {
         "read": false,

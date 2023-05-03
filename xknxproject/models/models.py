@@ -136,7 +136,7 @@ class ComObjectInstanceRef:
     transmit_flag: bool | None  # "TransmitFlag" - knx:Enable_t
     update_flag: bool | None  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
-    datapoint_type: DPTType | None  # "DataPointType" - knx:IDREFS
+    datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS
     description: str | None  # "Description" - language dependent
     links: list[str] | None  # "Links" - knx:RELIDREFS
 
@@ -176,8 +176,8 @@ class ComObjectInstanceRef:
             self.update_flag = com_object.update_flag
         if self.read_on_init_flag is None:
             self.read_on_init_flag = com_object.read_on_init_flag
-        if self.datapoint_type is None:
-            self.datapoint_type = com_object.datapoint_type
+        if not self.datapoint_types:
+            self.datapoint_types = com_object.datapoint_types
         if isinstance(com_object, ComObject):
             self.number = com_object.number
 
@@ -199,7 +199,7 @@ class ComObject:
         "transmit_flag",
         "update_flag",
         "read_on_init_flag",
-        "datapoint_type",
+        "datapoint_types",
     )
 
     # all items required in the XML
@@ -215,7 +215,7 @@ class ComObject:
     transmit_flag: bool  # "TransmitFlag" - knx:Enable_t
     update_flag: bool  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool  # "ReadOnInitFlag" - knx:Enable_t
-    datapoint_type: DPTType | None  # "DataPointType" - knx:IDREFS - optional
+    datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS - optional
 
 
 @dataclass
@@ -235,7 +235,7 @@ class ComObjectRef:
         "transmit_flag",
         "update_flag",
         "read_on_init_flag",
-        "datapoint_type",
+        "datapoint_types",
     )
 
     identifier: str  # "Id" - xs:ID - required
@@ -250,7 +250,7 @@ class ComObjectRef:
     transmit_flag: bool | None  # "TransmitFlag" - knx:Enable_t
     update_flag: bool | None  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
-    datapoint_type: DPTType | None  # "DataPointType" - knx:IDREFS
+    datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS
 
 
 @dataclass

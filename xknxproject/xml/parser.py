@@ -70,7 +70,7 @@ class XMLParser:
                         function_text=com_object.function_text,  # type: ignore[typeddict-item]
                         description=com_object.description or "",
                         device_address=device.individual_address,
-                        dpt=com_object.datapoint_type,
+                        dpts=com_object.datapoint_types,
                         object_size=com_object.object_size,  # type: ignore[typeddict-item]
                         flags=Flags(
                             read=com_object.read_flag,  # type: ignore[typeddict-item]

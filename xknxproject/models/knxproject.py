@@ -31,7 +31,7 @@ class CommunicationObject(TypedDict):
     function_text: str
     description: str
     device_address: str
-    dpt: DPTType | None
+    dpts: list[DPTType]
     object_size: str
     group_address_links: list[str]
     flags: Flags

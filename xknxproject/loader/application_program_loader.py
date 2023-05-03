@@ -8,7 +8,7 @@ from xml.etree import ElementTree
 from zipfile import Path
 
 from xknxproject.models import ComObject, ComObjectRef, DeviceInstance
-from xknxproject.util import parse_dpt_type, parse_xml_flag
+from xknxproject.util import parse_dpt_types, parse_xml_flag
 
 _LOGGER = logging.getLogger("xknxproject.log")
 
@@ -139,7 +139,7 @@ class ApplicationProgramLoader:
             transmit_flag=parse_xml_flag(elem.get("TransmitFlag"), False),
             update_flag=parse_xml_flag(elem.get("UpdateFlag"), False),
             read_on_init_flag=parse_xml_flag(elem.get("ReadOnInitFlag"), False),
-            datapoint_type=parse_dpt_type(elem.get("DatapointType")),
+            datapoint_types=parse_dpt_types(elem.get("DatapointType")),
         )
 
     @staticmethod
@@ -161,7 +161,7 @@ class ApplicationProgramLoader:
             transmit_flag=parse_xml_flag(elem.get("TransmitFlag")),
             update_flag=parse_xml_flag(elem.get("UpdateFlag")),
             read_on_init_flag=parse_xml_flag(elem.get("ReadOnInitFlag")),
-            datapoint_type=parse_dpt_type(elem.get("DatapointType")),
+            datapoint_types=parse_dpt_types(elem.get("DatapointType")),
         )
 
     @staticmethod
