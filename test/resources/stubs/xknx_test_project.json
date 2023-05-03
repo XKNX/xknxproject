@@ -8,7 +8,7 @@
     "created_by": "ETS5",
     "schema_version": "20",
     "tool_version": "5.7.1428.39779",
-    "xknxproject_version": "2.1.0",
+    "xknxproject_version": "3.0.0",
     "language_code": null
   },
   "communication_objects": {
@@ -19,7 +19,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt": null,
+      "dpts": [],
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -38,7 +38,7 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt": null,
+      "dpts": [],
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -57,10 +57,12 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt": {
-        "main": 1,
-        "sub": 8
-      },
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 8
+        }
+      ],
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -79,10 +81,12 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt": {
-        "main": 1,
-        "sub": 8
-      },
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 8
+        }
+      ],
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -101,7 +105,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt": null,
+      "dpts": [],
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -120,10 +124,12 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpt": {
-        "main": 1,
-        "sub": 8
-      },
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 8
+        }
+      ],
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -142,10 +148,12 @@
       "function_text": "Wind alarm no. 1",
       "description": "",
       "device_address": "1.1.5",
-      "dpt": {
-        "main": 1,
-        "sub": 1
-      },
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
       "object_size": "1 Bit",
       "flags": {
         "read": false,

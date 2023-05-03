@@ -10,28 +10,43 @@ from xknxproject.models import DPTType
 _LOGGER = logging.getLogger("xknxproject.log")
 
 
-def parse_dpt_type(dpt_string: str | None) -> DPTType | None:
-    """Parse a DPT type from the XML representation to main and sub types."""
-    if not dpt_string:
+def get_dpt_type(dpt_string: str | None) -> DPTType | None:
+    """Parse DPT type from the XML representation to main and sub types."""
+    # GroupAddress tags should only support one single DPT.
+    try:
+        return parse_dpt_types(dpt_string)[0]
+    except IndexError:
         return None
 
-    last_dpt: str = dpt_string.split(" ")[-1]
-    dpt_parts = last_dpt.split("-")
-    try:
-        if MAIN_DPT == dpt_parts[0]:
-            return DPTType(
-                main=int(dpt_parts[1]),
-                sub=None,
+
+def parse_dpt_types(dpt_string: str | None) -> list[DPTType]:
+    """Parse all DPTs from the XML representation to main and sub types."""
+    if not dpt_string:
+        return []
+
+    supported_dpts: list[DPTType] = []
+    for _dpt in dpt_string.split(" "):
+        dpt_parts = _dpt.split("-")
+        try:
+            if MAIN_DPT == dpt_parts[0]:
+                supported_dpts.append(
+                    DPTType(
+                        main=int(dpt_parts[1]),
+                        sub=None,
+                    )
+                )
+            if MAIN_AND_SUB_DPT == dpt_parts[0]:
+                supported_dpts.append(
+                    DPTType(
+                        main=int(dpt_parts[1]),
+                        sub=int(dpt_parts[2]),
+                    )
+                )
+        except (IndexError, ValueError):
+            _LOGGER.warning(
+                'Could not parse DPTType from: "%s" in "%s"', _dpt, dpt_string
             )
-        if MAIN_AND_SUB_DPT == dpt_parts[0]:
-            return DPTType(
-                main=int(dpt_parts[1]),
-                sub=int(dpt_parts[2]),
-            )
-    except (IndexError, ValueError):
-        pass
-    _LOGGER.warning('Could not parse DPTType from: "%s"', dpt_string)
-    return None
+    return supported_dpts
 
 
 @overload
