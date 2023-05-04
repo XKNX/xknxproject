@@ -6,6 +6,7 @@ from pathlib import Path
 import time
 
 from xknxproject.__version__ import __version__
+from xknxproject.combination import combine_project
 from xknxproject.models import KNXProject
 from xknxproject.xml import XMLParser
 from xknxproject.zip.extractor import extract
@@ -27,7 +28,7 @@ class XKNXProj:
         self.password = password
         self.language = language
 
-    def parse(self) -> KNXProject:
+    def parse(self, combine: bool = True) -> KNXProject:
         """Parse the KNX project."""
         _LOGGER.info(
             'Xknxproject version %s parsing "%s" with%s password...',
@@ -38,6 +39,9 @@ class XKNXProj:
         _start = time.time()
         with extract(self.path, self.password) as knx_project_content:
             project = XMLParser(knx_project_content).parse(self.language)
+
+        if combine:
+            project = combine_project(project)
 
         _LOGGER.info("Parsing took %s seconds", time.time() - _start)
         _LOGGER.info(

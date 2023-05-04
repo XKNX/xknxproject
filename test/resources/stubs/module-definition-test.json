@@ -34,7 +34,9 @@
         "read_on_init": false,
         "transmit": true
       },
-      "group_address_links": ["0/0/3"]
+      "group_address_links": [
+        "0/0/3"
+      ]
     },
     "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1": {
       "name": "IstWert",
@@ -58,7 +60,9 @@
         "read_on_init": false,
         "transmit": true
       },
-      "group_address_links": ["0/0/1"]
+      "group_address_links": [
+        "0/0/1"
+      ]
     },
     "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3": {
       "name": "SollWert",
@@ -82,7 +86,10 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["0/0/2", "0/7/2"]
+      "group_address_links": [
+        "0/0/2",
+        "0/7/2"
+      ]
     },
     "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1": {
       "name": "IstWert",
@@ -106,7 +113,9 @@
         "read_on_init": false,
         "transmit": true
       },
-      "group_address_links": ["0/1/1"]
+      "group_address_links": [
+        "0/1/1"
+      ]
     },
     "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3": {
       "name": "SollWert",
@@ -130,7 +139,10 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["0/1/2", "0/7/2"]
+      "group_address_links": [
+        "0/1/2",
+        "0/7/2"
+      ]
     },
     "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3": {
       "name": "SollWert",
@@ -154,7 +166,10 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["0/2/2", "0/7/2"]
+      "group_address_links": [
+        "0/2/2",
+        "0/7/2"
+      ]
     }
   },
   "topology": {
@@ -183,7 +198,10 @@
         "1": {
           "name": "Neue Linie",
           "description": null,
-          "devices": ["1.1.1", "1.1.2"],
+          "devices": [
+            "1.1.1",
+            "1.1.2"
+          ],
           "medium_type": "Twisted Pair (TP)"
         }
       }
@@ -212,7 +230,9 @@
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.2",
       "project_uid": 13,
-      "communication_object_ids": ["1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"]
+      "communication_object_ids": [
+        "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
+      ]
     }
   },
   "group_addresses": {
@@ -226,7 +246,9 @@
         "main": 9,
         "sub": 1
       },
-      "communication_object_ids": ["1.1.1/MD-2_M-1_MI-1_O-2-1_R-1"],
+      "communication_object_ids": [
+        "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1"
+      ],
       "description": ""
     },
     "0/0/2": {
@@ -239,7 +261,9 @@
         "main": 9,
         "sub": 1
       },
-      "communication_object_ids": ["1.1.1/MD-2_M-1_MI-1_O-2-2_R-3"],
+      "communication_object_ids": [
+        "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3"
+      ],
       "description": ""
     },
     "0/0/3": {
@@ -252,7 +276,9 @@
         "main": 9,
         "sub": 1
       },
-      "communication_object_ids": ["1.1.1/O-334_R-21"],
+      "communication_object_ids": [
+        "1.1.1/O-334_R-21"
+      ],
       "description": ""
     },
     "0/1/2": {
@@ -265,7 +291,9 @@
         "main": 9,
         "sub": 1
       },
-      "communication_object_ids": ["1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"],
+      "communication_object_ids": [
+        "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"
+      ],
       "description": ""
     },
     "0/1/1": {
@@ -278,7 +306,9 @@
         "main": 9,
         "sub": 1
       },
-      "communication_object_ids": ["1.1.1/MD-2_M-2_MI-1_O-2-1_R-1"],
+      "communication_object_ids": [
+        "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1"
+      ],
       "description": ""
     },
     "0/2/2": {
@@ -291,7 +321,9 @@
         "main": 9,
         "sub": 1
       },
-      "communication_object_ids": ["1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"],
+      "communication_object_ids": [
+        "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
+      ],
       "description": ""
     },
     "0/7/2": {
