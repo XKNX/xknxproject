@@ -13,7 +13,8 @@ class DPTTuple(NamedTuple):
     main: int
     sub: int | None
 
-    def _to_dpt_type(self) -> DPTType:
+    def to_dpttype(self) -> DPTType:
+        """Return a DPTType representation."""
         return DPTType(main=self.main, sub=self.sub)
 
 
@@ -55,7 +56,7 @@ def _get_dpt_from_comm_objects(
     if not dpts:
         return None
     if len(dpts) == 1:
-        return next(iter(dpts))._to_dpt_type()
+        return next(iter(dpts)).to_dpttype()
     # if they all share the same main type, use a generic DPTType
     mains = {dpt.main for dpt in dpts}
     if len(mains) == 1:
