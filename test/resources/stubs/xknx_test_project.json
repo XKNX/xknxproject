@@ -424,10 +424,6 @@
         {
           "main": 2,
           "sub": 1
-        },
-        {
-          "main": 2,
-          "sub": 1
         }
       ],
       "object_size": "2 Bit",
