@@ -2,7 +2,7 @@
   "info": {
     "project_id": "P-0242",
     "name": "xknx test project",
-    "last_modified": "2023-05-05T13:13:05.4421108Z",
+    "last_modified": "2023-05-05T14:02:49.64676Z",
     "group_address_style": "ThreeLevel",
     "guid": "7aceb083-274e-4568-806f-b8f9df992873",
     "created_by": "ETS5",
@@ -386,58 +386,6 @@
       "group_address_links": [
         "2/1/23"
       ]
-    },
-    "1.1.7/O-1_R-1630": {
-      "name": "Kanal C1",
-      "number": 1,
-      "text": "Channel C1",
-      "function_text": "Brighter/darker",
-      "description": "",
-      "device_address": "1.1.7",
-      "dpts": [
-        {
-          "main": 3,
-          "sub": 7
-        }
-      ],
-      "object_size": "4 Bit",
-      "flags": {
-        "read": true,
-        "write": true,
-        "communication": true,
-        "update": true,
-        "read_on_init": false,
-        "transmit": false
-      },
-      "group_address_links": [
-        "2/1/12"
-      ]
-    },
-    "1.1.7/O-7_R-1623": {
-      "name": "Kanal C1",
-      "number": 7,
-      "text": "Channel C1",
-      "function_text": "  Forced mode",
-      "description": "",
-      "device_address": "1.1.7",
-      "dpts": [
-        {
-          "main": 2,
-          "sub": 1
-        }
-      ],
-      "object_size": "2 Bit",
-      "flags": {
-        "read": true,
-        "write": true,
-        "communication": true,
-        "update": true,
-        "read_on_init": false,
-        "transmit": false
-      },
-      "group_address_links": [
-        "2/1/11"
-      ]
     }
   },
   "topology": {
@@ -469,8 +417,7 @@
           "devices": [
             "1.1.0",
             "1.1.5",
-            "1.1.6",
-            "1.1.7"
+            "1.1.6"
           ],
           "medium_type": "Twisted Pair (TP)"
         }
@@ -516,18 +463,6 @@
         "1.1.6/O-20_R-8108",
         "1.1.6/O-9_R-9073",
         "1.1.6/O-18_R-7994"
-      ]
-    },
-    "1.1.7": {
-      "name": "DM 8-2 T (8 x dimming actuator, 200 W)",
-      "hardware_name": "FIX2 Series DM 8-2 T",
-      "description": "",
-      "manufacturer_name": "Theben AG",
-      "individual_address": "1.1.7",
-      "project_uid": 53,
-      "communication_object_ids": [
-        "1.1.7/O-1_R-1630",
-        "1.1.7/O-7_R-1623"
       ]
     }
   },
@@ -719,36 +654,6 @@
       },
       "communication_object_ids": [
         "1.1.6/O-20_R-8108"
-      ],
-      "description": ""
-    },
-    "2/1/11": {
-      "name": "generic 2-bit",
-      "identifier": "GA-14",
-      "raw_address": 4363,
-      "address": "2/1/11",
-      "project_uid": 51,
-      "dpt": {
-        "main": 2,
-        "sub": 1
-      },
-      "communication_object_ids": [
-        "1.1.7/O-7_R-1623"
-      ],
-      "description": ""
-    },
-    "2/1/12": {
-      "name": "generic 4-bit",
-      "identifier": "GA-15",
-      "raw_address": 4364,
-      "address": "2/1/12",
-      "project_uid": 52,
-      "dpt": {
-        "main": 3,
-        "sub": 7
-      },
-      "communication_object_ids": [
-        "1.1.7/O-1_R-1630"
       ],
       "description": ""
     }
