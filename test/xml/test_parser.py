@@ -34,18 +34,30 @@ def test_parse_project_ets5():
         parser = XMLParser(knx_project_contents)
         parser.parse()
 
-    assert len(parser.group_addresses) == 7
-    assert parser.group_addresses[0].address == "1/0/0"
-    assert parser.group_addresses[1].address == "1/0/1"
-    assert parser.group_addresses[2].address == "1/0/2"
-    assert parser.group_addresses[3].address == "1/0/3"
-    assert parser.group_addresses[4].address == "1/0/4"
-    assert parser.group_addresses[5].address == "1/0/5"
-    assert parser.group_addresses[6].address == "2/0/6"
+    assert len(parser.group_addresses) == 15
+    parsed_gas = {ga.address for ga in parser.group_addresses}
+    assert len(parsed_gas) == 15
+    assert parsed_gas == {
+        "1/0/0",
+        "1/0/1",
+        "1/0/2",
+        "1/0/3",
+        "1/0/4",
+        "1/0/5",
+        "2/0/6",
+        "2/1/1",
+        "2/1/2",
+        "2/1/10",
+        "2/1/11",
+        "2/1/12",
+        "2/1/21",
+        "2/1/22",
+        "2/1/23",
+    }
 
     assert len(parser.areas) == 2
     assert len(parser.areas[1].lines) == 2
-    assert len(parser.areas[1].lines[1].devices) == 2
+    assert len(parser.areas[1].lines[1].devices) == 4
     assert len(parser.areas[1].lines[1].devices[0].additional_addresses) == 4
     assert len(parser.areas[1].lines[1].devices[1].com_object_instance_refs) == 7
 
