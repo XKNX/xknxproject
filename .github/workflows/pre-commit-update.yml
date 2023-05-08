@@ -23,12 +23,13 @@ jobs:
       - name: Install dependencies
         # needed for the mypy hook
         run: |
-          pip install -r requirements/testing.txt
+          pip install -r requirements_testing.txt
       - name: Pre-commit auto-update
         env:
           # new branch is created in create-pull-request step
           SKIP: no-commit-to-branch
-        uses: browniebroke/pre-commit-autoupdate-action@v1.0.0
+        run: |
+          pre-commit autoupdate
       - uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
