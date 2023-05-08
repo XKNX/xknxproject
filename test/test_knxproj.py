@@ -1,3 +1,5 @@
+"""Test parsing ETS projects."""
+
 from xknxproject import XKNXProj
 
 from . import RESOURCES_PATH

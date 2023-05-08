@@ -117,3 +117,25 @@ output-format = "colorized"
 
 [tool.pytest.ini_options]
 testpaths = "test"
+
+[tool.ruff]
+target-version = "py39"
+select = [
+  "C4",  # comprehensions
+  "D",   # pydocstyle
+  "E",   # pycodestyle
+  "F",   # pyflakes
+  "RUF", # ruff specific
+  "T20", # print
+  "UP",  # pyupgrade
+  "W",   # pydocstyle warning
+]
+ignore = [
+  "D202",
+  "D203",
+  "D212",
+  "E501", # line too long
+]
+extend-exclude = [
+  "script",
+]

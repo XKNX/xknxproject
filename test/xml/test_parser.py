@@ -1,3 +1,4 @@
+"""Test parser."""
 from test import RESOURCES_PATH
 
 from xknxproject.xml.parser import XMLParser
