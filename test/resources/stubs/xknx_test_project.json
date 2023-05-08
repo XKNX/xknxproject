@@ -1,8 +1,8 @@
 {
   "info": {
     "project_id": "P-0242",
-    "name": "Test (1)",
-    "last_modified": "2022-04-21T17:18:43.3042783Z",
+    "name": "xknx test project",
+    "last_modified": "2023-05-05T14:02:49.64676Z",
     "group_address_style": "ThreeLevel",
     "guid": "7aceb083-274e-4568-806f-b8f9df992873",
     "created_by": "ETS5",
@@ -19,7 +19,12 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpts": [],
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        }
+      ],
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -29,7 +34,9 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["1/0/5"]
+      "group_address_links": [
+        "1/0/5"
+      ]
     },
     "1.1.5/O-41_R-1434": {
       "name": "Ausgang B",
@@ -38,7 +45,12 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpts": [],
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        }
+      ],
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -48,7 +60,9 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["1/0/4"]
+      "group_address_links": [
+        "1/0/4"
+      ]
     },
     "1.1.5/O-70_R-1505": {
       "name": "Ausgang C",
@@ -72,7 +86,9 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["1/0/3"]
+      "group_address_links": [
+        "1/0/3"
+      ]
     },
     "1.1.5/O-71_R-1506": {
       "name": "Ausgang C",
@@ -96,7 +112,9 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["1/0/2"]
+      "group_address_links": [
+        "1/0/2"
+      ]
     },
     "1.1.5/O-100_R-1577": {
       "name": "Ausgang D",
@@ -105,7 +123,12 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
-      "dpts": [],
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        }
+      ],
       "object_size": "1 Bit",
       "flags": {
         "read": false,
@@ -115,7 +138,9 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["1/0/1"]
+      "group_address_links": [
+        "1/0/1"
+      ]
     },
     "1.1.5/O-101_R-1578": {
       "name": "Ausgang D",
@@ -139,7 +164,9 @@
         "read_on_init": false,
         "transmit": false
       },
-      "group_address_links": ["1/0/0"]
+      "group_address_links": [
+        "1/0/0"
+      ]
     },
     "1.1.5/O-4_R-1417": {
       "name": "Ausgang A-X",
@@ -163,7 +190,202 @@
         "read_on_init": false,
         "transmit": true
       },
-      "group_address_links": ["2/0/6"]
+      "group_address_links": [
+        "2/0/6"
+      ]
+    },
+    "1.1.6/O-0_R-665": {
+      "name": "Kanal A",
+      "number": 0,
+      "text": "ChannelA",
+      "function_text": "Output value",
+      "description": "2-byte generic",
+      "device_address": "1.1.6",
+      "dpts": [],
+      "object_size": "2 Bytes",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "2/1/22"
+      ]
+    },
+    "1.1.6/O-20_R-8108": {
+      "name": "Kanal C",
+      "number": 20,
+      "text": "ChannelC",
+      "function_text": "Measured value outside range",
+      "description": "1-bit undefined DPT",
+      "device_address": "1.1.6",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "2/1/10"
+      ]
+    },
+    "1.1.6/O-9_R-9073": {
+      "name": "Kanal B",
+      "number": 9,
+      "text": "ChannelB",
+      "function_text": "Output value",
+      "description": "2-byte DPT 9 any",
+      "device_address": "1.1.6",
+      "dpts": [
+        {
+          "main": 9,
+          "sub": null
+        },
+        {
+          "main": 9,
+          "sub": 1
+        },
+        {
+          "main": 9,
+          "sub": 2
+        },
+        {
+          "main": 9,
+          "sub": 3
+        },
+        {
+          "main": 9,
+          "sub": 4
+        },
+        {
+          "main": 9,
+          "sub": 5
+        },
+        {
+          "main": 9,
+          "sub": 6
+        },
+        {
+          "main": 9,
+          "sub": 7
+        },
+        {
+          "main": 9,
+          "sub": 8
+        },
+        {
+          "main": 9,
+          "sub": 9
+        },
+        {
+          "main": 9,
+          "sub": 10
+        },
+        {
+          "main": 9,
+          "sub": 11
+        },
+        {
+          "main": 9,
+          "sub": 20
+        },
+        {
+          "main": 9,
+          "sub": 21
+        },
+        {
+          "main": 9,
+          "sub": 22
+        },
+        {
+          "main": 9,
+          "sub": 23
+        },
+        {
+          "main": 9,
+          "sub": 24
+        },
+        {
+          "main": 9,
+          "sub": 25
+        },
+        {
+          "main": 9,
+          "sub": 26
+        },
+        {
+          "main": 9,
+          "sub": 27
+        },
+        {
+          "main": 9,
+          "sub": 28
+        },
+        {
+          "main": 9,
+          "sub": 29
+        },
+        {
+          "main": 9,
+          "sub": 30
+        },
+        {
+          "main": 9,
+          "sub": 31
+        }
+      ],
+      "object_size": "2 Bytes",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "2/1/21",
+        "2/1/22",
+        "2/1/23"
+      ]
+    },
+    "1.1.6/O-18_R-7994": {
+      "name": "Kanal C",
+      "number": 18,
+      "text": "ChannelC",
+      "function_text": "Output value",
+      "description": "2-byte DPT 9 generic",
+      "device_address": "1.1.6",
+      "dpts": [
+        {
+          "main": 9,
+          "sub": null
+        }
+      ],
+      "object_size": "2 Bytes",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "2/1/23"
+      ]
     }
   },
   "topology": {
@@ -192,7 +414,11 @@
         "1": {
           "name": "Neue Linie",
           "description": null,
-          "devices": ["1.1.0", "1.1.5"],
+          "devices": [
+            "1.1.0",
+            "1.1.5",
+            "1.1.6"
+          ],
           "medium_type": "Twisted Pair (TP)"
         }
       }
@@ -224,6 +450,20 @@
         "1.1.5/O-101_R-1578",
         "1.1.5/O-4_R-1417"
       ]
+    },
+    "1.1.6": {
+      "name": "AE/S4.2 Analogue Input,4-fold,MDRC",
+      "hardware_name": "AE/S4.2 Analogeingang,4fach,REG",
+      "description": "",
+      "manufacturer_name": "ABB",
+      "individual_address": "1.1.6",
+      "project_uid": 49,
+      "communication_object_ids": [
+        "1.1.6/O-0_R-665",
+        "1.1.6/O-20_R-8108",
+        "1.1.6/O-9_R-9073",
+        "1.1.6/O-18_R-7994"
+      ]
     }
   },
   "group_addresses": {
@@ -233,8 +473,13 @@
       "raw_address": 2048,
       "address": "1/0/0",
       "project_uid": 34,
-      "dpt": null,
-      "communication_object_ids": ["1.1.5/O-101_R-1578"],
+      "dpt": {
+        "main": 1,
+        "sub": 8
+      },
+      "communication_object_ids": [
+        "1.1.5/O-101_R-1578"
+      ],
       "description": ""
     },
     "1/0/1": {
@@ -243,8 +488,13 @@
       "raw_address": 2049,
       "address": "1/0/1",
       "project_uid": 35,
-      "dpt": null,
-      "communication_object_ids": ["1.1.5/O-100_R-1577"],
+      "dpt": {
+        "main": 1,
+        "sub": null
+      },
+      "communication_object_ids": [
+        "1.1.5/O-100_R-1577"
+      ],
       "description": ""
     },
     "1/0/2": {
@@ -253,8 +503,13 @@
       "raw_address": 2050,
       "address": "1/0/2",
       "project_uid": 36,
-      "dpt": null,
-      "communication_object_ids": ["1.1.5/O-71_R-1506"],
+      "dpt": {
+        "main": 1,
+        "sub": 8
+      },
+      "communication_object_ids": [
+        "1.1.5/O-71_R-1506"
+      ],
       "description": ""
     },
     "1/0/3": {
@@ -263,8 +518,13 @@
       "raw_address": 2051,
       "address": "1/0/3",
       "project_uid": 37,
-      "dpt": null,
-      "communication_object_ids": ["1.1.5/O-70_R-1505"],
+      "dpt": {
+        "main": 1,
+        "sub": 8
+      },
+      "communication_object_ids": [
+        "1.1.5/O-70_R-1505"
+      ],
       "description": ""
     },
     "1/0/4": {
@@ -273,8 +533,13 @@
       "raw_address": 2052,
       "address": "1/0/4",
       "project_uid": 38,
-      "dpt": null,
-      "communication_object_ids": ["1.1.5/O-41_R-1434"],
+      "dpt": {
+        "main": 1,
+        "sub": null
+      },
+      "communication_object_ids": [
+        "1.1.5/O-41_R-1434"
+      ],
       "description": ""
     },
     "1/0/5": {
@@ -283,8 +548,13 @@
       "raw_address": 2053,
       "address": "1/0/5",
       "project_uid": 39,
-      "dpt": null,
-      "communication_object_ids": ["1.1.5/O-40_R-1433"],
+      "dpt": {
+        "main": 1,
+        "sub": null
+      },
+      "communication_object_ids": [
+        "1.1.5/O-40_R-1433"
+      ],
       "description": ""
     },
     "2/0/6": {
@@ -293,8 +563,98 @@
       "raw_address": 4102,
       "address": "2/0/6",
       "project_uid": 42,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "communication_object_ids": [
+        "1.1.5/O-4_R-1417"
+      ],
+      "description": ""
+    },
+    "2/1/1": {
+      "name": "Not linked to a comm object",
+      "identifier": "GA-8",
+      "raw_address": 4353,
+      "address": "2/1/1",
+      "project_uid": 43,
       "dpt": null,
-      "communication_object_ids": ["1.1.5/O-4_R-1417"],
+      "communication_object_ids": [],
+      "description": "no dpt"
+    },
+    "2/1/22": {
+      "name": "No DPT in GA 2",
+      "identifier": "GA-9",
+      "raw_address": 4374,
+      "address": "2/1/22",
+      "project_uid": 44,
+      "dpt": {
+        "main": 9,
+        "sub": null
+      },
+      "communication_object_ids": [
+        "1.1.6/O-0_R-665",
+        "1.1.6/O-9_R-9073"
+      ],
+      "description": "multiple DPT 9 and not defined in COs"
+    },
+    "2/1/23": {
+      "name": "No DPT in GA 3",
+      "identifier": "GA-10",
+      "raw_address": 4375,
+      "address": "2/1/23",
+      "project_uid": 45,
+      "dpt": {
+        "main": 9,
+        "sub": null
+      },
+      "communication_object_ids": [
+        "1.1.6/O-9_R-9073",
+        "1.1.6/O-18_R-7994"
+      ],
+      "description": "DPT 9 generic and multiple in COs"
+    },
+    "2/1/2": {
+      "name": "Not linked to a comm object 2",
+      "identifier": "GA-11",
+      "raw_address": 4354,
+      "address": "2/1/2",
+      "project_uid": 47,
+      "dpt": {
+        "main": 9,
+        "sub": 1
+      },
+      "communication_object_ids": [],
+      "description": "temperature"
+    },
+    "2/1/21": {
+      "name": "No DPT in GA",
+      "identifier": "GA-12",
+      "raw_address": 4373,
+      "address": "2/1/21",
+      "project_uid": 48,
+      "dpt": {
+        "main": 9,
+        "sub": null
+      },
+      "communication_object_ids": [
+        "1.1.6/O-9_R-9073"
+      ],
+      "description": "multiple DPT 9 in 1 CO"
+    },
+    "2/1/10": {
+      "name": "generic 1-bit",
+      "identifier": "GA-13",
+      "raw_address": 4362,
+      "address": "2/1/10",
+      "project_uid": 50,
+      "dpt": {
+        "main": 1,
+        "sub": null
+      },
+      "communication_object_ids": [
+        "1.1.6/O-20_R-8108"
+      ],
       "description": ""
     }
   },
