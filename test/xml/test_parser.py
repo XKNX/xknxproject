@@ -10,7 +10,7 @@ xknx_test_project_protected_ets6 = RESOURCES_PATH / "testprojekt-ets6.knxproj"
 
 
 def test_parse_project_ets6():
-    """Test parsing of group adresses."""
+    """Test parsing of group addresses."""
     with extract(xknx_test_project_protected_ets6, "test") as knx_project_contents:
         parser = XMLParser(knx_project_contents)
         parser.parse()

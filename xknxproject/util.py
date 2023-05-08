@@ -25,7 +25,7 @@ def parse_dpt_types(dpt_string: str | None) -> list[DPTType]:
         return []
 
     supported_dpts: list[DPTType] = []
-    # some applications have listed same DPT mulitple times `DatapointType="DPST-1-1 DPST-1-1"`
+    # some applications have listed same DPT multiple times `DatapointType="DPST-1-1 DPST-1-1"`
     # so we use dict.fromkeys() (as set() doesn't preserve order)
     for _dpt in dict.fromkeys(dpt_string.split()):
         dpt_parts = _dpt.split("-")

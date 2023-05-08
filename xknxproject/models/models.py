@@ -1,4 +1,4 @@
-"""Handles Group adresses."""
+"""Define internally used data structures."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -150,7 +150,7 @@ class ComObjectInstanceRef:
 
     def resolve_com_object_ref_id(self, application_program_ref: str) -> None:
         """Prepend the ref_id with the application program ref."""
-        # Remove module and ModuleInstance occurence as they will not be in the application program directly
+        # Remove module and ModuleInstance occurrence as they will not be in the application program directly
         ref_id = re.sub(r"(M-\d+?_MI-\d+?_)", "", self.ref_id)
         self.com_object_ref_id = f"{application_program_ref}_{ref_id}"
 
