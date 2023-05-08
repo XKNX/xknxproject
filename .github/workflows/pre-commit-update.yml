@@ -17,8 +17,8 @@ jobs:
           python-version: "3.x"
           cache: "pip"
           cache-dependency-path: |
-            requirements/production.txt
-            requirements/testing.txt
+            requirements_production.txt
+            requirements_testing.txt
             .pre-commit-config.yaml
       - name: Install dependencies
         # needed for the mypy hook
