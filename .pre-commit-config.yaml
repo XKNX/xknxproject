@@ -24,9 +24,6 @@ repos:
     rev: 6.0.0
     hooks:
       - id: flake8
-        additional_dependencies:
-          - flake8-docstrings==1.6.0
-          - pydocstyle==6.0.0
         files: ^(xknxproject|examples|docs)/.+\.py$
   - repo: https://github.com/PyCQA/isort
     rev: 5.12.0
