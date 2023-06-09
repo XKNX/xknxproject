@@ -58,31 +58,38 @@ class XMLParser:
         for device in self.devices:
             device_com_objects: list[str] = []
             for com_object in device.com_object_instance_refs:
-                if com_object.links:
-                    com_object_key = f"{device.individual_address}/{com_object.ref_id}"
-                    group_address_links = [
-                        _ga_id_to_address[link] for link in com_object.links
-                    ]
-                    communication_objects[com_object_key] = CommunicationObject(
-                        name=com_object.name,  # type: ignore[typeddict-item]
-                        number=com_object.number,  # type: ignore[typeddict-item]
-                        text=com_object.text,  # type: ignore[typeddict-item]
-                        function_text=com_object.function_text,  # type: ignore[typeddict-item]
-                        description=com_object.description or "",
-                        device_address=device.individual_address,
-                        dpts=com_object.datapoint_types,
-                        object_size=com_object.object_size,  # type: ignore[typeddict-item]
-                        flags=Flags(
-                            read=com_object.read_flag,  # type: ignore[typeddict-item]
-                            write=com_object.write_flag,  # type: ignore[typeddict-item]
-                            communication=com_object.communication_flag,  # type: ignore[typeddict-item]
-                            update=com_object.update_flag,  # type: ignore[typeddict-item]
-                            read_on_init=com_object.read_on_init_flag,  # type: ignore[typeddict-item]
-                            transmit=com_object.transmit_flag,  # type: ignore[typeddict-item]
-                        ),
-                        group_address_links=group_address_links,
-                    )
-                    device_com_objects.append(com_object_key)
+                if not com_object.links:
+                    continue
+                group_address_links = [
+                    valid_link
+                    for link in com_object.links
+                    if (valid_link := _ga_id_to_address.get(link))
+                ]
+                if not group_address_links:
+                    # skip orphaned ComObjectInstanceRef pointing only to non-existent GroupAddress
+                    # see https://github.com/XKNX/knx-frontend/issues/71
+                    continue
+                com_object_key = f"{device.individual_address}/{com_object.ref_id}"
+                communication_objects[com_object_key] = CommunicationObject(
+                    name=com_object.name,  # type: ignore[typeddict-item]
+                    number=com_object.number,  # type: ignore[typeddict-item]
+                    text=com_object.text,  # type: ignore[typeddict-item]
+                    function_text=com_object.function_text,  # type: ignore[typeddict-item]
+                    description=com_object.description or "",
+                    device_address=device.individual_address,
+                    dpts=com_object.datapoint_types,
+                    object_size=com_object.object_size,  # type: ignore[typeddict-item]
+                    flags=Flags(
+                        read=com_object.read_flag,  # type: ignore[typeddict-item]
+                        write=com_object.write_flag,  # type: ignore[typeddict-item]
+                        communication=com_object.communication_flag,  # type: ignore[typeddict-item]
+                        update=com_object.update_flag,  # type: ignore[typeddict-item]
+                        read_on_init=com_object.read_on_init_flag,  # type: ignore[typeddict-item]
+                        transmit=com_object.transmit_flag,  # type: ignore[typeddict-item]
+                    ),
+                    group_address_links=group_address_links,
+                )
+                device_com_objects.append(com_object_key)
 
             devices_dict[device.individual_address] = Device(
                 name=device.product_name,
