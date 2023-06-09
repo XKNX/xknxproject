@@ -59,10 +59,16 @@ class XMLParser:
             device_com_objects: list[str] = []
             for com_object in device.com_object_instance_refs:
                 if com_object.links:
-                    com_object_key = f"{device.individual_address}/{com_object.ref_id}"
                     group_address_links = [
-                        _ga_id_to_address[link] for link in com_object.links
+                        valid_link
+                        for link in com_object.links
+                        if (valid_link := _ga_id_to_address.get(link))
                     ]
+                    if not group_address_links:
+                        # skip orphaned ComObjectInstanceRef pointing only to non-existent GroupAddress
+                        # see https://github.com/XKNX/knx-frontend/issues/71
+                        continue
+                    com_object_key = f"{device.individual_address}/{com_object.ref_id}"
                     communication_objects[com_object_key] = CommunicationObject(
                         name=com_object.name,  # type: ignore[typeddict-item]
                         number=com_object.number,  # type: ignore[typeddict-item]
