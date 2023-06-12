@@ -6,6 +6,7 @@ import re
 
 from xknxproject.models.knxproject import DPTType
 from xknxproject.models.static import SpaceType
+from xknxproject.util import is_ets4_project
 
 
 class XMLGroupAddress:
@@ -148,11 +149,16 @@ class ComObjectInstanceRef:
     number: int | None = None
     object_size: str | None = None
 
-    def resolve_com_object_ref_id(self, application_program_ref: str) -> None:
+    def resolve_com_object_ref_id(
+        self, application_program_ref: str, schema_version: int
+    ) -> None:
         """Prepend the ref_id with the application program ref."""
         # Remove module and ModuleInstance occurrence as they will not be in the application program directly
         ref_id = re.sub(r"(M-\d+?_MI-\d+?_)", "", self.ref_id)
-        self.com_object_ref_id = f"{application_program_ref}_{ref_id}"
+        if is_ets4_project(schema_version):
+            self.com_object_ref_id = ref_id
+        else:
+            self.com_object_ref_id = f"{application_program_ref}_{ref_id}"
 
     def merge_from_application(self, com_object: ComObject | ComObjectRef) -> None:
         """Fill missing information with information parsed from the application program."""
