@@ -78,12 +78,12 @@ class _GroupAddressLoader:
     @staticmethod
     def load(group_address_element: ElementTree.Element) -> XMLGroupAddress:
         """Load GroupAddress mappings."""
-
+        project_uid = group_address_element.get("Puid")
         return XMLGroupAddress(
             name=group_address_element.get("Name", ""),
             identifier=group_address_element.get("Id", ""),
             address=group_address_element.get("Address", ""),
-            project_uid=int(group_address_element.get("Puid")),  # type: ignore[arg-type]
+            project_uid=int(project_uid) if project_uid else None,
             description=group_address_element.get("Description", ""),
             dpt=get_dpt_type(group_address_element.get("DatapointType")),
         )
@@ -144,11 +144,12 @@ class _TopologyLoader:
         if address is None:
             return None
 
+        project_uid = device_element.get("Puid")
         product_ref = device_element.get("ProductRefId", "")
         device: DeviceInstance = DeviceInstance(
             identifier=device_element.get("Id", ""),
             address=address,
-            project_uid=int(device_element.get("Puid")),  # type: ignore[arg-type]
+            project_uid=int(project_uid) if project_uid else None,
             name=device_element.get("Name", ""),
             description=device_element.get("Description", ""),
             last_modified=device_element.get("LastModified", ""),
@@ -221,6 +222,7 @@ class _LocationLoader:
         """Parse a space from the document."""
         usage_id = node.get("Usage")
         usage_text = self.space_usage_names.get(usage_id, "") if usage_id else ""
+        project_uid = node.get("Puid")
         space: XMLSpace = XMLSpace(
             identifier=node.get("Id"),  # type: ignore[arg-type]
             name=node.get("Name"),  # type: ignore[arg-type]
@@ -229,7 +231,7 @@ class _LocationLoader:
             usage_text=usage_text,
             number=node.get("Number", ""),
             description=node.get("Description", ""),
-            project_uid=int(node.get("Puid")),  # type: ignore[arg-type]
+            project_uid=int(project_uid) if project_uid else None,
             spaces=[],
             devices=[],
         )

@@ -45,7 +45,7 @@ class Device(TypedDict):
     description: str
     manufacturer_name: str
     individual_address: str
-    project_uid: int
+    project_uid: int | None
     communication_object_ids: list[str]
 
 
@@ -73,7 +73,7 @@ class GroupAddress(TypedDict):
     identifier: str
     raw_address: int
     address: str
-    project_uid: int
+    project_uid: int | None
     dpt: DPTType | None
     communication_object_ids: list[str]
     description: str
@@ -89,7 +89,7 @@ class Space(TypedDict):
     usage_text: str
     number: str
     description: str
-    project_uid: int
+    project_uid: int | None
     devices: list[str]
     spaces: dict[str, Space]
 

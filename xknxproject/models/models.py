@@ -16,7 +16,7 @@ class XMLGroupAddress:
         name: str,
         identifier: str,
         address: str,
-        project_uid: int,
+        project_uid: int | None,
         description: str,
         dpt: DPTType | None,
     ):
@@ -74,7 +74,7 @@ class DeviceInstance:
         *,
         identifier: str,
         address: str,
-        project_uid: int,
+        project_uid: int | None,
         name: str,
         description: str,
         last_modified: str,
@@ -264,7 +264,7 @@ class XMLSpace:
     usage_text: str  # default to "" - translated
     number: str  # default to ""
     description: str  # default to ""
-    project_uid: int
+    project_uid: int | None
     spaces: list[XMLSpace]
     devices: list[str]  # [DeviceInstance.individual_address]
 
