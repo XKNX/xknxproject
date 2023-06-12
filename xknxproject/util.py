@@ -4,7 +4,12 @@ from __future__ import annotations
 import logging
 from typing import overload
 
-from xknxproject.const import MAIN_AND_SUB_DPT, MAIN_DPT
+from xknxproject.const import (
+    ETS_4_2_SCHEMA_VERSION,
+    ETS_6_SCHEMA_VERSION,
+    MAIN_AND_SUB_DPT,
+    MAIN_DPT,
+)
 from xknxproject.models import DPTType
 
 _LOGGER = logging.getLogger("xknxproject.log")
@@ -66,3 +71,13 @@ def parse_xml_flag(flag: str | None, default: bool | None = None) -> bool | None
     if flag is None:
         return default
     return flag == "Enabled"
+
+
+def is_ets4_project(schema_version: int) -> bool:
+    """Check if the project is an ETS4 project."""
+    return schema_version <= ETS_4_2_SCHEMA_VERSION
+
+
+def is_ets6_project(schema_version: int) -> bool:
+    """Check if the project is an ETS6 project."""
+    return schema_version >= ETS_6_SCHEMA_VERSION

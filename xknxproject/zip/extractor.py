@@ -14,12 +14,12 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import pyzipper
 
-from xknxproject.const import ETS_4_SCHEMA_VERSION, ETS_6_SCHEMA_VERSION
 from xknxproject.exceptions import (
     InvalidPasswordException,
     ProjectNotFoundException,
     UnexpectedFileContent,
 )
+from xknxproject.util import is_ets4_project, is_ets6_project
 
 _LOGGER = logging.getLogger("xknxproject.log")
 
@@ -52,7 +52,7 @@ class KNXProjContents:
         """Open the project.xml file."""
         schema_version = _get_schema_version(self.xml_namespace)
         project_filename = (
-            "Project.xml" if _is_ets4_project(schema_version) else "project.xml"
+            "Project.xml" if is_ets4_project(schema_version) else "project.xml"
         )
         return self._project_archive.open(
             f"{self._project_relative_path}{project_filename}",
@@ -122,7 +122,7 @@ def _extract_protected_project_file(
         raise InvalidPasswordException("Password required.")
 
     project_archive: ZipFile
-    if not _is_ets6_project(schema_version):
+    if not is_ets6_project(schema_version):
         try:
             project_archive = ZipFile(archive_zip.open(info, mode="r"), mode="r")
             project_archive.setpassword(password.encode("utf-8"))
@@ -169,16 +169,6 @@ def _get_schema_version(namespace: str) -> int:
 
     _LOGGER.debug("Schema version: %s", schema_version)
     return schema_version
-
-
-def _is_ets4_project(schema_version: int) -> bool:
-    """Check if the project is an ETS4 project."""
-    return schema_version == ETS_4_SCHEMA_VERSION
-
-
-def _is_ets6_project(schema_version: int) -> bool:
-    """Check if the project is an ETS6 project."""
-    return schema_version >= ETS_6_SCHEMA_VERSION
 
 
 def _generate_ets6_zip_password(password: str) -> bytes:
