@@ -174,11 +174,36 @@ class _TopologyLoader:
         return device
 
     @staticmethod
+    def __get_links_from_ets4(com_object: ElementTree.Element) -> str | None:
+        # Check if "Connectors" is available. This will always fail for ETS5/6
+        if (connectors := com_object.find("{*}Connectors")) is None:
+            return None
+
+        # Send GA is the primary GA, put it first in the list
+        if (send_ga := connectors.find("{*}Send")) is None:
+            return None
+
+        # Remove the project ID from GA
+        links = [send_ga.get("GroupAddressRefId", "").split("_")[1]]
+        # Receive GA are additional GA, add them at the end of the list
+        for receive_ga in com_object.findall("{*}Receive"):
+            links.append(receive_ga.get("GroupAddressRefId", "").split("_")[1])
+
+        # Return a list of GA as string as for "Links" in ETS5/6
+        return " ".join(links)
+
+    @staticmethod
     def _create_com_object_instance(
         com_object: ElementTree.Element,
     ) -> ComObjectInstanceRef | None:
         """Create ComObjectInstanceRef."""
-        if not (links := com_object.get("Links")):
+
+        # Check if "Links" is available for ETS5/6
+        if (links := com_object.get("Links")) is None:
+            # ETS4 has a different schema to define links, check if it is available
+            links = _TopologyLoader.__get_links_from_ets4(com_object)
+
+        if not links:
             return None
 
         return ComObjectInstanceRef(
