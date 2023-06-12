@@ -4,7 +4,7 @@ from typing import Final
 ETS_6_SCHEMA_VERSION: Final = 21
 ETS_5_7_SCHEMA_VERSION: Final = 20
 ETS_5_6_SCHEMA_VERSION: Final = 14
-ETS_4_SCHEMA_VERSION: Final = 11
+ETS_4_2_SCHEMA_VERSION: Final = 11
 
 
 MAIN_DPT: Final = "DPT"
