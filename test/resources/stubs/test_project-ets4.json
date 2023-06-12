@@ -1,0 +1,85 @@
+{
+  "info": {
+    "project_id": "P-0600",
+    "name": "Test Project XKNX",
+    "last_modified": "2023-06-12T17:59:16",
+    "group_address_style": "ThreeLevel",
+    "guid": null,
+    "created_by": "ETS4",
+    "schema_version": "11",
+    "tool_version": "ETS 4.2.0 (Build 3884)",
+    "xknxproject_version": "3.1.1",
+    "language_code": null
+  },
+  "communication_objects": {},
+  "topology": {
+    "0": {
+      "name": "Backbone area",
+      "description": null,
+      "lines": {
+        "0": {
+          "name": "Backbone line",
+          "description": null,
+          "devices": [
+            "0.0.1",
+            "0.0.2"
+          ],
+          "medium_type": "Twisted Pair (TP)"
+        }
+      }
+    }
+  },
+  "devices": {
+    "0.0.1": {
+      "name": "AKS-2016.02 Switch Actuator 20-fold, 12TE, 16A",
+      "hardware_name": "Schaltaktor 20-fach,12TE, 230VAC, 16A",
+      "description": "",
+      "manufacturer_name": "MDT technologies",
+      "individual_address": "0.0.1",
+      "project_uid": null,
+      "communication_object_ids": []
+    },
+    "0.0.2": {
+      "name": "JRA/S4.230.5.1 Blind/RollerShutterAct,TD,M,4f,230V",
+      "hardware_name": "JRA/S4.230.5.1 Jal./Rol.Akt.Fahrzt.man.4f,230V,REG",
+      "description": "",
+      "manufacturer_name": "ABB",
+      "individual_address": "0.0.2",
+      "project_uid": null,
+      "communication_object_ids": []
+    }
+  },
+  "group_addresses": {
+    "0/0/1": {
+      "name": "Test 1",
+      "identifier": "GA-1",
+      "raw_address": 1,
+      "address": "0/0/1",
+      "project_uid": null,
+      "dpt": null,
+      "communication_object_ids": [],
+      "description": ""
+    },
+    "0/0/2": {
+      "name": "Test 2",
+      "identifier": "GA-2",
+      "raw_address": 2,
+      "address": "0/0/2",
+      "project_uid": null,
+      "dpt": null,
+      "communication_object_ids": [],
+      "description": ""
+    },
+    "0/0/3": {
+      "name": "Test 3",
+      "identifier": "GA-3",
+      "raw_address": 3,
+      "address": "0/0/3",
+      "project_uid": null,
+      "dpt": null,
+      "communication_object_ids": [],
+      "description": ""
+    }
+  },
+  "locations": {}
+}
