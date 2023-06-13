@@ -182,19 +182,26 @@ class _TopologyLoader:
         return device
 
     @staticmethod
-    def __get_links_from_ets4(com_object: ElementTree.Element) -> str | None:
+    def __get_links_from_ets4(com_object: ElementTree.Element) -> list[str]:
         # Check if "Connectors" is available. This will always fail for ETS5/6
         if (connectors := com_object.find("{*}Connectors")) is None:
-            return None
+            return []
 
         # Send GA is the primary GA, Receive GA are additional group addresses
         ga_list = connectors.findall("{*}Send") + connectors.findall("{*}Receive")
 
         # Remove the project ID from GA
-        links = [ga.get("GroupAddressRefId", "").split("_")[1] for ga in ga_list]
+        return [ga.get("GroupAddressRefId", "").split("_")[1] for ga in ga_list]
 
-        # Return a list of GA as string as for "Links" in ETS5/6
-        return " ".join(links)
+    @staticmethod
+    def __get_links_from_ets5(com_object: ElementTree.Element) -> list[str]:
+        # ETS5/6 uses a space-separated string of GA
+        links = com_object.get("Links")
+
+        if links is None:
+            return []
+
+        return links.split(" ")
 
     def _create_com_object_instance(
         self,
@@ -205,7 +212,7 @@ class _TopologyLoader:
         if is_ets4_project(self.__knx_proj_contents.schema_version):
             links = self.__get_links_from_ets4(com_object)
         else:
-            links = com_object.get("Links")
+            links = self.__get_links_from_ets5(com_object)
 
         if not links:
             return None
@@ -223,7 +230,7 @@ class _TopologyLoader:
             read_on_init_flag=parse_xml_flag(com_object.get("ReadOnInitFlag")),
             datapoint_types=parse_dpt_types(com_object.get("DatapointType")),
             description=com_object.get("Description"),
-            links=links.split(" "),
+            links=links,
         )
 
 
