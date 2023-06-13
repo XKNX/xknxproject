@@ -52,14 +52,11 @@ class ProjectLoader:
                 group_address_list.append(
                     _GroupAddressLoader.load(group_address_element=ga_element),
                 )
+            topology_loader = _TopologyLoader(knx_proj_contents)
             for topology_element in tree.findall(
                 "{*}Project/{*}Installations/{*}Installation/{*}Topology"
             ):
-                areas.extend(
-                    _TopologyLoader(knx_proj_contents).load(
-                        topology_element=topology_element
-                    ),
-                )
+                areas.extend(topology_loader.load(topology_element=topology_element))
             for area in areas:
                 for line in area.lines:
                     devices.extend(line.devices)
@@ -71,14 +68,13 @@ class ProjectLoader:
                 else "Locations"
             )
 
+            location_loader = _LocationLoader(
+                knx_proj_contents, devices, space_usage_names
+            )
             for location_element in tree.findall(
                 f"{{*}}Project/{{*}}Installations/{{*}}Installation/{{*}}{element_name}"
             ):
-                spaces.extend(
-                    _LocationLoader(knx_proj_contents, devices, space_usage_names).load(
-                        location_element=location_element
-                    ),
-                )
+                spaces.extend(location_loader.load(location_element=location_element))
 
         with knx_proj_contents.open_project_meta() as project_file:
             tree = ElementTree.parse(project_file)
