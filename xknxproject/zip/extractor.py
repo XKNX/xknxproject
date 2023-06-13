@@ -40,6 +40,7 @@ class KNXProjContents:
         self.root = root_zip
         self.root_path = ZipPath(root_zip)
         self.xml_namespace = xml_namespace
+        self.schema_version = _get_schema_version(xml_namespace)
 
     def open_project_0(self) -> IO[bytes]:
         """Open the project 0.xml file."""
@@ -50,9 +51,8 @@ class KNXProjContents:
 
     def open_project_meta(self) -> IO[bytes]:
         """Open the project.xml file."""
-        schema_version = _get_schema_version(self.xml_namespace)
         project_filename = (
-            "Project.xml" if is_ets4_project(schema_version) else "project.xml"
+            "Project.xml" if is_ets4_project(self.schema_version) else "project.xml"
         )
         return self._project_archive.open(
             f"{self._project_relative_path}{project_filename}",
