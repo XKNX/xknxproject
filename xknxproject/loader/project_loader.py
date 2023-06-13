@@ -14,7 +14,12 @@ from xknxproject.models import (
     XMLProjectInformation,
     XMLSpace,
 )
-from xknxproject.util import get_dpt_type, parse_dpt_types, parse_xml_flag
+from xknxproject.util import (
+    get_dpt_type,
+    is_ets4_project,
+    parse_dpt_types,
+    parse_xml_flag,
+)
 from xknxproject.zip import KNXProjContents
 
 
@@ -51,7 +56,9 @@ class ProjectLoader:
                 "{*}Project/{*}Installations/{*}Installation/{*}Topology"
             ):
                 areas.extend(
-                    _TopologyLoader.load(topology_element=topology_element),
+                    _TopologyLoader(knx_proj_contents).load(
+                        topology_element=topology_element
+                    ),
                 )
             for area in areas:
                 for line in area.lines:
@@ -92,18 +99,19 @@ class _GroupAddressLoader:
 class _TopologyLoader:
     """Load topology from KNX XML."""
 
-    @staticmethod
-    def load(topology_element: ElementTree.Element) -> list[XMLArea]:
+    def __init__(self, knx_proj_contents: KNXProjContents) -> None:
+        self.__knx_proj_contents = knx_proj_contents
+
+    def load(self, topology_element: ElementTree.Element) -> list[XMLArea]:
         """Load topology mappings."""
         areas: list[XMLArea] = []
 
         for area in topology_element.findall("{*}Area"):
-            areas.append(_TopologyLoader._create_area(area))
+            areas.append(self._create_area(area))
 
         return areas
 
-    @staticmethod
-    def _create_area(area_element: ElementTree.Element) -> XMLArea:
+    def _create_area(self, area_element: ElementTree.Element) -> XMLArea:
         """Create an Area."""
         address: int = int(area_element.get("Address", ""))
         name: str = area_element.get("Name", "")
@@ -111,12 +119,11 @@ class _TopologyLoader:
         area: XMLArea = XMLArea(address, name, description, [])
 
         for line_element in area_element:
-            area.lines.append(_TopologyLoader._create_line(line_element, area))
+            area.lines.append(self._create_line(line_element, area))
 
         return area
 
-    @staticmethod
-    def _create_line(line_element: ElementTree.Element, area: XMLArea) -> XMLLine:
+    def _create_line(self, line_element: ElementTree.Element, area: XMLArea) -> XMLLine:
         """Create a Line."""
         address: int = int(line_element.get("Address", ""))
         name: str = line_element.get("Name", "")
@@ -129,14 +136,13 @@ class _TopologyLoader:
         line: XMLLine = XMLLine(address, description, name, medium_type, [], area)
 
         for device_element in line_element.findall(".//{*}DeviceInstance"):
-            if device := _TopologyLoader._create_device(device_element, line):
+            if device := self._create_device(device_element, line):
                 line.devices.append(device)
 
         return line
 
-    @staticmethod
     def _create_device(
-        device_element: ElementTree.Element, line: XMLLine
+        self, device_element: ElementTree.Element, line: XMLLine
     ) -> DeviceInstance | None:
         """Create device."""
         address: str | None = device_element.get("Address")
@@ -166,9 +172,7 @@ class _TopologyLoader:
                         device.additional_addresses.append(_address)
             if sub_node.tag.endswith("ComObjectInstanceRefs"):
                 for com_object in sub_node:
-                    if instance := _TopologyLoader._create_com_object_instance(
-                        com_object
-                    ):
+                    if instance := self._create_com_object_instance(com_object):
                         device.com_object_instance_refs.append(instance)
 
         return device
@@ -192,16 +196,16 @@ class _TopologyLoader:
         # Return a list of GA as string as for "Links" in ETS5/6
         return " ".join(links)
 
-    @staticmethod
     def _create_com_object_instance(
+        self,
         com_object: ElementTree.Element,
     ) -> ComObjectInstanceRef | None:
         """Create ComObjectInstanceRef."""
 
-        # Check if "Links" is available for ETS5/6
-        if (links := com_object.get("Links")) is None:
-            # ETS4 has a different schema to define links, check if it is available
-            links = _TopologyLoader.__get_links_from_ets4(com_object)
+        if is_ets4_project(self.__knx_proj_contents.schema_version):
+            links = self.__get_links_from_ets4(com_object)
+        else:
+            links = com_object.get("Links")
 
         if not links:
             return None
