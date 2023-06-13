@@ -63,11 +63,19 @@ class ProjectLoader:
             for area in areas:
                 for line in area.lines:
                     devices.extend(line.devices)
+
+            # ETS4 has a different naming for locations than ETS5/6
+            element_name = (
+                "Buildings"
+                if is_ets4_project(knx_proj_contents.schema_version)
+                else "Locations"
+            )
+
             for location_element in tree.findall(
-                "{*}Project/{*}Installations/{*}Installation/{*}Locations"
+                f"{{*}}Project/{{*}}Installations/{{*}}Installation/{{*}}{element_name}"
             ):
                 spaces.extend(
-                    _LocationLoader(devices, space_usage_names).load(
+                    _LocationLoader(knx_proj_contents, devices, space_usage_names).load(
                         location_element=location_element
                     ),
                 )
@@ -228,10 +236,16 @@ class _LocationLoader:
 
     def __init__(
         self,
+        knx_proj_contents: KNXProjContents,
         devices: list[DeviceInstance],
         space_usage_names: dict[str, str],
     ):
         """Initialize the LocationLoader."""
+        self.__element_name = (
+            "BuildingPart"
+            if is_ets4_project(knx_proj_contents.schema_version)
+            else "Space"
+        )
         self.devices: dict[str, str] = {
             device.identifier: device.individual_address for device in devices
         }
@@ -240,7 +254,8 @@ class _LocationLoader:
     def load(self, location_element: ElementTree.Element) -> list[XMLSpace]:
         """Load Location mappings."""
         return [
-            self.parse_space(space) for space in location_element.findall("{*}Space")
+            self.parse_space(space)
+            for space in location_element.findall(f"{{*}}{self.__element_name}")
         ]
 
     def parse_space(self, node: ElementTree.Element) -> XMLSpace:
@@ -262,7 +277,7 @@ class _LocationLoader:
         )
 
         for sub_node in node:
-            if sub_node.tag.endswith("Space"):
+            if sub_node.tag.endswith(self.__element_name):
                 # recursively call parse space since this can be nested for an unbound time in the XSD
                 space.spaces.append(self.parse_space(sub_node))
             elif sub_node.tag.endswith("DeviceInstanceRef"):

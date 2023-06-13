@@ -232,10 +232,79 @@
         "sub": null
       },
       "communication_object_ids": [
-        "0.0.1/M-0083_A-0013-11-A9D6_O-13_R-4"
+        "0.0.1/M-0083_A-0013-11-A9D6_O-13_R-4",
+        "0.0.2/M-0002_A-A061-13-C01C_O-10_R-485"
       ],
       "description": ""
     }
   },
-  "locations": {}
+  "locations": {
+    "House": {
+      "type": "Building",
+      "identifier": "P-0600-0_BP-0",
+      "name": "House",
+      "usage_id": null,
+      "usage_text": "",
+      "number": "",
+      "description": "",
+      "project_uid": null,
+      "devices": [],
+      "spaces": {
+        "First floor": {
+          "type": "Floor",
+          "identifier": "P-0600-0_BP-1",
+          "name": "First floor",
+          "usage_id": null,
+          "usage_text": "",
+          "number": "",
+          "description": "",
+          "project_uid": null,
+          "devices": [],
+          "spaces": {
+            "Kitchen": {
+              "type": "Room",
+              "identifier": "P-0600-0_BP-2",
+              "name": "Kitchen",
+              "usage_id": null,
+              "usage_text": "",
+              "number": "",
+              "description": "",
+              "project_uid": null,
+              "devices": [
+                "0.0.2"
+              ],
+              "spaces": {}
+            }
+          }
+        },
+        "Second floor": {
+          "type": "Floor",
+          "identifier": "P-0600-0_BP-3",
+          "name": "Second floor",
+          "usage_id": null,
+          "usage_text": "",
+          "number": "",
+          "description": "",
+          "project_uid": null,
+          "devices": [],
+          "spaces": {
+            "Bathroom": {
+              "type": "Room",
+              "identifier": "P-0600-0_BP-4",
+              "name": "Bathroom",
+              "usage_id": null,
+              "usage_text": "",
+              "number": "",
+              "description": "",
+              "project_uid": null,
+              "devices": [
+                "0.0.1"
+              ],
+              "spaces": {}
+            }
+          }
+        }
+      }
+    }
+  }
 }
