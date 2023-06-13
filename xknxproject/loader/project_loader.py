@@ -237,7 +237,7 @@ class _LocationLoader:
         space_usage_names: dict[str, str],
     ):
         """Initialize the LocationLoader."""
-        self.__element_name = (
+        self._element_name = (
             "BuildingPart"
             if is_ets4_project(knx_proj_contents.schema_version)
             else "Space"
@@ -251,7 +251,7 @@ class _LocationLoader:
         """Load Location mappings."""
         return [
             self.parse_space(space)
-            for space in location_element.findall(f"{{*}}{self.__element_name}")
+            for space in location_element.findall(f"{{*}}{self._element_name}")
         ]
 
     def parse_space(self, node: ElementTree.Element) -> XMLSpace:
@@ -273,7 +273,7 @@ class _LocationLoader:
         )
 
         for sub_node in node:
-            if sub_node.tag.endswith(self.__element_name):
+            if sub_node.tag.endswith(self._element_name):
                 # recursively call parse space since this can be nested for an unbound time in the XSD
                 space.spaces.append(self.parse_space(sub_node))
             elif sub_node.tag.endswith("DeviceInstanceRef"):
