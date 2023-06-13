@@ -183,15 +183,11 @@ class _TopologyLoader:
         if (connectors := com_object.find("{*}Connectors")) is None:
             return None
 
-        # Send GA is the primary GA, put it first in the list
-        if (send_ga := connectors.find("{*}Send")) is None:
-            return None
+        # Send GA is the primary GA, Receive GA are additional group addresses
+        ga_list = connectors.findall("{*}Send") + connectors.findall("{*}Receive")
 
         # Remove the project ID from GA
-        links = [send_ga.get("GroupAddressRefId", "").split("_")[1]]
-        # Receive GA are additional GA, add them at the end of the list
-        for receive_ga in com_object.findall("{*}Receive"):
-            links.append(receive_ga.get("GroupAddressRefId", "").split("_")[1])
+        links = [ga.get("GroupAddressRefId", "").split("_")[1] for ga in ga_list]
 
         # Return a list of GA as string as for "Links" in ETS5/6
         return " ".join(links)
