@@ -6,7 +6,7 @@ import re
 
 from xknxproject.models.knxproject import DPTType
 from xknxproject.models.static import SpaceType
-from xknxproject.util import is_ets4_project
+from xknxproject.zip import KNXProjContents
 
 
 class XMLGroupAddress:
@@ -150,12 +150,12 @@ class ComObjectInstanceRef:
     object_size: str | None = None
 
     def resolve_com_object_ref_id(
-        self, application_program_ref: str, schema_version: int
+        self, application_program_ref: str, knx_proj_contents: KNXProjContents
     ) -> None:
         """Prepend the ref_id with the application program ref."""
         # Remove module and ModuleInstance occurrence as they will not be in the application program directly
         ref_id = re.sub(r"(M-\d+?_MI-\d+?_)", "", self.ref_id)
-        if is_ets4_project(schema_version):
+        if knx_proj_contents.is_ets4_project():
             self.com_object_ref_id = ref_id
         else:
             self.com_object_ref_id = f"{application_program_ref}_{ref_id}"

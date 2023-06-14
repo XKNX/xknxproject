@@ -14,12 +14,7 @@ from xknxproject.models import (
     XMLProjectInformation,
     XMLSpace,
 )
-from xknxproject.util import (
-    get_dpt_type,
-    is_ets4_project,
-    parse_dpt_types,
-    parse_xml_flag,
-)
+from xknxproject.util import get_dpt_type, parse_dpt_types, parse_xml_flag
 from xknxproject.zip import KNXProjContents
 
 
@@ -63,9 +58,7 @@ class ProjectLoader:
 
             # ETS4 has a different naming for locations than ETS5/6
             element_name = (
-                "Buildings"
-                if is_ets4_project(knx_proj_contents.schema_version)
-                else "Locations"
+                "Buildings" if knx_proj_contents.is_ets4_project() else "Locations"
             )
 
             location_loader = _LocationLoader(
@@ -209,7 +202,7 @@ class _TopologyLoader:
     ) -> ComObjectInstanceRef | None:
         """Create ComObjectInstanceRef."""
 
-        if is_ets4_project(self.__knx_proj_contents.schema_version):
+        if self.__knx_proj_contents.is_ets4_project():
             links = self.__get_links_from_ets4(com_object)
         else:
             links = self.__get_links_from_ets5(com_object)
@@ -245,9 +238,7 @@ class _LocationLoader:
     ):
         """Initialize the LocationLoader."""
         self._element_name = (
-            "BuildingPart"
-            if is_ets4_project(knx_proj_contents.schema_version)
-            else "Space"
+            "BuildingPart" if knx_proj_contents.is_ets4_project() else "Space"
         )
         self.devices: dict[str, str] = {
             device.identifier: device.individual_address for device in devices

@@ -14,12 +14,12 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import pyzipper
 
+from xknxproject.const import ETS_4_2_SCHEMA_VERSION, ETS_6_SCHEMA_VERSION
 from xknxproject.exceptions import (
     InvalidPasswordException,
     ProjectNotFoundException,
     UnexpectedFileContent,
 )
-from xknxproject.util import is_ets4_project, is_ets6_project
 
 _LOGGER = logging.getLogger("xknxproject.log")
 
@@ -42,6 +42,10 @@ class KNXProjContents:
         self.xml_namespace = xml_namespace
         self.schema_version = _get_schema_version(xml_namespace)
 
+    def is_ets4_project(self) -> bool:
+        """Check if the project is an ETS4 project."""
+        return self.schema_version <= ETS_4_2_SCHEMA_VERSION
+
     def open_project_0(self) -> IO[bytes]:
         """Open the project 0.xml file."""
         return self._project_archive.open(
@@ -51,9 +55,7 @@ class KNXProjContents:
 
     def open_project_meta(self) -> IO[bytes]:
         """Open the project.xml file."""
-        project_filename = (
-            "Project.xml" if is_ets4_project(self.schema_version) else "project.xml"
-        )
+        project_filename = "Project.xml" if self.is_ets4_project() else "project.xml"
         return self._project_archive.open(
             f"{self._project_relative_path}{project_filename}",
             mode="r",
@@ -121,23 +123,21 @@ def _extract_protected_project_file(
     if not password:
         raise InvalidPasswordException("Password required.")
 
-    project_archive: ZipFile
-    if not is_ets6_project(schema_version):
-        try:
+    try:
+        project_archive: ZipFile
+        # Password protection is different for ETS4/5 and ETS6
+        if schema_version < ETS_6_SCHEMA_VERSION:
             project_archive = ZipFile(archive_zip.open(info, mode="r"), mode="r")
             project_archive.setpassword(password.encode("utf-8"))
             yield project_archive
-        except RuntimeError as exception:
-            raise InvalidPasswordException("Invalid password.") from exception
-    else:
-        try:
+        else:
             project_archive = pyzipper.AESZipFile(
                 archive_zip.open(info, mode="r"), mode="r"
             )
             project_archive.setpassword(_generate_ets6_zip_password(password))
             yield project_archive
-        except RuntimeError as exception:
-            raise InvalidPasswordException("Invalid password.") from exception
+    except RuntimeError as exception:
+        raise InvalidPasswordException("Invalid password.") from exception
 
 
 def _get_xml_namespace(project_zip: ZipFile) -> str:

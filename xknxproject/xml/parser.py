@@ -245,7 +245,7 @@ class XMLParser:
             device.application_program_ref = application_program_ref
             for com_object in device.com_object_instance_refs:
                 com_object.resolve_com_object_ref_id(
-                    application_program_ref, int(self.project_info.schema_version)
+                    application_program_ref, self.knx_proj_contents
                 )
 
         application_programs = (
