@@ -9,7 +9,7 @@ from xknxproject import XKNXProj
 file_names = [
     ("module-definition-test", "test", "de-DE"),
     ("xknx_test_project", "test", None),
-    ("test_project-ets4", "Test", None),
+    ("test_project-ets4", "test", "de-DE"),
 ]
 
 for file_name, password, language in file_names:

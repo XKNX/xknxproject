@@ -188,6 +188,7 @@ class XMLParser:
             space_usage_names,
             self.language_code,
         ) = KNXMasterLoader.load(
+            knx_proj_contents=self.knx_proj_contents,
             knx_master_file=self.knx_proj_contents.root_path / "knx_master.xml",
             language=language,
         )
