@@ -5,6 +5,9 @@ import logging
 from xml.etree import ElementTree
 from zipfile import Path
 
+from xknxproject.const import ETS4_PRODUCT_LANGUAGES
+from xknxproject.zip import KNXProjContents
+
 _LOGGER = logging.getLogger("xknxproject.log")
 
 
@@ -13,6 +16,7 @@ class KNXMasterLoader:
 
     @staticmethod
     def load(
+        knx_proj_contents: KNXProjContents,
         knx_master_file: Path,
         language: str | None,
     ) -> tuple[dict[str, str], dict[str, str], str | None]:
@@ -28,12 +32,17 @@ class KNXMasterLoader:
                 identifier = manufacturer.get("Id", "")
                 manufacturer_mapping[identifier] = manufacturer.get("Name", "")
 
-            for space_usage_node in tree.findall(".//{*}SpaceUsages/{*}SpaceUsage"):
-                identifier = space_usage_node.get("Id", "")
-                space_usage_mapping[identifier] = space_usage_node.get("Text", "")
+            if knx_proj_contents.is_ets4_project():
+                # No SpaceUsage in ETS4, neither ProductLanguages. Therefore, we use an
+                # hardcoded list of common product languages
+                product_languages = ETS4_PRODUCT_LANGUAGES
+            else:
+                for space_usage_node in tree.findall(".//{*}SpaceUsages/{*}SpaceUsage"):
+                    identifier = space_usage_node.get("Id", "")
+                    space_usage_mapping[identifier] = space_usage_node.get("Text", "")
 
-            for language_node in tree.findall(".//{*}ProductLanguages/{*}Language"):
-                product_languages.append(language_node.get("Identifier", ""))
+                for language_node in tree.findall(".//{*}ProductLanguages/{*}Language"):
+                    product_languages.append(language_node.get("Identifier", ""))
 
             if language is not None:
                 language_code = KNXMasterLoader.get_language_code(
