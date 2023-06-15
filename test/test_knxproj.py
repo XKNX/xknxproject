@@ -13,6 +13,13 @@ def test_parse_project_ets5():
     assert_stub(project, "xknx_test_project.json")
 
 
+def test_parse_project_ets4():
+    """Test parsing of ETS4 project."""
+    knxproj = XKNXProj(RESOURCES_PATH / "test_project-ets4.knxproj", "Test")
+    project = knxproj.parse()
+    assert_stub(project, "test_project-ets4.json")
+
+
 def test_parse_project_modules():
     """Test parsing of ETS5 project including 2 identical devices with module definitions."""
     knxproj = XKNXProj(

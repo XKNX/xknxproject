@@ -244,7 +244,9 @@ class XMLParser:
                 continue
             device.application_program_ref = application_program_ref
             for com_object in device.com_object_instance_refs:
-                com_object.resolve_com_object_ref_id(application_program_ref)
+                com_object.resolve_com_object_ref_id(
+                    application_program_ref, self.knx_proj_contents
+                )
 
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(
