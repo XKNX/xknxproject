@@ -15,7 +15,7 @@ def test_parse_project_ets5():
 
 def test_parse_project_ets4():
     """Test parsing of ETS4 project."""
-    knxproj = XKNXProj(RESOURCES_PATH / "test_project-ets4.knxproj", "Test")
+    knxproj = XKNXProj(RESOURCES_PATH / "test_project-ets4.knxproj", "test")
     project = knxproj.parse()
     assert_stub(project, "test_project-ets4.json")
 

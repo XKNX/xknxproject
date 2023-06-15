@@ -67,7 +67,7 @@ def test_parse_project_ets5():
     ("filename", "password"),
     [
         (RESOURCES_PATH / "test_project-ets4-no_password.knxproj", None),
-        (RESOURCES_PATH / "test_project-ets4.knxproj", "Test"),
+        (RESOURCES_PATH / "test_project-ets4.knxproj", "test"),
     ],
 )
 def test_parse_project_ets4(filename, password):
