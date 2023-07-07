@@ -10,6 +10,7 @@ from .knxproject import (
     Line,
     ProjectInfo,
     Space,
+    Functions
 )
 from .models import (
     ComObject,
@@ -23,6 +24,7 @@ from .models import (
     XMLLine,
     XMLProjectInformation,
     XMLSpace,
+    XMLFunctions,
 )
 from .static import MEDIUM_TYPES, SpaceType
 
@@ -37,6 +39,7 @@ __all__ = [
     "Line",
     "ProjectInfo",
     "Space",
+    "Functions",
     "ComObject",
     "ComObjectInstanceRef",
     "ComObjectRef",
@@ -47,6 +50,7 @@ __all__ = [
     "XMLGroupAddress",
     "XMLLine",
     "XMLSpace",
+    "XMLFunctions",
     "XMLProjectInformation",
     "MEDIUM_TYPES",
     "SpaceType",

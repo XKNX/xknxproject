@@ -24,10 +24,12 @@ from xknxproject.models import (
     Product,
     ProjectInfo,
     Space,
+    Functions,
     XMLArea,
     XMLGroupAddress,
     XMLProjectInformation,
     XMLSpace,
+    XMLFunctions,
 )
 from xknxproject.zip.extractor import KNXProjContents
 
@@ -47,6 +49,7 @@ class XMLParser:
         self.language_code: str | None = None
 
         self.project_info: XMLProjectInformation
+        self.functions: list[XMLFunctions]
 
     def parse(self, language: str | None = None) -> KNXProject:
         """Parse ETS files."""
@@ -162,6 +165,19 @@ class XMLParser:
             locations=space_dict,
         )
 
+    def convert_functions(self, functions: XMLFunctions) -> list[str, Functions]:
+        function_list: list[str, Functions] = []
+        for f in functions:
+            function_list.append(Functions(
+                identifier=f.identifier,
+                name=f.name,
+                function_type=f.function_type,
+                project_uid=f.project_uid,
+                group_addresses=f.group_addresses,
+            ))
+        return function_list
+
+
     def recursive_convert_spaces(self, space: XMLSpace) -> Space:
         """Convert spaces to the final output format."""
         subspaces: dict[str, Space] = {}
@@ -179,6 +195,7 @@ class XMLParser:
             project_uid=space.project_uid,
             devices=space.devices,
             spaces=subspaces,
+            functions=self.convert_functions(space.functions)
         )
 
     def load(self, language: str | None) -> None:

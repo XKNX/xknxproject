@@ -92,6 +92,18 @@ class Space(TypedDict):
     project_uid: int | None
     devices: list[str]
     spaces: dict[str, Space]
+    functions: list[str, Functions]
+
+
+class Functions(TypedDict):
+    """Functions typed dict."""
+
+    identifier: str
+    name: str
+    function_type: str
+    project_uid: int | None
+    group_addresses: list[str]
+
 
 
 class ProjectInfo(TypedDict):

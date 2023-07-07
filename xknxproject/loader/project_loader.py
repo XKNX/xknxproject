@@ -13,6 +13,7 @@ from xknxproject.models import (
     XMLLine,
     XMLProjectInformation,
     XMLSpace,
+    XMLFunctions,
 )
 from xknxproject.util import get_dpt_type, parse_dpt_types, parse_xml_flag
 from xknxproject.zip import KNXProjContents
@@ -268,6 +269,7 @@ class _LocationLoader:
             project_uid=int(project_uid) if project_uid else None,
             spaces=[],
             devices=[],
+            functions=[],
         )
 
         for sub_node in node:
@@ -277,8 +279,29 @@ class _LocationLoader:
             elif sub_node.tag.endswith("DeviceInstanceRef"):
                 if individual_address := self.devices.get(sub_node.get("RefId", "")):
                     space.devices.append(individual_address)
+            elif sub_node.tag.endswith("Function"):
+                space.functions.append(self.parse_functions(sub_node))
 
         return space
+
+
+    def parse_functions(self, node: ElementTree.Element) -> XMLFunctions:
+
+        project_uid = node.get("Puid")
+        functions: XMLFunctions = XMLFunctions (
+                    identifier=node.get("Id"),  # type: ignore[arg-type]
+                    name=node.get("Name"),  # type: ignore[arg-type]
+                    function_type="",
+                    project_uid=int(project_uid) if project_uid else None,
+                    group_addresses=[],
+        )
+
+        for sub_node in node:
+            if sub_node.tag.endswith("GroupAddressRef"):
+                refId=sub_node.get("RefId", "")
+                functions.group_addresses.append(refId)
+
+        return functions
 
 
 def load_project_info(tree: ElementTree.ElementTree) -> XMLProjectInformation:
