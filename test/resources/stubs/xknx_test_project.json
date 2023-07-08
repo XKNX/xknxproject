@@ -669,7 +669,8 @@
       "description": "",
       "project_uid": 6,
       "devices": [],
-      "spaces": {}
+      "spaces": {},
+      "functions": []
     }
   }
 }

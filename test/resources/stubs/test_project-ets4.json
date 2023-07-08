@@ -274,8 +274,10 @@
                 "0.0.2"
               ],
               "spaces": {}
+              "functions": []
             }
-          }
+          },
+          "functions": []
         },
         "Second floor": {
           "type": "Floor",
@@ -301,10 +303,13 @@
                 "0.0.1"
               ],
               "spaces": {}
+              "functions": []
             }
-          }
+          },
+          "functions": []
         }
-      }
+      },
+      "functions": []
     }
   }
 }
