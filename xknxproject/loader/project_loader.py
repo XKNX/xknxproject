@@ -285,6 +285,7 @@ class _LocationLoader:
         return space
 
     def parse_functions(self, node: ElementTree.Element) -> XMLFunction:
+        """Parse a functions from the document."""
         project_uid = node.get("Puid")
         functions: XMLFunction = XMLFunction(
             identifier=node.get("Id"),
