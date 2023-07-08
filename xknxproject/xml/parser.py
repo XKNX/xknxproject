@@ -166,6 +166,7 @@ class XMLParser:
         )
 
     def convert_functions(self, functions: XMLFunction) -> list[Function]:
+        """Convert function to the final output format."""
         return [Function(
             identifier=f.identifier,
             name=f.name,
