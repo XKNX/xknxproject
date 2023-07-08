@@ -105,7 +105,6 @@ class Function(TypedDict):
     group_addresses: list[str]
 
 
-
 class ProjectInfo(TypedDict):
     """Information about the project."""
 
