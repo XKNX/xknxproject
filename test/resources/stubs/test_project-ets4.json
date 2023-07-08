@@ -273,7 +273,7 @@
               "devices": [
                 "0.0.2"
               ],
-              "spaces": {}
+              "spaces": {},
               "functions": []
             }
           },
@@ -302,7 +302,7 @@
               "devices": [
                 "0.0.1"
               ],
-              "spaces": {}
+              "spaces": {},
               "functions": []
             }
           },
