@@ -100,7 +100,7 @@
                         {
                             "identifier": "P-05C0-0_F-1",
                             "name": "LivingroomLight",
-                            "function_type": "",
+                            "function_type": "FT-1",
                             "project_uid": 11,
                             "group_addresses": [
                                 "P-05C0-0_GA-1",

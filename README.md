@@ -17,7 +17,7 @@ Currently, xknxproject supports extracting (password protected) ETS 4, 5 and 6 p
 * Group Addresses and their DPT type if set
 * The application programs communication objects, their respective flags and the DPT Type
 * Location information of devices (in which rooms they are)
-  * Room function from ETS 6 projects
+* Functions assigned to rooms
 
 Caution: Loading a middle-sized project with this tool takes about 1.5 seconds. For bigger projects this might as well be >3s.
 

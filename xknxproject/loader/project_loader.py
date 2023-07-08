@@ -13,7 +13,7 @@ from xknxproject.models import (
     XMLLine,
     XMLProjectInformation,
     XMLSpace,
-    XMLFunctions,
+    XMLFunction,
 )
 from xknxproject.util import get_dpt_type, parse_dpt_types, parse_xml_flag
 from xknxproject.zip import KNXProjContents
@@ -285,21 +285,17 @@ class _LocationLoader:
         return space
 
 
-    def parse_functions(self, node: ElementTree.Element) -> XMLFunctions:
+    def parse_functions(self, node: ElementTree.Element) -> XMLFunction:
 
         project_uid = node.get("Puid")
-        functions: XMLFunctions = XMLFunctions (
+        functions: XMLFunction = XMLFunction (
                     identifier=node.get("Id"),  # type: ignore[arg-type]
                     name=node.get("Name"),  # type: ignore[arg-type]
-                    function_type="",
+                    function_type=node.get("Type"),
                     project_uid=int(project_uid) if project_uid else None,
-                    group_addresses=[],
+                    group_addresses=[sub_node.get("RefId", "") for sub_node in
+                                     node if sub_node.tag.endswith("GroupAddressRef")],
         )
-
-        for sub_node in node:
-            if sub_node.tag.endswith("GroupAddressRef"):
-                refId=sub_node.get("RefId", "")
-                functions.group_addresses.append(refId)
 
         return functions
 

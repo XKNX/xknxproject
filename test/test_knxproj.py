@@ -5,8 +5,6 @@ from xknxproject import XKNXProj
 from . import RESOURCES_PATH
 from .conftest import assert_stub
 
-import json
-
 def test_parse_project_ets5():
     """Test parsing of ETS5 project."""
     knxproj = XKNXProj(RESOURCES_PATH / "xknx_test_project.knxproj", "test")
