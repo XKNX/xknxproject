@@ -9,11 +9,11 @@ from xknxproject.models import (
     DeviceInstance,
     SpaceType,
     XMLArea,
+    XMLFunction,
     XMLGroupAddress,
     XMLLine,
     XMLProjectInformation,
     XMLSpace,
-    XMLFunction,
 )
 from xknxproject.util import get_dpt_type, parse_dpt_types, parse_xml_flag
 from xknxproject.zip import KNXProjContents

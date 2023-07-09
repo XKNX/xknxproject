@@ -17,6 +17,7 @@ from xknxproject.models import (
     Device,
     DeviceInstance,
     Flags,
+    Function,
     GroupAddress,
     HardwareToPrograms,
     KNXProject,
@@ -24,12 +25,11 @@ from xknxproject.models import (
     Product,
     ProjectInfo,
     Space,
-    Function,
     XMLArea,
+    XMLFunction,
     XMLGroupAddress,
     XMLProjectInformation,
     XMLSpace,
-    XMLFunction,
 )
 from xknxproject.zip.extractor import KNXProjContents
 
@@ -165,7 +165,7 @@ class XMLParser:
             locations=space_dict,
         )
 
-    def convert_functions(self, functions: XMLFunction) -> list[Function]:
+    def convert_functions(self, functions: list[XMLFunction]) -> list[Function]:
         """Convert function to the final output format."""
         return [
             Function(

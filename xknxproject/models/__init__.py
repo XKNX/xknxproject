@@ -5,12 +5,12 @@ from .knxproject import (
     Device,
     DPTType,
     Flags,
+    Function,
     GroupAddress,
     KNXProject,
     Line,
     ProjectInfo,
     Space,
-    Function,
 )
 from .models import (
     ComObject,
@@ -20,11 +20,11 @@ from .models import (
     HardwareToPrograms,
     Product,
     XMLArea,
+    XMLFunction,
     XMLGroupAddress,
     XMLLine,
     XMLProjectInformation,
     XMLSpace,
-    XMLFunction,
 )
 from .static import MEDIUM_TYPES, SpaceType
 
