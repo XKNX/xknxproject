@@ -288,12 +288,15 @@ class _LocationLoader:
         """Parse a functions from the document."""
         project_uid = node.get("Puid")
         functions: XMLFunction = XMLFunction(
-            identifier=node.get("Id"),
-            name=node.get("Name"),
-            function_type=node.get("Type"),
+            identifier=node.get("Id"),  # type: ignore[arg-type]
+            name=node.get("Name"),  # type: ignore[arg-type]
+            function_type=node.get("Type"),  # type: ignore[arg-type]
             project_uid=int(project_uid) if project_uid else None,
-            group_addresses=[sub_node.get("RefId", "") for sub_node in node if
-                             sub_node.tag.endswith("GroupAddressRef")],
+            group_addresses=[
+                sub_node.get("RefId", "")
+                for sub_node in node
+                if sub_node.tag.endswith("GroupAddressRef")
+            ],
         )
 
         return functions

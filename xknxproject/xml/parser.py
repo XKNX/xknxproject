@@ -167,13 +167,16 @@ class XMLParser:
 
     def convert_functions(self, functions: XMLFunction) -> list[Function]:
         """Convert function to the final output format."""
-        return [Function(
-            identifier=f.identifier,
-            name=f.name,
-            function_type=f.function_type,
-            project_uid=f.project_uid,
-            group_addresses=f.group_addresses,
-        ) for f in functions]
+        return [
+            Function(
+                identifier=f.identifier,
+                name=f.name,
+                function_type=f.function_type,
+                project_uid=f.project_uid,
+                group_addresses=f.group_addresses,
+            )
+            for f in functions
+        ]
 
     def recursive_convert_spaces(self, space: XMLSpace) -> Space:
         """Convert spaces to the final output format."""
@@ -192,7 +195,7 @@ class XMLParser:
             project_uid=space.project_uid,
             devices=space.devices,
             spaces=subspaces,
-            functions=self.convert_functions(space.functions)
+            functions=self.convert_functions(space.functions),
         )
 
     def load(self, language: str | None) -> None:

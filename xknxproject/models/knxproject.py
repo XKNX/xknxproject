@@ -92,7 +92,7 @@ class Space(TypedDict):
     project_uid: int | None
     devices: list[str]
     spaces: dict[str, Space]
-    functions: list[str, Function]
+    functions: list[Function]
 
 
 class Function(TypedDict):

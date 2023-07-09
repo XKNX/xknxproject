@@ -10,7 +10,7 @@ from .knxproject import (
     Line,
     ProjectInfo,
     Space,
-    Function
+    Function,
 )
 from .models import (
     ComObject,
