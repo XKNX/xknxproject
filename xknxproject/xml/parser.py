@@ -19,6 +19,7 @@ from xknxproject.models import (
     Flags,
     Function,
     GroupAddress,
+    GroupAddressRef,
     HardwareToPrograms,
     KNXProject,
     Line,
@@ -28,6 +29,7 @@ from xknxproject.models import (
     XMLArea,
     XMLFunction,
     XMLGroupAddress,
+    XMLGroupAddressRef,
     XMLProjectInformation,
     XMLSpace,
 )
@@ -165,6 +167,21 @@ class XMLParser:
             locations=space_dict,
         )
 
+    def convert_group_address_ref(
+        self, group_address_ref: list[XMLGroupAddressRef]
+    ) -> list[GroupAddressRef]:
+        """Convert group address ref to the final output format."""
+        return [
+            GroupAddressRef(
+                identifier=g.identifier,
+                name=g.name,
+                role=g.role,
+                ref_id=g.ref_id,
+                project_uid=g.project_uid,
+            )
+            for g in group_address_ref
+        ]
+
     def convert_functions(self, functions: list[XMLFunction]) -> list[Function]:
         """Convert function to the final output format."""
         return [
@@ -173,7 +190,7 @@ class XMLParser:
                 name=f.name,
                 function_type=f.function_type,
                 project_uid=f.project_uid,
-                group_addresses=f.group_addresses,
+                group_addresses=self.convert_group_address_ref(f.group_addresses),
             )
             for f in functions
         ]

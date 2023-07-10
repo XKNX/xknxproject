@@ -10,6 +10,7 @@ from xknxproject.models import (
     SpaceType,
     XMLArea,
     XMLFunction,
+    XMLGroupAddressRef,
     XMLGroupAddress,
     XMLLine,
     XMLProjectInformation,
@@ -292,12 +293,20 @@ class _LocationLoader:
             name=node.get("Name"),  # type: ignore[arg-type]
             function_type=node.get("Type"),  # type: ignore[arg-type]
             project_uid=int(project_uid) if project_uid else None,
-            group_addresses=[
-                sub_node.get("RefId", "")
-                for sub_node in node
-                if sub_node.tag.endswith("GroupAddressRef")
-            ],
+            group_addresses=[],
         )
+
+        for sub_node in node:
+            if sub_node.tag.endswith("GroupAddressRef"):
+                project_uid = sub_node.get("Puid")
+                group_address_ref: XMLGroupAddressRef = XMLGroupAddressRef(
+                    identifier=sub_node.get("Id"),  # type: ignore[arg-type]
+                    name=sub_node.get("Name"),  # type: ignore[arg-type]
+                    role=sub_node.get("Role", ""),
+                    ref_id=sub_node.get("RefId", ""),
+                    project_uid=int(project_uid) if project_uid else None,
+                )
+                functions.group_addresses.append(group_address_ref)
 
         return functions
 

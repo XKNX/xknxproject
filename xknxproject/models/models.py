@@ -284,7 +284,18 @@ class XMLFunction:
     name: str
     function_type: str
     project_uid: int | None
-    group_addresses: list[str]
+    group_addresses: list[XMLGroupAddressRef]
+
+
+@dataclass
+class XMLGroupAddressRef:
+    """A GroupAddressRef in the functions XML."""
+
+    identifier: str
+    name: str
+    role: str
+    ref_id: str
+    project_uid: int | None
 
 
 @dataclass

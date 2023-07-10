@@ -103,8 +103,20 @@
                             "function_type": "FT-1",
                             "project_uid": 11,
                             "group_addresses": [
-                                "P-05C0-0_GA-1",
-                                "P-05C0-0_GA-2"
+                                {
+                                    "identifier": "P-05C0-0_GF-1",
+                                    "name": "",
+                                    "role": "SwitchOnOff",
+                                    "ref_id": "P-05C0-0_GA-1",
+                                    "project_uid": 15
+                                },
+                                {
+                                    "identifier": "P-05C0-0_GF-2",
+                                    "name": "",
+                                    "role": "InfoOnOff",
+                                    "ref_id": "P-05C0-0_GA-2",
+                                    "project_uid": 17
+                                }
                             ]
                         }
                     ]

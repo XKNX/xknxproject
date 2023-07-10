@@ -102,7 +102,17 @@ class Function(TypedDict):
     name: str
     function_type: str
     project_uid: int | None
-    group_addresses: list[str]
+    group_addresses: list[GroupAddressRef]
+
+
+class GroupAddressRef(TypedDict):
+    """GroupAddressRef typed dict."""
+
+    identifier: str
+    name: str
+    role: str
+    ref_id: str
+    project_uid: int | None
 
 
 class ProjectInfo(TypedDict):
