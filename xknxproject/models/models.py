@@ -283,6 +283,7 @@ class XMLFunction:
     identifier: str
     name: str
     function_type: str
+    usage_text: str
     project_uid: int | None
     group_addresses: list[XMLGroupAddressRef]
 

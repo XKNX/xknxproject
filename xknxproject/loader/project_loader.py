@@ -27,6 +27,7 @@ class ProjectLoader:
     def load(
         knx_proj_contents: KNXProjContents,
         space_usage_names: dict[str, str],
+        function_type_names: dict[str, str],
     ) -> tuple[
         list[XMLGroupAddress],
         list[XMLArea],
@@ -64,7 +65,7 @@ class ProjectLoader:
             )
 
             location_loader = _LocationLoader(
-                knx_proj_contents, devices, space_usage_names
+                knx_proj_contents, devices, space_usage_names, function_type_names
             )
             for location_element in tree.findall(
                 f"{{*}}Project/{{*}}Installations/{{*}}Installation/{{*}}{element_name}"
@@ -237,6 +238,7 @@ class _LocationLoader:
         knx_proj_contents: KNXProjContents,
         devices: list[DeviceInstance],
         space_usage_names: dict[str, str],
+        function_type_names: dict[str, str],
     ):
         """Initialize the LocationLoader."""
         self._element_name = (
@@ -246,6 +248,7 @@ class _LocationLoader:
             device.identifier: device.individual_address for device in devices
         }
         self.space_usage_names = space_usage_names
+        self.function_type_names = function_type_names
 
     def load(self, location_element: ElementTree.Element) -> list[XMLSpace]:
         """Load Location mappings."""
@@ -288,17 +291,20 @@ class _LocationLoader:
     def parse_functions(self, node: ElementTree.Element) -> XMLFunction:
         """Parse a functions from the document."""
         project_uid = node.get("Puid")
+        function_type=node.get("Type")  # type: ignore[arg-type]
+        usage_text = self.function_type_names.get(function_type, "") if function_type else ""
         functions: XMLFunction = XMLFunction(
             identifier=node.get("Id"),  # type: ignore[arg-type]
             name=node.get("Name"),  # type: ignore[arg-type]
-            function_type=node.get("Type"),  # type: ignore[arg-type]
+            function_type=function_type,
             project_uid=int(project_uid) if project_uid else None,
             group_addresses=[],
+            usage_text=usage_text,
         )
-
+        
         for sub_node in node:
             if sub_node.tag.endswith("GroupAddressRef"):
-                project_uid = sub_node.get("Puid")
+                project_uid = sub_node.get("Puid")                
                 group_address_ref: XMLGroupAddressRef = XMLGroupAddressRef(
                     identifier=sub_node.get("Id"),  # type: ignore[arg-type]
                     name=sub_node.get("Name"),  # type: ignore[arg-type]

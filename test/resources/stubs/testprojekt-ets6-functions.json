@@ -101,6 +101,7 @@
                             "identifier": "P-05C0-0_F-1",
                             "name": "LivingroomLight",
                             "function_type": "FT-1",
+                            "usage_text": "switchable light",
                             "project_uid": 11,
                             "group_addresses": [
                                 {

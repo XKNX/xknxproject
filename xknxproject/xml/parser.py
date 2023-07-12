@@ -189,6 +189,7 @@ class XMLParser:
                 identifier=f.identifier,
                 name=f.name,
                 function_type=f.function_type,
+                usage_text=f.usage_text,
                 project_uid=f.project_uid,
                 group_addresses=self.convert_group_address_ref(f.group_addresses),
             )
@@ -221,6 +222,7 @@ class XMLParser:
             manufacturer_names,
             space_usage_names,
             self.language_code,
+            function_type_names,
         ) = KNXMasterLoader.load(
             knx_proj_contents=self.knx_proj_contents,
             knx_master_file=self.knx_proj_contents.root_path / "knx_master.xml",
@@ -235,6 +237,7 @@ class XMLParser:
         ) = ProjectLoader.load(
             knx_proj_contents=self.knx_proj_contents,
             space_usage_names=space_usage_names,
+            function_type_names=function_type_names,
         )
 
         products_dict: dict[str, Product] = {}
