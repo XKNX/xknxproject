@@ -177,6 +177,7 @@ class XMLParser:
                 name=g.name,
                 role=g.role,
                 ref_id=g.ref_id,
+                address=g.address,
                 project_uid=g.project_uid,
             )
             for g in group_address_ref

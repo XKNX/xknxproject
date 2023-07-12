@@ -65,7 +65,8 @@ class ProjectLoader:
             )
 
             location_loader = _LocationLoader(
-                knx_proj_contents, devices, space_usage_names, function_type_names
+                knx_proj_contents, devices, space_usage_names,
+                function_type_names, group_address_list
             )
             for location_element in tree.findall(
                 f"{{*}}Project/{{*}}Installations/{{*}}Installation/{{*}}{element_name}"
@@ -239,6 +240,7 @@ class _LocationLoader:
         devices: list[DeviceInstance],
         space_usage_names: dict[str, str],
         function_type_names: dict[str, str],
+        group_address_list: list[XMLGroupAddress],
     ):
         """Initialize the LocationLoader."""
         self._element_name = (
@@ -249,6 +251,7 @@ class _LocationLoader:
         }
         self.space_usage_names = space_usage_names
         self.function_type_names = function_type_names
+        self.group_address_list = group_address_list
 
     def load(self, location_element: ElementTree.Element) -> list[XMLSpace]:
         """Load Location mappings."""
@@ -305,11 +308,17 @@ class _LocationLoader:
         for sub_node in node:
             if sub_node.tag.endswith("GroupAddressRef"):
                 project_uid = sub_node.get("Puid")                
+                ref_id=sub_node.get("RefId", "")
+
+                id=ref_id.split('_')[1]
+                address=[g for g in self.group_address_list if g.identifier == id][0].address
+                
                 group_address_ref: XMLGroupAddressRef = XMLGroupAddressRef(
                     identifier=sub_node.get("Id"),  # type: ignore[arg-type]
                     name=sub_node.get("Name"),  # type: ignore[arg-type]
                     role=sub_node.get("Role", ""),
-                    ref_id=sub_node.get("RefId", ""),
+                    ref_id=ref_id,
+                    address=address,
                     project_uid=int(project_uid) if project_uid else None,
                 )
                 functions.group_addresses.append(group_address_ref)
