@@ -10,8 +10,8 @@ from xknxproject.models import (
     SpaceType,
     XMLArea,
     XMLFunction,
-    XMLGroupAddressRef,
     XMLGroupAddress,
+    XMLGroupAddressRef,
     XMLLine,
     XMLProjectInformation,
     XMLSpace,
@@ -65,8 +65,11 @@ class ProjectLoader:
             )
 
             location_loader = _LocationLoader(
-                knx_proj_contents, devices, space_usage_names,
-                function_type_names, group_address_list
+                knx_proj_contents,
+                devices,
+                space_usage_names,
+                function_type_names,
+                group_address_list,
             )
             for location_element in tree.findall(
                 f"{{*}}Project/{{*}}Installations/{{*}}Installation/{{*}}{element_name}"
@@ -294,8 +297,10 @@ class _LocationLoader:
     def parse_functions(self, node: ElementTree.Element) -> XMLFunction:
         """Parse a functions from the document."""
         project_uid = node.get("Puid")
-        function_type=node.get("Type")  # type: ignore[arg-type]
-        usage_text = self.function_type_names.get(function_type, "") if function_type else ""
+        function_type = node.get("Type", "")
+        usage_text = (
+            self.function_type_names.get(function_type, "") if function_type else ""
+        )
         functions: XMLFunction = XMLFunction(
             identifier=node.get("Id"),  # type: ignore[arg-type]
             name=node.get("Name"),  # type: ignore[arg-type]
@@ -304,13 +309,15 @@ class _LocationLoader:
             group_addresses=[],
             usage_text=usage_text,
         )
-        
+
         for sub_node in node:
             if sub_node.tag.endswith("GroupAddressRef"):
-                project_uid = sub_node.get("Puid")                
-                id=sub_node.get("RefId", "").split('_')[1]
-                address=[g for g in self.group_address_list if g.identifier == id][0].address
-                
+                project_uid = sub_node.get("Puid")
+                ref_id = sub_node.get("RefId", "").split("_")[1]
+                address = [
+                    g for g in self.group_address_list if g.identifier == ref_id
+                ][0].address
+
                 group_address_ref: XMLGroupAddressRef = XMLGroupAddressRef(
                     identifier=sub_node.get("Id"),  # type: ignore[arg-type]
                     name=sub_node.get("Name"),  # type: ignore[arg-type]

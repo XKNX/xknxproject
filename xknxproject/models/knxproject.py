@@ -112,7 +112,6 @@ class GroupAddressRef(TypedDict):
     identifier: str
     name: str
     role: str
-    ref_id: str
     address: str
     project_uid: int | None
 

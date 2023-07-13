@@ -45,10 +45,14 @@ class KNXMasterLoader:
                 for language_node in tree.findall(".//{*}ProductLanguages/{*}Language"):
                     product_languages.append(language_node.get("Identifier", ""))
 
-                for function_type_node in tree.findall(".//{*}FunctionTypes/{*}FunctionType"):
+                for function_type_node in tree.findall(
+                    ".//{*}FunctionTypes/{*}FunctionType"
+                ):
                     identifier = function_type_node.get("Id", "")
-                    function_type_mapping[identifier] = function_type_node.get("Text", "")
-                    
+                    function_type_mapping[identifier] = function_type_node.get(
+                        "Text", ""
+                    )
+
             if language is not None:
                 language_code = KNXMasterLoader.get_language_code(
                     language, product_languages
@@ -70,7 +74,12 @@ class KNXMasterLoader:
                     ) is not None:
                         space_usage_mapping[_ref_id] = translation_node.get("Text", "")
 
-        return manufacturer_mapping, space_usage_mapping, language_code, function_type_mapping
+        return (
+            manufacturer_mapping,
+            space_usage_mapping,
+            language_code,
+            function_type_mapping,
+        )
 
     @staticmethod
     def get_language_code(language: str, product_languages: list[str]) -> str | None:
