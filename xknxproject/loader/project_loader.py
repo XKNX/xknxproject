@@ -308,16 +308,13 @@ class _LocationLoader:
         for sub_node in node:
             if sub_node.tag.endswith("GroupAddressRef"):
                 project_uid = sub_node.get("Puid")                
-                ref_id=sub_node.get("RefId", "")
-
-                id=ref_id.split('_')[1]
+                id=sub_node.get("RefId", "").split('_')[1]
                 address=[g for g in self.group_address_list if g.identifier == id][0].address
                 
                 group_address_ref: XMLGroupAddressRef = XMLGroupAddressRef(
                     identifier=sub_node.get("Id"),  # type: ignore[arg-type]
                     name=sub_node.get("Name"),  # type: ignore[arg-type]
                     role=sub_node.get("Role", ""),
-                    ref_id=ref_id,
                     address=address,
                     project_uid=int(project_uid) if project_uid else None,
                 )

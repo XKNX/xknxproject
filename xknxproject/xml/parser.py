@@ -176,7 +176,6 @@ class XMLParser:
                 identifier=g.identifier,
                 name=g.name,
                 role=g.role,
-                ref_id=g.ref_id,
                 address=g.address,
                 project_uid=g.project_uid,
             )
