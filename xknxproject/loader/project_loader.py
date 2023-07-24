@@ -92,11 +92,11 @@ class ProjectLoader:
             )
 
             for group_address in function.group_addresses:
-                group_address.address = [
-                    g
-                    for g in group_address_list
-                    if g.identifier == group_address.ref_id
-                ][0].address
+                group_address.address = next(
+                    ga.address
+                    for ga in group_address_list
+                    if ga.identifier == group_address.ref_id
+                )
 
         return group_address_list, areas, devices, spaces, project_info, functions
 
