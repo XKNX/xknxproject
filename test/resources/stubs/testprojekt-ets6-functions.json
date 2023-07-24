@@ -97,33 +97,35 @@
                     "devices": [],
                     "spaces": {},
                     "functions": [
-                        {
-                            "identifier": "P-05C0-0_F-1",
-                            "name": "LivingroomLight",
-                            "function_type": "FT-1",
-                            "usage_text": "switchable light",
-                            "project_uid": 11,
-                            "group_addresses": [
-                                {
-                                    "identifier": "P-05C0-0_GF-1",
-                                    "name": "",
-                                    "role": "SwitchOnOff",
-                                    "address": "0/0/1",
-                                    "project_uid": 15
-                                },
-                                {
-                                    "identifier": "P-05C0-0_GF-2",
-                                    "name": "",
-                                    "role": "InfoOnOff",
-                                    "address": "0/0/2",
-                                    "project_uid": 17
-                                }
-                            ]
-                        }
+                        "F-1"
                     ]
                 }
             },
             "functions": []
+        }
+    },
+    "functions": {
+        "F-1": {
+            "function_type": "FT-1",
+            "group_addresses": {
+                "0/0/1": {
+                    "address": "0/0/1",
+                    "name": "",
+                    "project_uid": 15,
+                    "role": "SwitchOnOff"
+                },
+                "0/0/2": {
+                    "address": "0/0/2",
+                    "name": "",
+                    "project_uid": 17,
+                    "role": "InfoOnOff"
+                }
+            },
+            "identifier": "F-1",
+            "name": "LivingroomLight",
+            "project_uid": 11,
+            "space_id": "P-05C0-0_BP-2",
+            "usage_text": "switchable light"
         }
     }
 }

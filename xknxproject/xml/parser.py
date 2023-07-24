@@ -51,7 +51,7 @@ class XMLParser:
         self.language_code: str | None = None
 
         self.project_info: XMLProjectInformation
-        self.functions: list[XMLFunction]
+        self.functions: list[XMLFunction] = []
 
     def parse(self, language: str | None = None) -> KNXProject:
         """Parse ETS files."""
@@ -145,6 +145,10 @@ class XMLParser:
         for space in self.spaces:
             space_dict[space.name] = self.recursive_convert_spaces(space)
 
+        functions_dict: dict[str, Function] = {}
+        for function in self.functions:
+            functions_dict[function.identifier] = self.convert_functions(function)
+
         info = ProjectInfo(
             project_id=self.project_info.project_id,
             name=self.project_info.name,
@@ -165,36 +169,38 @@ class XMLParser:
             devices=devices_dict,
             group_addresses=group_address_dict,
             locations=space_dict,
+            functions=functions_dict,
         )
 
     def convert_group_address_ref(
-        self, group_address_ref: list[XMLGroupAddressRef]
-    ) -> list[GroupAddressRef]:
+        self, group_address_ref: XMLGroupAddressRef
+    ) -> GroupAddressRef:
         """Convert group address ref to the final output format."""
-        return [
-            GroupAddressRef(
-                identifier=g.identifier,
-                name=g.name,
-                role=g.role,
-                address=g.address,
-                project_uid=g.project_uid,
-            )
-            for g in group_address_ref
-        ]
+        return GroupAddressRef(
+            address=group_address_ref.address,
+            name=group_address_ref.name,
+            project_uid=group_address_ref.project_uid,
+            role=group_address_ref.role,
+        )
 
-    def convert_functions(self, functions: list[XMLFunction]) -> list[Function]:
+    def convert_functions(self, function: XMLFunction) -> Function:
         """Convert function to the final output format."""
-        return [
-            Function(
-                identifier=f.identifier,
-                name=f.name,
-                function_type=f.function_type,
-                usage_text=f.usage_text,
-                project_uid=f.project_uid,
-                group_addresses=self.convert_group_address_ref(f.group_addresses),
+
+        ga_dict = {}
+        for group_address in function.group_addresses:
+            ga_dict[group_address.address] = self.convert_group_address_ref(
+                group_address
             )
-            for f in functions
-        ]
+
+        return Function(
+            function_type=function.function_type,
+            group_addresses=ga_dict,
+            identifier=function.identifier,
+            name=function.name,
+            project_uid=function.project_uid,
+            space_id=function.space_id,
+            usage_text=function.usage_text,
+        )
 
     def recursive_convert_spaces(self, space: XMLSpace) -> Space:
         """Convert spaces to the final output format."""
@@ -213,7 +219,7 @@ class XMLParser:
             project_uid=space.project_uid,
             devices=space.devices,
             spaces=subspaces,
-            functions=self.convert_functions(space.functions),
+            functions=space.functions,
         )
 
     def load(self, language: str | None) -> None:
@@ -234,6 +240,7 @@ class XMLParser:
             self.devices,
             self.spaces,
             self.project_info,
+            self.functions,
         ) = ProjectLoader.load(
             knx_proj_contents=self.knx_proj_contents,
             space_usage_names=space_usage_names,

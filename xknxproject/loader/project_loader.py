@@ -34,12 +34,14 @@ class ProjectLoader:
         list[DeviceInstance],
         list[XMLSpace],
         XMLProjectInformation,
+        list[XMLFunction],
     ]:
         """Load topology mappings."""
         areas: list[XMLArea] = []
         devices: list[DeviceInstance] = []
         group_address_list: list[XMLGroupAddress] = []
         spaces: list[XMLSpace] = []
+        functions: list[XMLFunction] = []
 
         with knx_proj_contents.open_project_0() as project_0_file:
             tree = ElementTree.parse(project_0_file)
@@ -68,19 +70,35 @@ class ProjectLoader:
                 knx_proj_contents,
                 devices,
                 space_usage_names,
-                function_type_names,
-                group_address_list,
             )
             for location_element in tree.findall(
                 f"{{*}}Project/{{*}}Installations/{{*}}Installation/{{*}}{element_name}"
             ):
-                spaces.extend(location_loader.load(location_element=location_element))
+                spaces.extend(
+                    location_loader.load(
+                        location_element=location_element, functions=functions
+                    )
+                )
 
         with knx_proj_contents.open_project_meta() as project_file:
             tree = ElementTree.parse(project_file)
             project_info = load_project_info(tree)
 
-        return group_address_list, areas, devices, spaces, project_info
+        for function in functions:
+            function.usage_text = (
+                function_type_names.get(function.function_type, "")
+                if function.function_type
+                else ""
+            )
+
+            for group_address in function.group_addresses:
+                group_address.address = [
+                    g
+                    for g in group_address_list
+                    if g.identifier == group_address.ref_id
+                ][0].address
+
+        return group_address_list, areas, devices, spaces, project_info, functions
 
 
 class _GroupAddressLoader:
@@ -242,8 +260,6 @@ class _LocationLoader:
         knx_proj_contents: KNXProjContents,
         devices: list[DeviceInstance],
         space_usage_names: dict[str, str],
-        function_type_names: dict[str, str],
-        group_address_list: list[XMLGroupAddress],
     ):
         """Initialize the LocationLoader."""
         self._element_name = (
@@ -253,17 +269,19 @@ class _LocationLoader:
             device.identifier: device.individual_address for device in devices
         }
         self.space_usage_names = space_usage_names
-        self.function_type_names = function_type_names
-        self.group_address_list = group_address_list
 
-    def load(self, location_element: ElementTree.Element) -> list[XMLSpace]:
+    def load(
+        self, location_element: ElementTree.Element, functions: list[XMLFunction]
+    ) -> list[XMLSpace]:
         """Load Location mappings."""
         return [
-            self.parse_space(space)
+            self.parse_space(space, functions)
             for space in location_element.findall(f"{{*}}{self._element_name}")
         ]
 
-    def parse_space(self, node: ElementTree.Element) -> XMLSpace:
+    def parse_space(
+        self, node: ElementTree.Element, functions: list[XMLFunction]
+    ) -> XMLSpace:
         """Parse a space from the document."""
         usage_id = node.get("Usage")
         usage_text = self.space_usage_names.get(usage_id, "") if usage_id else ""
@@ -285,45 +303,46 @@ class _LocationLoader:
         for sub_node in node:
             if sub_node.tag.endswith(self._element_name):
                 # recursively call parse space since this can be nested for an unbound time in the XSD
-                space.spaces.append(self.parse_space(sub_node))
+                space.spaces.append(self.parse_space(sub_node, functions))
             elif sub_node.tag.endswith("DeviceInstanceRef"):
                 if individual_address := self.devices.get(sub_node.get("RefId", "")):
                     space.devices.append(individual_address)
             elif sub_node.tag.endswith("Function"):
-                space.functions.append(self.parse_functions(sub_node))
+                function = self.parse_functions(sub_node)
+                function.space_id = space.identifier
+                functions.append(function)
+                space.functions.append(function.identifier)
 
         return space
 
     def parse_functions(self, node: ElementTree.Element) -> XMLFunction:
         """Parse a functions from the document."""
+        identifier = node.get("Id", "").split("_")[1]
         project_uid = node.get("Puid")
         function_type = node.get("Type", "")
-        usage_text = (
-            self.function_type_names.get(function_type, "") if function_type else ""
-        )
+
         functions: XMLFunction = XMLFunction(
-            identifier=node.get("Id"),  # type: ignore[arg-type]
+            identifier=identifier,
             name=node.get("Name"),  # type: ignore[arg-type]
             function_type=function_type,
             project_uid=int(project_uid) if project_uid else None,
             group_addresses=[],
-            usage_text=usage_text,
+            usage_text="",
+            space_id="",
         )
 
         for sub_node in node:
             if sub_node.tag.endswith("GroupAddressRef"):
                 project_uid = sub_node.get("Puid")
                 ref_id = sub_node.get("RefId", "").split("_")[1]
-                address = [
-                    g for g in self.group_address_list if g.identifier == ref_id
-                ][0].address
 
                 group_address_ref: XMLGroupAddressRef = XMLGroupAddressRef(
+                    ref_id=ref_id,
                     identifier=sub_node.get("Id"),  # type: ignore[arg-type]
                     name=sub_node.get("Name"),  # type: ignore[arg-type]
                     role=sub_node.get("Role", ""),
-                    address=address,
                     project_uid=int(project_uid) if project_uid else None,
+                    address="",
                 )
                 functions.group_addresses.append(group_address_ref)
 
