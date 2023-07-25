@@ -377,11 +377,15 @@
               "description": "office description",
               "project_uid": 22,
               "devices": [],
-              "spaces": {}
+              "spaces": {},
+              "functions": []
             }
-          }
+          },
+          "functions": []
         }
-      }
+      },
+      "functions": []
     }
-  }
+  },
+  "functions": {}
 }

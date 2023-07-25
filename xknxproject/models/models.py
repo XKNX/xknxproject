@@ -273,6 +273,32 @@ class XMLSpace:
     project_uid: int | None
     spaces: list[XMLSpace]
     devices: list[str]  # [DeviceInstance.individual_address]
+    functions: list[str]
+
+
+@dataclass
+class XMLFunction:
+    """A functions in the space XML."""
+
+    function_type: str
+    group_addresses: list[XMLGroupAddressRef]
+    identifier: str
+    name: str
+    project_uid: int | None
+    space_id: str
+    usage_text: str
+
+
+@dataclass
+class XMLGroupAddressRef:
+    """A GroupAddressRef in the functions XML."""
+
+    address: str
+    identifier: str
+    name: str
+    project_uid: int | None
+    ref_id: str
+    role: str
 
 
 @dataclass

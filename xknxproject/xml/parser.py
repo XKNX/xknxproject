@@ -17,7 +17,9 @@ from xknxproject.models import (
     Device,
     DeviceInstance,
     Flags,
+    Function,
     GroupAddress,
+    GroupAddressRef,
     HardwareToPrograms,
     KNXProject,
     Line,
@@ -25,7 +27,9 @@ from xknxproject.models import (
     ProjectInfo,
     Space,
     XMLArea,
+    XMLFunction,
     XMLGroupAddress,
+    XMLGroupAddressRef,
     XMLProjectInformation,
     XMLSpace,
 )
@@ -47,6 +51,7 @@ class XMLParser:
         self.language_code: str | None = None
 
         self.project_info: XMLProjectInformation
+        self.functions: list[XMLFunction] = []
 
     def parse(self, language: str | None = None) -> KNXProject:
         """Parse ETS files."""
@@ -140,6 +145,10 @@ class XMLParser:
         for space in self.spaces:
             space_dict[space.name] = self.recursive_convert_spaces(space)
 
+        functions_dict: dict[str, Function] = {}
+        for function in self.functions:
+            functions_dict[function.identifier] = self.convert_functions(function)
+
         info = ProjectInfo(
             project_id=self.project_info.project_id,
             name=self.project_info.name,
@@ -160,6 +169,37 @@ class XMLParser:
             devices=devices_dict,
             group_addresses=group_address_dict,
             locations=space_dict,
+            functions=functions_dict,
+        )
+
+    def convert_group_address_ref(
+        self, group_address_ref: XMLGroupAddressRef
+    ) -> GroupAddressRef:
+        """Convert group address ref to the final output format."""
+        return GroupAddressRef(
+            address=group_address_ref.address,
+            name=group_address_ref.name,
+            project_uid=group_address_ref.project_uid,
+            role=group_address_ref.role,
+        )
+
+    def convert_functions(self, function: XMLFunction) -> Function:
+        """Convert function to the final output format."""
+
+        ga_dict = {}
+        for group_address in function.group_addresses:
+            ga_dict[group_address.address] = self.convert_group_address_ref(
+                group_address
+            )
+
+        return Function(
+            function_type=function.function_type,
+            group_addresses=ga_dict,
+            identifier=function.identifier,
+            name=function.name,
+            project_uid=function.project_uid,
+            space_id=function.space_id,
+            usage_text=function.usage_text,
         )
 
     def recursive_convert_spaces(self, space: XMLSpace) -> Space:
@@ -179,6 +219,7 @@ class XMLParser:
             project_uid=space.project_uid,
             devices=space.devices,
             spaces=subspaces,
+            functions=space.functions,
         )
 
     def load(self, language: str | None) -> None:
@@ -187,6 +228,7 @@ class XMLParser:
             manufacturer_names,
             space_usage_names,
             self.language_code,
+            function_type_names,
         ) = KNXMasterLoader.load(
             knx_proj_contents=self.knx_proj_contents,
             knx_master_file=self.knx_proj_contents.root_path / "knx_master.xml",
@@ -198,9 +240,11 @@ class XMLParser:
             self.devices,
             self.spaces,
             self.project_info,
+            self.functions,
         ) = ProjectLoader.load(
             knx_proj_contents=self.knx_proj_contents,
             space_usage_names=space_usage_names,
+            function_type_names=function_type_names,
         )
 
         products_dict: dict[str, Product] = {}

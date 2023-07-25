@@ -92,6 +92,28 @@ class Space(TypedDict):
     project_uid: int | None
     devices: list[str]
     spaces: dict[str, Space]
+    functions: list[str]
+
+
+class Function(TypedDict):
+    """Function typed dict."""
+
+    function_type: str
+    group_addresses: dict[str, GroupAddressRef]
+    identifier: str
+    name: str
+    project_uid: int | None
+    space_id: str
+    usage_text: str
+
+
+class GroupAddressRef(TypedDict):
+    """GroupAddressRef typed dict."""
+
+    address: str
+    name: str
+    project_uid: int | None
+    role: str
 
 
 class ProjectInfo(TypedDict):
@@ -118,3 +140,4 @@ class KNXProject(TypedDict):
     topology: dict[str, Area]
     locations: dict[str, Space]
     group_addresses: dict[str, GroupAddress]
+    functions: dict[str, Function]

@@ -30,3 +30,13 @@ def test_parse_project_modules():
     )
     project = knxproj.parse()
     assert_stub(project, "module-definition-test.json")
+
+
+def test_parse_project_ets6_with_functions():
+    """Test parsing of ETS6 project with room functions."""
+    knxproj = XKNXProj(
+        RESOURCES_PATH / "testprojekt-ets6-functions.knxproj",
+        language="De",  # resolves to "de-DE" in parser for knx_master.xml
+    )
+    project = knxproj.parse()
+    assert_stub(project, "testprojekt-ets6-functions.json")

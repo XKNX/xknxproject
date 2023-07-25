@@ -273,9 +273,11 @@
               "devices": [
                 "0.0.2"
               ],
-              "spaces": {}
+              "spaces": {},
+              "functions": []
             }
-          }
+          },
+          "functions": []
         },
         "Second floor": {
           "type": "Floor",
@@ -300,11 +302,15 @@
               "devices": [
                 "0.0.1"
               ],
-              "spaces": {}
+              "spaces": {},
+              "functions": []
             }
-          }
+          },
+          "functions": []
         }
-      }
+      },
+      "functions": []
     }
-  }
+  },
+  "functions": {}
 }
