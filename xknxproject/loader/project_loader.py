@@ -7,6 +7,7 @@ from xml.etree import ElementTree
 from xknxproject.models import (
     ComObjectInstanceRef,
     DeviceInstance,
+    KNXMasterData,
     SpaceType,
     XMLArea,
     XMLFunction,
@@ -26,8 +27,7 @@ class ProjectLoader:
     @staticmethod
     def load(
         knx_proj_contents: KNXProjContents,
-        space_usage_names: dict[str, str],
-        function_type_names: dict[str, str],
+        knx_master_data: KNXMasterData,
     ) -> tuple[
         list[XMLGroupAddress],
         list[XMLArea],
@@ -68,8 +68,8 @@ class ProjectLoader:
 
             location_loader = _LocationLoader(
                 knx_proj_contents,
+                knx_master_data,
                 devices,
-                space_usage_names,
             )
             for location_element in tree.findall(
                 f"{{*}}Project/{{*}}Installations/{{*}}Installation/{{*}}{element_name}"
@@ -86,7 +86,7 @@ class ProjectLoader:
 
         for function in functions:
             function.usage_text = (
-                function_type_names.get(function.function_type, "")
+                knx_master_data.get_function_type_name(function.function_type)
                 if function.function_type
                 else ""
             )
@@ -258,17 +258,17 @@ class _LocationLoader:
     def __init__(
         self,
         knx_proj_contents: KNXProjContents,
+        knx_master_data: KNXMasterData,
         devices: list[DeviceInstance],
-        space_usage_names: dict[str, str],
     ):
         """Initialize the LocationLoader."""
+        self.knx_master_data = knx_master_data
         self._element_name = (
             "BuildingPart" if knx_proj_contents.is_ets4_project() else "Space"
         )
         self.devices: dict[str, str] = {
             device.identifier: device.individual_address for device in devices
         }
-        self.space_usage_names = space_usage_names
 
     def load(
         self, location_element: ElementTree.Element, functions: list[XMLFunction]
@@ -284,7 +284,9 @@ class _LocationLoader:
     ) -> XMLSpace:
         """Parse a space from the document."""
         usage_id = node.get("Usage")
-        usage_text = self.space_usage_names.get(usage_id, "") if usage_id else ""
+        usage_text = (
+            self.knx_master_data.get_space_usage_name(usage_id) if usage_id else ""
+        )
         project_uid = node.get("Puid")
         space: XMLSpace = XMLSpace(
             identifier=node.get("Id"),  # type: ignore[arg-type]

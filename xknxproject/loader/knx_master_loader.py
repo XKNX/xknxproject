@@ -6,6 +6,7 @@ from xml.etree import ElementTree
 from zipfile import Path
 
 from xknxproject.const import ETS4_PRODUCT_LANGUAGES
+from xknxproject.models import KNXMasterData, TranslationsType
 from xknxproject.zip import KNXProjContents
 
 _LOGGER = logging.getLogger("xknxproject.log")
@@ -19,12 +20,13 @@ class KNXMasterLoader:
         knx_proj_contents: KNXProjContents,
         knx_master_file: Path,
         language: str | None,
-    ) -> tuple[dict[str, str], dict[str, str], str | None, dict[str, str]]:
-        """Load KNX master data."""
+    ) -> tuple[KNXMasterData, str | None]:
+        """Load KNX master data. Returns KNXMasterData and the found language code."""
         manufacturer_mapping: dict[str, str] = {}
         space_usage_mapping: dict[str, str] = {}
         product_languages: list[str] = []  # eg. "en-US", "de-DE", "fr-FR"
         language_code: str | None = None
+        translations: TranslationsType = {}
         function_type_mapping: dict[str, str] = {}
 
         with knx_master_file.open(mode="rb") as master_xml:
@@ -64,21 +66,22 @@ class KNXMasterLoader:
                     f"/{{*}}Language[@Identifier='{language_code}']"
                     "/{*}TranslationUnit/{*}TranslationElement"
                 ):
-                    _ref_id = translation_element.get("RefId")
-                    if _ref_id not in space_usage_mapping:
-                        continue
-                    if (
-                        translation_node := translation_element.find(
-                            "{*}Translation[@AttributeName='Text']"
-                        )
-                    ) is not None:
-                        space_usage_mapping[_ref_id] = translation_node.get("Text", "")
+                    _ref_id = translation_element.get("RefId", "")
+                    translations[_ref_id] = {
+                        attr: text
+                        for item in translation_element.findall("{*}Translation")
+                        if (attr := item.get("AttributeName")) is not None
+                        and (text := item.get("Text")) is not None
+                    }
 
         return (
-            manufacturer_mapping,
-            space_usage_mapping,
+            KNXMasterData(
+                function_type_names=function_type_mapping,
+                manufacturer_names=manufacturer_mapping,
+                space_usage_mapping=space_usage_mapping,
+                translations=translations,
+            ),
             language_code,
-            function_type_mapping,
         )
 
     @staticmethod

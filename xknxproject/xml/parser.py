@@ -225,10 +225,8 @@ class XMLParser:
     def load(self, language: str | None) -> None:
         """Load XML files."""
         (
-            manufacturer_names,
-            space_usage_names,
+            knx_master_data,
             self.language_code,
-            function_type_names,
         ) = KNXMasterLoader.load(
             knx_proj_contents=self.knx_proj_contents,
             knx_master_file=self.knx_proj_contents.root_path / "knx_master.xml",
@@ -243,8 +241,7 @@ class XMLParser:
             self.functions,
         ) = ProjectLoader.load(
             knx_proj_contents=self.knx_proj_contents,
-            space_usage_names=space_usage_names,
-            function_type_names=function_type_names,
+            knx_master_data=knx_master_data,
         )
 
         products_dict: dict[str, Product] = {}
@@ -262,7 +259,9 @@ class XMLParser:
             hardware_application_map.update(_hardware_programs)
 
         for device in self.devices:
-            device.manufacturer_name = manufacturer_names.get(device.manufacturer, "")
+            device.manufacturer_name = knx_master_data.manufacturer_names.get(
+                device.manufacturer, ""
+            )
 
             try:
                 product = products_dict[device.product_ref]

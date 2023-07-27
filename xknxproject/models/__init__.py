@@ -1,4 +1,5 @@
 """Xknxproj models."""
+# flake8: noqa
 from .knxproject import (
     Area,
     CommunicationObject,
@@ -19,7 +20,9 @@ from .models import (
     ComObjectRef,
     DeviceInstance,
     HardwareToPrograms,
+    KNXMasterData,
     Product,
+    TranslationsType,
     XMLArea,
     XMLFunction,
     XMLGroupAddress,
@@ -29,33 +32,3 @@ from .models import (
     XMLSpace,
 )
 from .static import MEDIUM_TYPES, SpaceType
-
-__all__ = [
-    "Area",
-    "CommunicationObject",
-    "Device",
-    "DPTType",
-    "Flags",
-    "GroupAddress",
-    "KNXProject",
-    "Line",
-    "ProjectInfo",
-    "Space",
-    "Function",
-    "GroupAddressRef",
-    "ComObject",
-    "ComObjectInstanceRef",
-    "ComObjectRef",
-    "DeviceInstance",
-    "HardwareToPrograms",
-    "Product",
-    "XMLArea",
-    "XMLGroupAddress",
-    "XMLLine",
-    "XMLSpace",
-    "XMLFunction",
-    "XMLGroupAddressRef",
-    "XMLProjectInformation",
-    "MEDIUM_TYPES",
-    "SpaceType",
-]
