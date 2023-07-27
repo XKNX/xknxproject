@@ -10,6 +10,7 @@ file_names = [
     ("module-definition-test", "test", "de-DE"),
     ("xknx_test_project", "test", None),
     ("test_project-ets4", "test", "de-DE"),
+    ("testprojekt-ets6-functions", None, "de-DE"),
 ]
 
 for file_name, password, language in file_names:
