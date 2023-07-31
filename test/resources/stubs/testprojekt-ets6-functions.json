@@ -1,131 +1,131 @@
 {
-    "info": {
-        "project_id": "P-05C0",
-        "name": "Minimal-Example",
-        "last_modified": "2023-07-07T12:41:11.4132414Z",
-        "group_address_style": "ThreeLevel",
-        "guid": "efabc0f9-4e81-440d-a236-b80913e85730",
-        "created_by": "ETS6",
-        "schema_version": "22",
-        "tool_version": "6.1.5686.0",
-        "xknxproject_version": "3.2.0",
-        "language_code": "de-DE"
-    },
-    "communication_objects": {},
-    "topology": {
+  "info": {
+    "project_id": "P-05C0",
+    "name": "Minimal-Example",
+    "last_modified": "2023-07-07T12:41:11.4132414Z",
+    "group_address_style": "ThreeLevel",
+    "guid": "efabc0f9-4e81-440d-a236-b80913e85730",
+    "created_by": "ETS6",
+    "schema_version": "22",
+    "tool_version": "6.1.5686.0",
+    "xknxproject_version": "3.2.0",
+    "language_code": "de-DE"
+  },
+  "communication_objects": {},
+  "topology": {
+    "0": {
+      "name": "",
+      "description": null,
+      "lines": {
         "0": {
-            "name": "",
-            "description": null,
-            "lines": {
-                "0": {
-                    "name": "",
-                    "description": null,
-                    "devices": [],
-                    "medium_type": "KNXnet/IP (IP)"
-                }
-            }
+          "name": "",
+          "description": null,
+          "devices": [],
+          "medium_type": "KNXnet/IP (IP)"
+        }
+      }
+    },
+    "1": {
+      "name": "",
+      "description": null,
+      "lines": {
+        "0": {
+          "name": "",
+          "description": null,
+          "devices": [],
+          "medium_type": "KNXnet/IP (IP)"
         },
         "1": {
-            "name": "",
-            "description": null,
-            "lines": {
-                "0": {
-                    "name": "",
-                    "description": null,
-                    "devices": [],
-                    "medium_type": "KNXnet/IP (IP)"
-                },
-                "1": {
-                    "name": "",
-                    "description": null,
-                    "devices": [],
-                    "medium_type": "Twisted Pair (TP)"
-                }
-            }
+          "name": "",
+          "description": null,
+          "devices": [],
+          "medium_type": "Twisted Pair (TP)"
         }
+      }
+    }
+  },
+  "devices": {},
+  "group_addresses": {
+    "0/0/1": {
+      "name": "Schalten",
+      "identifier": "GA-1",
+      "raw_address": 1,
+      "address": "0/0/1",
+      "project_uid": 14,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "communication_object_ids": [],
+      "description": "Livingroom LivingroomLight"
     },
-    "devices": {},
-    "group_addresses": {
+    "0/0/2": {
+      "name": "Status",
+      "identifier": "GA-2",
+      "raw_address": 2,
+      "address": "0/0/2",
+      "project_uid": 16,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "communication_object_ids": [],
+      "description": "Livingroom LivingroomLight"
+    }
+  },
+  "locations": {
+    "Minimal-Example": {
+      "type": "Building",
+      "identifier": "P-05C0-0_BP-1",
+      "name": "Minimal-Example",
+      "usage_id": null,
+      "usage_text": "",
+      "number": "",
+      "description": "",
+      "project_uid": 9,
+      "devices": [],
+      "spaces": {
+        "Livingroom": {
+          "type": "Room",
+          "identifier": "P-05C0-0_BP-2",
+          "name": "Livingroom",
+          "usage_id": "SU-4",
+          "usage_text": "Wohnzimmer",
+          "number": "",
+          "description": "",
+          "project_uid": 10,
+          "devices": [],
+          "spaces": {},
+          "functions": [
+            "F-1"
+          ]
+        }
+      },
+      "functions": []
+    }
+  },
+  "functions": {
+    "F-1": {
+      "function_type": "FT-1",
+      "group_addresses": {
         "0/0/1": {
-            "name": "Schalten",
-            "identifier": "GA-1",
-            "raw_address": 1,
-            "address": "0/0/1",
-            "project_uid": 14,
-            "dpt": {
-                "main": 1,
-                "sub": 1
-            },
-            "communication_object_ids": [],
-            "description": "Livingroom LivingroomLight"
+          "address": "0/0/1",
+          "name": "",
+          "project_uid": 15,
+          "role": "SwitchOnOff"
         },
         "0/0/2": {
-            "name": "Status",
-            "identifier": "GA-2",
-            "raw_address": 2,
-            "address": "0/0/2",
-            "project_uid": 16,
-            "dpt": {
-                "main": 1,
-                "sub": 1
-            },
-            "communication_object_ids": [],
-            "description": "Livingroom LivingroomLight"
+          "address": "0/0/2",
+          "name": "",
+          "project_uid": 17,
+          "role": "InfoOnOff"
         }
-    },
-    "locations": {
-        "Minimal-Example": {
-            "type": "Building",
-            "identifier": "P-05C0-0_BP-1",
-            "name": "Minimal-Example",
-            "usage_id": null,
-            "usage_text": "",
-            "number": "",
-            "description": "",
-            "project_uid": 9,
-            "devices": [],
-            "spaces": {
-                "Livingroom": {
-                    "type": "Room",
-                    "identifier": "P-05C0-0_BP-2",
-                    "name": "Livingroom",
-                    "usage_id": "SU-4",
-                    "usage_text": "Wohnzimmer",
-                    "number": "",
-                    "description": "",
-                    "project_uid": 10,
-                    "devices": [],
-                    "spaces": {},
-                    "functions": [
-                        "F-1"
-                    ]
-                }
-            },
-            "functions": []
-        }
-    },
-    "functions": {
-        "F-1": {
-            "function_type": "FT-1",
-            "group_addresses": {
-                "0/0/1": {
-                    "address": "0/0/1",
-                    "name": "",
-                    "project_uid": 15,
-                    "role": "SwitchOnOff"
-                },
-                "0/0/2": {
-                    "address": "0/0/2",
-                    "name": "",
-                    "project_uid": 17,
-                    "role": "InfoOnOff"
-                }
-            },
-            "identifier": "F-1",
-            "name": "LivingroomLight",
-            "project_uid": 11,
-            "space_id": "P-05C0-0_BP-2",
-            "usage_text": "switchable light"
-        }
+      },
+      "identifier": "F-1",
+      "name": "LivingroomLight",
+      "project_uid": 11,
+      "space_id": "P-05C0-0_BP-2",
+      "usage_text": "Licht schalten"
     }
+  }
 }

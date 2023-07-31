@@ -8,6 +8,8 @@ from xknxproject.models.knxproject import DPTType
 from xknxproject.models.static import SpaceType
 from xknxproject.zip import KNXProjContents
 
+TranslationsType = dict[str, dict[str, str]]
+
 
 class XMLGroupAddress:
     """Class that represents a group address."""
@@ -257,6 +259,39 @@ class ComObjectRef:
     update_flag: bool | None  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
     datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS
+
+
+@dataclass
+class KNXMasterData:
+    """KNX Master data needed for parsing other project files."""
+
+    function_type_names: dict[str, str]
+    manufacturer_names: dict[str, str]
+    space_usage_mapping: dict[str, str]
+    translations: TranslationsType
+
+    def _get_translation_item(
+        self, ref_id: str, attribute_name: str = "Text"
+    ) -> str | None:
+        """Get translation item from the translations dict."""
+        if self.translations:
+            try:
+                return self.translations[ref_id][attribute_name]
+            except KeyError:
+                return None
+        return None
+
+    def get_function_type_name(self, function_type_id: str) -> str:
+        """Get space usage name from space usage id."""
+        if translated := self._get_translation_item(function_type_id):
+            return translated
+        return self.function_type_names.get(function_type_id, "")
+
+    def get_space_usage_name(self, space_usage_id: str) -> str:
+        """Get space usage name from space usage id."""
+        if translated := self._get_translation_item(space_usage_id):
+            return translated
+        return self.space_usage_mapping.get(space_usage_id, "")
 
 
 @dataclass
