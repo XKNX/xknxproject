@@ -4,14 +4,13 @@ from __future__ import annotations
 import base64
 from collections.abc import Iterator
 from contextlib import contextmanager
+import hashlib
 import logging
 from pathlib import Path
 import re
 from typing import IO
 from zipfile import Path as ZipPath, ZipFile, ZipInfo
 
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import pyzipper
 
 from xknxproject.const import ETS_4_2_SCHEMA_VERSION, ETS_6_SCHEMA_VERSION
@@ -173,11 +172,13 @@ def _get_schema_version(namespace: str) -> int:
 
 def _generate_ets6_zip_password(password: str) -> bytes:
     """Generate ZIP archive password."""
+
     return base64.b64encode(
-        PBKDF2HMAC(
-            algorithm=hashes.SHA256(),
-            length=32,
+        hashlib.pbkdf2_hmac(
+            hash_name="sha256",
+            password=password.encode("utf-16-le"),
             salt=b"21.project.ets.knx.org",
             iterations=65536,
-        ).derive(password.encode("utf-16-le"))
+            dklen=32,
+        )
     )
