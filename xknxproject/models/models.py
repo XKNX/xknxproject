@@ -63,6 +63,7 @@ class XMLGroupRange:
     children: list[XMLGroupRange]
 
     def str_address(self) -> str:
+        """Generate a string representation for the range (same as in in ETS)."""
         main = (self.range_start & 0b1111100000000000) >> 11
         middle = (self.range_start & 0b11100000000) >> 8
 

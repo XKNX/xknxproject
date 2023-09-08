@@ -152,8 +152,8 @@ class _GroupAddressRangeLoader:
         ) -> XMLGroupRange:
             return XMLGroupRange(
                 name=e.get("Name", ""),
-                range_start=int(e.get("RangeStart")),
-                range_end=int(e.get("RangeEnd")),
+                range_start=int(e.get("RangeStart", "")),
+                range_end=int(e.get("RangeEnd", "")),
                 group_addresses=[
                     int(e.attrib["Address"]) for e in e.findall("{*}GroupAddress")
                 ],
