@@ -27,10 +27,10 @@ from .models import (
     XMLArea,
     XMLFunction,
     XMLGroupAddress,
-    XMLGroupRange,
     XMLGroupAddressRef,
+    XMLGroupRange,
     XMLLine,
     XMLProjectInformation,
     XMLSpace,
 )
-from .static import MEDIUM_TYPES, SpaceType, GroupAddressStyle
+from .static import MEDIUM_TYPES, GroupAddressStyle, SpaceType

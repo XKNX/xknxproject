@@ -26,7 +26,7 @@ MEDIUM_TYPES: dict[str, str] = {
 
 
 class GroupAddressStyle(Enum):
-    """Supported GroupAddress style identifiers"""
+    """Supported GroupAddress style identifiers."""
 
     TWOLEVEL = "TwoLevel"  # TODO: To be verified!
     THREELEVEL = "ThreeLevel"

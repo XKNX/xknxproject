@@ -146,7 +146,9 @@ class XMLParser:
 
         group_range_dict: dict[str, GroupRange] = {}
         for group_range in self.group_ranges:
-            group_range_dict[group_range.str_address()] = self.convert_group_range(group_range)
+            group_range_dict[group_range.str_address()] = self.convert_group_range(
+                group_range
+            )
 
         space_dict: dict[str, Space] = {}
         for space in self.spaces:
@@ -231,7 +233,7 @@ class XMLParser:
         )
 
     def convert_group_range(self, group_range: XMLGroupRange) -> GroupRange:
-        """Convert XMLGroupRange into GroupRange"""
+        """Convert XMLGroupRange into GroupRange."""
         children: dict[str, GroupRange] = {}
         for child in group_range.children:
             children[child.str_address()] = self.convert_group_range(child)
@@ -239,7 +241,11 @@ class XMLParser:
         return GroupRange(
             name=group_range.name,
             children=children,
-            group_adresses=group_range.group_addresses
+            group_adresses=[
+                XMLGroupAddress.str_address(ga) for ga in group_range.group_addresses
+            ],
+            address_start=XMLGroupAddress.str_address(group_range.range_start),
+            address_end=XMLGroupAddress.str_address(group_range.range_end),
         )
 
     def load(self, language: str | None) -> None:

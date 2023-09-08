@@ -59,11 +59,10 @@ class XMLGroupRange:
     name: str
     range_start: int
     range_end: int
-    # comment: str
-    group_addresses: list[str]
+    group_addresses: list[int]
     children: list[XMLGroupRange]
 
-    def str_address(self):
+    def str_address(self) -> str:
         main = (self.range_start & 0b1111100000000000) >> 11
         middle = (self.range_start & 0b11100000000) >> 8
 

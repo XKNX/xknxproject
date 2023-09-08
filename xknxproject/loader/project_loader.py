@@ -7,14 +7,14 @@ from xml.etree import ElementTree
 from xknxproject.models import (
     ComObjectInstanceRef,
     DeviceInstance,
+    GroupAddressStyle,
     KNXMasterData,
     SpaceType,
-    GroupAddressStyle,
     XMLArea,
     XMLFunction,
     XMLGroupAddress,
-    XMLGroupRange,
     XMLGroupAddressRef,
+    XMLGroupRange,
     XMLLine,
     XMLProjectInformation,
     XMLSpace,
@@ -32,6 +32,7 @@ class ProjectLoader:
         knx_master_data: KNXMasterData,
     ) -> tuple[
         list[XMLGroupAddress],
+        list[XMLGroupRange],
         list[XMLArea],
         list[DeviceInstance],
         list[XMLSpace],
@@ -63,7 +64,9 @@ class ProjectLoader:
                 "{*}Project/{*}Installations/{*}Installation/{*}GroupAddresses/{*}GroupRanges/{*}GroupRange"
             ):
                 group_range_list.append(
-                    _GroupAddressRangeLoader.load(ga_range_l1, project_info.group_address_style)
+                    _GroupAddressRangeLoader.load(
+                        ga_range_l1, project_info.group_address_style
+                    )
                 )
             topology_loader = _TopologyLoader(knx_proj_contents)
             for topology_element in tree.findall(
@@ -107,7 +110,15 @@ class ProjectLoader:
                     if ga.identifier == group_address.ref_id
                 )
 
-        return group_address_list, group_range_list, areas, devices, spaces, project_info, functions
+        return (
+            group_address_list,
+            group_range_list,
+            areas,
+            devices,
+            spaces,
+            project_info,
+            functions,
+        )
 
 
 class _GroupAddressLoader:
@@ -128,22 +139,29 @@ class _GroupAddressLoader:
 
 
 class _GroupAddressRangeLoader:
-    """Load infromation of GroupAdress levels (GroupRange)"""
+    """Load infromation of GroupAdress levels (GroupRange)."""
 
     @staticmethod
-    def load(group_range_element: ElementTree.Element, group_address_style: str) -> XMLGroupRange:
+    def load(
+        group_range_element: ElementTree.Element, group_address_style: str
+    ) -> XMLGroupRange:
         """Load GroupRange."""
-        def create_xml_group_range(e: ElementTree.Element, children: list[XMLGroupRange]) -> XMLGroupRange:
+
+        def create_xml_group_range(
+            e: ElementTree.Element, children: list[XMLGroupRange]
+        ) -> XMLGroupRange:
             return XMLGroupRange(
                 name=e.get("Name", ""),
                 range_start=int(e.get("RangeStart")),
                 range_end=int(e.get("RangeEnd")),
-                group_addresses=[e.attrib['Address'] for e in e.findall("{*}GroupAddress")],
-                children=children
+                group_addresses=[
+                    int(e.attrib["Address"]) for e in e.findall("{*}GroupAddress")
+                ],
+                children=children,
             )
 
         child_elements = []
-        if (group_address_style == GroupAddressStyle.THREELEVEL.value):
+        if group_address_style == GroupAddressStyle.THREELEVEL.value:
             for ga_range_l2 in group_range_element.findall("{*}GroupRange"):
                 child_elements.append(create_xml_group_range(ga_range_l2, []))
 
