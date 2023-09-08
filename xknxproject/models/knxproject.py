@@ -79,6 +79,14 @@ class GroupAddress(TypedDict):
     description: str
 
 
+class GroupRange(TypedDict):
+    """GroupRange typed dict."""
+
+    name: str
+    children: dict[str, GroupRange]
+    group_adresses: list[str]
+
+
 class Space(TypedDict):
     """Space typed dict."""
 
@@ -140,4 +148,5 @@ class KNXProject(TypedDict):
     topology: dict[str, Area]
     locations: dict[str, Space]
     group_addresses: dict[str, GroupAddress]
+    group_range: dict[str, GroupRange]
     functions: dict[str, Function]

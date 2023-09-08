@@ -9,6 +9,7 @@ from .knxproject import (
     Function,
     GroupAddress,
     GroupAddressRef,
+    GroupRange,
     KNXProject,
     Line,
     ProjectInfo,
@@ -26,9 +27,10 @@ from .models import (
     XMLArea,
     XMLFunction,
     XMLGroupAddress,
+    XMLGroupRange,
     XMLGroupAddressRef,
     XMLLine,
     XMLProjectInformation,
     XMLSpace,
 )
-from .static import MEDIUM_TYPES, SpaceType
+from .static import MEDIUM_TYPES, SpaceType, GroupAddressStyle

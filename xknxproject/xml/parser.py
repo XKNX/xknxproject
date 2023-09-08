@@ -20,6 +20,7 @@ from xknxproject.models import (
     Function,
     GroupAddress,
     GroupAddressRef,
+    GroupRange,
     HardwareToPrograms,
     KNXProject,
     Line,
@@ -30,6 +31,7 @@ from xknxproject.models import (
     XMLFunction,
     XMLGroupAddress,
     XMLGroupAddressRef,
+    XMLGroupRange,
     XMLProjectInformation,
     XMLSpace,
 )
@@ -46,6 +48,7 @@ class XMLParser:
         self.knx_proj_contents = knx_proj_contents
         self.spaces: list[XMLSpace] = []
         self.group_addresses: list[XMLGroupAddress] = []
+        self.group_ranges: list[XMLGroupRange] = []
         self.areas: list[XMLArea] = []
         self.devices: list[DeviceInstance] = []
         self.language_code: str | None = None
@@ -141,6 +144,10 @@ class XMLParser:
                 description=group_address.description,
             )
 
+        group_range_dict: dict[str, GroupRange] = {}
+        for group_range in self.group_ranges:
+            group_range_dict[group_range.str_address()] = self.convert_group_range(group_range)
+
         space_dict: dict[str, Space] = {}
         for space in self.spaces:
             space_dict[space.name] = self.recursive_convert_spaces(space)
@@ -168,6 +175,7 @@ class XMLParser:
             topology=topology_dict,
             devices=devices_dict,
             group_addresses=group_address_dict,
+            group_ranges=group_range_dict,
             locations=space_dict,
             functions=functions_dict,
         )
@@ -222,6 +230,18 @@ class XMLParser:
             functions=space.functions,
         )
 
+    def convert_group_range(self, group_range: XMLGroupRange) -> GroupRange:
+        """Convert XMLGroupRange into GroupRange"""
+        children: dict[str, GroupRange] = {}
+        for child in group_range.children:
+            children[child.str_address()] = self.convert_group_range(child)
+
+        return GroupRange(
+            name=group_range.name,
+            children=children,
+            group_adresses=group_range.group_addresses
+        )
+
     def load(self, language: str | None) -> None:
         """Load XML files."""
         (
@@ -234,6 +254,7 @@ class XMLParser:
         )
         (
             self.group_addresses,
+            self.group_ranges,
             self.areas,
             self.devices,
             self.spaces,

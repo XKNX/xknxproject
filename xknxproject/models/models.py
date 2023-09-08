@@ -35,9 +35,14 @@ class XMLGroupAddress:
 
     def _parse_address(self) -> str:
         """Parse a given address and returns a string representation of it."""
-        main = (self.raw_address & 0b1111100000000000) >> 11
-        middle = (self.raw_address & 0b11100000000) >> 8
-        sub = self.raw_address & 0b11111111
+        return XMLGroupAddress.str_address(self.raw_address)
+
+    @staticmethod
+    def str_address(raw_address: int) -> str:
+        """Parse a given address and returns a string representation of it."""
+        main = (raw_address & 0b1111100000000000) >> 11
+        middle = (raw_address & 0b11100000000) >> 8
+        sub = raw_address & 0b11111111
         return f"{main}/{middle}/{sub}"
 
     def __repr__(self) -> str:
@@ -45,6 +50,29 @@ class XMLGroupAddress:
         return (
             f"{self.address} ({self.name}) - [DPT: {self.dpt}, ID: {self.identifier}]"
         )
+
+
+@dataclass
+class XMLGroupRange:
+    """Class that represents a group range."""
+
+    name: str
+    range_start: int
+    range_end: int
+    # comment: str
+    group_addresses: list[str]
+    children: list[XMLGroupRange]
+
+    def str_address(self):
+        main = (self.range_start & 0b1111100000000000) >> 11
+        middle = (self.range_start & 0b11100000000) >> 8
+
+        if (self.range_end - self.range_start) > (2**16 / 32 - 3):
+            # Must be a "main"
+            return f"{main}"
+        else:
+            # Must be a "middle"
+            return f"{main}/{middle}"
 
 
 @dataclass

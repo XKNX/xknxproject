@@ -23,3 +23,10 @@ MEDIUM_TYPES: dict[str, str] = {
     "MT-2": "KNX RF (RF)",
     "MT-5": "KNXnet/IP (IP)",
 }
+
+
+class GroupAddressStyle(Enum):
+    """Supported GroupAddress style identifiers"""
+
+    TWOLEVEL = "TwoLevel"  # TODO: To be verified!
+    THREELEVEL = "ThreeLevel"
