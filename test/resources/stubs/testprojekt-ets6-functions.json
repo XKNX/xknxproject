@@ -73,6 +73,26 @@
       "description": "Livingroom LivingroomLight"
     }
   },
+  "group_ranges": {
+    "0": {
+      "name": "Neue Hauptgruppe",
+      "children": {
+        "0/0": {
+          "name": "Neue Mittelgruppe",
+          "children": {},
+          "group_adresses": [
+            "0/0/1",
+            "0/0/2"
+          ],
+          "address_start": "0/0/1",
+          "address_end": "0/0/255"
+        }
+      },
+      "group_adresses": [],
+      "address_start": "0/0/1",
+      "address_end": "0/7/255"
+    }
+  },
   "locations": {
     "Minimal-Example": {
       "type": "Building",

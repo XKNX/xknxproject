@@ -66,13 +66,10 @@ class XMLGroupRange:
         """Generate a string representation for the range (same as in in ETS)."""
         main = (self.range_start & 0b1111100000000000) >> 11
         middle = (self.range_start & 0b11100000000) >> 8
-
         if (self.range_end - self.range_start) > (2**16 / 32 - 3):
             # Must be a "main"
             return f"{main}"
-        else:
-            # Must be a "middle"
-            return f"{main}/{middle}"
+        return f"{main}/{middle}"
 
 
 @dataclass

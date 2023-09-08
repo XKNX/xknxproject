@@ -344,6 +344,55 @@
       "description": ""
     }
   },
+  "group_ranges": {
+    "0": {
+      "name": "Heating",
+      "children": {
+        "0/0": {
+          "name": "Wohnzimmer",
+          "children": {},
+          "group_adresses": [
+            "0/0/1",
+            "0/0/2",
+            "0/0/3"
+          ],
+          "address_start": "0/0/1",
+          "address_end": "0/0/255"
+        },
+        "0/1": {
+          "name": "Kitchen",
+          "children": {},
+          "group_adresses": [
+            "0/1/2",
+            "0/1/1"
+          ],
+          "address_start": "0/1/0",
+          "address_end": "0/1/255"
+        },
+        "0/2": {
+          "name": "Bathroom",
+          "children": {},
+          "group_adresses": [
+            "0/2/2"
+          ],
+          "address_start": "0/2/0",
+          "address_end": "0/2/255"
+        },
+        "0/7": {
+          "name": "Common",
+          "children": {},
+          "group_adresses": [
+            "0/7/2"
+          ],
+          "address_start": "0/7/0",
+          "address_end": "0/7/255"
+        }
+      },
+      "group_adresses": [],
+      "address_start": "0/0/1",
+      "address_end": "0/7/255"
+    }
+  },
   "locations": {
     "ModuleDefinitionTest": {
       "type": "Building",

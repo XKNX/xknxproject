@@ -139,7 +139,7 @@ class _GroupAddressLoader:
 
 
 class _GroupAddressRangeLoader:
-    """Load infromation of GroupAdress levels (GroupRange)."""
+    """Load information of GroupAdress levels (GroupRange)."""
 
     @staticmethod
     def load(
@@ -148,14 +148,14 @@ class _GroupAddressRangeLoader:
         """Load GroupRange."""
 
         def create_xml_group_range(
-            e: ElementTree.Element, children: list[XMLGroupRange]
+            elem: ElementTree.Element, children: list[XMLGroupRange]
         ) -> XMLGroupRange:
             return XMLGroupRange(
-                name=e.get("Name", ""),
-                range_start=int(e.get("RangeStart", "")),
-                range_end=int(e.get("RangeEnd", "")),
+                name=elem.get("Name", ""),
+                range_start=int(elem.get("RangeStart", "")),
+                range_end=int(elem.get("RangeEnd", "")),
                 group_addresses=[
-                    int(e.attrib["Address"]) for e in e.findall("{*}GroupAddress")
+                    int(e.attrib["Address"]) for e in elem.findall("{*}GroupAddress")
                 ],
                 children=children,
             )
