@@ -249,7 +249,8 @@
       "communication_object_ids": [
         "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/0/2": {
       "name": "Temperatur Soll",
@@ -264,7 +265,8 @@
       "communication_object_ids": [
         "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/0/3": {
       "name": "Reglerwert",
@@ -279,7 +281,8 @@
       "communication_object_ids": [
         "1.1.1/O-334_R-21"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/1/2": {
       "name": "Temperatur Soll",
@@ -294,7 +297,8 @@
       "communication_object_ids": [
         "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/1/1": {
       "name": "Temperatur Ist",
@@ -309,7 +313,8 @@
       "communication_object_ids": [
         "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/2/2": {
       "name": "Temperatur Soll",
@@ -324,7 +329,8 @@
       "communication_object_ids": [
         "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/7/2": {
       "name": "Temperatur Soll",
@@ -341,7 +347,8 @@
         "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3",
         "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     }
   },
   "group_ranges": {
@@ -357,7 +364,8 @@
             "0/0/3"
           ],
           "address_start": "0/0/1",
-          "address_end": "0/0/255"
+          "address_end": "0/0/255",
+          "comment": ""
         },
         "0/1": {
           "name": "Kitchen",
@@ -367,7 +375,8 @@
             "0/1/1"
           ],
           "address_start": "0/1/0",
-          "address_end": "0/1/255"
+          "address_end": "0/1/255",
+          "comment": ""
         },
         "0/2": {
           "name": "Bathroom",
@@ -376,7 +385,8 @@
             "0/2/2"
           ],
           "address_start": "0/2/0",
-          "address_end": "0/2/255"
+          "address_end": "0/2/255",
+          "comment": ""
         },
         "0/7": {
           "name": "Common",
@@ -385,12 +395,14 @@
             "0/7/2"
           ],
           "address_start": "0/7/0",
-          "address_end": "0/7/255"
+          "address_end": "0/7/255",
+          "comment": ""
         }
       },
       "group_adresses": [],
       "address_start": "0/0/1",
-      "address_end": "0/7/255"
+      "address_end": "0/7/255",
+      "comment": ""
     }
   },
   "locations": {

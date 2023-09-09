@@ -1,9 +1,10 @@
 """Parser logic for ETS XML files."""
 from __future__ import annotations
 
-import logging
-from striprtf.striprtf import rtf_to_text
 import html
+import logging
+
+from striprtf.striprtf import rtf_to_text
 
 from xknxproject.__version__ import __version__
 from xknxproject.loader import (
@@ -144,7 +145,7 @@ class XMLParser:
                 dpt=group_address.dpt,
                 communication_object_ids=_com_object_ids,
                 description=group_address.description,
-                comment=html.unescape(rtf_to_text(group_address.comment))
+                comment=html.unescape(rtf_to_text(group_address.comment)),
             )
 
         group_range_dict: dict[str, GroupRange] = {}
