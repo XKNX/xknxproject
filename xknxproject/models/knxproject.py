@@ -77,15 +77,17 @@ class GroupAddress(TypedDict):
     dpt: DPTType | None
     communication_object_ids: list[str]
     description: str
+    comment: str
 
 
 class GroupRange(TypedDict):
     """GroupRange typed dict."""
 
     name: str
-    children: dict[str, GroupRange]
     address_start: str
     address_end: str
+    comment: str
+    children: dict[str, GroupRange]
     group_adresses: list[str]
 
 

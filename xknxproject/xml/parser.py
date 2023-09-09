@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import logging
+from striprtf.striprtf import rtf_to_text
+import html
 
 from xknxproject.__version__ import __version__
 from xknxproject.loader import (
@@ -142,6 +144,7 @@ class XMLParser:
                 dpt=group_address.dpt,
                 communication_object_ids=_com_object_ids,
                 description=group_address.description,
+                comment=html.unescape(rtf_to_text(group_address.comment))
             )
 
         group_range_dict: dict[str, GroupRange] = {}
@@ -246,6 +249,7 @@ class XMLParser:
             ],
             address_start=XMLGroupAddress.str_address(group_range.range_start),
             address_end=XMLGroupAddress.str_address(group_range.range_end),
+            comment=html.unescape(rtf_to_text(group_range.comment)),
         )
 
     def load(self, language: str | None) -> None:

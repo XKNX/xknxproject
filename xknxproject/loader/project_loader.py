@@ -135,6 +135,7 @@ class _GroupAddressLoader:
             project_uid=int(project_uid) if project_uid else None,
             description=group_address_element.get("Description", ""),
             dpt=get_dpt_type(group_address_element.get("DatapointType")),
+            comment=group_address_element.get("Comment", ""),
         )
 
 
@@ -158,6 +159,7 @@ class _GroupAddressRangeLoader:
                     int(e.attrib["Address"]) for e in elem.findall("{*}GroupAddress")
                 ],
                 children=children,
+                comment=elem.get("Comment", ""),
             )
 
         child_elements = []

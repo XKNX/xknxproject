@@ -22,6 +22,7 @@ class XMLGroupAddress:
         project_uid: int | None,
         description: str,
         dpt: DPTType | None,
+        comment: str,
     ):
         """Initialize a group address."""
         self.name = name
@@ -30,6 +31,7 @@ class XMLGroupAddress:
         self.project_uid = project_uid
         self.description = description
         self.dpt = dpt
+        self.comment = comment
 
         self.address = self._parse_address()
 
@@ -61,6 +63,7 @@ class XMLGroupRange:
     range_end: int
     group_addresses: list[int]
     children: list[XMLGroupRange]
+    comment: str
 
     def str_address(self) -> str:
         """Generate a string representation for the range (same as in in ETS)."""
