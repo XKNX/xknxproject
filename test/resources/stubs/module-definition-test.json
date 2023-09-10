@@ -352,57 +352,53 @@
     }
   },
   "group_ranges": {
-    "0": {
+    "0/0": {
       "name": "Heating",
-      "children": {
+      "address_start": 1,
+      "address_end": 2047,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
         "0/0": {
           "name": "Wohnzimmer",
-          "children": {},
-          "group_adresses": [
+          "address_start": 1,
+          "address_end": 255,
+          "group_addresses": [
             "0/0/1",
             "0/0/2",
             "0/0/3"
           ],
-          "address_start": "0/0/1",
-          "address_end": "0/0/255",
           "comment": ""
         },
         "0/1": {
           "name": "Kitchen",
-          "children": {},
-          "group_adresses": [
+          "address_start": 256,
+          "address_end": 511,
+          "group_addresses": [
             "0/1/2",
             "0/1/1"
           ],
-          "address_start": "0/1/0",
-          "address_end": "0/1/255",
           "comment": ""
         },
         "0/2": {
           "name": "Bathroom",
-          "children": {},
-          "group_adresses": [
+          "address_start": 512,
+          "address_end": 767,
+          "group_addresses": [
             "0/2/2"
           ],
-          "address_start": "0/2/0",
-          "address_end": "0/2/255",
           "comment": ""
         },
         "0/7": {
           "name": "Common",
-          "children": {},
-          "group_adresses": [
+          "address_start": 1792,
+          "address_end": 2047,
+          "group_addresses": [
             "0/7/2"
           ],
-          "address_start": "0/7/0",
-          "address_end": "0/7/255",
           "comment": ""
         }
-      },
-      "group_adresses": [],
-      "address_start": "0/0/1",
-      "address_end": "0/7/255",
-      "comment": ""
+      }
     }
   },
   "locations": {

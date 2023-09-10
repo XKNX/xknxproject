@@ -1,0 +1,114 @@
+{
+  "info": {
+    "project_id": "P-05B2",
+    "name": "ets6_two_level",
+    "last_modified": "2023-09-10T10:10:01.7031627Z",
+    "group_address_style": "TwoLevel",
+    "guid": "8e781d27-6dd1-4bf5-a13e-147665a77462",
+    "created_by": "ETS6",
+    "schema_version": "22",
+    "tool_version": "6.1.5686.0",
+    "xknxproject_version": "3.2.0",
+    "language_code": "de-DE"
+  },
+  "communication_objects": {},
+  "topology": {
+    "0": {
+      "name": "",
+      "description": null,
+      "lines": {
+        "0": {
+          "name": "",
+          "description": null,
+          "devices": [],
+          "medium_type": "Twisted Pair (TP)"
+        }
+      }
+    },
+    "1": {
+      "name": "Main",
+      "description": null,
+      "lines": {
+        "0": {
+          "name": "",
+          "description": null,
+          "devices": [],
+          "medium_type": "Twisted Pair (TP)"
+        },
+        "1": {
+          "name": "1st floor",
+          "description": null,
+          "devices": [],
+          "medium_type": "Twisted Pair (TP)"
+        },
+        "2": {
+          "name": "2nd floor",
+          "description": null,
+          "devices": [],
+          "medium_type": "Twisted Pair (TP)"
+        }
+      }
+    }
+  },
+  "devices": {},
+  "group_addresses": {
+    "0/1": {
+      "name": "Foo",
+      "identifier": "GA-1",
+      "raw_address": 1,
+      "address": "0/1",
+      "project_uid": 6,
+      "dpt": null,
+      "communication_object_ids": [],
+      "description": "",
+      "comment": ""
+    },
+    "1/1": {
+      "name": "Bar",
+      "identifier": "GA-2",
+      "raw_address": 2049,
+      "address": "1/1",
+      "project_uid": 8,
+      "dpt": null,
+      "communication_object_ids": [],
+      "description": "",
+      "comment": ""
+    }
+  },
+  "group_ranges": {
+    "0": {
+      "name": "Group 1",
+      "address_start": 1,
+      "address_end": 2047,
+      "group_addresses": [
+        "0/1"
+      ],
+      "comment": ""
+    },
+    "1": {
+      "name": "Group 2",
+      "address_start": 2048,
+      "address_end": 4095,
+      "group_addresses": [
+        "1/1"
+      ],
+      "comment": ""
+    }
+  },
+  "locations": {
+    "ets6_two_level": {
+      "type": "Building",
+      "identifier": "P-05B2-0_BP-1",
+      "name": "ets6_two_level",
+      "usage_id": null,
+      "usage_text": "",
+      "number": "",
+      "description": "",
+      "project_uid": 4,
+      "devices": [],
+      "spaces": {},
+      "functions": []
+    }
+  },
+  "functions": {}
+}

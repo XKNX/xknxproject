@@ -23,7 +23,9 @@ from xknxproject.models import (
     Function,
     GroupAddress,
     GroupAddressRef,
+    GroupAddressStyle,
     GroupRange,
+    GroupRangeWithChildren,
     HardwareToPrograms,
     KNXProject,
     Line,
@@ -148,10 +150,10 @@ class XMLParser:
                 comment=html.unescape(rtf_to_text(group_address.comment)),
             )
 
-        group_range_dict: dict[str, GroupRange] = {}
+        group_range_dict: dict[str, GroupRange | GroupRangeWithChildren] = {}
         for group_range in self.group_ranges:
             group_range_dict[group_range.str_address()] = self.convert_group_range(
-                group_range
+                group_range, self.project_info.group_address_style
             )
 
         space_dict: dict[str, Space] = {}
@@ -166,7 +168,7 @@ class XMLParser:
             project_id=self.project_info.project_id,
             name=self.project_info.name,
             last_modified=self.project_info.last_modified,
-            group_address_style=self.project_info.group_address_style,
+            group_address_style=self.project_info.group_address_style.value,
             guid=self.project_info.guid,
             created_by=self.project_info.created_by,
             schema_version=self.project_info.schema_version,
@@ -236,20 +238,38 @@ class XMLParser:
             functions=space.functions,
         )
 
-    def convert_group_range(self, group_range: XMLGroupRange) -> GroupRange:
+    def convert_group_range(
+        self, group_range: XMLGroupRange, group_address_style: GroupAddressStyle
+    ) -> GroupRange | GroupRangeWithChildren:
         """Convert XMLGroupRange into GroupRange."""
-        children: dict[str, GroupRange] = {}
-        for child in group_range.children:
-            children[child.str_address()] = self.convert_group_range(child)
+        group_ranges: dict[str, GroupRange | GroupRangeWithChildren] = {}
+        for child_gr in group_range.group_ranges:
+            group_ranges[child_gr.str_address()] = self.convert_group_range(
+                child_gr, group_address_style
+            )
 
+        if len(group_ranges):
+            # We have children, we may have GA's also
+            return GroupRangeWithChildren(
+                name=group_range.name,
+                address_start=group_range.range_start,
+                address_end=group_range.range_end,
+                group_addresses=[
+                    XMLGroupAddress.str_address(ga, group_address_style)
+                    for ga in group_range.group_addresses
+                ],
+                comment=html.unescape(rtf_to_text(group_range.comment)),
+                group_ranges=group_ranges,
+            )
+        # We have no children, we may have GA's only
         return GroupRange(
             name=group_range.name,
-            children=children,
-            group_adresses=[
-                XMLGroupAddress.str_address(ga) for ga in group_range.group_addresses
+            address_start=group_range.range_start,
+            address_end=group_range.range_end,
+            group_addresses=[
+                XMLGroupAddress.str_address(ga, group_address_style)
+                for ga in group_range.group_addresses
             ],
-            address_start=XMLGroupAddress.str_address(group_range.range_start),
-            address_end=XMLGroupAddress.str_address(group_range.range_end),
             comment=html.unescape(rtf_to_text(group_range.comment)),
         )
 

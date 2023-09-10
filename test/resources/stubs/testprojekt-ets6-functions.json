@@ -76,25 +76,24 @@
     }
   },
   "group_ranges": {
-    "0": {
+    "0/0": {
       "name": "Neue Hauptgruppe",
-      "children": {
+      "address_start": 1,
+      "address_end": 2047,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
         "0/0": {
           "name": "Neue Mittelgruppe",
-          "children": {},
-          "group_adresses": [
+          "address_start": 1,
+          "address_end": 255,
+          "group_addresses": [
             "0/0/1",
             "0/0/2"
           ],
-          "address_start": "0/0/1",
-          "address_end": "0/0/255",
           "comment": ""
         }
-      },
-      "group_adresses": [],
-      "address_start": "0/0/1",
-      "address_end": "0/7/255",
-      "comment": ""
+      }
     }
   },
   "locations": {

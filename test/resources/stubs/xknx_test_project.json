@@ -674,11 +674,16 @@
   "group_ranges": {
     "1": {
       "name": "Neue Hauptgruppe",
-      "children": {
+      "address_start": 2048,
+      "address_end": 4095,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
         "1/0": {
           "name": "Neue Mittelgruppe",
-          "children": {},
-          "group_adresses": [
+          "address_start": 2048,
+          "address_end": 2303,
+          "group_addresses": [
             "1/0/0",
             "1/0/1",
             "1/0/2",
@@ -686,33 +691,31 @@
             "1/0/4",
             "1/0/5"
           ],
-          "address_start": "1/0/0",
-          "address_end": "1/0/255",
           "comment": ""
         }
-      },
-      "group_adresses": [],
-      "address_start": "1/0/0",
-      "address_end": "1/7/255",
-      "comment": ""
+      }
     },
     "2": {
       "name": "Neue Hauptgruppe",
-      "children": {
+      "address_start": 4096,
+      "address_end": 6143,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
         "2/0": {
           "name": "Neue Mittelgruppe",
-          "children": {},
-          "group_adresses": [
+          "address_start": 4096,
+          "address_end": 4351,
+          "group_addresses": [
             "2/0/6"
           ],
-          "address_start": "2/0/0",
-          "address_end": "2/0/255",
           "comment": ""
         },
         "2/1": {
           "name": "DPT tests",
-          "children": {},
-          "group_adresses": [
+          "address_start": 4352,
+          "address_end": 4607,
+          "group_addresses": [
             "2/1/1",
             "2/1/22",
             "2/1/23",
@@ -720,15 +723,9 @@
             "2/1/21",
             "2/1/10"
           ],
-          "address_start": "2/1/0",
-          "address_end": "2/1/255",
           "comment": ""
         }
-      },
-      "group_adresses": [],
-      "address_start": "2/0/0",
-      "address_end": "2/7/255",
-      "comment": ""
+      }
     }
   },
   "locations": {

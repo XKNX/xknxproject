@@ -10,6 +10,7 @@ from .knxproject import (
     GroupAddress,
     GroupAddressRef,
     GroupRange,
+    GroupRangeWithChildren,
     KNXProject,
     Line,
     ProjectInfo,

@@ -242,26 +242,25 @@
     }
   },
   "group_ranges": {
-    "0": {
+    "0/0": {
       "name": "Test 1st level",
-      "children": {
+      "address_start": 1,
+      "address_end": 2047,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
         "0/0": {
           "name": "Test 2nd level",
-          "children": {},
-          "group_adresses": [
+          "address_start": 1,
+          "address_end": 255,
+          "group_addresses": [
             "0/0/1",
             "0/0/2",
             "0/0/3"
           ],
-          "address_start": "0/0/1",
-          "address_end": "0/0/255",
           "comment": ""
         }
-      },
-      "group_adresses": [],
-      "address_start": "0/0/1",
-      "address_end": "0/7/255",
-      "comment": ""
+      }
     }
   },
   "locations": {
