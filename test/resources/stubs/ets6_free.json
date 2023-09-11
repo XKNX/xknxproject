@@ -1,0 +1,171 @@
+{
+  "info": {
+    "project_id": "P-0310",
+    "name": "ets6_free",
+    "last_modified": "2023-09-11T19:49:52.8053929Z",
+    "group_address_style": "Free",
+    "guid": "4eb10284-c66c-42a0-9622-48adb78753a3",
+    "created_by": "ETS6",
+    "schema_version": "22",
+    "tool_version": "6.1.5686.0",
+    "xknxproject_version": "3.2.0",
+    "language_code": "de-DE"
+  },
+  "communication_objects": {},
+  "topology": {
+    "0": {
+      "name": "",
+      "description": null,
+      "lines": {
+        "0": {
+          "name": "",
+          "description": null,
+          "devices": [],
+          "medium_type": "Twisted Pair (TP)"
+        }
+      }
+    },
+    "1": {
+      "name": "",
+      "description": null,
+      "lines": {
+        "0": {
+          "name": "",
+          "description": null,
+          "devices": [],
+          "medium_type": "Twisted Pair (TP)"
+        },
+        "1": {
+          "name": "",
+          "description": null,
+          "devices": [],
+          "medium_type": "Twisted Pair (TP)"
+        }
+      }
+    }
+  },
+  "devices": {},
+  "group_addresses": {
+    "3": {
+      "name": "whatever",
+      "identifier": "GA-3",
+      "raw_address": 3,
+      "address": "3",
+      "project_uid": 16,
+      "dpt": null,
+      "communication_object_ids": [],
+      "description": "",
+      "comment": ""
+    },
+    "2": {
+      "name": "bar",
+      "identifier": "GA-2",
+      "raw_address": 2,
+      "address": "2",
+      "project_uid": 14,
+      "dpt": null,
+      "communication_object_ids": [],
+      "description": "",
+      "comment": ""
+    },
+    "1": {
+      "name": "foo",
+      "identifier": "GA-1",
+      "raw_address": 1,
+      "address": "1",
+      "project_uid": 12,
+      "dpt": null,
+      "communication_object_ids": [],
+      "description": "",
+      "comment": ""
+    },
+    "1025": {
+      "name": "one_more",
+      "identifier": "GA-4",
+      "raw_address": 1025,
+      "address": "1025",
+      "project_uid": 21,
+      "dpt": null,
+      "communication_object_ids": [],
+      "description": "",
+      "comment": ""
+    }
+  },
+  "group_ranges": {
+    "1...512": {
+      "name": "Group 1",
+      "address_start": 1,
+      "address_end": 512,
+      "group_addresses": [
+        "1"
+      ],
+      "comment": "",
+      "group_ranges": {
+        "2...128": {
+          "name": "Group 1.1",
+          "address_start": 2,
+          "address_end": 128,
+          "group_addresses": [
+            "2"
+          ],
+          "comment": "",
+          "group_ranges": {
+            "3...33": {
+              "name": "Group 1.1.1",
+              "address_start": 3,
+              "address_end": 33,
+              "group_addresses": [
+                "3"
+              ],
+              "comment": "",
+              "group_ranges": {}
+            }
+          }
+        }
+      }
+    },
+    "513...1024": {
+      "name": "Empy Main",
+      "address_start": 513,
+      "address_end": 1024,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {}
+    },
+    "1025...1536": {
+      "name": "Only Sub",
+      "address_start": 1025,
+      "address_end": 1536,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
+        "1025...1151": {
+          "name": "Sub",
+          "address_start": 1025,
+          "address_end": 1151,
+          "group_addresses": [
+            "1025"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        }
+      }
+    }
+  },
+  "locations": {
+    "et6_free": {
+      "type": "Building",
+      "identifier": "P-0310-0_BP-1",
+      "name": "et6_free",
+      "usage_id": null,
+      "usage_text": "",
+      "number": "",
+      "description": "",
+      "project_uid": 9,
+      "devices": [],
+      "spaces": {},
+      "functions": []
+    }
+  },
+  "functions": {}
+}

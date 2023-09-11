@@ -77,6 +77,18 @@ class GroupAddress(TypedDict):
     dpt: DPTType | None
     communication_object_ids: list[str]
     description: str
+    comment: str
+
+
+class GroupRange(TypedDict):
+    """GroupRange holding the actual GAs but no children (e.g. 'middle' in THREELEVEL)."""
+
+    name: str
+    address_start: int
+    address_end: int
+    comment: str
+    group_addresses: list[str]
+    group_ranges: dict[str, GroupRange]
 
 
 class Space(TypedDict):
@@ -140,4 +152,5 @@ class KNXProject(TypedDict):
     topology: dict[str, Area]
     locations: dict[str, Space]
     group_addresses: dict[str, GroupAddress]
+    group_ranges: dict[str, GroupRange]
     functions: dict[str, Function]

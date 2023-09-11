@@ -480,7 +480,8 @@
       "communication_object_ids": [
         "1.1.5/O-101_R-1578"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "1/0/1": {
       "name": "Behang D auf/ab",
@@ -495,7 +496,8 @@
       "communication_object_ids": [
         "1.1.5/O-100_R-1577"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "1/0/2": {
       "name": "Lamelle C auf/ab",
@@ -510,7 +512,8 @@
       "communication_object_ids": [
         "1.1.5/O-71_R-1506"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "1/0/3": {
       "name": "Behang C auf/ab",
@@ -525,7 +528,8 @@
       "communication_object_ids": [
         "1.1.5/O-70_R-1505"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "1/0/4": {
       "name": "Lamelle B auf/ab",
@@ -540,7 +544,8 @@
       "communication_object_ids": [
         "1.1.5/O-41_R-1434"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "1/0/5": {
       "name": "BehangB auf/ab",
@@ -555,7 +560,8 @@
       "communication_object_ids": [
         "1.1.5/O-40_R-1433"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "2/0/6": {
       "name": "Windalarm",
@@ -570,7 +576,8 @@
       "communication_object_ids": [
         "1.1.5/O-4_R-1417"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "2/1/1": {
       "name": "Not linked to a comm object",
@@ -580,7 +587,8 @@
       "project_uid": 43,
       "dpt": null,
       "communication_object_ids": [],
-      "description": "no dpt"
+      "description": "no dpt",
+      "comment": ""
     },
     "2/1/22": {
       "name": "No DPT in GA 2",
@@ -596,7 +604,8 @@
         "1.1.6/O-0_R-665",
         "1.1.6/O-9_R-9073"
       ],
-      "description": "multiple DPT 9 and not defined in COs"
+      "description": "multiple DPT 9 and not defined in COs",
+      "comment": ""
     },
     "2/1/23": {
       "name": "No DPT in GA 3",
@@ -612,7 +621,8 @@
         "1.1.6/O-9_R-9073",
         "1.1.6/O-18_R-7994"
       ],
-      "description": "DPT 9 generic and multiple in COs"
+      "description": "DPT 9 generic and multiple in COs",
+      "comment": ""
     },
     "2/1/2": {
       "name": "Not linked to a comm object 2",
@@ -625,7 +635,8 @@
         "sub": 1
       },
       "communication_object_ids": [],
-      "description": "temperature"
+      "description": "temperature",
+      "comment": ""
     },
     "2/1/21": {
       "name": "No DPT in GA",
@@ -640,7 +651,8 @@
       "communication_object_ids": [
         "1.1.6/O-9_R-9073"
       ],
-      "description": "multiple DPT 9 in 1 CO"
+      "description": "multiple DPT 9 in 1 CO",
+      "comment": ""
     },
     "2/1/10": {
       "name": "generic 1-bit",
@@ -655,7 +667,68 @@
       "communication_object_ids": [
         "1.1.6/O-20_R-8108"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
+    }
+  },
+  "group_ranges": {
+    "1": {
+      "name": "Neue Hauptgruppe",
+      "address_start": 2048,
+      "address_end": 4095,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
+        "1/0": {
+          "name": "Neue Mittelgruppe",
+          "address_start": 2048,
+          "address_end": 2303,
+          "group_addresses": [
+            "1/0/0",
+            "1/0/1",
+            "1/0/2",
+            "1/0/3",
+            "1/0/4",
+            "1/0/5"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        }
+      }
+    },
+    "2": {
+      "name": "Neue Hauptgruppe",
+      "address_start": 4096,
+      "address_end": 6143,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
+        "2/0": {
+          "name": "Neue Mittelgruppe",
+          "address_start": 4096,
+          "address_end": 4351,
+          "group_addresses": [
+            "2/0/6"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        },
+        "2/1": {
+          "name": "DPT tests",
+          "address_start": 4352,
+          "address_end": 4607,
+          "group_addresses": [
+            "2/1/1",
+            "2/1/22",
+            "2/1/23",
+            "2/1/2",
+            "2/1/21",
+            "2/1/10"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        }
+      }
     }
   },
   "locations": {

@@ -57,7 +57,8 @@
         "sub": 1
       },
       "communication_object_ids": [],
-      "description": "Livingroom LivingroomLight"
+      "description": "Livingroom LivingroomLight",
+      "comment": ""
     },
     "0/0/2": {
       "name": "Status",
@@ -70,7 +71,30 @@
         "sub": 1
       },
       "communication_object_ids": [],
-      "description": "Livingroom LivingroomLight"
+      "description": "Livingroom LivingroomLight",
+      "comment": ""
+    }
+  },
+  "group_ranges": {
+    "0": {
+      "name": "Neue Hauptgruppe",
+      "address_start": 1,
+      "address_end": 2047,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
+        "0/0": {
+          "name": "Neue Mittelgruppe",
+          "address_start": 1,
+          "address_end": 255,
+          "group_addresses": [
+            "0/0/1",
+            "0/0/2"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        }
+      }
     }
   },
   "locations": {

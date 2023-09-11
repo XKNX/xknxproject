@@ -203,7 +203,8 @@
         "0.0.1/M-0083_A-0013-11-A9D6_O-0_R-10000",
         "0.0.2/M-0002_A-A061-14-BE27_O-10_R-485"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/0/2": {
       "name": "Test 2",
@@ -219,7 +220,8 @@
         "0.0.1/M-0083_A-0013-11-A9D6_O-5_R-10005",
         "0.0.2/M-0002_A-A061-14-BE27_O-71_R-1506"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/0/3": {
       "name": "Test 3",
@@ -235,7 +237,31 @@
         "0.0.1/M-0083_A-0013-11-A9D6_O-13_R-4",
         "0.0.2/M-0002_A-A061-14-BE27_O-10_R-485"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
+    }
+  },
+  "group_ranges": {
+    "0": {
+      "name": "Test 1st level",
+      "address_start": 1,
+      "address_end": 2047,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
+        "0/0": {
+          "name": "Test 2nd level",
+          "address_start": 1,
+          "address_end": 255,
+          "group_addresses": [
+            "0/0/1",
+            "0/0/2",
+            "0/0/3"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        }
+      }
     }
   },
   "locations": {

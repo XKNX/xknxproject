@@ -1,7 +1,10 @@
 """Parser logic for ETS XML files."""
 from __future__ import annotations
 
+import html
 import logging
+
+from striprtf.striprtf import rtf_to_text
 
 from xknxproject.__version__ import __version__
 from xknxproject.loader import (
@@ -20,6 +23,8 @@ from xknxproject.models import (
     Function,
     GroupAddress,
     GroupAddressRef,
+    GroupAddressStyle,
+    GroupRange,
     HardwareToPrograms,
     KNXProject,
     Line,
@@ -30,6 +35,7 @@ from xknxproject.models import (
     XMLFunction,
     XMLGroupAddress,
     XMLGroupAddressRef,
+    XMLGroupRange,
     XMLProjectInformation,
     XMLSpace,
 )
@@ -46,6 +52,7 @@ class XMLParser:
         self.knx_proj_contents = knx_proj_contents
         self.spaces: list[XMLSpace] = []
         self.group_addresses: list[XMLGroupAddress] = []
+        self.group_ranges: list[XMLGroupRange] = []
         self.areas: list[XMLArea] = []
         self.devices: list[DeviceInstance] = []
         self.language_code: str | None = None
@@ -139,6 +146,13 @@ class XMLParser:
                 dpt=group_address.dpt,
                 communication_object_ids=_com_object_ids,
                 description=group_address.description,
+                comment=html.unescape(rtf_to_text(group_address.comment)),
+            )
+
+        group_range_dict: dict[str, GroupRange] = {}
+        for group_range in self.group_ranges:
+            group_range_dict[group_range.str_address()] = self.convert_group_range(
+                group_range, self.project_info.group_address_style
             )
 
         space_dict: dict[str, Space] = {}
@@ -153,7 +167,7 @@ class XMLParser:
             project_id=self.project_info.project_id,
             name=self.project_info.name,
             last_modified=self.project_info.last_modified,
-            group_address_style=self.project_info.group_address_style,
+            group_address_style=self.project_info.group_address_style.value,
             guid=self.project_info.guid,
             created_by=self.project_info.created_by,
             schema_version=self.project_info.schema_version,
@@ -168,6 +182,7 @@ class XMLParser:
             topology=topology_dict,
             devices=devices_dict,
             group_addresses=group_address_dict,
+            group_ranges=group_range_dict,
             locations=space_dict,
             functions=functions_dict,
         )
@@ -222,6 +237,28 @@ class XMLParser:
             functions=space.functions,
         )
 
+    def convert_group_range(
+        self, group_range: XMLGroupRange, group_address_style: GroupAddressStyle
+    ) -> GroupRange:
+        """Convert XMLGroupRange into GroupRange."""
+        group_ranges: dict[str, GroupRange] = {}
+        for child_gr in group_range.group_ranges:
+            group_ranges[child_gr.str_address()] = self.convert_group_range(
+                child_gr, group_address_style
+            )
+
+        return GroupRange(
+            name=group_range.name,
+            address_start=group_range.range_start,
+            address_end=group_range.range_end,
+            group_addresses=[
+                XMLGroupAddress.str_address(ga, group_address_style)
+                for ga in group_range.group_addresses
+            ],
+            comment=html.unescape(rtf_to_text(group_range.comment)),
+            group_ranges=group_ranges,
+        )
+
     def load(self, language: str | None) -> None:
         """Load XML files."""
         (
@@ -234,6 +271,7 @@ class XMLParser:
         )
         (
             self.group_addresses,
+            self.group_ranges,
             self.areas,
             self.devices,
             self.spaces,

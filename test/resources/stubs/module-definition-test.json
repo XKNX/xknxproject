@@ -2,7 +2,7 @@
   "info": {
     "project_id": "P-080F",
     "name": "ModuleDefinitionTest",
-    "last_modified": "2023-04-11T21:06:02.8735147Z",
+    "last_modified": "2023-09-11T19:55:48.2104095Z",
     "group_address_style": "ThreeLevel",
     "guid": "26520acd-6231-4fe4-a409-4d1610e7a251",
     "created_by": "ETS5",
@@ -249,7 +249,8 @@
       "communication_object_ids": [
         "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/0/2": {
       "name": "Temperatur Soll",
@@ -264,7 +265,8 @@
       "communication_object_ids": [
         "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/0/3": {
       "name": "Reglerwert",
@@ -279,7 +281,8 @@
       "communication_object_ids": [
         "1.1.1/O-334_R-21"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/1/2": {
       "name": "Temperatur Soll",
@@ -294,7 +297,8 @@
       "communication_object_ids": [
         "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/1/1": {
       "name": "Temperatur Ist",
@@ -309,7 +313,8 @@
       "communication_object_ids": [
         "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/2/2": {
       "name": "Temperatur Soll",
@@ -324,7 +329,8 @@
       "communication_object_ids": [
         "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
     },
     "0/7/2": {
       "name": "Temperatur Soll",
@@ -341,7 +347,87 @@
         "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3",
         "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
-      "description": ""
+      "description": "",
+      "comment": ""
+    }
+  },
+  "group_ranges": {
+    "0": {
+      "name": "Heating",
+      "address_start": 1,
+      "address_end": 2047,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
+        "0/0": {
+          "name": "Wohnzimmer",
+          "address_start": 1,
+          "address_end": 255,
+          "group_addresses": [
+            "0/0/1",
+            "0/0/2",
+            "0/0/3"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        },
+        "0/1": {
+          "name": "Kitchen",
+          "address_start": 256,
+          "address_end": 511,
+          "group_addresses": [
+            "0/1/2",
+            "0/1/1"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        },
+        "0/2": {
+          "name": "Bathroom",
+          "address_start": 512,
+          "address_end": 767,
+          "group_addresses": [
+            "0/2/2"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        },
+        "0/7": {
+          "name": "Common",
+          "address_start": 1792,
+          "address_end": 2047,
+          "group_addresses": [
+            "0/7/2"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        }
+      }
+    },
+    "1": {
+      "name": "Empty Main",
+      "address_start": 2048,
+      "address_end": 4095,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {}
+    },
+    "2": {
+      "name": "Only Sub",
+      "address_start": 4096,
+      "address_end": 6143,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
+        "2/0": {
+          "name": "Sub",
+          "address_start": 4096,
+          "address_end": 4351,
+          "group_addresses": [],
+          "comment": "",
+          "group_ranges": {}
+        }
+      }
     }
   },
   "locations": {

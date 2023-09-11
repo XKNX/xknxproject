@@ -11,6 +11,8 @@ file_names = [
     ("xknx_test_project", "test", None),
     ("test_project-ets4", "test", "de-DE"),
     ("testprojekt-ets6-functions", None, "de-DE"),
+    ("ets6_free", None, "de-DE"),
+    ("ets6_two_level", None, "de-DE"),
 ]
 
 for file_name, password, language in file_names:
