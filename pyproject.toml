@@ -35,7 +35,7 @@ version = {attr = "xknxproject.__version__.__version__"}
 include = ["xknxproject*"]
 
 [tool.black]
-target-version = ["py39", "py310", "py311"]
+target-version = ["py39", "py310", "py311", "py312"]
 exclude = "generated"
 
 
