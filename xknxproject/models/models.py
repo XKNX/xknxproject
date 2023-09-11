@@ -40,17 +40,16 @@ class XMLGroupAddress:
     def str_address(raw_address: int, group_address_style: GroupAddressStyle) -> str:
         """Parse a given address and returns a string representation of it."""
         if group_address_style == GroupAddressStyle.FREE:
-            str_address = str(raw_address)
-        else:
-            main = (raw_address & 0b1111100000000000) >> 11
-            if group_address_style == GroupAddressStyle.THREELEVEL:
-                middle = (raw_address & 0b11100000000) >> 8
-                sub = raw_address & 0b11111111
-                str_address = f"{main}/{middle}/{sub}"
-            elif group_address_style == GroupAddressStyle.TWOLEVEL:
-                sub = raw_address & 0b11111111111
-                str_address = f"{main}/{sub}"
-        return str_address
+            return str(raw_address)
+        main = (raw_address & 0b1111100000000000) >> 11
+        if group_address_style == GroupAddressStyle.THREELEVEL:
+            middle = (raw_address & 0b11100000000) >> 8
+            sub = raw_address & 0b11111111
+            return f"{main}/{middle}/{sub}"
+        if group_address_style == GroupAddressStyle.TWOLEVEL:
+            sub = raw_address & 0b11111111111
+            return f"{main}/{sub}"
+        raise ValueError(f"GroupAddressSyste '{group_address_style}' not supported!")
 
     def __repr__(self) -> str:
         """Return string representation."""
@@ -83,7 +82,7 @@ class XMLGroupRange:
             start_address_token = XMLGroupAddress.str_address(
                 self.range_start, self.style
             ).split("/")
-            if (self.range_end - self.range_start) >= 2047:
+            if (self.range_end - self.range_start) >= 2046:
                 return start_address_token[0]
             return "/".join(start_address_token[0:2])
 

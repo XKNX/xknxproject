@@ -242,7 +242,7 @@
     }
   },
   "group_ranges": {
-    "0/0": {
+    "0": {
       "name": "Test 1st level",
       "address_start": 1,
       "address_end": 2047,

@@ -157,12 +157,14 @@ class _GroupAddressRangeLoader:
 
         def create_xml_group_range(elem: ElementTree.Element) -> XMLGroupRange:
             group_range_elems = elem.findall("./{*}GroupRange")
-            group_ranges = list(map(create_xml_group_range, group_range_elems))
+            group_ranges = [
+                create_xml_group_range(range_elem) for range_elem in group_range_elems
+            ]
 
             return XMLGroupRange(
                 name=elem.get("Name", ""),
-                range_start=int(elem.get("RangeStart", "")),
-                range_end=int(elem.get("RangeEnd", "")),
+                range_start=int(elem.get("RangeStart")),  # type: ignore[arg-type]
+                range_end=int(elem.get("RangeEnd")),  # type: ignore[arg-type]
                 group_addresses=[
                     int(e.attrib["Address"]) for e in elem.findall("{*}GroupAddress")
                 ],

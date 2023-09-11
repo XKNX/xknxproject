@@ -76,7 +76,7 @@
     }
   },
   "group_ranges": {
-    "0/0": {
+    "0": {
       "name": "Neue Hauptgruppe",
       "address_start": 1,
       "address_end": 2047,

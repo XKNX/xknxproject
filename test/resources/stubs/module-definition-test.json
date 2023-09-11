@@ -352,7 +352,7 @@
     }
   },
   "group_ranges": {
-    "0/0": {
+    "0": {
       "name": "Heating",
       "address_start": 1,
       "address_end": 2047,
