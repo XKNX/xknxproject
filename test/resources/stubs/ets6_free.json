@@ -2,7 +2,7 @@
   "info": {
     "project_id": "P-0310",
     "name": "ets6_free",
-    "last_modified": "2023-09-10T17:50:59.8260208Z",
+    "last_modified": "2023-09-11T19:49:52.8053929Z",
     "group_address_style": "Free",
     "guid": "4eb10284-c66c-42a0-9622-48adb78753a3",
     "created_by": "ETS6",
@@ -78,6 +78,17 @@
       "communication_object_ids": [],
       "description": "",
       "comment": ""
+    },
+    "1025": {
+      "name": "one_more",
+      "identifier": "GA-4",
+      "raw_address": 1025,
+      "address": "1025",
+      "project_uid": 21,
+      "dpt": null,
+      "communication_object_ids": [],
+      "description": "",
+      "comment": ""
     }
   },
   "group_ranges": {
@@ -110,6 +121,33 @@
               "group_ranges": {}
             }
           }
+        }
+      }
+    },
+    "513...1024": {
+      "name": "Empy Main",
+      "address_start": 513,
+      "address_end": 1024,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {}
+    },
+    "1025...1536": {
+      "name": "Only Sub",
+      "address_start": 1025,
+      "address_end": 1536,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
+        "1025...1151": {
+          "name": "Sub",
+          "address_start": 1025,
+          "address_end": 1151,
+          "group_addresses": [
+            "1025"
+          ],
+          "comment": "",
+          "group_ranges": {}
         }
       }
     }

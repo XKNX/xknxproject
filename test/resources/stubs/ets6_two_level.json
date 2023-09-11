@@ -2,7 +2,7 @@
   "info": {
     "project_id": "P-05B2",
     "name": "ets6_two_level",
-    "last_modified": "2023-09-10T10:10:01.7031627Z",
+    "last_modified": "2023-09-11T19:50:35.2470606Z",
     "group_address_style": "TwoLevel",
     "guid": "8e781d27-6dd1-4bf5-a13e-147665a77462",
     "created_by": "ETS6",
@@ -93,6 +93,14 @@
       "group_addresses": [
         "1/1"
       ],
+      "comment": "",
+      "group_ranges": {}
+    },
+    "2": {
+      "name": "Empty",
+      "address_start": 4096,
+      "address_end": 6143,
+      "group_addresses": [],
       "comment": "",
       "group_ranges": {}
     }

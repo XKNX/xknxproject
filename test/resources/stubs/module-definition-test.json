@@ -2,7 +2,7 @@
   "info": {
     "project_id": "P-080F",
     "name": "ModuleDefinitionTest",
-    "last_modified": "2023-04-11T21:06:02.8735147Z",
+    "last_modified": "2023-09-11T19:55:48.2104095Z",
     "group_address_style": "ThreeLevel",
     "guid": "26520acd-6231-4fe4-a409-4d1610e7a251",
     "created_by": "ETS5",
@@ -399,6 +399,31 @@
           "group_addresses": [
             "0/7/2"
           ],
+          "comment": "",
+          "group_ranges": {}
+        }
+      }
+    },
+    "1": {
+      "name": "Empty Main",
+      "address_start": 2048,
+      "address_end": 4095,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {}
+    },
+    "2": {
+      "name": "Only Sub",
+      "address_start": 4096,
+      "address_end": 6143,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
+        "2/0": {
+          "name": "Sub",
+          "address_start": 4096,
+          "address_end": 4351,
+          "group_addresses": [],
           "comment": "",
           "group_ranges": {}
         }

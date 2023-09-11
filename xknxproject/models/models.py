@@ -85,6 +85,7 @@ class XMLGroupRange:
             if (self.range_end - self.range_start) >= 2046:
                 return start_address_token[0]
             return "/".join(start_address_token[0:2])
+        raise ValueError(f"GroupAddressSyste '{self.style}' not supported!")
 
 
 @dataclass
