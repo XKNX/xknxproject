@@ -368,7 +368,8 @@
             "0/0/2",
             "0/0/3"
           ],
-          "comment": ""
+          "comment": "",
+          "group_ranges": {}
         },
         "0/1": {
           "name": "Kitchen",
@@ -378,7 +379,8 @@
             "0/1/2",
             "0/1/1"
           ],
-          "comment": ""
+          "comment": "",
+          "group_ranges": {}
         },
         "0/2": {
           "name": "Bathroom",
@@ -387,7 +389,8 @@
           "group_addresses": [
             "0/2/2"
           ],
-          "comment": ""
+          "comment": "",
+          "group_ranges": {}
         },
         "0/7": {
           "name": "Common",
@@ -396,7 +399,8 @@
           "group_addresses": [
             "0/7/2"
           ],
-          "comment": ""
+          "comment": "",
+          "group_ranges": {}
         }
       }
     }

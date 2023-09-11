@@ -83,7 +83,8 @@
       "group_addresses": [
         "0/1"
       ],
-      "comment": ""
+      "comment": "",
+      "group_ranges": {}
     },
     "1": {
       "name": "Group 2",
@@ -92,7 +93,8 @@
       "group_addresses": [
         "1/1"
       ],
-      "comment": ""
+      "comment": "",
+      "group_ranges": {}
     }
   },
   "locations": {

@@ -691,7 +691,8 @@
             "1/0/4",
             "1/0/5"
           ],
-          "comment": ""
+          "comment": "",
+          "group_ranges": {}
         }
       }
     },
@@ -709,7 +710,8 @@
           "group_addresses": [
             "2/0/6"
           ],
-          "comment": ""
+          "comment": "",
+          "group_ranges": {}
         },
         "2/1": {
           "name": "DPT tests",
@@ -723,7 +725,8 @@
             "2/1/21",
             "2/1/10"
           ],
-          "comment": ""
+          "comment": "",
+          "group_ranges": {}
         }
       }
     }

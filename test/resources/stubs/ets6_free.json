@@ -106,7 +106,8 @@
               "group_addresses": [
                 "3"
               ],
-              "comment": ""
+              "comment": "",
+              "group_ranges": {}
             }
           }
         }

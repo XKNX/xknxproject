@@ -25,7 +25,6 @@ from xknxproject.models import (
     GroupAddressRef,
     GroupAddressStyle,
     GroupRange,
-    GroupRangeWithChildren,
     HardwareToPrograms,
     KNXProject,
     Line,
@@ -150,7 +149,7 @@ class XMLParser:
                 comment=html.unescape(rtf_to_text(group_address.comment)),
             )
 
-        group_range_dict: dict[str, GroupRange | GroupRangeWithChildren] = {}
+        group_range_dict: dict[str, GroupRange] = {}
         for group_range in self.group_ranges:
             group_range_dict[group_range.str_address()] = self.convert_group_range(
                 group_range, self.project_info.group_address_style
@@ -240,28 +239,14 @@ class XMLParser:
 
     def convert_group_range(
         self, group_range: XMLGroupRange, group_address_style: GroupAddressStyle
-    ) -> GroupRange | GroupRangeWithChildren:
+    ) -> GroupRange:
         """Convert XMLGroupRange into GroupRange."""
-        group_ranges: dict[str, GroupRange | GroupRangeWithChildren] = {}
+        group_ranges: dict[str, GroupRange] = {}
         for child_gr in group_range.group_ranges:
             group_ranges[child_gr.str_address()] = self.convert_group_range(
                 child_gr, group_address_style
             )
 
-        if len(group_ranges):
-            # We have children, we may have GA's also
-            return GroupRangeWithChildren(
-                name=group_range.name,
-                address_start=group_range.range_start,
-                address_end=group_range.range_end,
-                group_addresses=[
-                    XMLGroupAddress.str_address(ga, group_address_style)
-                    for ga in group_range.group_addresses
-                ],
-                comment=html.unescape(rtf_to_text(group_range.comment)),
-                group_ranges=group_ranges,
-            )
-        # We have no children, we may have GA's only
         return GroupRange(
             name=group_range.name,
             address_start=group_range.range_start,
@@ -271,6 +256,7 @@ class XMLParser:
                 for ga in group_range.group_addresses
             ],
             comment=html.unescape(rtf_to_text(group_range.comment)),
+            group_ranges=group_ranges,
         )
 
     def load(self, language: str | None) -> None:

@@ -88,12 +88,7 @@ class GroupRange(TypedDict):
     address_end: int
     comment: str
     group_addresses: list[str]
-
-
-class GroupRangeWithChildren(GroupRange):
-    """GroupRange having children (e.g. main in THREELEVEL), may or may not hold GAs."""
-
-    group_ranges: dict[str, GroupRange | GroupRangeWithChildren]
+    group_ranges: dict[str, GroupRange]
 
 
 class Space(TypedDict):
@@ -157,5 +152,5 @@ class KNXProject(TypedDict):
     topology: dict[str, Area]
     locations: dict[str, Space]
     group_addresses: dict[str, GroupAddress]
-    group_ranges: dict[str, GroupRange | GroupRangeWithChildren]
+    group_ranges: dict[str, GroupRange]
     functions: dict[str, Function]
