@@ -8,7 +8,7 @@
     "created_by": "ETS4",
     "schema_version": "11",
     "tool_version": "ETS 4.2.0 (Build 3884)",
-    "xknxproject_version": "3.2.0",
+    "xknxproject_version": "3.3.0",
     "language_code": "de-DE"
   },
   "communication_objects": {
