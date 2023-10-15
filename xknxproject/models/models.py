@@ -22,6 +22,7 @@ class XMLGroupAddress:
         project_uid: int | None,
         description: str,
         dpt: DPTType | None,
+        data_secure_key: str | None,
         comment: str,
         style: GroupAddressStyle,
     ):
@@ -32,6 +33,7 @@ class XMLGroupAddress:
         self.project_uid = project_uid
         self.description = description
         self.dpt = dpt
+        self.data_secure_key = data_secure_key  # bas64 encoded key
         self.comment = comment
         self.style = style
         self.address = XMLGroupAddress.str_address(self.raw_address, self.style)

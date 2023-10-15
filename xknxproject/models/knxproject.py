@@ -75,6 +75,7 @@ class GroupAddress(TypedDict):
     address: str
     project_uid: int | None
     dpt: DPTType | None
+    data_secure: bool
     communication_object_ids: list[str]
     description: str
     comment: str

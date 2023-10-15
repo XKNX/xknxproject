@@ -597,6 +597,7 @@
         "main": 1,
         "sub": 8
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-101_R-1578"
       ],
@@ -613,6 +614,7 @@
         "main": 1,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-100_R-1577"
       ],
@@ -629,6 +631,7 @@
         "main": 1,
         "sub": 8
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-71_R-1506"
       ],
@@ -645,6 +648,7 @@
         "main": 1,
         "sub": 8
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-70_R-1505"
       ],
@@ -661,6 +665,7 @@
         "main": 1,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-41_R-1434"
       ],
@@ -677,6 +682,7 @@
         "main": 1,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-40_R-1433"
       ],
@@ -693,6 +699,7 @@
         "main": 1,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-4_R-1417"
       ],
@@ -706,6 +713,7 @@
       "address": "2/1/1",
       "project_uid": 43,
       "dpt": null,
+      "data_secure": false,
       "communication_object_ids": [],
       "description": "no dpt",
       "comment": ""
@@ -720,6 +728,7 @@
         "main": 9,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.6/O-0_R-665",
         "1.1.6/O-9_R-9073"
@@ -737,6 +746,7 @@
         "main": 9,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.6/O-9_R-9073",
         "1.1.6/O-18_R-7994"
@@ -754,6 +764,7 @@
         "main": 9,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [],
       "description": "temperature",
       "comment": ""
@@ -768,6 +779,7 @@
         "main": 9,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.6/O-9_R-9073"
       ],
@@ -784,6 +796,7 @@
         "main": 1,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.6/O-20_R-8108"
       ],
@@ -800,6 +813,7 @@
         "main": 9,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.7/MD-2_M-20_MI-1_O-5-10_R-18"
       ],
@@ -816,6 +830,7 @@
         "main": 9,
         "sub": 1
       },
+      "data_secure": true,
       "communication_object_ids": [
         "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17"
       ],
@@ -832,6 +847,7 @@
         "main": 5,
         "sub": 1
       },
+      "data_secure": true,
       "communication_object_ids": [
         "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3"
       ],
@@ -848,6 +864,7 @@
         "main": 9,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.6/O-18_R-7994",
         "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45"

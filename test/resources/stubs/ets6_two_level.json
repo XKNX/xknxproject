@@ -59,6 +59,7 @@
       "address": "0/1",
       "project_uid": 6,
       "dpt": null,
+      "data_secure": false,
       "communication_object_ids": [],
       "description": "",
       "comment": ""
@@ -70,6 +71,7 @@
       "address": "1/1",
       "project_uid": 8,
       "dpt": null,
+      "data_secure": false,
       "communication_object_ids": [],
       "description": "",
       "comment": ""

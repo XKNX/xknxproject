@@ -56,6 +56,7 @@
         "main": 1,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [],
       "description": "Livingroom LivingroomLight",
       "comment": ""
@@ -70,6 +71,7 @@
         "main": 1,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [],
       "description": "Livingroom LivingroomLight",
       "comment": ""

@@ -246,6 +246,7 @@
         "main": 9,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1"
       ],
@@ -262,6 +263,7 @@
         "main": 9,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
@@ -278,6 +280,7 @@
         "main": 9,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.1/O-334_R-21"
       ],
@@ -294,6 +297,7 @@
         "main": 9,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"
       ],
@@ -310,6 +314,7 @@
         "main": 9,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1"
       ],
@@ -326,6 +331,7 @@
         "main": 9,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
@@ -342,6 +348,7 @@
         "main": 9,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3",
         "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3",
