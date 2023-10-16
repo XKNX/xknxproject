@@ -33,7 +33,7 @@ class XMLGroupAddress:
         self.project_uid = project_uid
         self.description = description
         self.dpt = dpt
-        self.data_secure_key = data_secure_key  # bas64 encoded key
+        self.data_secure_key = data_secure_key  # Key as base64 encoded string or None
         self.comment = comment
         self.style = style
         self.address = XMLGroupAddress.str_address(self.raw_address, self.style)
