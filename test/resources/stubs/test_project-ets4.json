@@ -8,7 +8,7 @@
     "created_by": "ETS4",
     "schema_version": "11",
     "tool_version": "ETS 4.2.0 (Build 3884)",
-    "xknxproject_version": "3.2.0",
+    "xknxproject_version": "3.3.0",
     "language_code": "de-DE"
   },
   "communication_objects": {
@@ -199,6 +199,7 @@
         "main": 1,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "0.0.1/M-0083_A-0013-11-A9D6_O-0_R-10000",
         "0.0.2/M-0002_A-A061-14-BE27_O-10_R-485"
@@ -216,6 +217,7 @@
         "main": 1,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "0.0.1/M-0083_A-0013-11-A9D6_O-5_R-10005",
         "0.0.2/M-0002_A-A061-14-BE27_O-71_R-1506"
@@ -233,6 +235,7 @@
         "main": 1,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "0.0.1/M-0083_A-0013-11-A9D6_O-13_R-4",
         "0.0.2/M-0002_A-A061-14-BE27_O-10_R-485"

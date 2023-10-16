@@ -144,6 +144,7 @@ class XMLParser:
                 address=group_address.address,
                 project_uid=group_address.project_uid,
                 dpt=group_address.dpt,
+                data_secure=bool(group_address.data_secure_key),
                 communication_object_ids=_com_object_ids,
                 description=group_address.description,
                 comment=html.unescape(rtf_to_text(group_address.comment)),

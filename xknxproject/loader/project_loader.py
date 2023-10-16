@@ -141,6 +141,7 @@ class _GroupAddressLoader:
             project_uid=int(project_uid) if project_uid else None,
             description=group_address_element.get("Description", ""),
             dpt=get_dpt_type(group_address_element.get("DatapointType")),
+            data_secure_key=group_address_element.get("Key"),
             comment=group_address_element.get("Comment", ""),
             style=group_address_style,
         )

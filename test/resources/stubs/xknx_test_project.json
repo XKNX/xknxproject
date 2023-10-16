@@ -2,13 +2,13 @@
   "info": {
     "project_id": "P-0242",
     "name": "xknx test project",
-    "last_modified": "2023-05-05T14:02:49.64676Z",
+    "last_modified": "2023-09-29T21:48:57.7711452Z",
     "group_address_style": "ThreeLevel",
     "guid": "7aceb083-274e-4568-806f-b8f9df992873",
     "created_by": "ETS5",
     "schema_version": "20",
     "tool_version": "5.7.1428.39779",
-    "xknxproject_version": "3.2.0",
+    "xknxproject_version": "3.3.0",
     "language_code": null
   },
   "communication_objects": {
@@ -384,7 +384,112 @@
         "transmit": true
       },
       "group_address_links": [
-        "2/1/23"
+        "2/1/23",
+        "7/1/2"
+      ]
+    },
+    "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3": {
+      "name": "RTR1 - 2 - Controller",
+      "number": 2,
+      "text": "RTR 1 (...) - Ausgang",
+      "function_text": "Command value - Heating",
+      "description": "",
+      "device_address": "1.1.7",
+      "dpts": [
+        {
+          "main": 5,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Byte",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "7/1/1"
+      ]
+    },
+    "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17": {
+      "name": "RTR1 - 0 - RSM",
+      "number": 0,
+      "text": "RTR 1 (...) - Eingang",
+      "function_text": "Setpoint temperature - Active operating mode",
+      "description": "",
+      "device_address": "1.1.7",
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
+      "object_size": "2 Bytes",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "7/1/0"
+      ]
+    },
+    "1.1.7/MD-2_M-20_MI-1_O-5-10_R-18": {
+      "name": "RTR1 - 10 - RSM",
+      "number": 10,
+      "text": "RTR 1 (...) - Ausgang",
+      "function_text": "Setpoint temperature - Active operating mode - Status",
+      "description": "",
+      "device_address": "1.1.7",
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
+      "object_size": "2 Bytes",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "7/0/0"
+      ]
+    },
+    "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45": {
+      "name": "RTR1 - 1 - Sensor",
+      "number": 1,
+      "text": "RTR 1 (...) - Eingang",
+      "function_text": "Room temperature - Measured value 1",
+      "description": "",
+      "device_address": "1.1.7",
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
+      "object_size": "2 Bytes",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "7/1/2"
       ]
     }
   },
@@ -417,7 +522,8 @@
           "devices": [
             "1.1.0",
             "1.1.5",
-            "1.1.6"
+            "1.1.6",
+            "1.1.7"
           ],
           "medium_type": "Twisted Pair (TP)"
         }
@@ -464,6 +570,20 @@
         "1.1.6/O-9_R-9073",
         "1.1.6/O-18_R-7994"
       ]
+    },
+    "1.1.7": {
+      "name": "Heating actuator 6-gang with controller",
+      "hardware_name": "Heizungsaktor 6fach mit Regler Secure",
+      "description": "",
+      "manufacturer_name": "GIRA Giersiepen",
+      "individual_address": "1.1.7",
+      "project_uid": 60,
+      "communication_object_ids": [
+        "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3",
+        "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17",
+        "1.1.7/MD-2_M-20_MI-1_O-5-10_R-18",
+        "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45"
+      ]
     }
   },
   "group_addresses": {
@@ -477,6 +597,7 @@
         "main": 1,
         "sub": 8
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-101_R-1578"
       ],
@@ -493,6 +614,7 @@
         "main": 1,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-100_R-1577"
       ],
@@ -509,6 +631,7 @@
         "main": 1,
         "sub": 8
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-71_R-1506"
       ],
@@ -525,6 +648,7 @@
         "main": 1,
         "sub": 8
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-70_R-1505"
       ],
@@ -541,6 +665,7 @@
         "main": 1,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-41_R-1434"
       ],
@@ -557,6 +682,7 @@
         "main": 1,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-40_R-1433"
       ],
@@ -573,6 +699,7 @@
         "main": 1,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-4_R-1417"
       ],
@@ -586,6 +713,7 @@
       "address": "2/1/1",
       "project_uid": 43,
       "dpt": null,
+      "data_secure": false,
       "communication_object_ids": [],
       "description": "no dpt",
       "comment": ""
@@ -600,6 +728,7 @@
         "main": 9,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.6/O-0_R-665",
         "1.1.6/O-9_R-9073"
@@ -617,6 +746,7 @@
         "main": 9,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.6/O-9_R-9073",
         "1.1.6/O-18_R-7994"
@@ -634,6 +764,7 @@
         "main": 9,
         "sub": 1
       },
+      "data_secure": false,
       "communication_object_ids": [],
       "description": "temperature",
       "comment": ""
@@ -648,6 +779,7 @@
         "main": 9,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.6/O-9_R-9073"
       ],
@@ -664,8 +796,78 @@
         "main": 1,
         "sub": null
       },
+      "data_secure": false,
       "communication_object_ids": [
         "1.1.6/O-20_R-8108"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "7/0/0": {
+      "name": "ds 0",
+      "identifier": "GA-15",
+      "raw_address": 14336,
+      "address": "7/0/0",
+      "project_uid": 58,
+      "dpt": {
+        "main": 9,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.7/MD-2_M-20_MI-1_O-5-10_R-18"
+      ],
+      "description": "security: off (inherited from middle group)",
+      "comment": ""
+    },
+    "7/1/0": {
+      "name": "ds 1",
+      "identifier": "GA-14",
+      "raw_address": 14592,
+      "address": "7/1/0",
+      "project_uid": 57,
+      "dpt": {
+        "main": 9,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17"
+      ],
+      "description": "security: auto",
+      "comment": ""
+    },
+    "7/1/1": {
+      "name": "ds 2",
+      "identifier": "GA-16",
+      "raw_address": 14593,
+      "address": "7/1/1",
+      "project_uid": 59,
+      "dpt": {
+        "main": 5,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3"
+      ],
+      "description": "security: on",
+      "comment": ""
+    },
+    "7/1/2": {
+      "name": "ds + non ds",
+      "identifier": "GA-17",
+      "raw_address": 14594,
+      "address": "7/1/2",
+      "project_uid": 64,
+      "dpt": {
+        "main": 9,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.6/O-18_R-7994",
+        "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45"
       ],
       "description": "",
       "comment": ""
@@ -724,6 +926,37 @@
             "2/1/2",
             "2/1/21",
             "2/1/10"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        }
+      }
+    },
+    "7": {
+      "name": "DataSecureTest",
+      "address_start": 14336,
+      "address_end": 16383,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
+        "7/0": {
+          "name": "Non-DS",
+          "address_start": 14336,
+          "address_end": 14591,
+          "group_addresses": [
+            "7/0/0"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        },
+        "7/1": {
+          "name": "DS-Auto",
+          "address_start": 14592,
+          "address_end": 14847,
+          "group_addresses": [
+            "7/1/0",
+            "7/1/1",
+            "7/1/2"
           ],
           "comment": "",
           "group_ranges": {}
