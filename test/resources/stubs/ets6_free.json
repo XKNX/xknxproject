@@ -46,12 +46,12 @@
   },
   "devices": {},
   "group_addresses": {
-    "3": {
-      "name": "whatever",
-      "identifier": "GA-3",
-      "raw_address": 3,
-      "address": "3",
-      "project_uid": 16,
+    "1": {
+      "name": "foo",
+      "identifier": "GA-1",
+      "raw_address": 1,
+      "address": "1",
+      "project_uid": 12,
       "dpt": null,
       "data_secure": false,
       "communication_object_ids": [],
@@ -70,12 +70,12 @@
       "description": "",
       "comment": ""
     },
-    "1": {
-      "name": "foo",
-      "identifier": "GA-1",
-      "raw_address": 1,
-      "address": "1",
-      "project_uid": 12,
+    "3": {
+      "name": "whatever",
+      "identifier": "GA-3",
+      "raw_address": 3,
+      "address": "3",
+      "project_uid": 16,
       "dpt": null,
       "data_secure": false,
       "communication_object_ids": [],

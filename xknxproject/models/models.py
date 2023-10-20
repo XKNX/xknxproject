@@ -119,7 +119,7 @@ class DeviceInstance:
         self,
         *,
         identifier: str,
-        address: str,
+        address: int,
         project_uid: int | None,
         name: str,
         description: str,
@@ -142,6 +142,8 @@ class DeviceInstance:
         self.product_ref = product_ref
         self.hardware_program_ref = hardware_program_ref
         self.line = line
+        self.area_address = line.area.address  # used for sorting
+        self.line_address = line.address  # used for sorting
         self.manufacturer = manufacturer
         self.additional_addresses = additional_addresses or []
         self.com_object_instance_refs = com_object_instance_refs or []
@@ -149,7 +151,7 @@ class DeviceInstance:
         self.application_program_ref: str | None = None
 
         self.individual_address = (
-            f"{self.line.area.address}.{self.line.address}.{self.address}"
+            f"{self.area_address}.{self.line_address}.{self.address}"
         )
         self.product_name: str = ""
         self.hardware_name: str = ""

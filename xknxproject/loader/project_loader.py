@@ -235,7 +235,7 @@ class _TopologyLoader:
         product_ref = device_element.get("ProductRefId", "")
         device: DeviceInstance = DeviceInstance(
             identifier=device_element.get("Id", ""),
-            address=address,
+            address=int(address),
             project_uid=int(project_uid) if project_uid else None,
             name=device_element.get("Name", ""),
             description=device_element.get("Description", ""),

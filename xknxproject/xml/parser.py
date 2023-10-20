@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import html
 import logging
+from operator import attrgetter
 
 from striprtf.striprtf import rtf_to_text
 
@@ -63,6 +64,7 @@ class XMLParser:
     def parse(self, language: str | None = None) -> KNXProject:
         """Parse ETS files."""
         self.load(language=language)
+        self.sort()
         _ga_id_to_address = {ga.identifier: ga.address for ga in self.group_addresses}
 
         communication_objects: dict[str, CommunicationObject] = {}
@@ -344,3 +346,32 @@ class XMLParser:
                 devices=devices,
                 language_code=self.language_code,
             )
+
+    def sort(self) -> None:
+        """Sort loaded structures as XML content is sorted by creation time."""
+
+        def recursive_sort_spaces(spaces: list[XMLSpace]) -> None:
+            for _space in spaces:
+                _space.devices.sort(
+                    key=lambda ia: tuple(ia.split("."))  # area > line > device
+                )
+                recursive_sort_spaces(_space.spaces)
+
+        recursive_sort_spaces(self.spaces)
+
+        self.group_addresses.sort(key=attrgetter("raw_address"))
+
+        def recursive_sort_group_ranges(group_ranges: list[XMLGroupRange]) -> None:
+            for _grs in group_ranges:
+                recursive_sort_group_ranges(_grs.group_ranges)
+            group_ranges.sort(key=attrgetter("range_start"))
+
+        recursive_sort_group_ranges(self.group_ranges)
+
+        for area in self.areas:
+            for line in area.lines:
+                line.devices.sort(key=attrgetter("address"))
+            area.lines.sort(key=attrgetter("address"))
+        self.areas.sort(key=attrgetter("address"))
+
+        self.devices.sort(key=attrgetter("area_address", "line_address", "address"))
