@@ -324,14 +324,8 @@ class XMLParser:
                 name=area.name, description=area.description, lines=lines_dict
             )
 
-        group_address_dict: dict[str, GroupAddress] = {}
-        for group_address in self.group_addresses:
-            _com_object_ids = [
-                com_object_id
-                for com_object_id, com_object in communication_objects.items()
-                if group_address.address in com_object["group_address_links"]
-            ]
-            group_address_dict[group_address.address] = GroupAddress(
+        group_address_dict: dict[str, GroupAddress] = {
+            group_address.address: GroupAddress(
                 name=group_address.name,
                 identifier=group_address.identifier,
                 raw_address=group_address.raw_address,
@@ -339,20 +333,27 @@ class XMLParser:
                 project_uid=group_address.project_uid,
                 dpt=group_address.dpt,
                 data_secure=bool(group_address.data_secure_key),
-                communication_object_ids=_com_object_ids,
+                communication_object_ids=[
+                    com_object_id
+                    for com_object_id, com_object in communication_objects.items()
+                    if group_address.address in com_object["group_address_links"]
+                ],
                 description=group_address.description,
                 comment=html.unescape(rtf_to_text(group_address.comment)),
             )
+            for group_address in self.group_addresses
+        }
 
         group_range_dict: dict[str, GroupRange] = _recursive_convert_group_range(
-            self.group_ranges, group_address_style=self.project_info.group_address_style
+            self.group_ranges, self.project_info.group_address_style
         )
 
         space_dict: dict[str, Space] = _recursive_convert_spaces(self.spaces)
 
-        functions_dict: dict[str, Function] = {}
-        for function in self.functions:
-            functions_dict[function.identifier] = _convert_functions(function)
+        functions_dict: dict[str, Function] = {
+            function.identifier: _convert_functions(function)
+            for function in self.functions
+        }
 
         info = ProjectInfo(
             project_id=self.project_info.project_id,
