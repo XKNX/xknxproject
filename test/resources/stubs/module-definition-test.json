@@ -287,23 +287,6 @@
       "description": "",
       "comment": ""
     },
-    "0/1/2": {
-      "name": "Temperatur Soll",
-      "identifier": "GA-4",
-      "raw_address": 258,
-      "address": "0/1/2",
-      "project_uid": 16,
-      "dpt": {
-        "main": 9,
-        "sub": 1
-      },
-      "data_secure": false,
-      "communication_object_ids": [
-        "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"
-      ],
-      "description": "",
-      "comment": ""
-    },
     "0/1/1": {
       "name": "Temperatur Ist",
       "identifier": "GA-7",
@@ -317,6 +300,23 @@
       "data_secure": false,
       "communication_object_ids": [
         "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/1/2": {
+      "name": "Temperatur Soll",
+      "identifier": "GA-4",
+      "raw_address": 258,
+      "address": "0/1/2",
+      "project_uid": 16,
+      "dpt": {
+        "main": 9,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"
       ],
       "description": "",
       "comment": ""

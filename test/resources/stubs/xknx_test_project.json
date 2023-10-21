@@ -718,6 +718,55 @@
       "description": "no dpt",
       "comment": ""
     },
+    "2/1/2": {
+      "name": "Not linked to a comm object 2",
+      "identifier": "GA-11",
+      "raw_address": 4354,
+      "address": "2/1/2",
+      "project_uid": 47,
+      "dpt": {
+        "main": 9,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [],
+      "description": "temperature",
+      "comment": ""
+    },
+    "2/1/10": {
+      "name": "generic 1-bit",
+      "identifier": "GA-13",
+      "raw_address": 4362,
+      "address": "2/1/10",
+      "project_uid": 50,
+      "dpt": {
+        "main": 1,
+        "sub": null
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.6/O-20_R-8108"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "2/1/21": {
+      "name": "No DPT in GA",
+      "identifier": "GA-12",
+      "raw_address": 4373,
+      "address": "2/1/21",
+      "project_uid": 48,
+      "dpt": {
+        "main": 9,
+        "sub": null
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.6/O-9_R-9073"
+      ],
+      "description": "multiple DPT 9 in 1 CO",
+      "comment": ""
+    },
     "2/1/22": {
       "name": "No DPT in GA 2",
       "identifier": "GA-9",
@@ -752,55 +801,6 @@
         "1.1.6/O-18_R-7994"
       ],
       "description": "DPT 9 generic and multiple in COs",
-      "comment": ""
-    },
-    "2/1/2": {
-      "name": "Not linked to a comm object 2",
-      "identifier": "GA-11",
-      "raw_address": 4354,
-      "address": "2/1/2",
-      "project_uid": 47,
-      "dpt": {
-        "main": 9,
-        "sub": 1
-      },
-      "data_secure": false,
-      "communication_object_ids": [],
-      "description": "temperature",
-      "comment": ""
-    },
-    "2/1/21": {
-      "name": "No DPT in GA",
-      "identifier": "GA-12",
-      "raw_address": 4373,
-      "address": "2/1/21",
-      "project_uid": 48,
-      "dpt": {
-        "main": 9,
-        "sub": null
-      },
-      "data_secure": false,
-      "communication_object_ids": [
-        "1.1.6/O-9_R-9073"
-      ],
-      "description": "multiple DPT 9 in 1 CO",
-      "comment": ""
-    },
-    "2/1/10": {
-      "name": "generic 1-bit",
-      "identifier": "GA-13",
-      "raw_address": 4362,
-      "address": "2/1/10",
-      "project_uid": 50,
-      "dpt": {
-        "main": 1,
-        "sub": null
-      },
-      "data_secure": false,
-      "communication_object_ids": [
-        "1.1.6/O-20_R-8108"
-      ],
-      "description": "",
       "comment": ""
     },
     "7/0/0": {
