@@ -75,25 +75,24 @@ def _convert_functions(function: XMLFunction) -> Function:
     )
 
 
-def _recursive_convert_spaces(space: XMLSpace) -> Space:
+def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
     """Convert spaces to the final output format."""
-    subspaces: dict[str, Space] = {}
-    for subspace in space.spaces:
-        subspaces[subspace.name] = _recursive_convert_spaces(subspace)
-
-    return Space(
-        type=space.space_type.value,
-        identifier=space.identifier,
-        name=space.name,
-        usage_id=space.usage_id,
-        usage_text=space.usage_text,
-        number=space.number,
-        description=space.description,
-        project_uid=space.project_uid,
-        devices=space.devices,
-        spaces=subspaces,
-        functions=space.functions,
-    )
+    return {
+        space.name: Space(
+            type=space.space_type.value,
+            identifier=space.identifier,
+            name=space.name,
+            usage_id=space.usage_id,
+            usage_text=space.usage_text,
+            number=space.number,
+            description=space.description,
+            project_uid=space.project_uid,
+            devices=space.devices,
+            spaces=_recursive_convert_spaces(space.spaces),
+            functions=space.functions,
+        )
+        for space in spaces
+    }
 
 
 def _recursive_convert_group_range(
@@ -353,9 +352,7 @@ class XMLParser:
                 group_range, self.project_info.group_address_style
             )
 
-        space_dict: dict[str, Space] = {}
-        for space in self.spaces:
-            space_dict[space.name] = _recursive_convert_spaces(space)
+        space_dict: dict[str, Space] = _recursive_convert_spaces(self.spaces)
 
         functions_dict: dict[str, Function] = {}
         for function in self.functions:
