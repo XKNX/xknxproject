@@ -45,6 +45,81 @@ from xknxproject.zip.extractor import KNXProjContents
 _LOGGER = logging.getLogger("xknxproject.log")
 
 
+def _convert_group_address_ref(
+    group_address_ref: XMLGroupAddressRef,
+) -> GroupAddressRef:
+    """Convert group address ref to the final output format."""
+    return GroupAddressRef(
+        address=group_address_ref.address,
+        name=group_address_ref.name,
+        project_uid=group_address_ref.project_uid,
+        role=group_address_ref.role,
+    )
+
+
+def _convert_functions(function: XMLFunction) -> Function:
+    """Convert function to the final output format."""
+
+    ga_dict = {}
+    for group_address in function.group_addresses:
+        ga_dict[group_address.address] = _convert_group_address_ref(group_address)
+
+    return Function(
+        function_type=function.function_type,
+        group_addresses=ga_dict,
+        identifier=function.identifier,
+        name=function.name,
+        project_uid=function.project_uid,
+        space_id=function.space_id,
+        usage_text=function.usage_text,
+    )
+
+
+def _recursive_convert_spaces(space: XMLSpace) -> Space:
+    """Convert spaces to the final output format."""
+    subspaces: dict[str, Space] = {}
+    for subspace in space.spaces:
+        subspaces[subspace.name] = _recursive_convert_spaces(subspace)
+
+    return Space(
+        type=space.space_type.value,
+        identifier=space.identifier,
+        name=space.name,
+        usage_id=space.usage_id,
+        usage_text=space.usage_text,
+        number=space.number,
+        description=space.description,
+        project_uid=space.project_uid,
+        devices=space.devices,
+        spaces=subspaces,
+        functions=space.functions,
+    )
+
+
+def _recursive_convert_group_range(
+    group_range: XMLGroupRange,
+    group_address_style: GroupAddressStyle,
+) -> GroupRange:
+    """Convert XMLGroupRange into GroupRange."""
+    group_ranges: dict[str, GroupRange] = {}
+    for child_gr in group_range.group_ranges:
+        group_ranges[child_gr.str_address()] = _recursive_convert_group_range(
+            child_gr, group_address_style
+        )
+
+    return GroupRange(
+        name=group_range.name,
+        address_start=group_range.range_start,
+        address_end=group_range.range_end,
+        group_addresses=[
+            XMLGroupAddress.str_address(ga, group_address_style)
+            for ga in group_range.group_addresses
+        ],
+        comment=html.unescape(rtf_to_text(group_range.comment)),
+        group_ranges=group_ranges,
+    )
+
+
 class XMLParser:
     """Class that parses XMLs and returns useful information."""
 
@@ -62,9 +137,127 @@ class XMLParser:
         self.functions: list[XMLFunction] = []
 
     def parse(self, language: str | None = None) -> KNXProject:
-        """Parse ETS files."""
-        self.load(language=language)
-        self.sort()
+        """Parse ETS project."""
+        self._load(language=language)
+        self._sort()
+        return self._transform()
+
+    def _load(self, language: str | None) -> None:
+        """Load XML files."""
+        (
+            knx_master_data,
+            self.language_code,
+        ) = KNXMasterLoader.load(
+            knx_proj_contents=self.knx_proj_contents,
+            knx_master_file=self.knx_proj_contents.root_path / "knx_master.xml",
+            language=language,
+        )
+        (
+            self.group_addresses,
+            self.group_ranges,
+            self.areas,
+            self.devices,
+            self.spaces,
+            self.project_info,
+            self.functions,
+        ) = ProjectLoader.load(
+            knx_proj_contents=self.knx_proj_contents,
+            knx_master_data=knx_master_data,
+        )
+
+        products_dict: dict[str, Product] = {}
+        hardware_application_map: HardwareToPrograms = {}
+        for _products, _hardware_programs in [
+            HardwareLoader.load(
+                hardware_file=hardware_file,
+                language_code=self.language_code,
+            )
+            for hardware_file in HardwareLoader.get_hardware_files(
+                project_contents=self.knx_proj_contents
+            )
+        ]:
+            products_dict.update(_products)
+            hardware_application_map.update(_hardware_programs)
+
+        for device in self.devices:
+            device.manufacturer_name = knx_master_data.manufacturer_names.get(
+                device.manufacturer, ""
+            )
+
+            try:
+                product = products_dict[device.product_ref]
+            except KeyError:
+                _LOGGER.warning(
+                    "Could not find hardware product for device %s with product_ref %s",
+                    device.individual_address,
+                    device.product_ref,
+                )
+                continue
+            device.product_name = product.text
+            device.hardware_name = product.hardware_name
+
+            try:
+                application_program_ref = hardware_application_map[
+                    device.hardware_program_ref
+                ]
+            except KeyError:
+                _LOGGER.warning(
+                    "Could not find application_program_ref for device %s with hardware_program_ref %s",
+                    device.individual_address,
+                    device.hardware_program_ref,
+                )
+                continue
+            device.application_program_ref = application_program_ref
+            for com_object in device.com_object_instance_refs:
+                com_object.resolve_com_object_ref_id(
+                    application_program_ref, self.knx_proj_contents
+                )
+
+        application_programs = (
+            ApplicationProgramLoader.get_application_program_files_for_devices(
+                project_root_path=self.knx_proj_contents.root_path,
+                devices=self.devices,
+            )
+        )
+        # update self.devices items with its inherited values from their application programs
+        for application_program_file, devices in application_programs.items():
+            ApplicationProgramLoader.load(
+                application_program_path=application_program_file,
+                devices=devices,
+                language_code=self.language_code,
+            )
+
+    def _sort(self) -> None:
+        """Sort loaded structures as XML content is sorted by creation time."""
+
+        def recursive_sort_spaces(spaces: list[XMLSpace]) -> None:
+            for _space in spaces:
+                _space.devices.sort(
+                    key=lambda ia: tuple(ia.split("."))  # area > line > device
+                )
+                recursive_sort_spaces(_space.spaces)
+
+        recursive_sort_spaces(self.spaces)
+
+        self.group_addresses.sort(key=attrgetter("raw_address"))
+
+        def recursive_sort_group_ranges(group_ranges: list[XMLGroupRange]) -> None:
+            for _grs in group_ranges:
+                recursive_sort_group_ranges(_grs.group_ranges)
+            group_ranges.sort(key=attrgetter("range_start"))
+
+        recursive_sort_group_ranges(self.group_ranges)
+
+        for area in self.areas:
+            for line in area.lines:
+                line.devices.sort(key=attrgetter("address"))
+            area.lines.sort(key=attrgetter("address"))
+        self.areas.sort(key=attrgetter("address"))
+
+        self.devices.sort(key=attrgetter("area_address", "line_address", "address"))
+
+    def _transform(self) -> KNXProject:
+        """Convert XML Data to KNXProject structure."""
         _ga_id_to_address = {ga.identifier: ga.address for ga in self.group_addresses}
 
         communication_objects: dict[str, CommunicationObject] = {}
@@ -154,17 +347,19 @@ class XMLParser:
 
         group_range_dict: dict[str, GroupRange] = {}
         for group_range in self.group_ranges:
-            group_range_dict[group_range.str_address()] = self.convert_group_range(
+            group_range_dict[
+                group_range.str_address()
+            ] = _recursive_convert_group_range(
                 group_range, self.project_info.group_address_style
             )
 
         space_dict: dict[str, Space] = {}
         for space in self.spaces:
-            space_dict[space.name] = self.recursive_convert_spaces(space)
+            space_dict[space.name] = _recursive_convert_spaces(space)
 
         functions_dict: dict[str, Function] = {}
         for function in self.functions:
-            functions_dict[function.identifier] = self.convert_functions(function)
+            functions_dict[function.identifier] = _convert_functions(function)
 
         info = ProjectInfo(
             project_id=self.project_info.project_id,
@@ -189,189 +384,3 @@ class XMLParser:
             locations=space_dict,
             functions=functions_dict,
         )
-
-    def convert_group_address_ref(
-        self, group_address_ref: XMLGroupAddressRef
-    ) -> GroupAddressRef:
-        """Convert group address ref to the final output format."""
-        return GroupAddressRef(
-            address=group_address_ref.address,
-            name=group_address_ref.name,
-            project_uid=group_address_ref.project_uid,
-            role=group_address_ref.role,
-        )
-
-    def convert_functions(self, function: XMLFunction) -> Function:
-        """Convert function to the final output format."""
-
-        ga_dict = {}
-        for group_address in function.group_addresses:
-            ga_dict[group_address.address] = self.convert_group_address_ref(
-                group_address
-            )
-
-        return Function(
-            function_type=function.function_type,
-            group_addresses=ga_dict,
-            identifier=function.identifier,
-            name=function.name,
-            project_uid=function.project_uid,
-            space_id=function.space_id,
-            usage_text=function.usage_text,
-        )
-
-    def recursive_convert_spaces(self, space: XMLSpace) -> Space:
-        """Convert spaces to the final output format."""
-        subspaces: dict[str, Space] = {}
-        for subspace in space.spaces:
-            subspaces[subspace.name] = self.recursive_convert_spaces(subspace)
-
-        return Space(
-            type=space.space_type.value,
-            identifier=space.identifier,
-            name=space.name,
-            usage_id=space.usage_id,
-            usage_text=space.usage_text,
-            number=space.number,
-            description=space.description,
-            project_uid=space.project_uid,
-            devices=space.devices,
-            spaces=subspaces,
-            functions=space.functions,
-        )
-
-    def convert_group_range(
-        self, group_range: XMLGroupRange, group_address_style: GroupAddressStyle
-    ) -> GroupRange:
-        """Convert XMLGroupRange into GroupRange."""
-        group_ranges: dict[str, GroupRange] = {}
-        for child_gr in group_range.group_ranges:
-            group_ranges[child_gr.str_address()] = self.convert_group_range(
-                child_gr, group_address_style
-            )
-
-        return GroupRange(
-            name=group_range.name,
-            address_start=group_range.range_start,
-            address_end=group_range.range_end,
-            group_addresses=[
-                XMLGroupAddress.str_address(ga, group_address_style)
-                for ga in group_range.group_addresses
-            ],
-            comment=html.unescape(rtf_to_text(group_range.comment)),
-            group_ranges=group_ranges,
-        )
-
-    def load(self, language: str | None) -> None:
-        """Load XML files."""
-        (
-            knx_master_data,
-            self.language_code,
-        ) = KNXMasterLoader.load(
-            knx_proj_contents=self.knx_proj_contents,
-            knx_master_file=self.knx_proj_contents.root_path / "knx_master.xml",
-            language=language,
-        )
-        (
-            self.group_addresses,
-            self.group_ranges,
-            self.areas,
-            self.devices,
-            self.spaces,
-            self.project_info,
-            self.functions,
-        ) = ProjectLoader.load(
-            knx_proj_contents=self.knx_proj_contents,
-            knx_master_data=knx_master_data,
-        )
-
-        products_dict: dict[str, Product] = {}
-        hardware_application_map: HardwareToPrograms = {}
-        for _products, _hardware_programs in [
-            HardwareLoader.load(
-                hardware_file=hardware_file,
-                language_code=self.language_code,
-            )
-            for hardware_file in HardwareLoader.get_hardware_files(
-                project_contents=self.knx_proj_contents
-            )
-        ]:
-            products_dict.update(_products)
-            hardware_application_map.update(_hardware_programs)
-
-        for device in self.devices:
-            device.manufacturer_name = knx_master_data.manufacturer_names.get(
-                device.manufacturer, ""
-            )
-
-            try:
-                product = products_dict[device.product_ref]
-            except KeyError:
-                _LOGGER.warning(
-                    "Could not find hardware product for device %s with product_ref %s",
-                    device.individual_address,
-                    device.product_ref,
-                )
-                continue
-            device.product_name = product.text
-            device.hardware_name = product.hardware_name
-
-            try:
-                application_program_ref = hardware_application_map[
-                    device.hardware_program_ref
-                ]
-            except KeyError:
-                _LOGGER.warning(
-                    "Could not find application_program_ref for device %s with hardware_program_ref %s",
-                    device.individual_address,
-                    device.hardware_program_ref,
-                )
-                continue
-            device.application_program_ref = application_program_ref
-            for com_object in device.com_object_instance_refs:
-                com_object.resolve_com_object_ref_id(
-                    application_program_ref, self.knx_proj_contents
-                )
-
-        application_programs = (
-            ApplicationProgramLoader.get_application_program_files_for_devices(
-                project_root_path=self.knx_proj_contents.root_path,
-                devices=self.devices,
-            )
-        )
-        # update self.devices items with its inherited values from their application programs
-        for application_program_file, devices in application_programs.items():
-            ApplicationProgramLoader.load(
-                application_program_path=application_program_file,
-                devices=devices,
-                language_code=self.language_code,
-            )
-
-    def sort(self) -> None:
-        """Sort loaded structures as XML content is sorted by creation time."""
-
-        def recursive_sort_spaces(spaces: list[XMLSpace]) -> None:
-            for _space in spaces:
-                _space.devices.sort(
-                    key=lambda ia: tuple(ia.split("."))  # area > line > device
-                )
-                recursive_sort_spaces(_space.spaces)
-
-        recursive_sort_spaces(self.spaces)
-
-        self.group_addresses.sort(key=attrgetter("raw_address"))
-
-        def recursive_sort_group_ranges(group_ranges: list[XMLGroupRange]) -> None:
-            for _grs in group_ranges:
-                recursive_sort_group_ranges(_grs.group_ranges)
-            group_ranges.sort(key=attrgetter("range_start"))
-
-        recursive_sort_group_ranges(self.group_ranges)
-
-        for area in self.areas:
-            for line in area.lines:
-                line.devices.sort(key=attrgetter("address"))
-            area.lines.sort(key=attrgetter("address"))
-        self.areas.sort(key=attrgetter("address"))
-
-        self.devices.sort(key=attrgetter("area_address", "line_address", "address"))
