@@ -96,27 +96,27 @@ def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
 
 
 def _recursive_convert_group_range(
-    group_range: XMLGroupRange,
+    group_ranges: list[XMLGroupRange],
     group_address_style: GroupAddressStyle,
-) -> GroupRange:
+) -> dict[str, GroupRange]:
     """Convert XMLGroupRange into GroupRange."""
-    group_ranges: dict[str, GroupRange] = {}
-    for child_gr in group_range.group_ranges:
-        group_ranges[child_gr.str_address()] = _recursive_convert_group_range(
-            child_gr, group_address_style
+    return {
+        group_range.str_address(): GroupRange(
+            name=group_range.name,
+            address_start=group_range.range_start,
+            address_end=group_range.range_end,
+            group_addresses=[
+                XMLGroupAddress.str_address(ga, group_address_style)
+                for ga in group_range.group_addresses
+            ],
+            comment=html.unescape(rtf_to_text(group_range.comment)),
+            group_ranges=_recursive_convert_group_range(
+                group_range.group_ranges,
+                group_address_style,
+            ),
         )
-
-    return GroupRange(
-        name=group_range.name,
-        address_start=group_range.range_start,
-        address_end=group_range.range_end,
-        group_addresses=[
-            XMLGroupAddress.str_address(ga, group_address_style)
-            for ga in group_range.group_addresses
-        ],
-        comment=html.unescape(rtf_to_text(group_range.comment)),
-        group_ranges=group_ranges,
-    )
+        for group_range in group_ranges
+    }
 
 
 class XMLParser:
@@ -344,13 +344,9 @@ class XMLParser:
                 comment=html.unescape(rtf_to_text(group_address.comment)),
             )
 
-        group_range_dict: dict[str, GroupRange] = {}
-        for group_range in self.group_ranges:
-            group_range_dict[
-                group_range.str_address()
-            ] = _recursive_convert_group_range(
-                group_range, self.project_info.group_address_style
-            )
+        group_range_dict: dict[str, GroupRange] = _recursive_convert_group_range(
+            self.group_ranges, group_address_style=self.project_info.group_address_style
+        )
 
         space_dict: dict[str, Space] = _recursive_convert_spaces(self.spaces)
 
