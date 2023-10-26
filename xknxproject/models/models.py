@@ -128,7 +128,6 @@ class DeviceInstance:
         hardware_program_ref: str,
         line: XMLLine,
         manufacturer: str,
-        additional_addresses: list[str] | None = None,
         com_object_instance_refs: list[ComObjectInstanceRef] | None = None,
         com_objects: list[ComObject] | None = None,
     ):
@@ -145,7 +144,7 @@ class DeviceInstance:
         self.area_address = line.area.address  # used for sorting
         self.line_address = line.address  # used for sorting
         self.manufacturer = manufacturer
-        self.additional_addresses = additional_addresses or []
+        self.additional_addresses: list[AdditionalAddress] = []
         self.com_object_instance_refs = com_object_instance_refs or []
         self.com_objects = com_objects or []
         self.application_program_ref: str | None = None
@@ -157,15 +156,32 @@ class DeviceInstance:
         self.hardware_name: str = ""
         self.manufacturer_name: str = ""
 
-    def add_additional_address(self, address: str) -> None:
+    def add_additional_address(
+        self, device_address: str, description: str, name: str | None
+    ) -> None:
         """Add an additional individual address."""
         self.additional_addresses.append(
-            f"{self.line.area.address}/{self.line.address}/{address}"
+            AdditionalAddress(
+                address=f"{self.line.area.address}.{self.line.address}.{device_address}",
+                description=description,
+                name=name,
+            )
         )
 
     def application_program_xml(self) -> str:
         """Obtain the file name to the application program XML."""
         return f"{self.manufacturer}/{self.application_program_ref}.xml"
+
+
+@dataclass
+class AdditionalAddress:
+    """Class that represents an additional address of IP interfaces."""
+
+    address: str
+    description: str  # default: ""
+    # TODO: IP Secure interfaces use `BusInterface` to transport name and
+    # leave this an empty string. I don't know how `AddressIndex` relates.
+    name: str | None
 
 
 @dataclass
