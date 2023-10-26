@@ -19,6 +19,7 @@
       "function_text": "Messwert empfangen",
       "description": "",
       "device_address": "1.1.1",
+      "channel": null,
       "dpts": [
         {
           "main": 9,
@@ -45,6 +46,7 @@
       "function_text": "Temperaturwert empfangen",
       "description": "",
       "device_address": "1.1.1",
+      "channel": "MD-2_M-1_MI-1_CH-1",
       "dpts": [
         {
           "main": 9,
@@ -71,6 +73,7 @@
       "function_text": "Sollwert vorgeben",
       "description": "",
       "device_address": "1.1.1",
+      "channel": "MD-2_M-1_MI-1_CH-1",
       "dpts": [
         {
           "main": 9,
@@ -98,6 +101,7 @@
       "function_text": "Temperaturwert empfangen",
       "description": "Beschreibung KO 41",
       "device_address": "1.1.1",
+      "channel": "MD-2_M-2_MI-1_CH-1",
       "dpts": [
         {
           "main": 9,
@@ -124,6 +128,7 @@
       "function_text": "Sollwert vorgeben",
       "description": "Beschreibung KO 42 (U-Flag)",
       "device_address": "1.1.1",
+      "channel": "MD-2_M-2_MI-1_CH-1",
       "dpts": [
         {
           "main": 9,
@@ -151,6 +156,7 @@
       "function_text": "Sollwert vorgeben",
       "description": "",
       "device_address": "1.1.2",
+      "channel": "MD-2_M-1_MI-1_CH-1",
       "dpts": [
         {
           "main": 9,
@@ -221,7 +227,21 @@
         "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3",
         "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1",
         "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"
-      ]
+      ],
+      "channels": {
+        "MD-2_M-1_MI-1_CH-1": {
+          "identifier": "MD-2_M-1_MI-1_CH-1",
+          "name": "Kanal {{ChNo}}: Wohnzimmer"
+        },
+        "MD-2_M-2_MI-1_CH-1": {
+          "identifier": "MD-2_M-2_MI-1_CH-1",
+          "name": "Kanal {{ChNo}}: Küche"
+        },
+        "CH-9": {
+          "identifier": "CH-9",
+          "name": "Szenen"
+        }
+      }
     },
     "1.1.2": {
       "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
@@ -232,7 +252,17 @@
       "project_uid": 13,
       "communication_object_ids": [
         "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
-      ]
+      ],
+      "channels": {
+        "MD-2_M-1_MI-1_CH-1": {
+          "identifier": "MD-2_M-1_MI-1_CH-1",
+          "name": "Kanal {{ChNo}}: Bad"
+        },
+        "CH-9": {
+          "identifier": "CH-9",
+          "name": "Szenen"
+        }
+      }
     }
   },
   "group_addresses": {
