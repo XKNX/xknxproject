@@ -246,15 +246,17 @@ class _TopologyLoader:
             manufacturer=product_ref.split("_", 1)[0],
         )
 
-        for sub_node in device_element:
-            if sub_node.tag.endswith("AdditionalAddresses"):
-                for address_node in sub_node:
-                    if _address := address_node.get("Address"):
-                        device.additional_addresses.append(_address)
-            if sub_node.tag.endswith("ComObjectInstanceRefs"):
-                for com_object in sub_node:
-                    if instance := self._create_com_object_instance(com_object):
-                        device.com_object_instance_refs.append(instance)
+        for address_elem in device_element.findall("{*}AdditionalAddresses/{*}Address"):
+            if _address := address_elem.get("Address"):
+                device.additional_addresses.append(_address)
+
+        for com_obj_inst_ref_elem in device_element.findall(
+            "{*}ComObjectInstanceRefs/{*}ComObjectInstanceRef"
+        ):
+            if com_obj_inst_ref := self._create_com_object_instance(
+                com_obj_inst_ref_elem
+            ):
+                device.com_object_instance_refs.append(com_obj_inst_ref)
 
         return device
 
