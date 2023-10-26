@@ -5,6 +5,7 @@ import re
 from xml.etree import ElementTree
 
 from xknxproject.models import (
+    ChannelNode,
     ComObjectInstanceRef,
     DeviceInstance,
     GroupAddressStyle,
@@ -258,6 +259,16 @@ class _TopologyLoader:
             ):
                 device.com_object_instance_refs.append(com_obj_inst_ref)
 
+        for channel_node_elem in device_element.findall(
+            "{*}GroupObjectTree/{*}Nodes/{*}Node[@Type='Channel']"
+        ):
+            device.channels.append(
+                ChannelNode(
+                    ref_id=channel_node_elem.get("RefId"),  # type: ignore[arg-type]
+                    name=channel_node_elem.get("Text", ""),
+                )
+            )
+
         return device
 
     @staticmethod
@@ -309,6 +320,7 @@ class _TopologyLoader:
             read_on_init_flag=parse_xml_flag(com_object.get("ReadOnInitFlag")),
             datapoint_types=parse_dpt_types(com_object.get("DatapointType")),
             description=com_object.get("Description"),
+            channel=com_object.get("ChannelId"),
             links=links,
         )
 

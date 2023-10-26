@@ -129,6 +129,7 @@ class DeviceInstance:
         line: XMLLine,
         manufacturer: str,
         additional_addresses: list[str] | None = None,
+        channels: list[ChannelNode] | None = None,
         com_object_instance_refs: list[ComObjectInstanceRef] | None = None,
         com_objects: list[ComObject] | None = None,
     ):
@@ -146,6 +147,7 @@ class DeviceInstance:
         self.line_address = line.address  # used for sorting
         self.manufacturer = manufacturer
         self.additional_addresses = additional_addresses or []
+        self.channels: list[ChannelNode] = channels or []
         self.com_object_instance_refs = com_object_instance_refs or []
         self.com_objects = com_objects or []
         self.application_program_ref: str | None = None
@@ -169,6 +171,14 @@ class DeviceInstance:
 
 
 @dataclass
+class ChannelNode:
+    """Class that represents a Node with Type Channel."""
+
+    ref_id: str
+    name: str
+
+
+@dataclass
 class ComObjectInstanceRef:
     """Class that represents a ComObjectInstanceRef instance."""
 
@@ -186,6 +196,7 @@ class ComObjectInstanceRef:
     read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
     datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS
     description: str | None  # "Description" - language dependent
+    channel: str | None  # "ChannelId" - knx:IDREFS
     links: list[str] | None  # "Links" - knx:RELIDREFS
 
     # resolved via Hardware.xml from the containing DeviceInstance

@@ -17,6 +17,7 @@ from xknxproject.loader import (
 from xknxproject.models import (
     MEDIUM_TYPES,
     Area,
+    Channel,
     CommunicationObject,
     Device,
     DeviceInstance,
@@ -283,6 +284,7 @@ class XMLParser:
                     function_text=com_object.function_text,  # type: ignore[typeddict-item]
                     description=com_object.description or "",
                     device_address=device.individual_address,
+                    channel=com_object.channel,
                     dpts=com_object.datapoint_types,
                     object_size=com_object.object_size,  # type: ignore[typeddict-item]
                     flags=Flags(
@@ -305,6 +307,12 @@ class XMLParser:
                 individual_address=device.individual_address,
                 project_uid=device.project_uid,
                 communication_object_ids=device_com_objects,
+                channels={
+                    channel.ref_id: Channel(
+                        identifier=channel.ref_id, name=channel.name
+                    )
+                    for channel in device.channels
+                },
             )
 
         topology_dict: dict[str, Area] = {}
