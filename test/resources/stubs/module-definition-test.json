@@ -231,11 +231,11 @@
       "channels": {
         "MD-2_M-1_MI-1_CH-1": {
           "identifier": "MD-2_M-1_MI-1_CH-1",
-          "name": "Kanal {{ChNo}}: Wohnzimmer"
+          "name": "Kanal A: Wohnzimmer"
         },
         "MD-2_M-2_MI-1_CH-1": {
           "identifier": "MD-2_M-2_MI-1_CH-1",
-          "name": "Kanal {{ChNo}}: Küche"
+          "name": "Kanal B: Küche"
         },
         "CH-9": {
           "identifier": "CH-9",
@@ -256,7 +256,7 @@
       "channels": {
         "MD-2_M-1_MI-1_CH-1": {
           "identifier": "MD-2_M-1_MI-1_CH-1",
-          "name": "Kanal {{ChNo}}: Bad"
+          "name": "Kanal A: Bad"
         },
         "CH-9": {
           "identifier": "CH-9",

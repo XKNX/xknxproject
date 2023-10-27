@@ -24,6 +24,8 @@ from .models import (
     DeviceInstance,
     HardwareToPrograms,
     KNXMasterData,
+    ModuleInstance,
+    ModuleInstanceArgument,
     Product,
     TranslationsType,
     XMLArea,

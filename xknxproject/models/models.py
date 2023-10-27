@@ -1,6 +1,7 @@
 """Define internally used data structures."""
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass
 import re
 
@@ -131,6 +132,7 @@ class DeviceInstance:
         additional_addresses: list[str],
         channels: list[ChannelNode],
         com_object_instance_refs: list[ComObjectInstanceRef],
+        module_instances: list[ModuleInstance],
         com_objects: list[ComObject] | None = None,
     ):
         """Initialize a Device Instance."""
@@ -149,6 +151,7 @@ class DeviceInstance:
         self.additional_addresses = additional_addresses
         self.channels: list[ChannelNode] = channels
         self.com_object_instance_refs = com_object_instance_refs
+        self.module_instances = module_instances
         self.com_objects = com_objects or []
         self.application_program_ref: str | None = None
 
@@ -169,6 +172,31 @@ class DeviceInstance:
         """Obtain the file name to the application program XML."""
         return f"{self.manufacturer}/{self.application_program_ref}.xml"
 
+    def module_instance_arguments(self) -> Iterator[ModuleInstanceArgument]:
+        """Iterate ModuleInstance arguments."""
+        for _module_instance in self.module_instances:
+            yield from _module_instance.arguments
+
+    def complete_channel_placeholders(self) -> None:
+        """Replace placeholders in channel names with module instance arguments."""
+        for channel in self.channels:
+            if not (
+                channel.ref_id.startswith("MD-")  # only applicable if modules used
+                and "{{" in channel.name  # placeholders are denoted "{{name}}"
+            ):
+                continue
+
+            module_instance_ref = channel.ref_id.split("_CH")[0]
+            module_instance = next(
+                mi
+                for mi in self.module_instances
+                if mi.identifier == module_instance_ref
+            )
+            for argument in module_instance.arguments:
+                channel.name = channel.name.replace(
+                    f"{{{{{argument.name}}}}}", argument.value
+                )
+
 
 @dataclass
 class ChannelNode:
@@ -176,6 +204,28 @@ class ChannelNode:
 
     ref_id: str
     name: str
+
+
+@dataclass
+class ModuleInstance:
+    """Class that represents a ModuleInstance."""
+
+    identifier: str
+    ref_id: str
+    arguments: list[ModuleInstanceArgument]
+
+
+@dataclass
+class ModuleInstanceArgument:
+    """Class that represents a ModuleInstance Argument."""
+
+    ref_id: str
+    value: str
+    name: str = ""  # resolved from application by `ref_id` ModuleDefs/ModuleDef/Arguments/Argument
+
+    def complete_ref_id(self, application_program_ref: str) -> None:
+        """Prepend the ref_id with the application program ref."""
+        self.ref_id = f"{application_program_ref}_{self.ref_id}"
 
 
 @dataclass

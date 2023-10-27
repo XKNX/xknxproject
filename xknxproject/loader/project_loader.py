@@ -10,6 +10,8 @@ from xknxproject.models import (
     DeviceInstance,
     GroupAddressStyle,
     KNXMasterData,
+    ModuleInstance,
+    ModuleInstanceArgument,
     SpaceType,
     XMLArea,
     XMLFunction,
@@ -248,6 +250,13 @@ class _TopologyLoader:
             )
             if (com_obj_inst_ref := self._create_com_object_instance(elem)) is not None
         ]
+        module_instances = [
+            module_instance
+            for mi_elem in device_element.findall(
+                "{*}ModuleInstances/{*}ModuleInstance"
+            )
+            if (module_instance := self._create_module_instance(mi_elem)) is not None
+        ]
         channels = [
             ChannelNode(
                 ref_id=channel_node_elem.get("RefId"),  # type: ignore[arg-type]
@@ -271,6 +280,7 @@ class _TopologyLoader:
             additional_addresses=additional_addresses,
             channels=channels,
             com_object_instance_refs=com_obj_inst_refs,
+            module_instances=module_instances,
         )
 
     @staticmethod
@@ -324,6 +334,24 @@ class _TopologyLoader:
             description=com_object.get("Description"),
             channel=com_object.get("ChannelId"),
             links=links,
+        )
+
+    def _create_module_instance(
+        self,
+        module_instance_elem: ElementTree.Element,
+    ) -> ModuleInstance | None:
+        """Create ComObjectInstanceRef."""
+        module_arguments = [
+            ModuleInstanceArgument(
+                ref_id=arg.get("RefId"),  # type: ignore[arg-type]
+                value=arg.get("Value"),  # type: ignore[arg-type]
+            )
+            for arg in module_instance_elem.findall("{*}Arguments/{*}Argument")
+        ]
+        return ModuleInstance(
+            identifier=module_instance_elem.get("Id"),  # type: ignore[arg-type]
+            ref_id=module_instance_elem.get("RefId"),  # type: ignore[arg-type]
+            arguments=module_arguments,
         )
 
 

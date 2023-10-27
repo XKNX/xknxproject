@@ -605,51 +605,51 @@
       "channels": {
         "MD-1_M-13_MI-1_CH-80": {
           "identifier": "MD-1_M-13_MI-1_CH-80",
-          "name": "Ventilausgang {{MDA_Number}} (...)"
+          "name": "Ventilausgang 1 (...)"
         },
         "MD-1_M-8_MI-1_CH-80": {
           "identifier": "MD-1_M-8_MI-1_CH-80",
-          "name": "Ventilausgang {{MDA_Number}} (...)"
+          "name": "Ventilausgang 2 (...)"
         },
         "MD-1_M-1_MI-1_CH-80": {
           "identifier": "MD-1_M-1_MI-1_CH-80",
-          "name": "Ventilausgang {{MDA_Number}} (...)"
+          "name": "Ventilausgang 3 (...)"
         },
         "MD-1_M-2_MI-1_CH-80": {
           "identifier": "MD-1_M-2_MI-1_CH-80",
-          "name": "Ventilausgang {{MDA_Number}} (...)"
+          "name": "Ventilausgang 4 (...)"
         },
         "MD-1_M-6_MI-1_CH-80": {
           "identifier": "MD-1_M-6_MI-1_CH-80",
-          "name": "Ventilausgang {{MDA_Number}} (...)"
+          "name": "Ventilausgang 5 (...)"
         },
         "MD-1_M-3_MI-1_CH-80": {
           "identifier": "MD-1_M-3_MI-1_CH-80",
-          "name": "Ventilausgang {{MDA_Number}} (...)"
+          "name": "Ventilausgang 6 (...)"
         },
         "MD-2_M-20_MI-1_CH-81": {
           "identifier": "MD-2_M-20_MI-1_CH-81",
-          "name": "Raumtemperaturregler {{MDA_Number}} (...)"
+          "name": "Raumtemperaturregler 1 (...)"
         },
         "MD-2_M-4_MI-1_CH-81": {
           "identifier": "MD-2_M-4_MI-1_CH-81",
-          "name": "Raumtemperaturregler {{MDA_Number}} (...)"
+          "name": "Raumtemperaturregler 2 (...)"
         },
         "MD-2_M-9_MI-1_CH-81": {
           "identifier": "MD-2_M-9_MI-1_CH-81",
-          "name": "Raumtemperaturregler {{MDA_Number}} (...)"
+          "name": "Raumtemperaturregler 3 (...)"
         },
         "MD-2_M-10_MI-1_CH-81": {
           "identifier": "MD-2_M-10_MI-1_CH-81",
-          "name": "Raumtemperaturregler {{MDA_Number}} (...)"
+          "name": "Raumtemperaturregler 4 (...)"
         },
         "MD-2_M-11_MI-1_CH-81": {
           "identifier": "MD-2_M-11_MI-1_CH-81",
-          "name": "Raumtemperaturregler {{MDA_Number}} (...)"
+          "name": "Raumtemperaturregler 5 (...)"
         },
         "MD-2_M-12_MI-1_CH-81": {
           "identifier": "MD-2_M-12_MI-1_CH-81",
-          "name": "Raumtemperaturregler {{MDA_Number}} (...)"
+          "name": "Raumtemperaturregler 6 (...)"
         }
       }
     }

@@ -212,6 +212,8 @@ class XMLParser:
                 com_object.resolve_com_object_ref_id(
                     application_program_ref, self.knx_proj_contents
                 )
+            for module_instance_argument in device.module_instance_arguments():
+                module_instance_argument.complete_ref_id(application_program_ref)
 
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(
@@ -226,6 +228,8 @@ class XMLParser:
                 devices=devices,
                 language_code=self.language_code,
             )
+        for device in self.devices:
+            device.complete_channel_placeholders()
 
     def _sort(self) -> None:
         """Sort loaded structures as XML content is sorted by creation time."""
