@@ -128,9 +128,9 @@ class DeviceInstance:
         hardware_program_ref: str,
         line: XMLLine,
         manufacturer: str,
-        additional_addresses: list[str] | None = None,
-        channels: list[ChannelNode] | None = None,
-        com_object_instance_refs: list[ComObjectInstanceRef] | None = None,
+        additional_addresses: list[str],
+        channels: list[ChannelNode],
+        com_object_instance_refs: list[ComObjectInstanceRef],
         com_objects: list[ComObject] | None = None,
     ):
         """Initialize a Device Instance."""
@@ -146,9 +146,9 @@ class DeviceInstance:
         self.area_address = line.area.address  # used for sorting
         self.line_address = line.address  # used for sorting
         self.manufacturer = manufacturer
-        self.additional_addresses = additional_addresses or []
-        self.channels: list[ChannelNode] = channels or []
-        self.com_object_instance_refs = com_object_instance_refs or []
+        self.additional_addresses = additional_addresses
+        self.channels: list[ChannelNode] = channels
+        self.com_object_instance_refs = com_object_instance_refs
         self.com_objects = com_objects or []
         self.application_program_ref: str | None = None
 

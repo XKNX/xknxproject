@@ -234,7 +234,30 @@ class _TopologyLoader:
 
         project_uid = device_element.get("Puid")
         product_ref = device_element.get("ProductRefId", "")
-        device: DeviceInstance = DeviceInstance(
+        additional_addresses = [
+            add_addr
+            for address_elem in device_element.findall(
+                "{*}AdditionalAddresses/{*}Address"
+            )
+            if (add_addr := address_elem.get("Address")) is not None
+        ]
+        com_obj_inst_refs = [
+            com_obj_inst_ref
+            for elem in device_element.findall(
+                "{*}ComObjectInstanceRefs/{*}ComObjectInstanceRef"
+            )
+            if (com_obj_inst_ref := self._create_com_object_instance(elem)) is not None
+        ]
+        channels = [
+            ChannelNode(
+                ref_id=channel_node_elem.get("RefId"),  # type: ignore[arg-type]
+                name=channel_node_elem.get("Text", ""),
+            )
+            for channel_node_elem in device_element.findall(
+                "{*}GroupObjectTree/{*}Nodes/{*}Node[@Type='Channel']"
+            )
+        ]
+        return DeviceInstance(
             identifier=device_element.get("Id", ""),
             address=int(address),
             project_uid=int(project_uid) if project_uid else None,
@@ -245,31 +268,10 @@ class _TopologyLoader:
             hardware_program_ref=device_element.get("Hardware2ProgramRefId", ""),
             line=line,
             manufacturer=product_ref.split("_", 1)[0],
+            additional_addresses=additional_addresses,
+            channels=channels,
+            com_object_instance_refs=com_obj_inst_refs,
         )
-
-        for address_elem in device_element.findall("{*}AdditionalAddresses/{*}Address"):
-            if _address := address_elem.get("Address"):
-                device.additional_addresses.append(_address)
-
-        for com_obj_inst_ref_elem in device_element.findall(
-            "{*}ComObjectInstanceRefs/{*}ComObjectInstanceRef"
-        ):
-            if com_obj_inst_ref := self._create_com_object_instance(
-                com_obj_inst_ref_elem
-            ):
-                device.com_object_instance_refs.append(com_obj_inst_ref)
-
-        for channel_node_elem in device_element.findall(
-            "{*}GroupObjectTree/{*}Nodes/{*}Node[@Type='Channel']"
-        ):
-            device.channels.append(
-                ChannelNode(
-                    ref_id=channel_node_elem.get("RefId"),  # type: ignore[arg-type]
-                    name=channel_node_elem.get("Text", ""),
-                )
-            )
-
-        return device
 
     @staticmethod
     def __get_links_from_ets4(com_object: ElementTree.Element) -> list[str]:
