@@ -19,6 +19,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
+      "channel": null,
       "dpts": [
         {
           "main": 1,
@@ -45,6 +46,7 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
+      "channel": null,
       "dpts": [
         {
           "main": 1,
@@ -71,6 +73,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
+      "channel": null,
       "dpts": [
         {
           "main": 1,
@@ -97,6 +100,7 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
+      "channel": null,
       "dpts": [
         {
           "main": 1,
@@ -123,6 +127,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
+      "channel": null,
       "dpts": [
         {
           "main": 1,
@@ -149,6 +154,7 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
+      "channel": null,
       "dpts": [
         {
           "main": 1,
@@ -175,6 +181,7 @@
       "function_text": "Wind alarm no. 1",
       "description": "",
       "device_address": "1.1.5",
+      "channel": null,
       "dpts": [
         {
           "main": 1,
@@ -201,6 +208,7 @@
       "function_text": "Output value",
       "description": "2-byte generic",
       "device_address": "1.1.6",
+      "channel": null,
       "dpts": [],
       "object_size": "2 Bytes",
       "flags": {
@@ -222,6 +230,7 @@
       "function_text": "Measured value outside range",
       "description": "1-bit undefined DPT",
       "device_address": "1.1.6",
+      "channel": null,
       "dpts": [
         {
           "main": 1,
@@ -248,6 +257,7 @@
       "function_text": "Output value",
       "description": "2-byte DPT 9 any",
       "device_address": "1.1.6",
+      "channel": null,
       "dpts": [
         {
           "main": 9,
@@ -368,6 +378,7 @@
       "function_text": "Output value",
       "description": "2-byte DPT 9 generic",
       "device_address": "1.1.6",
+      "channel": null,
       "dpts": [
         {
           "main": 9,
@@ -395,6 +406,7 @@
       "function_text": "Command value - Heating",
       "description": "",
       "device_address": "1.1.7",
+      "channel": "MD-2_M-20_MI-1_CH-81",
       "dpts": [
         {
           "main": 5,
@@ -421,6 +433,7 @@
       "function_text": "Setpoint temperature - Active operating mode",
       "description": "",
       "device_address": "1.1.7",
+      "channel": "MD-2_M-20_MI-1_CH-81",
       "dpts": [
         {
           "main": 9,
@@ -447,6 +460,7 @@
       "function_text": "Setpoint temperature - Active operating mode - Status",
       "description": "",
       "device_address": "1.1.7",
+      "channel": "MD-2_M-20_MI-1_CH-81",
       "dpts": [
         {
           "main": 9,
@@ -473,6 +487,7 @@
       "function_text": "Room temperature - Measured value 1",
       "description": "",
       "device_address": "1.1.7",
+      "channel": "MD-2_M-20_MI-1_CH-81",
       "dpts": [
         {
           "main": 9,
@@ -538,7 +553,8 @@
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.0",
       "project_uid": 25,
-      "communication_object_ids": []
+      "communication_object_ids": [],
+      "channels": {}
     },
     "1.1.5": {
       "name": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
@@ -555,7 +571,8 @@
         "1.1.5/O-100_R-1577",
         "1.1.5/O-101_R-1578",
         "1.1.5/O-4_R-1417"
-      ]
+      ],
+      "channels": {}
     },
     "1.1.6": {
       "name": "AE/S4.2 Analogue Input,4-fold,MDRC",
@@ -569,7 +586,8 @@
         "1.1.6/O-20_R-8108",
         "1.1.6/O-9_R-9073",
         "1.1.6/O-18_R-7994"
-      ]
+      ],
+      "channels": {}
     },
     "1.1.7": {
       "name": "Heating actuator 6-gang with controller",
@@ -583,7 +601,57 @@
         "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17",
         "1.1.7/MD-2_M-20_MI-1_O-5-10_R-18",
         "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45"
-      ]
+      ],
+      "channels": {
+        "MD-1_M-13_MI-1_CH-80": {
+          "identifier": "MD-1_M-13_MI-1_CH-80",
+          "name": "Ventilausgang 1 (...)"
+        },
+        "MD-1_M-8_MI-1_CH-80": {
+          "identifier": "MD-1_M-8_MI-1_CH-80",
+          "name": "Ventilausgang 2 (...)"
+        },
+        "MD-1_M-1_MI-1_CH-80": {
+          "identifier": "MD-1_M-1_MI-1_CH-80",
+          "name": "Ventilausgang 3 (...)"
+        },
+        "MD-1_M-2_MI-1_CH-80": {
+          "identifier": "MD-1_M-2_MI-1_CH-80",
+          "name": "Ventilausgang 4 (...)"
+        },
+        "MD-1_M-6_MI-1_CH-80": {
+          "identifier": "MD-1_M-6_MI-1_CH-80",
+          "name": "Ventilausgang 5 (...)"
+        },
+        "MD-1_M-3_MI-1_CH-80": {
+          "identifier": "MD-1_M-3_MI-1_CH-80",
+          "name": "Ventilausgang 6 (...)"
+        },
+        "MD-2_M-20_MI-1_CH-81": {
+          "identifier": "MD-2_M-20_MI-1_CH-81",
+          "name": "Raumtemperaturregler 1 (...)"
+        },
+        "MD-2_M-4_MI-1_CH-81": {
+          "identifier": "MD-2_M-4_MI-1_CH-81",
+          "name": "Raumtemperaturregler 2 (...)"
+        },
+        "MD-2_M-9_MI-1_CH-81": {
+          "identifier": "MD-2_M-9_MI-1_CH-81",
+          "name": "Raumtemperaturregler 3 (...)"
+        },
+        "MD-2_M-10_MI-1_CH-81": {
+          "identifier": "MD-2_M-10_MI-1_CH-81",
+          "name": "Raumtemperaturregler 4 (...)"
+        },
+        "MD-2_M-11_MI-1_CH-81": {
+          "identifier": "MD-2_M-11_MI-1_CH-81",
+          "name": "Raumtemperaturregler 5 (...)"
+        },
+        "MD-2_M-12_MI-1_CH-81": {
+          "identifier": "MD-2_M-12_MI-1_CH-81",
+          "name": "Raumtemperaturregler 6 (...)"
+        }
+      }
     }
   },
   "group_addresses": {

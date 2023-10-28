@@ -2,6 +2,7 @@
 # flake8: noqa
 from .knxproject import (
     Area,
+    Channel,
     CommunicationObject,
     Device,
     DPTType,
@@ -16,12 +17,15 @@ from .knxproject import (
     Space,
 )
 from .models import (
+    ChannelNode,
     ComObject,
     ComObjectInstanceRef,
     ComObjectRef,
     DeviceInstance,
     HardwareToPrograms,
     KNXMasterData,
+    ModuleInstance,
+    ModuleInstanceArgument,
     Product,
     TranslationsType,
     XMLArea,

@@ -5,10 +5,13 @@ import re
 from xml.etree import ElementTree
 
 from xknxproject.models import (
+    ChannelNode,
     ComObjectInstanceRef,
     DeviceInstance,
     GroupAddressStyle,
     KNXMasterData,
+    ModuleInstance,
+    ModuleInstanceArgument,
     SpaceType,
     XMLArea,
     XMLFunction,
@@ -233,7 +236,37 @@ class _TopologyLoader:
 
         project_uid = device_element.get("Puid")
         product_ref = device_element.get("ProductRefId", "")
-        device: DeviceInstance = DeviceInstance(
+        additional_addresses = [
+            add_addr
+            for address_elem in device_element.findall(
+                "{*}AdditionalAddresses/{*}Address"
+            )
+            if (add_addr := address_elem.get("Address")) is not None
+        ]
+        com_obj_inst_refs = [
+            com_obj_inst_ref
+            for elem in device_element.findall(
+                "{*}ComObjectInstanceRefs/{*}ComObjectInstanceRef"
+            )
+            if (com_obj_inst_ref := self._create_com_object_instance(elem)) is not None
+        ]
+        module_instances = [
+            module_instance
+            for mi_elem in device_element.findall(
+                "{*}ModuleInstances/{*}ModuleInstance"
+            )
+            if (module_instance := self._create_module_instance(mi_elem)) is not None
+        ]
+        channels = [
+            ChannelNode(
+                ref_id=channel_node_elem.get("RefId"),  # type: ignore[arg-type]
+                name=channel_node_elem.get("Text", ""),
+            )
+            for channel_node_elem in device_element.findall(
+                "{*}GroupObjectTree/{*}Nodes/{*}Node[@Type='Channel']"
+            )
+        ]
+        return DeviceInstance(
             identifier=device_element.get("Id", ""),
             address=int(address),
             project_uid=int(project_uid) if project_uid else None,
@@ -244,19 +277,11 @@ class _TopologyLoader:
             hardware_program_ref=device_element.get("Hardware2ProgramRefId", ""),
             line=line,
             manufacturer=product_ref.split("_", 1)[0],
+            additional_addresses=additional_addresses,
+            channels=channels,
+            com_object_instance_refs=com_obj_inst_refs,
+            module_instances=module_instances,
         )
-
-        for sub_node in device_element:
-            if sub_node.tag.endswith("AdditionalAddresses"):
-                for address_node in sub_node:
-                    if _address := address_node.get("Address"):
-                        device.additional_addresses.append(_address)
-            if sub_node.tag.endswith("ComObjectInstanceRefs"):
-                for com_object in sub_node:
-                    if instance := self._create_com_object_instance(com_object):
-                        device.com_object_instance_refs.append(instance)
-
-        return device
 
     @staticmethod
     def __get_links_from_ets4(com_object: ElementTree.Element) -> list[str]:
@@ -307,7 +332,26 @@ class _TopologyLoader:
             read_on_init_flag=parse_xml_flag(com_object.get("ReadOnInitFlag")),
             datapoint_types=parse_dpt_types(com_object.get("DatapointType")),
             description=com_object.get("Description"),
+            channel=com_object.get("ChannelId"),
             links=links,
+        )
+
+    def _create_module_instance(
+        self,
+        module_instance_elem: ElementTree.Element,
+    ) -> ModuleInstance | None:
+        """Create ComObjectInstanceRef."""
+        module_arguments = [
+            ModuleInstanceArgument(
+                ref_id=arg.get("RefId"),  # type: ignore[arg-type]
+                value=arg.get("Value"),  # type: ignore[arg-type]
+            )
+            for arg in module_instance_elem.findall("{*}Arguments/{*}Argument")
+        ]
+        return ModuleInstance(
+            identifier=module_instance_elem.get("Id"),  # type: ignore[arg-type]
+            ref_id=module_instance_elem.get("RefId"),  # type: ignore[arg-type]
+            arguments=module_arguments,
         )
 
 

@@ -36,6 +36,12 @@ class ApplicationProgramLoader:
         com_object_refs: dict[str, ComObjectRef] = {}  # {Id: ComObjectRef}
         com_objects: dict[str, ComObject] = {}  # {Id: ComObject}
 
+        used_module_arguments = {
+            attribute.ref_id: ""
+            for device in devices
+            for attribute in device.module_instance_arguments()
+        }
+
         with application_program_path.open(mode="rb") as application_xml:
             tree_iterator = ElementTree.iterparse(application_xml, events=("start",))
             for _, elem in tree_iterator:
@@ -46,13 +52,15 @@ class ApplicationProgramLoader:
                         elem, identifier
                     )
                 elif elem.tag.endswith("ComObjectRef"):
-                    identifier = elem.attrib.get("Id")
-                    if identifier not in used_com_object_ref_ids:
-                        elem.clear()
-                        continue
-                    com_object_refs[
-                        identifier
-                    ] = ApplicationProgramLoader.parse_com_object_ref(elem, identifier)
+                    if (_id := elem.attrib.get("Id")) in used_com_object_ref_ids:
+                        com_object_refs[
+                            _id
+                        ] = ApplicationProgramLoader.parse_com_object_ref(elem, _id)
+                    elem.clear()
+                elif elem.tag.endswith("Argument"):  # ModuleDefs/ModuleDef/Arguments/
+                    if (_id := elem.attrib.get("Id")) in used_module_arguments:
+                        used_module_arguments[_id] = elem.attrib.get("Name")
+                    elem.clear()
                 elif elem.tag.endswith("Languages"):
                     elem.clear()
                     # hold iterator for optional translation parsing
@@ -67,6 +75,10 @@ class ApplicationProgramLoader:
                     used_com_object_ref_ids=used_com_object_ref_ids,
                     language_code=language_code,
                 )
+
+            for device in devices:
+                for attribute in device.module_instance_arguments():
+                    attribute.name = used_module_arguments[attribute.ref_id]
 
             for com_instance in com_object_instance_refs:
                 if com_instance.com_object_ref_id is None:

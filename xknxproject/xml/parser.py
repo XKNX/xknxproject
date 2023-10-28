@@ -17,6 +17,7 @@ from xknxproject.loader import (
 from xknxproject.models import (
     MEDIUM_TYPES,
     Area,
+    Channel,
     CommunicationObject,
     Device,
     DeviceInstance,
@@ -211,6 +212,8 @@ class XMLParser:
                 com_object.resolve_com_object_ref_id(
                     application_program_ref, self.knx_proj_contents
                 )
+            for module_instance_argument in device.module_instance_arguments():
+                module_instance_argument.complete_ref_id(application_program_ref)
 
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(
@@ -225,6 +228,8 @@ class XMLParser:
                 devices=devices,
                 language_code=self.language_code,
             )
+        for device in self.devices:
+            device.complete_channel_placeholders()
 
     def _sort(self) -> None:
         """Sort loaded structures as XML content is sorted by creation time."""
@@ -283,6 +288,7 @@ class XMLParser:
                     function_text=com_object.function_text,  # type: ignore[typeddict-item]
                     description=com_object.description or "",
                     device_address=device.individual_address,
+                    channel=com_object.channel,
                     dpts=com_object.datapoint_types,
                     object_size=com_object.object_size,  # type: ignore[typeddict-item]
                     flags=Flags(
@@ -305,6 +311,12 @@ class XMLParser:
                 individual_address=device.individual_address,
                 project_uid=device.project_uid,
                 communication_object_ids=device_com_objects,
+                channels={
+                    channel.ref_id: Channel(
+                        identifier=channel.ref_id, name=channel.name
+                    )
+                    for channel in device.channels
+                },
             )
 
         topology_dict: dict[str, Area] = {}
