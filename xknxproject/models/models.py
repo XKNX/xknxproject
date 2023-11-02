@@ -206,13 +206,16 @@ class DeviceInstance:
                 or coir.number is None  # only for type safety
             ):
                 continue
-            for mi in self.module_instances:
-                if coir.ref_id.startswith(f"{mi.identifier}_"):
-                    coir.number += next(
-                        int(arg.value)
-                        for arg in mi.arguments
-                        if arg.ref_id == coir.base_number_argument_ref
-                    )
+            _module_instance = next(
+                mi
+                for mi in self.module_instances
+                if coir.ref_id.startswith(f"{mi.identifier}_")
+            )
+            coir.number += next(
+                int(arg.value)
+                for arg in _module_instance.arguments
+                if arg.ref_id == coir.base_number_argument_ref
+            )
 
     def apply_module_instance_arguments(self) -> None:
         """Apply module instance arguments."""
