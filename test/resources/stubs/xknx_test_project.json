@@ -401,7 +401,7 @@
     },
     "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3": {
       "name": "RTR1 - 2 - Controller",
-      "number": 2,
+      "number": 935,
       "text": "RTR 1 (...) - Ausgang",
       "function_text": "Command value - Heating",
       "description": "",
@@ -428,7 +428,7 @@
     },
     "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17": {
       "name": "RTR1 - 0 - RSM",
-      "number": 0,
+      "number": 333,
       "text": "RTR 1 (...) - Eingang",
       "function_text": "Setpoint temperature - Active operating mode",
       "description": "",
@@ -455,7 +455,7 @@
     },
     "1.1.7/MD-2_M-20_MI-1_O-5-10_R-18": {
       "name": "RTR1 - 10 - RSM",
-      "number": 10,
+      "number": 343,
       "text": "RTR 1 (...) - Ausgang",
       "function_text": "Setpoint temperature - Active operating mode - Status",
       "description": "",
@@ -482,7 +482,7 @@
     },
     "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45": {
       "name": "RTR1 - 1 - Sensor",
-      "number": 1,
+      "number": 1438,
       "text": "RTR 1 (...) - Eingang",
       "function_text": "Room temperature - Measured value 1",
       "description": "",

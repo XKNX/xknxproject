@@ -177,7 +177,7 @@ class DeviceInstance:
         for _module_instance in self.module_instances:
             yield from _module_instance.arguments
 
-    def complete_channel_placeholders(self) -> None:
+    def _complete_channel_placeholders(self) -> None:
         """Replace placeholders in channel names with module instance arguments."""
         for channel in self.channels:
             if not (
@@ -196,6 +196,28 @@ class DeviceInstance:
                 channel.name = channel.name.replace(
                     f"{{{{{argument.name}}}}}", argument.value
                 )
+
+    def _add_com_object_instance_numbers(self) -> None:
+        """Add module base object number to merged ComObjectInstanceRef."""
+        for coir in self.com_object_instance_refs:
+            if (
+                coir.base_number_argument_ref is None
+                or not coir.ref_id.startswith("MD-")
+                or coir.number is None  # only for type safety
+            ):
+                continue
+            for mi in self.module_instances:
+                if coir.ref_id.startswith(f"{mi.identifier}_"):
+                    coir.number += next(
+                        int(arg.value)
+                        for arg in mi.arguments
+                        if arg.ref_id == coir.base_number_argument_ref
+                    )
+
+    def apply_module_instance_arguments(self) -> None:
+        """Apply module instance arguments."""
+        self._complete_channel_placeholders()
+        self._add_com_object_instance_numbers()
 
 
 @dataclass
@@ -254,8 +276,10 @@ class ComObjectInstanceRef:
 
     # only available form ComObject and ComObjectRef
     name: str | None = None
-    number: int | None = None
     object_size: str | None = None
+    # only available form ComObject
+    base_number_argument_ref: str | None = None  # optional in ComObject
+    number: int | None = None  # required in ComObject
 
     def resolve_com_object_ref_id(
         self, application_program_ref: str, knx_proj_contents: KNXProjContents
@@ -294,6 +318,7 @@ class ComObjectInstanceRef:
             self.datapoint_types = com_object.datapoint_types
         if isinstance(com_object, ComObject):
             self.number = com_object.number
+            self.base_number_argument_ref = com_object.base_number_argument_ref
 
 
 @dataclass
@@ -314,6 +339,7 @@ class ComObject:
         "update_flag",
         "read_on_init_flag",
         "datapoint_types",
+        "base_number_argument_ref",
     )
 
     # all items required in the XML
@@ -330,6 +356,10 @@ class ComObject:
     update_flag: bool  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool  # "ReadOnInitFlag" - knx:Enable_t
     datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS - optional
+    # "BaseNumber" - knx:IDREF - optional - schema version >= 20
+    # ModuleArgument identifier that holds value to add for
+    # communication object number of ComObjectInstanceRef
+    base_number_argument_ref: str | None
 
 
 @dataclass
