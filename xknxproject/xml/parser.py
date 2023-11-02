@@ -229,7 +229,7 @@ class XMLParser:
                 language_code=self.language_code,
             )
         for device in self.devices:
-            device.complete_channel_placeholders()
+            device.apply_module_instance_arguments()
 
     def _sort(self) -> None:
         """Sort loaded structures as XML content is sorted by creation time."""

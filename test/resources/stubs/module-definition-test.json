@@ -96,7 +96,7 @@
     },
     "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1": {
       "name": "IstWert",
-      "number": 1,
+      "number": 41,
       "text": "Kanal B: Küche",
       "function_text": "Temperaturwert empfangen",
       "description": "Beschreibung KO 41",
@@ -123,7 +123,7 @@
     },
     "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3": {
       "name": "SollWert",
-      "number": 2,
+      "number": 42,
       "text": "Kanal B: Küche",
       "function_text": "Sollwert vorgeben",
       "description": "Beschreibung KO 42 (U-Flag)",

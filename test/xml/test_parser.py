@@ -37,7 +37,7 @@ def test_parse_project_ets5():
         parser = XMLParser(knx_project_contents)
         parser.parse()
 
-    assert len(parser.group_addresses) == 17
+    assert len(parser.group_addresses) == 19
     parsed_gas = {ga.address for ga in parser.group_addresses}
     assert len(parsed_gas) == len(parser.group_addresses)
     assert parsed_gas == {
@@ -47,6 +47,8 @@ def test_parse_project_ets5():
         "1/0/3",
         "1/0/4",
         "1/0/5",
+        "2/0/0",
+        "2/0/1",
         "2/0/6",
         "2/1/1",
         "2/1/2",
