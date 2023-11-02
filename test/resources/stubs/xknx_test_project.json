@@ -2,7 +2,7 @@
   "info": {
     "project_id": "P-0242",
     "name": "xknx test project",
-    "last_modified": "2023-09-29T21:48:57.7711452Z",
+    "last_modified": "2023-11-02T06:19:30.3859365Z",
     "group_address_style": "ThreeLevel",
     "guid": "7aceb083-274e-4568-806f-b8f9df992873",
     "created_by": "ETS5",
@@ -402,7 +402,7 @@
     "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3": {
       "name": "RTR1 - 2 - Controller",
       "number": 935,
-      "text": "RTR 1 (...) - Ausgang",
+      "text": "RTR 1 (name in application) - Ausgang",
       "function_text": "Command value - Heating",
       "description": "",
       "device_address": "1.1.7",
@@ -429,7 +429,7 @@
     "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17": {
       "name": "RTR1 - 0 - RSM",
       "number": 333,
-      "text": "RTR 1 (...) - Eingang",
+      "text": "RTR 1 (name in application) - Eingang",
       "function_text": "Setpoint temperature - Active operating mode",
       "description": "",
       "device_address": "1.1.7",
@@ -456,7 +456,7 @@
     "1.1.7/MD-2_M-20_MI-1_O-5-10_R-18": {
       "name": "RTR1 - 10 - RSM",
       "number": 343,
-      "text": "RTR 1 (...) - Ausgang",
+      "text": "RTR 1 (name in application) - Ausgang",
       "function_text": "Setpoint temperature - Active operating mode - Status",
       "description": "",
       "device_address": "1.1.7",
@@ -483,7 +483,7 @@
     "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45": {
       "name": "RTR1 - 1 - Sensor",
       "number": 1438,
-      "text": "RTR 1 (...) - Eingang",
+      "text": "RTR 1 (name in application) - Eingang",
       "function_text": "Room temperature - Measured value 1",
       "description": "",
       "device_address": "1.1.7",
@@ -505,6 +505,60 @@
       },
       "group_address_links": [
         "7/1/2"
+      ]
+    },
+    "1.1.7/MD-2_M-4_MI-1_O-7-1_R-45": {
+      "name": "RTR1 - 1 - Sensor",
+      "number": 1448,
+      "text": "RTR 2 (...) - Eingang",
+      "function_text": "Room temperature - Measured value 1",
+      "description": "",
+      "device_address": "1.1.7",
+      "channel": "MD-2_M-4_MI-1_CH-81",
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
+      "object_size": "2 Bytes",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "2/0/1"
+      ]
+    },
+    "1.1.7/O-3_R-3": {
+      "name": "Objekt",
+      "number": 3,
+      "text": "Manual operation - Input/Output",
+      "function_text": "Temporary status indication",
+      "description": "no-channel GO",
+      "device_address": "1.1.7",
+      "channel": null,
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 2
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": true,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "2/0/0"
       ]
     }
   },
@@ -600,7 +654,9 @@
         "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3",
         "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17",
         "1.1.7/MD-2_M-20_MI-1_O-5-10_R-18",
-        "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45"
+        "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45",
+        "1.1.7/MD-2_M-4_MI-1_O-7-1_R-45",
+        "1.1.7/O-3_R-3"
       ],
       "channels": {
         "MD-1_M-13_MI-1_CH-80": {
@@ -629,15 +685,15 @@
         },
         "MD-2_M-20_MI-1_CH-81": {
           "identifier": "MD-2_M-20_MI-1_CH-81",
-          "name": "Raumtemperaturregler 1 (...)"
+          "name": "Raumtemperaturregler 1 (name in application)"
         },
         "MD-2_M-4_MI-1_CH-81": {
           "identifier": "MD-2_M-4_MI-1_CH-81",
-          "name": "Raumtemperaturregler 2 (...)"
+          "name": "channel name in properties"
         },
         "MD-2_M-9_MI-1_CH-81": {
           "identifier": "MD-2_M-9_MI-1_CH-81",
-          "name": "Raumtemperaturregler 3 (...)"
+          "name": "in application and properties"
         },
         "MD-2_M-10_MI-1_CH-81": {
           "identifier": "MD-2_M-10_MI-1_CH-81",
@@ -753,6 +809,40 @@
       "data_secure": false,
       "communication_object_ids": [
         "1.1.5/O-40_R-1433"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "2/0/0": {
+      "name": "channel-test",
+      "identifier": "GA-19",
+      "raw_address": 4096,
+      "address": "2/0/0",
+      "project_uid": 66,
+      "dpt": {
+        "main": 1,
+        "sub": 2
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.1.7/O-3_R-3"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "2/0/1": {
+      "name": "Temperature",
+      "identifier": "GA-18",
+      "raw_address": 4097,
+      "address": "2/0/1",
+      "project_uid": 65,
+      "dpt": {
+        "main": 9,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.1.7/MD-2_M-4_MI-1_O-7-1_R-45"
       ],
       "description": "",
       "comment": ""
@@ -978,7 +1068,9 @@
           "address_start": 4096,
           "address_end": 4351,
           "group_addresses": [
-            "2/0/6"
+            "2/0/6",
+            "2/0/1",
+            "2/0/0"
           ],
           "comment": "",
           "group_ranges": {}
