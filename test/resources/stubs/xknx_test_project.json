@@ -606,6 +606,7 @@
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.0",
+      "application_program": "M-0083_A-0139-22-F35B-O0072",
       "project_uid": 25,
       "communication_object_ids": [],
       "channels": {}
@@ -616,6 +617,7 @@
       "description": "",
       "manufacturer_name": "ABB",
       "individual_address": "1.1.5",
+      "application_program": "M-0002_A-A066-14-550B",
       "project_uid": 31,
       "communication_object_ids": [
         "1.1.5/O-40_R-1433",
@@ -634,6 +636,7 @@
       "description": "",
       "manufacturer_name": "ABB",
       "individual_address": "1.1.6",
+      "application_program": "M-0002_A-A01B-14-1B7C",
       "project_uid": 49,
       "communication_object_ids": [
         "1.1.6/O-0_R-665",
@@ -649,6 +652,7 @@
       "description": "",
       "manufacturer_name": "GIRA Giersiepen",
       "individual_address": "1.1.7",
+      "application_program": "M-0008_A-20E0-21-9997-O000A",
       "project_uid": 60,
       "communication_object_ids": [
         "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3",

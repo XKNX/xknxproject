@@ -46,6 +46,7 @@ class Device(TypedDict):
     description: str
     manufacturer_name: str
     individual_address: str
+    application_program: str | None
     project_uid: int | None
     communication_object_ids: list[str]
     channels: dict[str, Channel]  # id: Channel

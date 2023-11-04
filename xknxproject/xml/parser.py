@@ -309,6 +309,7 @@ class XMLParser:
                 description=device.description,
                 manufacturer_name=device.manufacturer_name,
                 individual_address=device.individual_address,
+                application_program=device.application_program_ref,
                 project_uid=device.project_uid,
                 communication_object_ids=device_com_objects,
                 channels={

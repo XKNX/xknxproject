@@ -220,6 +220,7 @@
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.1",
+      "application_program": "M-0083_A-013A-32-DCC1",
       "project_uid": 12,
       "communication_object_ids": [
         "1.1.1/O-334_R-21",
@@ -249,6 +250,7 @@
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.2",
+      "application_program": "M-0083_A-013A-32-DCC1",
       "project_uid": 13,
       "communication_object_ids": [
         "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"

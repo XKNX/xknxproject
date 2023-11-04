@@ -173,6 +173,7 @@
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "0.0.1",
+      "application_program": "M-0083_A-0013-11-A9D6",
       "project_uid": null,
       "communication_object_ids": [
         "0.0.1/M-0083_A-0013-11-A9D6_O-0_R-10000",
@@ -187,6 +188,7 @@
       "description": "",
       "manufacturer_name": "ABB",
       "individual_address": "0.0.2",
+      "application_program": "M-0002_A-A061-14-BE27",
       "project_uid": null,
       "communication_object_ids": [
         "0.0.2/M-0002_A-A061-14-BE27_O-10_R-485",
