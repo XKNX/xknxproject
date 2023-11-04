@@ -5,7 +5,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 import re
 
-from xknxproject.models.knxproject import DPTType
+from xknxproject.models.knxproject import DPTType, ModuleInstanceInfos
 from xknxproject.models.static import GroupAddressStyle, SpaceType
 from xknxproject.zip import KNXProjContents
 
@@ -197,30 +197,11 @@ class DeviceInstance:
                     f"{{{{{argument.name}}}}}", argument.value
                 )
 
-    def _add_com_object_instance_numbers(self) -> None:
-        """Add module base object number to merged ComObjectInstanceRef."""
-        for coir in self.com_object_instance_refs:
-            if (
-                coir.base_number_argument_ref is None
-                or not coir.ref_id.startswith("MD-")
-                or coir.number is None  # only for type safety
-            ):
-                continue
-            _module_instance = next(
-                mi
-                for mi in self.module_instances
-                if coir.ref_id.startswith(f"{mi.identifier}_")
-            )
-            coir.number += next(
-                int(arg.value)
-                for arg in _module_instance.arguments
-                if arg.ref_id == coir.base_number_argument_ref
-            )
-
     def apply_module_instance_arguments(self) -> None:
         """Apply module instance arguments."""
         self._complete_channel_placeholders()
-        self._add_com_object_instance_numbers()
+        for coir in self.com_object_instance_refs:
+            coir.apply_module_base_number_argument(self.module_instances)
 
 
 @dataclass
@@ -283,6 +264,8 @@ class ComObjectInstanceRef:
     # only available form ComObject
     base_number_argument_ref: str | None = None  # optional in ComObject
     number: int | None = None  # required in ComObject
+    # assigned when module arguments are applied
+    module: ModuleInstanceInfos | None = None
 
     def resolve_com_object_ref_id(
         self, application_program_ref: str, knx_proj_contents: KNXProjContents
@@ -322,6 +305,30 @@ class ComObjectInstanceRef:
         if isinstance(com_object, ComObject):
             self.number = com_object.number
             self.base_number_argument_ref = com_object.base_number_argument_ref
+
+    def apply_module_base_number_argument(
+        self, module_instances: list[ModuleInstance]
+    ) -> None:
+        """Apply module argument of base number."""
+        if (
+            self.base_number_argument_ref is None
+            or not self.ref_id.startswith("MD-")
+            or self.number is None  # only for type safety
+        ):
+            return
+        _module_instance = next(
+            mi for mi in module_instances if self.ref_id.startswith(f"{mi.identifier}_")
+        )
+        root_number = self.number
+        self.number += next(
+            int(arg.value)
+            for arg in _module_instance.arguments
+            if arg.ref_id == self.base_number_argument_ref
+        )
+        self.module = ModuleInstanceInfos(
+            definition=self.ref_id.split("_")[0],
+            root_number=root_number,
+        )
 
 
 @dataclass

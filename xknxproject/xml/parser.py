@@ -289,6 +289,7 @@ class XMLParser:
                     description=com_object.description or "",
                     device_address=device.individual_address,
                     device_application=device.application_program_ref,
+                    module_def=com_object.module,
                     channel=com_object.channel,
                     dpts=com_object.datapoint_types,
                     object_size=com_object.object_size,  # type: ignore[typeddict-item]

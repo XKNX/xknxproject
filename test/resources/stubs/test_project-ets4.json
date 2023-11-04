@@ -20,6 +20,7 @@
       "description": "",
       "device_address": "0.0.1",
       "device_application": "M-0083_A-0013-11-A9D6",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -48,6 +49,7 @@
       "description": "",
       "device_address": "0.0.1",
       "device_application": "M-0083_A-0013-11-A9D6",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -76,6 +78,7 @@
       "description": "",
       "device_address": "0.0.1",
       "device_application": "M-0083_A-0013-11-A9D6",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -104,6 +107,7 @@
       "description": "",
       "device_address": "0.0.2",
       "device_application": "M-0002_A-A061-14-BE27",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -133,6 +137,7 @@
       "description": "",
       "device_address": "0.0.2",
       "device_application": "M-0002_A-A061-14-BE27",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {

@@ -20,6 +20,7 @@
       "description": "",
       "device_address": "1.1.5",
       "device_application": "M-0002_A-A066-14-550B",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -48,6 +49,7 @@
       "description": "",
       "device_address": "1.1.5",
       "device_application": "M-0002_A-A066-14-550B",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -76,6 +78,7 @@
       "description": "",
       "device_address": "1.1.5",
       "device_application": "M-0002_A-A066-14-550B",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -104,6 +107,7 @@
       "description": "",
       "device_address": "1.1.5",
       "device_application": "M-0002_A-A066-14-550B",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -132,6 +136,7 @@
       "description": "",
       "device_address": "1.1.5",
       "device_application": "M-0002_A-A066-14-550B",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -160,6 +165,7 @@
       "description": "",
       "device_address": "1.1.5",
       "device_application": "M-0002_A-A066-14-550B",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -188,6 +194,7 @@
       "description": "",
       "device_address": "1.1.5",
       "device_application": "M-0002_A-A066-14-550B",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -216,6 +223,7 @@
       "description": "2-byte generic",
       "device_address": "1.1.6",
       "device_application": "M-0002_A-A01B-14-1B7C",
+      "module_def": null,
       "channel": null,
       "dpts": [],
       "object_size": "2 Bytes",
@@ -239,6 +247,7 @@
       "description": "1-bit undefined DPT",
       "device_address": "1.1.6",
       "device_application": "M-0002_A-A01B-14-1B7C",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -267,6 +276,7 @@
       "description": "2-byte DPT 9 any",
       "device_address": "1.1.6",
       "device_application": "M-0002_A-A01B-14-1B7C",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -389,6 +399,7 @@
       "description": "2-byte DPT 9 generic",
       "device_address": "1.1.6",
       "device_application": "M-0002_A-A01B-14-1B7C",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -418,6 +429,10 @@
       "description": "",
       "device_address": "1.1.7",
       "device_application": "M-0008_A-20E0-21-9997-O000A",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 2
+      },
       "channel": "MD-2_M-20_MI-1_CH-81",
       "dpts": [
         {
@@ -446,6 +461,10 @@
       "description": "",
       "device_address": "1.1.7",
       "device_application": "M-0008_A-20E0-21-9997-O000A",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 0
+      },
       "channel": "MD-2_M-20_MI-1_CH-81",
       "dpts": [
         {
@@ -474,6 +493,10 @@
       "description": "",
       "device_address": "1.1.7",
       "device_application": "M-0008_A-20E0-21-9997-O000A",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 10
+      },
       "channel": "MD-2_M-20_MI-1_CH-81",
       "dpts": [
         {
@@ -502,6 +525,10 @@
       "description": "",
       "device_address": "1.1.7",
       "device_application": "M-0008_A-20E0-21-9997-O000A",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 1
+      },
       "channel": "MD-2_M-20_MI-1_CH-81",
       "dpts": [
         {
@@ -530,6 +557,10 @@
       "description": "",
       "device_address": "1.1.7",
       "device_application": "M-0008_A-20E0-21-9997-O000A",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 1
+      },
       "channel": "MD-2_M-4_MI-1_CH-81",
       "dpts": [
         {
@@ -558,6 +589,7 @@
       "description": "no-channel GO",
       "device_address": "1.1.7",
       "device_application": "M-0008_A-20E0-21-9997-O000A",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {

@@ -20,6 +20,7 @@
       "description": "",
       "device_address": "1.1.1",
       "device_application": "M-0083_A-013A-32-DCC1",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -48,6 +49,10 @@
       "description": "",
       "device_address": "1.1.1",
       "device_application": "M-0083_A-013A-32-DCC1",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 1
+      },
       "channel": "MD-2_M-1_MI-1_CH-1",
       "dpts": [
         {
@@ -76,6 +81,10 @@
       "description": "",
       "device_address": "1.1.1",
       "device_application": "M-0083_A-013A-32-DCC1",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 2
+      },
       "channel": "MD-2_M-1_MI-1_CH-1",
       "dpts": [
         {
@@ -105,6 +114,10 @@
       "description": "Beschreibung KO 41",
       "device_address": "1.1.1",
       "device_application": "M-0083_A-013A-32-DCC1",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 1
+      },
       "channel": "MD-2_M-2_MI-1_CH-1",
       "dpts": [
         {
@@ -133,6 +146,10 @@
       "description": "Beschreibung KO 42 (U-Flag)",
       "device_address": "1.1.1",
       "device_application": "M-0083_A-013A-32-DCC1",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 2
+      },
       "channel": "MD-2_M-2_MI-1_CH-1",
       "dpts": [
         {
@@ -162,6 +179,10 @@
       "description": "",
       "device_address": "1.1.2",
       "device_application": "M-0083_A-013A-32-DCC1",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 2
+      },
       "channel": "MD-2_M-1_MI-1_CH-1",
       "dpts": [
         {
