@@ -31,6 +31,7 @@ class CommunicationObject(TypedDict):
     function_text: str
     description: str
     device_address: str
+    device_application: str | None
     channel: str | None
     dpts: list[DPTType]
     object_size: str
@@ -46,7 +47,7 @@ class Device(TypedDict):
     description: str
     manufacturer_name: str
     individual_address: str
-    application_program: str | None
+    application: str | None
     project_uid: int | None
     communication_object_ids: list[str]
     channels: dict[str, Channel]  # id: Channel

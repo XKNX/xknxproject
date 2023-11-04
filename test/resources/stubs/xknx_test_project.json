@@ -19,6 +19,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
+      "device_application": "M-0002_A-A066-14-550B",
       "channel": null,
       "dpts": [
         {
@@ -46,6 +47,7 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
+      "device_application": "M-0002_A-A066-14-550B",
       "channel": null,
       "dpts": [
         {
@@ -73,6 +75,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
+      "device_application": "M-0002_A-A066-14-550B",
       "channel": null,
       "dpts": [
         {
@@ -100,6 +103,7 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
+      "device_application": "M-0002_A-A066-14-550B",
       "channel": null,
       "dpts": [
         {
@@ -127,6 +131,7 @@
       "function_text": "Move blinds/shutter up-down",
       "description": "",
       "device_address": "1.1.5",
+      "device_application": "M-0002_A-A066-14-550B",
       "channel": null,
       "dpts": [
         {
@@ -154,6 +159,7 @@
       "function_text": "Slat adjustm./stop up-down",
       "description": "",
       "device_address": "1.1.5",
+      "device_application": "M-0002_A-A066-14-550B",
       "channel": null,
       "dpts": [
         {
@@ -181,6 +187,7 @@
       "function_text": "Wind alarm no. 1",
       "description": "",
       "device_address": "1.1.5",
+      "device_application": "M-0002_A-A066-14-550B",
       "channel": null,
       "dpts": [
         {
@@ -208,6 +215,7 @@
       "function_text": "Output value",
       "description": "2-byte generic",
       "device_address": "1.1.6",
+      "device_application": "M-0002_A-A01B-14-1B7C",
       "channel": null,
       "dpts": [],
       "object_size": "2 Bytes",
@@ -230,6 +238,7 @@
       "function_text": "Measured value outside range",
       "description": "1-bit undefined DPT",
       "device_address": "1.1.6",
+      "device_application": "M-0002_A-A01B-14-1B7C",
       "channel": null,
       "dpts": [
         {
@@ -257,6 +266,7 @@
       "function_text": "Output value",
       "description": "2-byte DPT 9 any",
       "device_address": "1.1.6",
+      "device_application": "M-0002_A-A01B-14-1B7C",
       "channel": null,
       "dpts": [
         {
@@ -378,6 +388,7 @@
       "function_text": "Output value",
       "description": "2-byte DPT 9 generic",
       "device_address": "1.1.6",
+      "device_application": "M-0002_A-A01B-14-1B7C",
       "channel": null,
       "dpts": [
         {
@@ -406,6 +417,7 @@
       "function_text": "Command value - Heating",
       "description": "",
       "device_address": "1.1.7",
+      "device_application": "M-0008_A-20E0-21-9997-O000A",
       "channel": "MD-2_M-20_MI-1_CH-81",
       "dpts": [
         {
@@ -433,6 +445,7 @@
       "function_text": "Setpoint temperature - Active operating mode",
       "description": "",
       "device_address": "1.1.7",
+      "device_application": "M-0008_A-20E0-21-9997-O000A",
       "channel": "MD-2_M-20_MI-1_CH-81",
       "dpts": [
         {
@@ -460,6 +473,7 @@
       "function_text": "Setpoint temperature - Active operating mode - Status",
       "description": "",
       "device_address": "1.1.7",
+      "device_application": "M-0008_A-20E0-21-9997-O000A",
       "channel": "MD-2_M-20_MI-1_CH-81",
       "dpts": [
         {
@@ -487,6 +501,7 @@
       "function_text": "Room temperature - Measured value 1",
       "description": "",
       "device_address": "1.1.7",
+      "device_application": "M-0008_A-20E0-21-9997-O000A",
       "channel": "MD-2_M-20_MI-1_CH-81",
       "dpts": [
         {
@@ -514,6 +529,7 @@
       "function_text": "Room temperature - Measured value 1",
       "description": "",
       "device_address": "1.1.7",
+      "device_application": "M-0008_A-20E0-21-9997-O000A",
       "channel": "MD-2_M-4_MI-1_CH-81",
       "dpts": [
         {
@@ -541,6 +557,7 @@
       "function_text": "Temporary status indication",
       "description": "no-channel GO",
       "device_address": "1.1.7",
+      "device_application": "M-0008_A-20E0-21-9997-O000A",
       "channel": null,
       "dpts": [
         {
@@ -606,7 +623,7 @@
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.0",
-      "application_program": "M-0083_A-0139-22-F35B-O0072",
+      "application": "M-0083_A-0139-22-F35B-O0072",
       "project_uid": 25,
       "communication_object_ids": [],
       "channels": {}
@@ -617,7 +634,7 @@
       "description": "",
       "manufacturer_name": "ABB",
       "individual_address": "1.1.5",
-      "application_program": "M-0002_A-A066-14-550B",
+      "application": "M-0002_A-A066-14-550B",
       "project_uid": 31,
       "communication_object_ids": [
         "1.1.5/O-40_R-1433",
@@ -636,7 +653,7 @@
       "description": "",
       "manufacturer_name": "ABB",
       "individual_address": "1.1.6",
-      "application_program": "M-0002_A-A01B-14-1B7C",
+      "application": "M-0002_A-A01B-14-1B7C",
       "project_uid": 49,
       "communication_object_ids": [
         "1.1.6/O-0_R-665",
@@ -652,7 +669,7 @@
       "description": "",
       "manufacturer_name": "GIRA Giersiepen",
       "individual_address": "1.1.7",
-      "application_program": "M-0008_A-20E0-21-9997-O000A",
+      "application": "M-0008_A-20E0-21-9997-O000A",
       "project_uid": 60,
       "communication_object_ids": [
         "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3",

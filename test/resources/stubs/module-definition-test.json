@@ -19,6 +19,7 @@
       "function_text": "Messwert empfangen",
       "description": "",
       "device_address": "1.1.1",
+      "device_application": "M-0083_A-013A-32-DCC1",
       "channel": null,
       "dpts": [
         {
@@ -46,6 +47,7 @@
       "function_text": "Temperaturwert empfangen",
       "description": "",
       "device_address": "1.1.1",
+      "device_application": "M-0083_A-013A-32-DCC1",
       "channel": "MD-2_M-1_MI-1_CH-1",
       "dpts": [
         {
@@ -73,6 +75,7 @@
       "function_text": "Sollwert vorgeben",
       "description": "",
       "device_address": "1.1.1",
+      "device_application": "M-0083_A-013A-32-DCC1",
       "channel": "MD-2_M-1_MI-1_CH-1",
       "dpts": [
         {
@@ -101,6 +104,7 @@
       "function_text": "Temperaturwert empfangen",
       "description": "Beschreibung KO 41",
       "device_address": "1.1.1",
+      "device_application": "M-0083_A-013A-32-DCC1",
       "channel": "MD-2_M-2_MI-1_CH-1",
       "dpts": [
         {
@@ -128,6 +132,7 @@
       "function_text": "Sollwert vorgeben",
       "description": "Beschreibung KO 42 (U-Flag)",
       "device_address": "1.1.1",
+      "device_application": "M-0083_A-013A-32-DCC1",
       "channel": "MD-2_M-2_MI-1_CH-1",
       "dpts": [
         {
@@ -156,6 +161,7 @@
       "function_text": "Sollwert vorgeben",
       "description": "",
       "device_address": "1.1.2",
+      "device_application": "M-0083_A-013A-32-DCC1",
       "channel": "MD-2_M-1_MI-1_CH-1",
       "dpts": [
         {
@@ -220,7 +226,7 @@
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.1",
-      "application_program": "M-0083_A-013A-32-DCC1",
+      "application": "M-0083_A-013A-32-DCC1",
       "project_uid": 12,
       "communication_object_ids": [
         "1.1.1/O-334_R-21",
@@ -250,7 +256,7 @@
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.2",
-      "application_program": "M-0083_A-013A-32-DCC1",
+      "application": "M-0083_A-013A-32-DCC1",
       "project_uid": 13,
       "communication_object_ids": [
         "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
