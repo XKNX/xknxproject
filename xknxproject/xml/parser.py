@@ -288,6 +288,8 @@ class XMLParser:
                     function_text=com_object.function_text,  # type: ignore[typeddict-item]
                     description=com_object.description or "",
                     device_address=device.individual_address,
+                    device_application=device.application_program_ref,
+                    module_def=com_object.module,
                     channel=com_object.channel,
                     dpts=com_object.datapoint_types,
                     object_size=com_object.object_size,  # type: ignore[typeddict-item]
@@ -309,6 +311,7 @@ class XMLParser:
                 description=device.description,
                 manufacturer_name=device.manufacturer_name,
                 individual_address=device.individual_address,
+                application=device.application_program_ref,
                 project_uid=device.project_uid,
                 communication_object_ids=device_com_objects,
                 channels={

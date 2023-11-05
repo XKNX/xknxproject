@@ -19,6 +19,8 @@
       "function_text": "Switch On/Off",
       "description": "",
       "device_address": "0.0.1",
+      "device_application": "M-0083_A-0013-11-A9D6",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -46,6 +48,8 @@
       "function_text": "State",
       "description": "",
       "device_address": "0.0.1",
+      "device_application": "M-0083_A-0013-11-A9D6",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -73,6 +77,8 @@
       "function_text": "State",
       "description": "",
       "device_address": "0.0.1",
+      "device_application": "M-0083_A-0013-11-A9D6",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -100,6 +106,8 @@
       "function_text": "Behang Auf-Ab fahren",
       "description": "",
       "device_address": "0.0.2",
+      "device_application": "M-0002_A-A061-14-BE27",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -128,6 +136,8 @@
       "function_text": "Lamellenverst./Stopp Auf-Ab",
       "description": "",
       "device_address": "0.0.2",
+      "device_application": "M-0002_A-A061-14-BE27",
+      "module_def": null,
       "channel": null,
       "dpts": [
         {
@@ -173,6 +183,7 @@
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "0.0.1",
+      "application": "M-0083_A-0013-11-A9D6",
       "project_uid": null,
       "communication_object_ids": [
         "0.0.1/M-0083_A-0013-11-A9D6_O-0_R-10000",
@@ -187,6 +198,7 @@
       "description": "",
       "manufacturer_name": "ABB",
       "individual_address": "0.0.2",
+      "application": "M-0002_A-A061-14-BE27",
       "project_uid": null,
       "communication_object_ids": [
         "0.0.2/M-0002_A-A061-14-BE27_O-10_R-485",

@@ -31,11 +31,20 @@ class CommunicationObject(TypedDict):
     function_text: str
     description: str
     device_address: str
+    device_application: str | None
+    module: ModuleInstanceInfos | None
     channel: str | None
     dpts: list[DPTType]
     object_size: str
     group_address_links: list[str]
     flags: Flags
+
+
+class ModuleInstanceInfos(TypedDict):
+    """Information about module association for CommunicationObjects."""
+
+    definition: str
+    root_number: int  # `Number` assigned by ComObject - without Module base object number added
 
 
 class Device(TypedDict):
@@ -46,6 +55,7 @@ class Device(TypedDict):
     description: str
     manufacturer_name: str
     individual_address: str
+    application: str | None
     project_uid: int | None
     communication_object_ids: list[str]
     channels: dict[str, Channel]  # id: Channel
