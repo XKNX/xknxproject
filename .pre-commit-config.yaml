@@ -13,7 +13,7 @@ repos:
       - id: pyupgrade
         args: [--py39-plus]
   - repo: https://github.com/psf/black
-    rev: 23.9.1
+    rev: 23.12.0
     hooks:
       - id: black
         args:
@@ -27,7 +27,7 @@ repos:
         files: ^(xknxproject|examples|docs)/.+\.py$
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # Ruff version.
-    rev: 'v0.0.292'
+    rev: 'v0.1.8'
     hooks:
       - id: ruff
         # in CI it is directly run by tox to allow dependency upgrade checks
