@@ -43,7 +43,7 @@ jobs:
     needs: ["build"]
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version: ["3.12"]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
@@ -59,10 +59,10 @@ jobs:
         run: |
           pip install -r requirements_testing.txt
       - name: Download all coverage artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
       - name: Create coverage report
         run: |
-          coverage combine coverage*/.coverage*
+          coverage combine coverage-*/.coverage
           coverage report
           coverage xml
       - name: Upload coverage to Codecov
