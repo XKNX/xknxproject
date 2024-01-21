@@ -3,25 +3,22 @@ requires = ["setuptools>=62.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name         = "xknxproject"
-authors      = [
-    {name = "Marvin Wichmann", email = "me@marvin-wichmann.de"},
-    {name = "Matthias Alphart", email = "farmio@alphart.net"},
+name = "xknxproject"
+authors = [
+  { name = "Marvin Wichmann", email = "me@marvin-wichmann.de" },
+  { name = "Matthias Alphart", email = "farmio@alphart.net" },
 ]
-classifiers  = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "Programming Language :: Python :: 3",
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
 ]
-dependencies = [
-    "pyzipper>=0.3.6",
-    "striprtf>=0.0.26",
-]
-description  = "A library to gather information from ETS project files used for KNX"
-dynamic      = ["version"]
-keywords     = ["KNX", "ETS", "Home Assistant"]
-license      = {file = "LICENSE"}
-readme       = "README.md"
+dependencies = ["pyzipper>=0.3.6", "striprtf>=0.0.26"]
+description = "A library to gather information from ETS project files used for KNX"
+dynamic = ["version"]
+keywords = ["KNX", "ETS", "Home Assistant"]
+license = { file = "LICENSE" }
+readme = "README.md"
 requires-python = ">=3.9.0"
 
 [project.urls]
@@ -29,13 +26,10 @@ homepage = "https://github.com/XKNX/xknxproject"
 
 
 [tool.setuptools.dynamic]
-version = {attr = "xknxproject.__version__.__version__"}
+version = { attr = "xknxproject.__version__.__version__" }
 
 [tool.setuptools.packages.find]
 include = ["xknxproject*"]
-
-[tool.black]
-exclude = "generated"
 
 
 [tool.mypy]
@@ -54,7 +48,7 @@ reports = "no"
 
 [tool.pylint.message_control]
 # Reasons disabled:
-# format - handled by black
+# format - handled by ruff
 # locally-disabled - it spams too much
 # duplicate-code - unavoidable
 # cyclic-import - doesn't test if both import on load
@@ -90,14 +84,12 @@ disable = [
   "too-many-boolean-expressions",
   "unused-argument",
   "wrong-import-order",
-  ]
+]
 # disabled for tests via command line options in Makefile:
 #   - no-self-use
 #   - protected-access
 #   - abstract-class-instantiated
-enable = [
-  "use-symbolic-message-instead",
-]
+enable = ["use-symbolic-message-instead"]
 
 [tool.pylint.format]
 expected-line-ending-format = "LF"
@@ -129,9 +121,7 @@ ignore = [
   "D212",
   "E501", # line too long
 ]
-extend-exclude = [
-  "script",
-]
+extend-exclude = ["script"]
 
 [tool.ruff.isort]
 force-sort-within-sections = true
