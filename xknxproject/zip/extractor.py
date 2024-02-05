@@ -152,7 +152,9 @@ def _get_xml_namespace(project_zip: ZipFile) -> str:
                     namespace = namespace_match.group(1)  # type: ignore[union-attr]
                 except (AttributeError, IndexError, UnicodeDecodeError):
                     _LOGGER.error("Could not parse XML namespace from %s", line)
-                    raise UnexpectedFileContent("Could not parse XML namespace.")
+                    raise UnexpectedFileContent(
+                        "Could not parse XML namespace."
+                    ) from None
 
         _LOGGER.debug("Namespace: %s", namespace)
         return namespace
@@ -164,7 +166,7 @@ def _get_schema_version(namespace: str) -> int:
         schema_version = int(namespace.split("/")[-1])
     except ValueError:
         _LOGGER.error("Could not parse schema version from %s", namespace)
-        raise UnexpectedFileContent("Could not parse schema version.")
+        raise UnexpectedFileContent("Could not parse schema version.") from None
 
     _LOGGER.debug("Schema version: %s", schema_version)
     return schema_version
