@@ -30,14 +30,14 @@ def parse_dpt_types(dpt_string: str | None) -> list[DPTType]:
     for _dpt in dict.fromkeys(dpt_string.split()):
         dpt_parts = _dpt.split("-")
         try:
-            if MAIN_DPT == dpt_parts[0]:
+            if dpt_parts[0] == MAIN_DPT:
                 supported_dpts.append(
                     DPTType(
                         main=int(dpt_parts[1]),
                         sub=None,
                     )
                 )
-            if MAIN_AND_SUB_DPT == dpt_parts[0]:
+            if dpt_parts[0] == MAIN_AND_SUB_DPT:
                 supported_dpts.append(
                     DPTType(
                         main=int(dpt_parts[1]),

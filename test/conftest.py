@@ -15,12 +15,12 @@ def assert_stub(to_be_verified: KNXProject, stub_name: str) -> None:
         assert len(version_string.split(".")) == 3
         return obj
 
-    with open(stub_path, encoding="utf-8") as stub_file:
+    with stub_path.open(encoding="utf-8") as stub_file:
         stub = remove_xknxproject_version(json.load(stub_file))
         to_be_verified = remove_xknxproject_version(to_be_verified)
         for key, value in stub.items():
             assert key in to_be_verified, f"`{key}` key missing in generated object"
             assert value == to_be_verified[key], f"`{key}` item does not match"
 
-        for key in to_be_verified.keys():
+        for key in to_be_verified:
             assert key in stub, f"`{key}` key of generated object missing in stub"
