@@ -52,6 +52,7 @@ class Device(TypedDict):
 
     name: str
     hardware_name: str
+    order_number: str
     description: str
     manufacturer_name: str
     individual_address: str
