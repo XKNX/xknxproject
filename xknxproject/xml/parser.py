@@ -195,6 +195,7 @@ class XMLParser:
                 continue
             device.product_name = product.text
             device.hardware_name = product.hardware_name
+            device.order_number = product.order_number
 
             try:
                 application_program_ref = hardware_application_map[
@@ -308,6 +309,7 @@ class XMLParser:
             devices_dict[device.individual_address] = Device(
                 name=device.product_name,
                 hardware_name=device.hardware_name,
+                order_number=device.order_number,
                 description=device.description,
                 manufacturer_name=device.manufacturer_name,
                 individual_address=device.individual_address,

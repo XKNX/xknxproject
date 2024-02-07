@@ -180,6 +180,7 @@
     "0.0.1": {
       "name": "AKS-2016.02 Switch Actuator 20-fold, 12TE, 16A",
       "hardware_name": "Schaltaktor 20-fach,12TE, 230VAC, 16A",
+      "order_number": "AKS-2016.02",
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "0.0.1",
@@ -195,6 +196,7 @@
     "0.0.2": {
       "name": "JRA/S4.230.5.1 Jal./Rol.Akt.Fahrzt.man.4f,230V,REG",
       "hardware_name": "JRA/S4.230.5.1 Jal./Rol.Akt.Fahrzt.man.4f,230V,REG",
+      "order_number": "2CDG 110 125 R0011",
       "description": "",
       "manufacturer_name": "ABB",
       "individual_address": "0.0.2",

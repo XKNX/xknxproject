@@ -76,6 +76,7 @@ class HardwareLoader:
         return Product(
             identifier=product_node.get("Id", ""),
             text=product_node.get("Text", ""),
+            order_number=product_node.get("OrderNumber", ""),
         )
 
     @staticmethod

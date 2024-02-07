@@ -160,6 +160,7 @@ class DeviceInstance:
         )
         self.product_name: str = ""
         self.hardware_name: str = ""
+        self.order_number: str = ""
         self.manufacturer_name: str = ""
 
     def add_additional_address(self, address: str) -> None:
@@ -488,6 +489,7 @@ class Product:
 
     identifier: str
     text: str
+    order_number: str
     hardware_name: str = ""
 
 

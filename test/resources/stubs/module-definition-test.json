@@ -244,6 +244,7 @@
     "1.1.1": {
       "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "hardware_name": "Heizungsaktor 8-fach",
+      "order_number": "AKH-0800.03",
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.1",
@@ -274,6 +275,7 @@
     "1.1.2": {
       "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "hardware_name": "Heizungsaktor 8-fach",
+      "order_number": "AKH-0800.03",
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.2",

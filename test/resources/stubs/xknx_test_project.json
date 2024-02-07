@@ -652,6 +652,7 @@
     "1.1.0": {
       "name": "SCN-IP100.03 IP Router with Secure",
       "hardware_name": "IP Router Secure",
+      "order_number": "SCN-IP100.03",
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.0",
@@ -663,6 +664,7 @@
     "1.1.5": {
       "name": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
       "hardware_name": "JRA/S4.230.2.1 Jal./Rol.Akt.man.4f,230V,REG",
+      "order_number": "2CDG 110 121 R0011",
       "description": "",
       "manufacturer_name": "ABB",
       "individual_address": "1.1.5",
@@ -682,6 +684,7 @@
     "1.1.6": {
       "name": "AE/S4.2 Analogue Input,4-fold,MDRC",
       "hardware_name": "AE/S4.2 Analogeingang,4fach,REG",
+      "order_number": "2CDG 110 030 R0011",
       "description": "",
       "manufacturer_name": "ABB",
       "individual_address": "1.1.6",
@@ -698,6 +701,7 @@
     "1.1.7": {
       "name": "Heating actuator 6-gang with controller",
       "hardware_name": "Heizungsaktor 6fach mit Regler Secure",
+      "order_number": "2139 00",
       "description": "",
       "manufacturer_name": "GIRA Giersiepen",
       "individual_address": "1.1.7",
