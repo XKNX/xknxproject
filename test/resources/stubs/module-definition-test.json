@@ -1,8 +1,8 @@
 {
   "info": {
-    "project_id": "P-080F",
+    "project_id": "P-0810",
     "name": "ModuleDefinitionTest",
-    "last_modified": "2023-09-11T19:55:48.2104095Z",
+    "last_modified": "2024-02-11T11:28:14.4900833Z",
     "group_address_style": "ThreeLevel",
     "guid": "26520acd-6231-4fe4-a409-4d1610e7a251",
     "created_by": "ETS5",
@@ -203,6 +203,352 @@
         "0/2/2",
         "0/7/2"
       ]
+    },
+    "1.1.2/MD-2_M-1_MI-1_O-2-19_R-6": {
+      "name": "ModeKomfort",
+      "number": 19,
+      "text": "Kanal A: Bad",
+      "function_text": "Betriebsart Komfort schalten",
+      "description": "",
+      "device_address": "1.1.2",
+      "device_application": "M-0083_A-013A-32-DCC1",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 19
+      },
+      "channel": "MD-2_M-1_MI-1_CH-1",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/6/7"
+      ]
+    },
+    "1.1.2/O-334_R-21": {
+      "name": "FuehrungsWert",
+      "number": 334,
+      "text": "Außentemperatur / Führungswert",
+      "function_text": "Messwert empfangen",
+      "description": "",
+      "device_address": "1.1.2",
+      "device_application": "M-0083_A-013A-32-DCC1",
+      "module_def": null,
+      "channel": null,
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
+      "object_size": "2 Bytes",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/6/10"
+      ]
+    },
+    "1.1.2/MD-2_M-5_MI-1_O-2-8_R-18": {
+      "name": "SollwertAkt",
+      "number": 168,
+      "text": "Kanal E: ",
+      "function_text": "Aktueller Sollwert senden",
+      "description": "",
+      "device_address": "1.1.2",
+      "device_application": "M-0083_A-013A-32-DCC1",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 8
+      },
+      "channel": "MD-2_M-5_MI-1_CH-1",
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
+      "object_size": "2 Bytes",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/6/8"
+      ]
+    },
+    "1.1.2/MD-2_M-6_MI-1_O-2-20_R-7": {
+      "name": "Mode Nacht",
+      "number": 220,
+      "text": "Kanal F: ",
+      "function_text": "Betriebsart Nacht schalten",
+      "description": "",
+      "device_address": "1.1.2",
+      "device_application": "M-0083_A-013A-32-DCC1",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 20
+      },
+      "channel": "MD-2_M-6_MI-1_CH-1",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/6/9"
+      ]
+    },
+    "1.1.3/O-24_R-966": {
+      "name": "Status On/Off (ECG1-ECG16)",
+      "number": 24,
+      "text": "Status (EVG1-EVG16)",
+      "function_text": "Status Ein/Aus",
+      "description": "",
+      "device_address": "1.1.3",
+      "device_application": "M-0083_A-0153-10-297A-O00EF",
+      "module_def": null,
+      "channel": "CH-0",
+      "dpts": [
+        {
+          "main": 27,
+          "sub": 1
+        }
+      ],
+      "object_size": "4 Bytes",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/6/0"
+      ]
+    },
+    "1.1.3/MD-2_M-3_MI-2_O-2-1_R-11": {
+      "name": "Group 1, Dimming",
+      "number": 80,
+      "text": "G2, Dimmen, ",
+      "function_text": "Dimmen relativ",
+      "description": "",
+      "device_address": "1.1.3",
+      "device_application": "M-0083_A-0153-10-297A-O00EF",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 1
+      },
+      "channel": "MD-2_M-3_MI-2_CH-1",
+      "dpts": [
+        {
+          "main": 3,
+          "sub": 7
+        }
+      ],
+      "object_size": "4 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/6/1"
+      ]
+    },
+    "1.1.3/MD-2_M-3_MI-3_O-2-0_R-10": {
+      "name": "Group 1, Switching",
+      "number": 111,
+      "text": "G3, Schalten, ",
+      "function_text": "Ein/Aus",
+      "description": "",
+      "device_address": "1.1.3",
+      "device_application": "M-0083_A-0153-10-297A-O00EF",
+      "module_def": {
+        "definition": "MD-2",
+        "root_number": 0
+      },
+      "channel": "MD-2_M-3_MI-3_CH-1",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/6/2"
+      ]
+    },
+    "1.1.3/MD-1_M-1_MI-1_O-2-0_R-7": {
+      "name": "ECG 1, Switching",
+      "number": 559,
+      "text": "EVG 1, Schalten ",
+      "function_text": "Ein/Aus",
+      "description": "",
+      "device_address": "1.1.3",
+      "device_application": "M-0083_A-0153-10-297A-O00EF",
+      "module_def": {
+        "definition": "MD-1",
+        "root_number": 0
+      },
+      "channel": "CH-17",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/6/3"
+      ]
+    },
+    "1.1.3/MD-1_M-1_MI-4_O-2-1_R-8": {
+      "name": "ECG 1, Dimming",
+      "number": 629,
+      "text": "EVG 4, Dimmen, ",
+      "function_text": "Dimmen relativ",
+      "description": "",
+      "device_address": "1.1.3",
+      "device_application": "M-0083_A-0153-10-297A-O00EF",
+      "module_def": {
+        "definition": "MD-1",
+        "root_number": 1
+      },
+      "channel": "CH-17",
+      "dpts": [
+        {
+          "main": 3,
+          "sub": 7
+        }
+      ],
+      "object_size": "4 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/6/4"
+      ]
+    },
+    "1.1.3/MD-3_M-2_MI-2_O-2-4_R-5": {
+      "name": "MD1, Error",
+      "number": 2041,
+      "text": "BM2, Fehler, ",
+      "function_text": "Alarm",
+      "description": "",
+      "device_address": "1.1.3",
+      "device_application": "M-0083_A-0153-10-297A-O00EF",
+      "module_def": {
+        "definition": "MD-3",
+        "root_number": 4
+      },
+      "channel": "CH-84",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 5
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/6/5"
+      ]
+    },
+    "1.1.3/MD-3_M-2_MI-8_O-2-5_R-6": {
+      "name": "MD1, BrightnessSwitch",
+      "number": 2078,
+      "text": "BM8, Helligkeit unterschreitet Grenzwert, ",
+      "function_text": "Alarm",
+      "description": "",
+      "device_address": "1.1.3",
+      "device_application": "M-0083_A-0153-10-297A-O00EF",
+      "module_def": {
+        "definition": "MD-3",
+        "root_number": 5
+      },
+      "channel": "CH-84",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 5
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/6/6"
+      ]
     }
   },
   "topology": {
@@ -233,7 +579,8 @@
           "description": null,
           "devices": [
             "1.1.1",
-            "1.1.2"
+            "1.1.2",
+            "1.1.3"
           ],
           "medium_type": "Twisted Pair (TP)"
         }
@@ -276,22 +623,131 @@
       "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "hardware_name": "Heizungsaktor 8-fach",
       "order_number": "AKH-0800.03",
-      "description": "",
+      "description": "Modules use ObjBaseNumber argument",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.2",
       "application": "M-0083_A-013A-32-DCC1",
       "project_uid": 13,
       "communication_object_ids": [
-        "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
+        "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3",
+        "1.1.2/MD-2_M-1_MI-1_O-2-19_R-6",
+        "1.1.2/O-334_R-21",
+        "1.1.2/MD-2_M-5_MI-1_O-2-8_R-18",
+        "1.1.2/MD-2_M-6_MI-1_O-2-20_R-7"
       ],
       "channels": {
         "MD-2_M-1_MI-1_CH-1": {
           "identifier": "MD-2_M-1_MI-1_CH-1",
           "name": "Kanal A: Bad"
         },
+        "MD-2_M-5_MI-1_CH-1": {
+          "identifier": "MD-2_M-5_MI-1_CH-1",
+          "name": "Kanal E: "
+        },
+        "MD-2_M-6_MI-1_CH-1": {
+          "identifier": "MD-2_M-6_MI-1_CH-1",
+          "name": "Kanal F: "
+        },
         "CH-9": {
           "identifier": "CH-9",
           "name": "Szenen"
+        }
+      }
+    },
+    "1.1.3": {
+      "name": "DALI Control Pro64 Gateway",
+      "hardware_name": "DALI Control Pro64 Gateway",
+      "order_number": "SCN-DA641P.04S",
+      "description": "Modules use Allocators for ObjBaseNumber ",
+      "manufacturer_name": "MDT technologies",
+      "individual_address": "1.1.3",
+      "application": "M-0083_A-0153-10-297A-O00EF",
+      "project_uid": 26,
+      "communication_object_ids": [
+        "1.1.3/O-24_R-966",
+        "1.1.3/MD-2_M-3_MI-2_O-2-1_R-11",
+        "1.1.3/MD-2_M-3_MI-3_O-2-0_R-10",
+        "1.1.3/MD-1_M-1_MI-1_O-2-0_R-7",
+        "1.1.3/MD-1_M-1_MI-4_O-2-1_R-8",
+        "1.1.3/MD-3_M-2_MI-2_O-2-4_R-5",
+        "1.1.3/MD-3_M-2_MI-8_O-2-5_R-6"
+      ],
+      "channels": {
+        "CH-0": {
+          "identifier": "CH-0",
+          "name": "ALLGEMEIN"
+        },
+        "MD-2_M-3_MI-1_CH-1": {
+          "identifier": "MD-2_M-3_MI-1_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-2_CH-1": {
+          "identifier": "MD-2_M-3_MI-2_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-3_CH-1": {
+          "identifier": "MD-2_M-3_MI-3_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-4_CH-1": {
+          "identifier": "MD-2_M-3_MI-4_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-5_CH-1": {
+          "identifier": "MD-2_M-3_MI-5_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-6_CH-1": {
+          "identifier": "MD-2_M-3_MI-6_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-7_CH-1": {
+          "identifier": "MD-2_M-3_MI-7_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-8_CH-1": {
+          "identifier": "MD-2_M-3_MI-8_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-9_CH-1": {
+          "identifier": "MD-2_M-3_MI-9_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-10_CH-1": {
+          "identifier": "MD-2_M-3_MI-10_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-11_CH-1": {
+          "identifier": "MD-2_M-3_MI-11_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-12_CH-1": {
+          "identifier": "MD-2_M-3_MI-12_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-13_CH-1": {
+          "identifier": "MD-2_M-3_MI-13_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-14_CH-1": {
+          "identifier": "MD-2_M-3_MI-14_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-15_CH-1": {
+          "identifier": "MD-2_M-3_MI-15_CH-1",
+          "name": "GL-4, "
+        },
+        "MD-2_M-3_MI-16_CH-1": {
+          "identifier": "MD-2_M-3_MI-16_CH-1",
+          "name": "GL-4, "
+        },
+        "CH-17": {
+          "identifier": "CH-17",
+          "name": "EVG"
+        },
+        "CH-84": {
+          "identifier": "CH-84",
+          "name": "Bewegungsmelder"
         }
       }
     }
@@ -399,6 +855,193 @@
       "description": "",
       "comment": ""
     },
+    "0/6/0": {
+      "name": "Object number 24",
+      "identifier": "GA-9",
+      "raw_address": 1536,
+      "address": "0/6/0",
+      "project_uid": 29,
+      "dpt": {
+        "main": 27,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.3/O-24_R-966"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/1": {
+      "name": "Object number 80",
+      "identifier": "GA-10",
+      "raw_address": 1537,
+      "address": "0/6/1",
+      "project_uid": 30,
+      "dpt": {
+        "main": 3,
+        "sub": 7
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.3/MD-2_M-3_MI-2_O-2-1_R-11"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/2": {
+      "name": "Object number 111",
+      "identifier": "GA-11",
+      "raw_address": 1538,
+      "address": "0/6/2",
+      "project_uid": 31,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.3/MD-2_M-3_MI-3_O-2-0_R-10"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/3": {
+      "name": "Object number 559",
+      "identifier": "GA-12",
+      "raw_address": 1539,
+      "address": "0/6/3",
+      "project_uid": 32,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.3/MD-1_M-1_MI-1_O-2-0_R-7"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/4": {
+      "name": "Object number 629",
+      "identifier": "GA-13",
+      "raw_address": 1540,
+      "address": "0/6/4",
+      "project_uid": 33,
+      "dpt": {
+        "main": 3,
+        "sub": 7
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.3/MD-1_M-1_MI-4_O-2-1_R-8"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/5": {
+      "name": "Object number 2041",
+      "identifier": "GA-14",
+      "raw_address": 1541,
+      "address": "0/6/5",
+      "project_uid": 34,
+      "dpt": {
+        "main": 1,
+        "sub": 5
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.3/MD-3_M-2_MI-2_O-2-4_R-5"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/6": {
+      "name": "Object number 2078",
+      "identifier": "GA-15",
+      "raw_address": 1542,
+      "address": "0/6/6",
+      "project_uid": 35,
+      "dpt": {
+        "main": 1,
+        "sub": 5
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.3/MD-3_M-2_MI-8_O-2-5_R-6"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/7": {
+      "name": "Object number 19",
+      "identifier": "GA-16",
+      "raw_address": 1543,
+      "address": "0/6/7",
+      "project_uid": 36,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.2/MD-2_M-1_MI-1_O-2-19_R-6"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/8": {
+      "name": "Object number 168",
+      "identifier": "GA-17",
+      "raw_address": 1544,
+      "address": "0/6/8",
+      "project_uid": 37,
+      "dpt": {
+        "main": 9,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.2/MD-2_M-5_MI-1_O-2-8_R-18"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/9": {
+      "name": "Object number 220",
+      "identifier": "GA-18",
+      "raw_address": 1545,
+      "address": "0/6/9",
+      "project_uid": 38,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.2/MD-2_M-6_MI-1_O-2-20_R-7"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/10": {
+      "name": "Object number 334",
+      "identifier": "GA-19",
+      "raw_address": 1546,
+      "address": "0/6/10",
+      "project_uid": 39,
+      "dpt": {
+        "main": 9,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.2/O-334_R-21"
+      ],
+      "description": "",
+      "comment": ""
+    },
     "0/7/2": {
       "name": "Temperatur Soll",
       "identifier": "GA-6",
@@ -460,6 +1103,26 @@
           "comment": "",
           "group_ranges": {}
         },
+        "0/6": {
+          "name": "ObjectNumber test",
+          "address_start": 1536,
+          "address_end": 1791,
+          "group_addresses": [
+            "0/6/0",
+            "0/6/1",
+            "0/6/2",
+            "0/6/3",
+            "0/6/4",
+            "0/6/5",
+            "0/6/6",
+            "0/6/7",
+            "0/6/8",
+            "0/6/9",
+            "0/6/10"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        },
         "0/7": {
           "name": "Common",
           "address_start": 1792,
@@ -501,7 +1164,7 @@
   "locations": {
     "ModuleDefinitionTest": {
       "type": "Building",
-      "identifier": "P-080F-0_BP-1",
+      "identifier": "P-0810-0_BP-1",
       "name": "ModuleDefinitionTest",
       "usage_id": null,
       "usage_text": "",
@@ -512,7 +1175,7 @@
       "spaces": {
         "First floor": {
           "type": "Floor",
-          "identifier": "P-080F-0_BP-2",
+          "identifier": "P-0810-0_BP-2",
           "name": "First floor",
           "usage_id": null,
           "usage_text": "",
@@ -523,7 +1186,7 @@
           "spaces": {
             "Office": {
               "type": "Room",
-              "identifier": "P-080F-0_BP-3",
+              "identifier": "P-0810-0_BP-3",
               "name": "Office",
               "usage_id": "SU-11",
               "usage_text": "Büro",

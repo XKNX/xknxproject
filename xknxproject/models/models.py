@@ -3,11 +3,14 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
 import re
 
 from xknxproject.models.knxproject import DPTType, ModuleInstanceInfos
 from xknxproject.models.static import GroupAddressStyle, SpaceType
 from xknxproject.zip import KNXProjContents
+
+_LOGGER = logging.getLogger("xknxproject.log")
 
 TranslationsType = dict[str, dict[str, str]]
 
@@ -178,6 +181,23 @@ class DeviceInstance:
         for _module_instance in self.module_instances:
             yield from _module_instance.arguments
 
+    def merge_application_program_info(self, application: ApplicationProgram) -> None:
+        """Merge items with their parent objects from the application program."""
+        for attribute in self.module_instance_arguments():
+            attribute.name = application.module_def_arguments[attribute.ref_id].name
+            attribute.allocates = application.module_def_arguments[
+                attribute.ref_id
+            ].allocates
+
+        for com_instance in self.com_object_instance_refs:
+            com_instance.merge_application_program_info(application)
+            com_instance.apply_module_base_number_argument(
+                module_instances=self.module_instances,
+                application_allocators=application.allocators,
+            )
+
+        self._complete_channel_placeholders()
+
     def _complete_channel_placeholders(self) -> None:
         """Replace placeholders in channel names with module instance arguments."""
         for channel in self.channels:
@@ -197,12 +217,6 @@ class DeviceInstance:
                 channel.name = channel.name.replace(
                     f"{{{{{argument.name}}}}}", argument.value
                 )
-
-    def apply_module_instance_arguments(self) -> None:
-        """Apply module instance arguments."""
-        self._complete_channel_placeholders()
-        for coir in self.com_object_instance_refs:
-            coir.apply_module_base_number_argument(self.module_instances)
 
 
 @dataclass
@@ -228,7 +242,9 @@ class ModuleInstanceArgument:
 
     ref_id: str
     value: str
-    name: str = ""  # resolved from application by `ref_id` ModuleDefs/ModuleDef/Arguments/Argument
+    # resolved from application by `ref_id` ModuleDefs/ModuleDef/Arguments/Argument
+    name: str = ""  # "Name" type="knx:Identifier50_t" use="required"
+    allocates: int | None = None  # "Allocates" type="xs:unsignedLong" use="optional"
 
     def complete_ref_id(self, application_program_ref: str) -> None:
         """Prepend the ref_id with the application program ref."""
@@ -257,6 +273,9 @@ class ComObjectInstanceRef:
     links: list[str] | None  # "Links" - knx:RELIDREFS
 
     # resolved via Hardware.xml from the containing DeviceInstance
+    application_program_id_prefix: str = (
+        ""  # empty string for ETS 4 since it doesn't use prefix
+    )
     com_object_ref_id: str | None = None
 
     # only available form ComObject and ComObjectRef
@@ -277,9 +296,23 @@ class ComObjectInstanceRef:
         if knx_proj_contents.is_ets4_project():
             self.com_object_ref_id = ref_id
         else:
+            self.application_program_id_prefix = f"{application_program_ref}_"
             self.com_object_ref_id = f"{application_program_ref}_{ref_id}"
 
-    def merge_from_application(self, com_object: ComObject | ComObjectRef) -> None:
+    def merge_application_program_info(self, application: ApplicationProgram) -> None:
+        """Fill missing information with information parsed from the application program."""
+        if self.com_object_ref_id is None:
+            _LOGGER.warning(
+                "ComObjectInstanceRef %s has no ComObjectRefId",
+                self.identifier,
+            )
+            return
+        com_object_ref = application.com_object_refs[self.com_object_ref_id]
+        com_object = application.com_objects[com_object_ref.ref_id]
+        self._merge_from_parent_object(com_object_ref)
+        self._merge_from_parent_object(com_object)
+
+    def _merge_from_parent_object(self, com_object: ComObject | ComObjectRef) -> None:
         """Fill missing information with information parsed from the application program."""
         if self.name is None:
             self.name = com_object.name
@@ -308,7 +341,9 @@ class ComObjectInstanceRef:
             self.base_number_argument_ref = com_object.base_number_argument_ref
 
     def apply_module_base_number_argument(
-        self, module_instances: list[ModuleInstance]
+        self,
+        module_instances: list[ModuleInstance],
+        application_allocators: dict[str, Allocator],
     ) -> None:
         """Apply module argument of base number."""
         if (
@@ -317,19 +352,84 @@ class ComObjectInstanceRef:
             or self.number is None  # only for type safety
         ):
             return
+        # there are 2 ways to get the base number
+        # 1. from the module instance arguments value "ObjNumberBase" directly
+        # 2. from the module defs allocator - adding the "Start" value to
+        #   (the modules index - 1) * allocator size
+        #   in this case the module instance argument value is the reference part
+        #   of the allocator id ("L-1") - at least in the application tested (MDT Dali 64)
         _module_instance = next(
             mi for mi in module_instances if self.ref_id.startswith(f"{mi.identifier}_")
         )
-        root_number = self.number
-        self.number += next(
-            int(arg.value)
+        com_object_number = self.number
+        base_number_argument = next(
+            arg
             for arg in _module_instance.arguments
             if arg.ref_id == self.base_number_argument_ref
         )
+        try:
+            self.number += int(base_number_argument.value)
+        except ValueError:
+            self.number += self._base_number_from_allocator(
+                base_number_argument, application_allocators
+            )
+
         self.module = ModuleInstanceInfos(
             definition=self.ref_id.split("_")[0],
-            root_number=root_number,
+            root_number=com_object_number,
         )
+
+    def _base_number_from_allocator(
+        self,
+        base_number_argument: ModuleInstanceArgument,
+        application_allocators: dict[str, Allocator],
+    ) -> int:
+        """Apply base number from allocator."""
+        allocator_object_base = next(
+            allocator
+            for allocator in application_allocators.values()
+            if allocator.identifier
+            == self.application_program_id_prefix + base_number_argument.value
+        )
+        if (allocator_size := base_number_argument.allocates) is None:
+            _LOGGER.warning(
+                "Base number allocator size not found for %s. Base number argument: %s",
+                self.identifier,
+                base_number_argument,
+            )
+            return 0
+        module_instance_index = int(self.ref_id.split("_MI-")[1].split("_")[0])
+        return allocator_object_base.start + (
+            allocator_size * (module_instance_index - 1)
+        )
+
+
+@dataclass
+class ApplicationProgram:
+    """Class that represents an ApplicationProgram instance."""
+
+    com_objects: dict[str, ComObject]  # {Id: ComObject}
+    com_object_refs: dict[str, ComObjectRef]  # {Id: ComObjectRef}
+    allocators: dict[str, Allocator]  # {Id: Allocator}
+    module_def_arguments: dict[str, ModuleDefinitionArgumentInfo]  # {Id: ...}
+
+
+@dataclass
+class Allocator:
+    """Allocator."""
+
+    identifier: str
+    name: str
+    start: int
+    end: int
+
+
+@dataclass
+class ModuleDefinitionArgumentInfo:
+    """Module Definition Argument."""
+
+    name: str = ""
+    allocates: int | None = None
 
 
 @dataclass

@@ -108,13 +108,13 @@ def test_parse_project_with_module_defs():
         parser = XMLParser(knx_project_contents)
         parser.parse()
 
-    assert len(parser.group_addresses) == 7
+    assert len(parser.group_addresses) == 18
     assert parser.group_addresses[0].address == "0/0/1"
     assert parser.group_addresses[1].address == "0/0/2"
     assert parser.group_addresses[2].address == "0/0/3"
 
     assert len(parser.areas) == 2
     assert len(parser.areas[1].lines) == 2
-    assert len(parser.areas[1].lines[1].devices) == 2
+    assert len(parser.areas[1].lines[1].devices) == 3
 
-    assert len(parser.devices) == 2
+    assert len(parser.devices) == 3
