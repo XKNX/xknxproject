@@ -191,7 +191,10 @@ class DeviceInstance:
 
         for com_instance in self.com_object_instance_refs:
             com_instance.merge_application_program_info(application)
-            com_instance.apply_module_base_number_argument(self.module_instances)
+            com_instance.apply_module_base_number_argument(
+                module_instances=self.module_instances,
+                application_allocators=application.allocators,
+            )
 
         self._complete_channel_placeholders()
 
@@ -270,6 +273,9 @@ class ComObjectInstanceRef:
     links: list[str] | None  # "Links" - knx:RELIDREFS
 
     # resolved via Hardware.xml from the containing DeviceInstance
+    application_program_id_prefix: str = (
+        ""  # empty string for ETS 4 since it doesn't use prefix
+    )
     com_object_ref_id: str | None = None
 
     # only available form ComObject and ComObjectRef
@@ -290,6 +296,7 @@ class ComObjectInstanceRef:
         if knx_proj_contents.is_ets4_project():
             self.com_object_ref_id = ref_id
         else:
+            self.application_program_id_prefix = f"{application_program_ref}_"
             self.com_object_ref_id = f"{application_program_ref}_{ref_id}"
 
     def merge_application_program_info(self, application: ApplicationProgram) -> None:
@@ -334,7 +341,9 @@ class ComObjectInstanceRef:
             self.base_number_argument_ref = com_object.base_number_argument_ref
 
     def apply_module_base_number_argument(
-        self, module_instances: list[ModuleInstance]
+        self,
+        module_instances: list[ModuleInstance],
+        application_allocators: dict[str, Allocator],
     ) -> None:
         """Apply module argument of base number."""
         if (
@@ -343,18 +352,55 @@ class ComObjectInstanceRef:
             or self.number is None  # only for type safety
         ):
             return
+        # there are 2 ways to get the base number
+        # 1. from the module instance arguments value "ObjNumberBase" directly
+        # 2. from the module defs allocator - adding the "Start" value to
+        #   (the modules index - 1) * allocator size
+        #   in this case the module instance argument value is the reference part
+        #   of the allocator id ("L-1") - at least in the application tested (MDT Dali 64)
         _module_instance = next(
             mi for mi in module_instances if self.ref_id.startswith(f"{mi.identifier}_")
         )
-        root_number = self.number
-        self.number += next(
-            int(arg.value)
+        com_object_number = self.number
+        base_number_argument = next(
+            arg
             for arg in _module_instance.arguments
             if arg.ref_id == self.base_number_argument_ref
         )
+        try:
+            self.number += int(base_number_argument.value)
+        except ValueError:
+            self.number += self._base_number_from_allocator(
+                base_number_argument, application_allocators
+            )
+
         self.module = ModuleInstanceInfos(
             definition=self.ref_id.split("_")[0],
-            root_number=root_number,
+            root_number=com_object_number,
+        )
+
+    def _base_number_from_allocator(
+        self,
+        base_number_argument: ModuleInstanceArgument,
+        application_allocators: dict[str, Allocator],
+    ) -> int:
+        """Apply base number from allocator."""
+        allocator_object_base = next(
+            allocator
+            for allocator in application_allocators.values()
+            if allocator.identifier
+            == self.application_program_id_prefix + base_number_argument.value
+        )
+        if (allocator_size := base_number_argument.allocates) is None:
+            _LOGGER.warning(
+                "Base number allocator size not found for %s. Base number argument: %s",
+                self.identifier,
+                base_number_argument,
+            )
+            return 0
+        module_instance_index = int(self.ref_id.split("_MI-")[1].split("_")[0])
+        return allocator_object_base.start + (
+            allocator_size * (module_instance_index - 1)
         )
 
 
