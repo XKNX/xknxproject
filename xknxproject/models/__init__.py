@@ -17,6 +17,8 @@ from .knxproject import (
     Space,
 )
 from .models import (
+    ApplicationProgram,
+    Allocator,
     ChannelNode,
     ComObject,
     ComObjectInstanceRef,
@@ -26,6 +28,7 @@ from .models import (
     KNXMasterData,
     ModuleInstance,
     ModuleInstanceArgument,
+    ModuleDefinitionArgumentInfo,
     Product,
     TranslationsType,
     XMLArea,

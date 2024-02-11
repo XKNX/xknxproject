@@ -16,6 +16,7 @@ from xknxproject.loader import (
 )
 from xknxproject.models import (
     MEDIUM_TYPES,
+    ApplicationProgram,
     Area,
     Channel,
     CommunicationObject,
@@ -214,23 +215,32 @@ class XMLParser:
                     application_program_ref, self.knx_proj_contents
                 )
             for module_instance_argument in device.module_instance_arguments():
+                # need to complete ref_id before parsing application program
                 module_instance_argument.complete_ref_id(application_program_ref)
 
+        # only parse each application program file once and only extract used infos
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(
-                project_root_path=self.knx_proj_contents.root_path,
                 devices=self.devices,
             )
         )
-        # update self.devices items with its inherited values from their application programs
+        applications: dict[str, ApplicationProgram] = {}
         for application_program_file, devices in application_programs.items():
-            ApplicationProgramLoader.load(
-                application_program_path=application_program_file,
+            applications[application_program_file] = ApplicationProgramLoader.load(
+                application_program_path=(
+                    self.knx_proj_contents.root_path / application_program_file
+                ),
                 devices=devices,
                 language_code=self.language_code,
             )
+
         for device in self.devices:
-            device.apply_module_instance_arguments()
+            try:
+                _application = applications[device.application_program_xml()]
+            except KeyError:
+                # device has no application program - logging was already done above
+                continue
+            device.merge_application_program_info(_application)
 
     def _sort(self) -> None:
         """Sort loaded structures as XML content is sorted by creation time."""

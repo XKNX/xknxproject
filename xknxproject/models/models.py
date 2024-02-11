@@ -3,11 +3,14 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
 import re
 
 from xknxproject.models.knxproject import DPTType, ModuleInstanceInfos
 from xknxproject.models.static import GroupAddressStyle, SpaceType
 from xknxproject.zip import KNXProjContents
+
+_LOGGER = logging.getLogger("xknxproject.log")
 
 TranslationsType = dict[str, dict[str, str]]
 
@@ -178,6 +181,20 @@ class DeviceInstance:
         for _module_instance in self.module_instances:
             yield from _module_instance.arguments
 
+    def merge_application_program_info(self, application: ApplicationProgram) -> None:
+        """Merge items with their parent objects from the application program."""
+        for attribute in self.module_instance_arguments():
+            attribute.name = application.module_def_arguments[attribute.ref_id].name
+            attribute.allocates = application.module_def_arguments[
+                attribute.ref_id
+            ].allocates
+
+        for com_instance in self.com_object_instance_refs:
+            com_instance.merge_application_program_info(application)
+            com_instance.apply_module_base_number_argument(self.module_instances)
+
+        self._complete_channel_placeholders()
+
     def _complete_channel_placeholders(self) -> None:
         """Replace placeholders in channel names with module instance arguments."""
         for channel in self.channels:
@@ -197,12 +214,6 @@ class DeviceInstance:
                 channel.name = channel.name.replace(
                     f"{{{{{argument.name}}}}}", argument.value
                 )
-
-    def apply_module_instance_arguments(self) -> None:
-        """Apply module instance arguments."""
-        self._complete_channel_placeholders()
-        for coir in self.com_object_instance_refs:
-            coir.apply_module_base_number_argument(self.module_instances)
 
 
 @dataclass
@@ -228,7 +239,9 @@ class ModuleInstanceArgument:
 
     ref_id: str
     value: str
-    name: str = ""  # resolved from application by `ref_id` ModuleDefs/ModuleDef/Arguments/Argument
+    # resolved from application by `ref_id` ModuleDefs/ModuleDef/Arguments/Argument
+    name: str = ""  # "Name" type="knx:Identifier50_t" use="required"
+    allocates: int | None = None  # "Allocates" type="xs:unsignedLong" use="optional"
 
     def complete_ref_id(self, application_program_ref: str) -> None:
         """Prepend the ref_id with the application program ref."""
@@ -279,7 +292,20 @@ class ComObjectInstanceRef:
         else:
             self.com_object_ref_id = f"{application_program_ref}_{ref_id}"
 
-    def merge_from_application(self, com_object: ComObject | ComObjectRef) -> None:
+    def merge_application_program_info(self, application: ApplicationProgram) -> None:
+        """Fill missing information with information parsed from the application program."""
+        if self.com_object_ref_id is None:
+            _LOGGER.warning(
+                "ComObjectInstanceRef %s has no ComObjectRefId",
+                self.identifier,
+            )
+            return
+        com_object_ref = application.com_object_refs[self.com_object_ref_id]
+        com_object = application.com_objects[com_object_ref.ref_id]
+        self._merge_from_parent_object(com_object_ref)
+        self._merge_from_parent_object(com_object)
+
+    def _merge_from_parent_object(self, com_object: ComObject | ComObjectRef) -> None:
         """Fill missing information with information parsed from the application program."""
         if self.name is None:
             self.name = com_object.name
@@ -330,6 +356,34 @@ class ComObjectInstanceRef:
             definition=self.ref_id.split("_")[0],
             root_number=root_number,
         )
+
+
+@dataclass
+class ApplicationProgram:
+    """Class that represents an ApplicationProgram instance."""
+
+    com_objects: dict[str, ComObject]  # {Id: ComObject}
+    com_object_refs: dict[str, ComObjectRef]  # {Id: ComObjectRef}
+    allocators: dict[str, Allocator]  # {Id: Allocator}
+    module_def_arguments: dict[str, ModuleDefinitionArgumentInfo]  # {Id: ...}
+
+
+@dataclass
+class Allocator:
+    """Allocator."""
+
+    identifier: str
+    name: str
+    start: int
+    end: int
+
+
+@dataclass
+class ModuleDefinitionArgumentInfo:
+    """Module Definition Argument."""
+
+    name: str = ""
+    allocates: int | None = None
 
 
 @dataclass

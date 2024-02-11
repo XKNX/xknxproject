@@ -7,7 +7,14 @@ from typing import Any
 from xml.etree import ElementTree
 from zipfile import Path
 
-from xknxproject.models import ComObject, ComObjectRef, DeviceInstance
+from xknxproject.models import (
+    Allocator,
+    ApplicationProgram,
+    ComObject,
+    ComObjectRef,
+    DeviceInstance,
+    ModuleDefinitionArgumentInfo,
+)
 from xknxproject.util import parse_dpt_types, parse_xml_flag
 
 _LOGGER = logging.getLogger("xknxproject.log")
@@ -21,7 +28,7 @@ class ApplicationProgramLoader:
         application_program_path: Path,
         devices: list[DeviceInstance],
         language_code: str | None,
-    ) -> None:  # tuple[dict[str, ComObjectRef], dict[str, ComObject]]:
+    ) -> ApplicationProgram:
         """Load Hardware mappings and assign to devices."""
         com_object_instance_refs = [
             instance_ref
@@ -36,11 +43,12 @@ class ApplicationProgramLoader:
         com_object_refs: dict[str, ComObjectRef] = {}  # {Id: ComObjectRef}
         com_objects: dict[str, ComObject] = {}  # {Id: ComObject}
 
-        used_module_arguments = {
-            attribute.ref_id: ""
+        used_module_arguments: dict[str, ModuleDefinitionArgumentInfo] = {
+            attribute.ref_id: ModuleDefinitionArgumentInfo()
             for device in devices
             for attribute in device.module_instance_arguments()
         }
+        allocators: dict[str, Allocator] = {}
 
         with application_program_path.open(mode="rb") as application_xml:
             tree_iterator = ElementTree.iterparse(application_xml, events=("start",))
@@ -57,9 +65,20 @@ class ApplicationProgramLoader:
                             _id
                         ] = ApplicationProgramLoader.parse_com_object_ref(elem, _id)
                     elem.clear()
+                elif elem.tag.endswith("Allocator"):  # Allocators/Allocator
+                    allocators[elem.attrib.get("Id")] = Allocator(
+                        identifier=elem.attrib.get("Id"),
+                        name=elem.attrib.get("Name"),
+                        start=int(elem.attrib.get("Start")),
+                        end=int(elem.attrib.get("maxInclusive")),
+                    )
                 elif elem.tag.endswith("Argument"):  # ModuleDefs/ModuleDef/Arguments/
                     if (_id := elem.attrib.get("Id")) in used_module_arguments:
-                        used_module_arguments[_id] = elem.attrib.get("Name")
+                        allocates = elem.attrib.get("Allocates")
+                        used_module_arguments[_id] = ModuleDefinitionArgumentInfo(
+                            name=elem.attrib.get("Name"),
+                            allocates=int(allocates) if allocates is not None else None,
+                        )
                     elem.clear()
                 elif elem.tag.endswith("Languages"):
                     elem.clear()
@@ -76,20 +95,12 @@ class ApplicationProgramLoader:
                     language_code=language_code,
                 )
 
-            for device in devices:
-                for attribute in device.module_instance_arguments():
-                    attribute.name = used_module_arguments[attribute.ref_id]
-
-            for com_instance in com_object_instance_refs:
-                if com_instance.com_object_ref_id is None:
-                    _LOGGER.warning(
-                        "ComObjectInstanceRef %s has no ComObjectRefId",
-                        com_instance.identifier,
-                    )
-                    continue
-                _com_object_ref = com_object_refs[com_instance.com_object_ref_id]
-                com_instance.merge_from_application(_com_object_ref)
-                com_instance.merge_from_application(com_objects[_com_object_ref.ref_id])
+            return ApplicationProgram(
+                com_objects=com_objects,
+                com_object_refs=com_object_refs,
+                allocators=allocators,
+                module_def_arguments=used_module_arguments,
+            )
 
     @staticmethod
     def parse_translations(
@@ -193,18 +204,13 @@ class ApplicationProgramLoader:
 
     @staticmethod
     def get_application_program_files_for_devices(
-        project_root_path: Path,
         devices: list[DeviceInstance],
-    ) -> dict[Path, list[DeviceInstance]]:
+    ) -> dict[str, list[DeviceInstance]]:
         """Do not load the same application program multiple times."""
-        _result: dict[str, list[DeviceInstance]] = {}
+        result: dict[str, list[DeviceInstance]] = {}
         for device in devices:
             if device.application_program_ref:
                 # zipfile.Path hashes are not equal, therefore we use str to create the struct
                 xml_file_name = device.application_program_xml()
-                _result.setdefault(xml_file_name, []).append(device)
-
-        return {
-            (project_root_path / xml_file): devices
-            for xml_file, devices in _result.items()
-        }
+                result.setdefault(xml_file_name, []).append(device)
+        return result
