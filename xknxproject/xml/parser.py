@@ -317,8 +317,8 @@ class XMLParser:
                 device_com_objects.append(com_object_key)
 
             devices_dict[device.individual_address] = Device(
-                name=device.product_name,
-                hardware_name=device.hardware_name,
+                name=device.name or device.product_name,
+                hardware_name=device.product_name,
                 order_number=device.order_number,
                 description=device.description,
                 manufacturer_name=device.manufacturer_name,
