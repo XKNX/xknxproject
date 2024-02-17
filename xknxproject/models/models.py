@@ -141,7 +141,7 @@ class DeviceInstance:
         """Initialize a Device Instance."""
         self.identifier = identifier
         self.address = address
-        self.name = name
+        self.name = name  # empty string if not customized in project
         self.description = description
         self.project_uid = project_uid
         self.last_modified = last_modified
@@ -161,8 +161,8 @@ class DeviceInstance:
         self.individual_address = (
             f"{self.area_address}.{self.line_address}.{self.address}"
         )
-        self.product_name: str = ""
-        self.hardware_name: str = ""
+        self.product_name: str = ""  # translatable name for specific product
+        self.hardware_name: str = ""  # untranslatable name from hardware.xml
         self.order_number: str = ""
         self.manufacturer_name: str = ""
 
