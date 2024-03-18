@@ -4,7 +4,7 @@ pylint==3.1.0
 pytest==8.1.1
 pytest-cov==4.1.0
 pytest-icdiff==0.9
-ruff==0.3.2
+ruff==0.3.3
 setuptools==69.1.1
 tox==4.14.1
 tox-gh-actions==3.2.0
