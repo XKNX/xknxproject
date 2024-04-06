@@ -190,8 +190,9 @@ class XMLParser:
                 product = products_dict[device.product_ref]
             except KeyError:
                 _LOGGER.warning(
-                    "Could not find hardware product for device %s with product_ref %s",
+                    "Could not find hardware product for device %s from %s with product_ref %s",
                     device.individual_address,
+                    device.manufacturer_name,
                     device.product_ref,
                 )
                 continue
@@ -205,19 +206,22 @@ class XMLParser:
                 ]
             except KeyError:
                 _LOGGER.warning(
-                    "Could not find application_program_ref for device %s with hardware_program_ref %s",
+                    "Could not find application_program_ref for device %s - %s - %s with hardware_program_ref %s",
                     device.individual_address,
+                    device.manufacturer_name,
+                    device.product_name,
                     device.hardware_program_ref,
                 )
                 continue
             device.application_program_ref = application_program_ref
             for com_object in device.com_object_instance_refs:
+                # TODO: try and except here
                 com_object.resolve_com_object_ref_id(
                     application_program_ref, self.knx_proj_contents
                 )
-            for module_instance_argument in device.module_instance_arguments():
+            for module_instance in device.module_instances:
                 # need to complete ref_id before parsing application program
-                module_instance_argument.complete_ref_id(application_program_ref)
+                module_instance.complete_arguments_ref_id(application_program_ref)
 
         # only parse each application program file once and only extract used infos
         application_programs = (

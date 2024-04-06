@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import logging
 import re
 
@@ -184,17 +184,17 @@ class DeviceInstance:
 
     def merge_application_program_info(self, application: ApplicationProgram) -> None:
         """Merge items with their parent objects from the application program."""
-        for attribute in self.module_instance_arguments():
-            attribute.name = application.module_def_arguments[attribute.ref_id].name
-            attribute.allocates = application.module_def_arguments[
-                attribute.ref_id
+        for argument in self.module_instance_arguments():
+            argument.name = application.module_def_arguments[argument.ref_id].name
+            argument.allocates = application.module_def_arguments[
+                argument.ref_id
             ].allocates
 
         for com_instance in self.com_object_instance_refs:
             com_instance.merge_application_program_info(application)
             com_instance.apply_module_base_number_argument(
                 module_instances=self.module_instances,
-                application_allocators=application.allocators,
+                application=application,
             )
 
         self._complete_channel_placeholders()
@@ -232,9 +232,31 @@ class ChannelNode:
 class ModuleInstance:
     """Class that represents a ModuleInstance."""
 
-    identifier: str
-    ref_id: str
+    identifier: str  # MD-4_M-15_MI-2 / MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2
+    ref_id: str  # MD-<int>_M-<int>
     arguments: list[ModuleInstanceArgument]
+
+    module_def_id: str = field(init=False)  # MD-<int>
+    # MD-<int>_M-<int>_MI-<int> if SubModule - reference may contain base values for arguments
+    base_module: str | None = field(init=False)
+    # ModuleDefUniqueNumber with SubModule id if present (used in result json)
+    definition_id: str = field(init=False)  # MD-<int>[_SM-<int>]
+
+    def __post_init__(self) -> None:
+        """Set is_submodule based on the identifier."""
+        self.module_def_id = self.ref_id.split("_")[0]
+        _submodule_match = re.search(r"(_SM-[^_]+)", self.identifier)
+        if _submodule_match is not None:
+            self.base_module = f"{self.identifier.split('_SM-')[0]}"
+            self.definition_id = f"{self.module_def_id}{_submodule_match.group()}"
+        else:
+            self.base_module = None
+            self.definition_id = self.module_def_id
+
+    def complete_arguments_ref_id(self, application_program_ref: str) -> None:
+        """Prepend the ref_id with the application program ref."""
+        for arg in self.arguments:
+            arg.complete_ref_id(application_program_ref, self.module_def_id)
 
 
 @dataclass
@@ -247,9 +269,12 @@ class ModuleInstanceArgument:
     name: str = ""  # "Name" type="knx:Identifier50_t" use="required"
     allocates: int | None = None  # "Allocates" type="xs:unsignedLong" use="optional"
 
-    def complete_ref_id(self, application_program_ref: str) -> None:
+    def complete_ref_id(self, application_program_ref: str, module_def_id: str) -> None:
         """Prepend the ref_id with the application program ref."""
-        self.ref_id = f"{application_program_ref}_{self.ref_id}"
+        if self.ref_id.startswith("SM-"):  # SubModule
+            self.ref_id = f"{application_program_ref}_{module_def_id}_{self.ref_id}"
+        else:
+            self.ref_id = f"{application_program_ref}_{self.ref_id}"
 
 
 @dataclass
@@ -292,13 +317,29 @@ class ComObjectInstanceRef:
         self, application_program_ref: str, knx_proj_contents: KNXProjContents
     ) -> None:
         """Prepend the ref_id with the application program ref."""
-        # Remove module and ModuleInstance occurrence as they will not be in the application program directly
-        ref_id = re.sub(r"(M-\d+?_MI-\d+?_)", "", self.ref_id)
-        if knx_proj_contents.is_ets4_project():
-            self.com_object_ref_id = ref_id
+        if knx_proj_contents.is_ets4_project() and self.ref_id.startswith(
+            application_program_ref
+        ):
+            # ETS4 doesn't use shortened ref_id and I think it doesn't support modules at all
+            self.com_object_ref_id = self.ref_id
+            return
+
+        if self.ref_id.startswith("O-"):
+            ref_id = self.ref_id
+        elif self.ref_id.startswith("MD-"):
+            # Remove module and ModuleInstance occurrence as they will not be in the application program directly
+            module_definition = self.ref_id.split("_")[0]
+            object_reference = self.ref_id[self.ref_id.index("_O-") :]
+            _submodule_match = re.search(r"(_SM-[^_]+)", self.ref_id)
+            submodule = _submodule_match.group() if _submodule_match is not None else ""
+            ref_id = f"{module_definition}{submodule}{object_reference}"
         else:
-            self.application_program_id_prefix = f"{application_program_ref}_"
-            self.com_object_ref_id = f"{application_program_ref}_{ref_id}"
+            raise ValueError(
+                f"Unknown ref_id format: {self.ref_id} in application: {application_program_ref}"
+            )
+
+        self.application_program_id_prefix = f"{application_program_ref}_"
+        self.com_object_ref_id = f"{application_program_ref}_{ref_id}"
 
     def merge_application_program_info(self, application: ApplicationProgram) -> None:
         """Fill missing information with information parsed from the application program."""
@@ -344,7 +385,7 @@ class ComObjectInstanceRef:
     def apply_module_base_number_argument(
         self,
         module_instances: list[ModuleInstance],
-        application_allocators: dict[str, Allocator],
+        application: ApplicationProgram,
     ) -> None:
         """Apply module argument of base number."""
         if (
@@ -353,30 +394,63 @@ class ComObjectInstanceRef:
             or self.number is None  # only for type safety
         ):
             return
-        # there are 2 ways to get the base number
-        # 1. from the module instance arguments value "ObjNumberBase" directly
-        # 2. from the module defs allocator - adding the "Start" value to
-        #   (the modules index - 1) * allocator size
-        #   in this case the module instance argument value is the reference part
-        #   of the allocator id ("L-1") - at least in the application tested (MDT Dali 64)
+
+        def _parse_base_number_argument(
+            module_instance: ModuleInstance,
+            base_number_argument_ref: str,
+        ) -> int:
+            """Parse the argument value."""
+            # there are 2 ways to get the base number
+            # 1. from the module instance arguments value "ObjNumberBase" directly
+            # 2. from the module defs allocator - adding the "Start" value to
+            #   (the modules index - 1) * allocator size
+            #   in this case the module instance argument value is the reference part
+            #   of the allocator id ("L-1") - at least in the application tested (MDT Dali 64)
+            #
+            #   for SubModules the NumericArg item may use a BaseValue reference to an
+            #   Argument of the base ModuleDef containing the base value for all its SubModules
+            result = 0
+            base_number_argument = next(
+                arg
+                for arg in module_instance.arguments
+                if arg.ref_id == base_number_argument_ref
+            )
+
+            try:
+                # path (1) if value is a number, we are done
+                # base module value should already be included
+                return int(base_number_argument.value)
+            except ValueError:
+                # path (2) value is a reference to an Allocator
+                if module_instance.base_module:
+                    # recurse to get the base number from the base module (for SubModule value)
+                    num_arg = application.numeric_args.get(base_number_argument.ref_id)
+                    if (
+                        num_arg is not None
+                        and (base_value_ref := num_arg.base_value) is not None
+                    ):
+                        base_module = next(
+                            mi
+                            for mi in module_instances
+                            if mi.identifier == module_instance.base_module
+                        )
+                        result += _parse_base_number_argument(
+                            module_instance=base_module,
+                            base_number_argument_ref=base_value_ref,
+                        )
+                return result + self._base_number_from_allocator(
+                    base_number_argument, application.allocators
+                )
+
         _module_instance = next(
             mi for mi in module_instances if self.ref_id.startswith(f"{mi.identifier}_")
         )
         com_object_number = self.number
-        base_number_argument = next(
-            arg
-            for arg in _module_instance.arguments
-            if arg.ref_id == self.base_number_argument_ref
+        self.number += _parse_base_number_argument(
+            _module_instance, self.base_number_argument_ref
         )
-        try:
-            self.number += int(base_number_argument.value)
-        except ValueError:
-            self.number += self._base_number_from_allocator(
-                base_number_argument, application_allocators
-            )
-
         self.module = ModuleInstanceInfos(
-            definition=self.ref_id.split("_")[0],
+            definition=_module_instance.definition_id,
             root_number=com_object_number,
         )
 
@@ -413,6 +487,7 @@ class ApplicationProgram:
     com_object_refs: dict[str, ComObjectRef]  # {Id: ComObjectRef}
     allocators: dict[str, Allocator]  # {Id: Allocator}
     module_def_arguments: dict[str, ModuleDefinitionArgumentInfo]  # {Id: ...}
+    numeric_args: dict[str, ModuleDefinitionNumericArg]  # {RefId: ...}
 
 
 @dataclass
@@ -431,6 +506,18 @@ class ModuleDefinitionArgumentInfo:
 
     name: str = ""
     allocates: int | None = None
+
+
+@dataclass
+class ModuleDefinitionNumericArg:
+    """Module Definition Numeric Argument."""
+
+    # shortened version (MD-<int>_L-<int>) should be Value in 0.xml ModuleInstanceArgument (at least with ETS 5)
+    allocator_ref_id: str | None
+    # if allocator_ref_id is not used, this is 0.xml ModuleInstanceArgument Value
+    value: int | None
+    # RefId to Argument (<application>_MD-<int>_A-<int>) - Base value for arguments used in SubModules
+    base_value: str | None
 
 
 @dataclass

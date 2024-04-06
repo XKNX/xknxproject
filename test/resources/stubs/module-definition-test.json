@@ -2,7 +2,7 @@
   "info": {
     "project_id": "P-0810",
     "name": "ModuleDefinitionTest",
-    "last_modified": "2024-02-11T11:28:14.4900833Z",
+    "last_modified": "2024-04-06T19:56:10.5912809Z",
     "group_address_style": "ThreeLevel",
     "guid": "26520acd-6231-4fe4-a409-4d1610e7a251",
     "created_by": "ETS5",
@@ -549,6 +549,227 @@
       "group_address_links": [
         "0/6/6"
       ]
+    },
+    "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-0_R-1": {
+      "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
+      "number": 263,
+      "text": "[EM][IC1][Dev 1.1] Verbrauchte Energie",
+      "function_text": "W·h",
+      "description": "",
+      "device_address": "1.1.4",
+      "device_application": "M-0071_A-5531-37-FDF4",
+      "module_def": {
+        "definition": "MD-4_SM-1",
+        "root_number": 0
+      },
+      "channel": null,
+      "dpts": [
+        {
+          "main": 13,
+          "sub": 10
+        }
+      ],
+      "object_size": "4 Bytes",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/6/12"
+      ]
+    },
+    "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-1_R-2": {
+      "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].power",
+      "number": 264,
+      "text": "[EM][IC1][Dev 1.1] Verbrauchte Leistung",
+      "function_text": "W",
+      "description": "",
+      "device_address": "1.1.4",
+      "device_application": "M-0071_A-5531-37-FDF4",
+      "module_def": {
+        "definition": "MD-4_SM-1",
+        "root_number": 1
+      },
+      "channel": null,
+      "dpts": [
+        {
+          "main": 14,
+          "sub": 56
+        }
+      ],
+      "object_size": "4 Bytes",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/6/13"
+      ]
+    },
+    "1.1.4/O-256_R-36": {
+      "name": "oEnMon.consumedEnergy",
+      "number": 256,
+      "text": "[EM] Verbrauchte Energie",
+      "function_text": "W·h",
+      "description": "",
+      "device_address": "1.1.4",
+      "device_application": "M-0071_A-5531-37-FDF4",
+      "module_def": null,
+      "channel": "CH-1",
+      "dpts": [
+        {
+          "main": 13,
+          "sub": 10
+        }
+      ],
+      "object_size": "4 Bytes",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/6/11"
+      ]
+    },
+    "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-1_SM-1_O-3-0_R-1": {
+      "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
+      "number": 277,
+      "text": "[EM][IC2][Dev 2.1] Verbrauchte Energie",
+      "function_text": "W·h",
+      "description": "",
+      "device_address": "1.1.4",
+      "device_application": "M-0071_A-5531-37-FDF4",
+      "module_def": {
+        "definition": "MD-4_SM-1",
+        "root_number": 0
+      },
+      "channel": null,
+      "dpts": [
+        {
+          "main": 13,
+          "sub": 10
+        }
+      ],
+      "object_size": "4 Bytes",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/6/15"
+      ]
+    },
+    "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-0_R-1": {
+      "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
+      "number": 263,
+      "text": "[EM][IC1][Dev 1.2] Verbrauchte Energie",
+      "function_text": "W·h",
+      "description": "",
+      "device_address": "1.1.4",
+      "device_application": "M-0071_A-5531-37-FDF4",
+      "module_def": {
+        "definition": "MD-4_SM-1",
+        "root_number": 0
+      },
+      "channel": null,
+      "dpts": [
+        {
+          "main": 13,
+          "sub": 10
+        }
+      ],
+      "object_size": "4 Bytes",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/6/14"
+      ]
+    },
+    "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-0_R-1": {
+      "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
+      "number": 277,
+      "text": "[EM][IC2][Dev 2.2] Verbrauchte Energie",
+      "function_text": "W·h",
+      "description": "",
+      "device_address": "1.1.4",
+      "device_application": "M-0071_A-5531-37-FDF4",
+      "module_def": {
+        "definition": "MD-4_SM-1",
+        "root_number": 0
+      },
+      "channel": null,
+      "dpts": [
+        {
+          "main": 13,
+          "sub": 10
+        }
+      ],
+      "object_size": "4 Bytes",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/6/16"
+      ]
+    },
+    "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-1_R-2": {
+      "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].power",
+      "number": 278,
+      "text": "[EM][IC2][Dev 2.2] Verbrauchte Leistung",
+      "function_text": "W",
+      "description": "",
+      "device_address": "1.1.4",
+      "device_application": "M-0071_A-5531-37-FDF4",
+      "module_def": {
+        "definition": "MD-4_SM-1",
+        "root_number": 1
+      },
+      "channel": null,
+      "dpts": [
+        {
+          "main": 14,
+          "sub": 56
+        }
+      ],
+      "object_size": "4 Bytes",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/6/17"
+      ]
     }
   },
   "topology": {
@@ -580,7 +801,8 @@
           "devices": [
             "1.1.1",
             "1.1.2",
-            "1.1.3"
+            "1.1.3",
+            "1.1.4"
           ],
           "medium_type": "Twisted Pair (TP)"
         }
@@ -748,6 +970,35 @@
         "CH-84": {
           "identifier": "CH-84",
           "name": "Bewegungsmelder"
+        }
+      }
+    },
+    "1.1.4": {
+      "name": "Z70 v2",
+      "hardware_name": "Z70 v2",
+      "order_number": "ZVIZ70V2",
+      "description": "SubModules with Allocators",
+      "manufacturer_name": "Zennio",
+      "individual_address": "1.1.4",
+      "application": "M-0071_A-5531-37-FDF4",
+      "project_uid": 40,
+      "communication_object_ids": [
+        "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-0_R-1",
+        "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-1_R-2",
+        "1.1.4/O-256_R-36",
+        "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-1_SM-1_O-3-0_R-1",
+        "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-0_R-1",
+        "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-0_R-1",
+        "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-1_R-2"
+      ],
+      "channels": {
+        "CH-1": {
+          "identifier": "CH-1",
+          "name": "Allgemein"
+        },
+        "CH-2": {
+          "identifier": "CH-2",
+          "name": "Visualisierung"
         }
       }
     }
@@ -1042,6 +1293,125 @@
       "description": "",
       "comment": ""
     },
+    "0/6/11": {
+      "name": "SM Object number 256",
+      "identifier": "GA-20",
+      "raw_address": 1547,
+      "address": "0/6/11",
+      "project_uid": 42,
+      "dpt": {
+        "main": 13,
+        "sub": 10
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.4/O-256_R-36"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/12": {
+      "name": "SM Object number 263",
+      "identifier": "GA-21",
+      "raw_address": 1548,
+      "address": "0/6/12",
+      "project_uid": 43,
+      "dpt": {
+        "main": 13,
+        "sub": 10
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-0_R-1"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/13": {
+      "name": "SM Object number 264",
+      "identifier": "GA-22",
+      "raw_address": 1549,
+      "address": "0/6/13",
+      "project_uid": 44,
+      "dpt": {
+        "main": 14,
+        "sub": 56
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-1_R-2"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/14": {
+      "name": "SM Object number 265",
+      "identifier": "GA-23",
+      "raw_address": 1550,
+      "address": "0/6/14",
+      "project_uid": 45,
+      "dpt": {
+        "main": 13,
+        "sub": 10
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-0_R-1"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/15": {
+      "name": "SM Object number 275",
+      "identifier": "GA-24",
+      "raw_address": 1551,
+      "address": "0/6/15",
+      "project_uid": 46,
+      "dpt": {
+        "main": 13,
+        "sub": 10
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-1_SM-1_O-3-0_R-1"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/16": {
+      "name": "SM Object number 277",
+      "identifier": "GA-25",
+      "raw_address": 1552,
+      "address": "0/6/16",
+      "project_uid": 47,
+      "dpt": {
+        "main": 13,
+        "sub": 10
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-0_R-1"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/6/17": {
+      "name": "SM Object number 278",
+      "identifier": "GA-26",
+      "raw_address": 1553,
+      "address": "0/6/17",
+      "project_uid": 48,
+      "dpt": {
+        "main": 14,
+        "sub": 56
+      },
+      "data_secure": false,
+      "communication_object_ids": [
+        "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-1_R-2"
+      ],
+      "description": "",
+      "comment": ""
+    },
     "0/7/2": {
       "name": "Temperatur Soll",
       "identifier": "GA-6",
@@ -1118,7 +1488,14 @@
             "0/6/7",
             "0/6/8",
             "0/6/9",
-            "0/6/10"
+            "0/6/10",
+            "0/6/11",
+            "0/6/12",
+            "0/6/13",
+            "0/6/14",
+            "0/6/15",
+            "0/6/16",
+            "0/6/17"
           ],
           "comment": "",
           "group_ranges": {}

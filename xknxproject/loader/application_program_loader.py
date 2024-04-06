@@ -15,6 +15,7 @@ from xknxproject.models import (
     ComObjectRef,
     DeviceInstance,
     ModuleDefinitionArgumentInfo,
+    ModuleDefinitionNumericArg,
 )
 from xknxproject.util import parse_dpt_types, parse_xml_flag
 
@@ -49,6 +50,7 @@ class ApplicationProgramLoader:
             for device in devices
             for attribute in device.module_instance_arguments()
         }
+        numeric_args: dict[str, ModuleDefinitionNumericArg] = {}
         allocators: dict[str, Allocator] = {}
 
         with application_program_path.open(mode="rb") as application_xml:
@@ -73,12 +75,24 @@ class ApplicationProgramLoader:
                         start=int(elem.attrib.get("Start")),
                         end=int(elem.attrib.get("maxInclusive")),
                     )
-                elif elem.tag.endswith("Argument"):  # ModuleDefs/ModuleDef/Arguments/
+                elif elem.tag.endswith("Argument"):
+                    # ModuleDefs/ModuleDef/Arguments/
+                    # or ModuleDefs/ModuleDef/SubModuleDefs/ModuleDef/Arguments/
                     if (_id := elem.attrib.get("Id")) in used_module_arguments:
                         allocates = elem.attrib.get("Allocates")
                         used_module_arguments[_id] = ModuleDefinitionArgumentInfo(
                             name=elem.attrib.get("Name"),
                             allocates=int(allocates) if allocates is not None else None,
+                        )
+                    elem.clear()
+                elif elem.tag.endswith("NumericArg"):
+                    # in dynamic section of Modules
+                    if (_id := elem.attrib.get("RefId")) in used_module_arguments:
+                        value = elem.attrib.get("Value")
+                        numeric_args[_id] = ModuleDefinitionNumericArg(
+                            allocator_ref_id=elem.attrib.get("AllocatorRefId"),
+                            base_value=elem.attrib.get("BaseValue"),
+                            value=int(value) if value is not None else None,
                         )
                     elem.clear()
                 elif elem.tag.endswith("Languages"):
@@ -101,6 +115,7 @@ class ApplicationProgramLoader:
                 com_object_refs=com_object_refs,
                 allocators=allocators,
                 module_def_arguments=used_module_arguments,
+                numeric_args=numeric_args,
             )
 
     @staticmethod
