@@ -1,3 +1,3 @@
 """ETS Project parser version."""
 
-__version__ = "3.7.0"
+__version__ = "3.7.1"
