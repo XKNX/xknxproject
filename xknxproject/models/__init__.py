@@ -30,6 +30,7 @@ from .models import (
     ModuleInstance,
     ModuleInstanceArgument,
     ModuleDefinitionArgumentInfo,
+    ModuleDefinitionNumericArg,
     Product,
     TranslationsType,
     XMLArea,
