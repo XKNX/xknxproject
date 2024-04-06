@@ -1,4 +1,5 @@
 """Test utilities."""
+
 import pytest
 
 from xknxproject.util import get_dpt_type, parse_dpt_types

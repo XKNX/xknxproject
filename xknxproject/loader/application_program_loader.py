@@ -1,4 +1,5 @@
 """Application Program Loader."""
+
 from __future__ import annotations
 
 from collections.abc import Iterator
@@ -61,9 +62,9 @@ class ApplicationProgramLoader:
                     )
                 elif elem.tag.endswith("ComObjectRef"):
                     if (_id := elem.attrib.get("Id")) in used_com_object_ref_ids:
-                        com_object_refs[
-                            _id
-                        ] = ApplicationProgramLoader.parse_com_object_ref(elem, _id)
+                        com_object_refs[_id] = (
+                            ApplicationProgramLoader.parse_com_object_ref(elem, _id)
+                        )
                     elem.clear()
                 elif elem.tag.endswith("Allocator"):  # Allocators/Allocator
                     allocators[elem.attrib.get("Id")] = Allocator(

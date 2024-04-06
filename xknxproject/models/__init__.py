@@ -1,4 +1,5 @@
 """Xknxproj models."""
+
 # flake8: noqa
 from .knxproject import (
     Area,

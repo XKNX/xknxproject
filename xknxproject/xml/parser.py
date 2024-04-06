@@ -1,4 +1,5 @@
 """Parser logic for ETS XML files."""
+
 from __future__ import annotations
 
 import html

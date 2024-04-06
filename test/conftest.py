@@ -1,4 +1,5 @@
 """Conftest for xknxproject."""
+
 import json
 from test import STUBS_PATH
 

@@ -1,4 +1,5 @@
 """Test reading KNX projects."""
+
 from test import RESOURCES_PATH
 
 from pytest import raises

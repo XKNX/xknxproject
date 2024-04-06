@@ -1,4 +1,5 @@
 """Hardware Loader."""
+
 from __future__ import annotations
 
 from xml.etree import ElementTree

@@ -1,4 +1,5 @@
 """Package for exception handling."""
+
 from .exceptions import (
     InvalidPasswordException,
     ProjectNotFoundException,

@@ -1,4 +1,5 @@
 """Combine the project data for more details inferred from linked objects."""
+
 from __future__ import annotations
 
 from typing import NamedTuple

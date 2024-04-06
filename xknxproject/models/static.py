@@ -1,4 +1,5 @@
 """Contains static data from the project files that is not really important and doesn't change often."""
+
 from enum import Enum
 
 

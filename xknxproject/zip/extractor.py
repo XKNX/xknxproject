@@ -1,4 +1,5 @@
 """Class to read KNXProj ZIP files."""
+
 from __future__ import annotations
 
 import base64

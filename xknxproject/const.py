@@ -1,4 +1,5 @@
 """Constants for the library."""
+
 from typing import Final
 
 ETS_6_SCHEMA_VERSION: Final = 21

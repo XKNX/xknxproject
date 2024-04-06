@@ -1,4 +1,5 @@
 """Test parser."""
+
 from test import RESOURCES_PATH
 
 import pytest

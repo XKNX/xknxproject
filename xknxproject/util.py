@@ -1,4 +1,5 @@
 """XML utilities."""
+
 from __future__ import annotations
 
 import logging
@@ -52,13 +53,11 @@ def parse_dpt_types(dpt_string: str | None) -> list[DPTType]:
 
 
 @overload
-def parse_xml_flag(flag: str | None, default: bool) -> bool:
-    ...
+def parse_xml_flag(flag: str | None, default: bool) -> bool: ...
 
 
 @overload
-def parse_xml_flag(flag: str | None, default: None = None) -> bool | None:
-    ...
+def parse_xml_flag(flag: str | None, default: None = None) -> bool | None: ...
 
 
 def parse_xml_flag(flag: str | None, default: bool | None = None) -> bool | None:

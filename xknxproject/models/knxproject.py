@@ -1,4 +1,5 @@
 """Define output type for parsed KNX project."""
+
 from __future__ import annotations
 
 from typing import TypedDict
@@ -44,7 +45,9 @@ class ModuleInstanceInfos(TypedDict):
     """Information about module association for CommunicationObjects."""
 
     definition: str
-    root_number: int  # `Number` assigned by ComObject - without Module base object number added
+    root_number: (
+        int  # `Number` assigned by ComObject - without Module base object number added
+    )
 
 
 class Device(TypedDict):

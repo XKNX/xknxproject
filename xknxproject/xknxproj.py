@@ -1,4 +1,5 @@
 """ETS Project Parser is a library to parse ETS project files."""
+
 from __future__ import annotations
 
 import logging
