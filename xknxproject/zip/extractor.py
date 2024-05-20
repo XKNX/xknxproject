@@ -125,19 +125,22 @@ def _extract_protected_project_file(
 
     try:
         project_archive: ZipFile
+        pwd: bytes
         # Password protection is different for ETS4/5 and ETS6
+        project_archive_file = archive_zip.open(info, mode="r")
         if schema_version < ETS_6_SCHEMA_VERSION:
-            project_archive = ZipFile(archive_zip.open(info, mode="r"), mode="r")
-            project_archive.setpassword(password.encode("utf-8"))
-            yield project_archive
+            project_archive = ZipFile(project_archive_file, mode="r")
+            pwd = password.encode("utf-8")
         else:
-            project_archive = pyzipper.AESZipFile(
-                archive_zip.open(info, mode="r"), mode="r"
-            )
-            project_archive.setpassword(_generate_ets6_zip_password(password))
-            yield project_archive
+            project_archive = pyzipper.AESZipFile(project_archive_file, mode="r")
+            pwd = _generate_ets6_zip_password(password)
+        project_archive.setpassword(pwd)
+        yield project_archive
     except RuntimeError as exception:
         raise InvalidPasswordException("Invalid password.") from exception
+    finally:
+        _LOGGER.debug("Closed protected project archive")
+        project_archive_file.close()
 
 
 def _get_xml_namespace(project_zip: ZipFile) -> str:
@@ -151,14 +154,16 @@ def _get_xml_namespace(project_zip: ZipFile) -> str:
                         line.decode(),
                     )
                     namespace = namespace_match.group(1)  # type: ignore[union-attr]
+                    _LOGGER.debug("Namespace: %s", namespace)
+                    return namespace
                 except (AttributeError, IndexError, UnicodeDecodeError):
                     _LOGGER.error("Could not parse XML namespace from %s", line)
                     raise UnexpectedFileContent(
                         "Could not parse XML namespace."
                     ) from None
-
-        _LOGGER.debug("Namespace: %s", namespace)
-        return namespace
+            if line_number > 2:
+                break
+        raise UnexpectedFileContent("Could not find XML namespace.")
 
 
 def _get_schema_version(namespace: str) -> int:
