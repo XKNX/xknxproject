@@ -1,11 +1,11 @@
 """Test parser."""
 
-from test import RESOURCES_PATH
-
 import pytest
 
 from xknxproject.xml.parser import XMLParser
 from xknxproject.zip import extract
+
+from .. import RESOURCES_PATH
 
 xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
 xknx_test_project_module_defs = RESOURCES_PATH / "module-definition-test.knxproj"
