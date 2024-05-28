@@ -1,9 +1,10 @@
 """Conftest for xknxproject."""
 
 import json
-from test import STUBS_PATH
 
 from xknxproject.models import KNXProject
+
+from . import STUBS_PATH
 
 
 def assert_stub(to_be_verified: KNXProject, stub_name: str) -> None:

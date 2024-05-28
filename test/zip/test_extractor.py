@@ -1,12 +1,12 @@
 """Test reading KNX projects."""
 
-from test import RESOURCES_PATH
-
 from pytest import raises
 
 from xknxproject.exceptions import InvalidPasswordException
 from xknxproject.zip import extract
 from xknxproject.zip.extractor import _generate_ets6_zip_password
+
+from .. import RESOURCES_PATH
 
 xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
 xknx_test_project_ets5 = RESOURCES_PATH / "xknx_test_project_no_password.knxproj"
