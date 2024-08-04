@@ -17,7 +17,7 @@ dependencies = ["pyzipper>=0.3.6", "striprtf>=0.0.26"]
 description = "A library to gather information from ETS project files used for KNX"
 dynamic = ["version"]
 keywords = ["KNX", "ETS", "Home Assistant"]
-license = { file = "LICENSE" }
+license = { text = "GPL-2.0-only" }
 readme = "README.md"
 requires-python = ">=3.9.0"
 
