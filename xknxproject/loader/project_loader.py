@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from xml.etree import ElementTree
 
+from xknxproject.exceptions import UnexpectedDataError
 from xknxproject.models import (
     ChannelNode,
     ComObjectInstanceRef,
@@ -112,11 +113,16 @@ class ProjectLoader:
             )
 
             for group_address in function.group_addresses:
-                group_address.address = next(
-                    ga.address
-                    for ga in group_address_list
-                    if ga.identifier == group_address.ref_id
-                )
+                try:
+                    group_address.address = next(
+                        ga.address
+                        for ga in group_address_list
+                        if ga.identifier == group_address.ref_id
+                    )
+                except StopIteration:
+                    raise UnexpectedDataError(
+                        f"Group address {group_address.ref_id} referred in function not found"
+                    ) from None
 
         return (
             group_address_list,
