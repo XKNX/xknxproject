@@ -264,7 +264,7 @@ class _TopologyLoader:
                 name=channel_node_elem.get("Text", ""),
             )
             for channel_node_elem in device_element.findall(
-                "{*}GroupObjectTree/{*}Nodes/{*}Node[@Type='Channel']"
+                "{*}GroupObjectTree//{*}Nodes/{*}Node[@Type='Channel']"
             )
         ]
         return DeviceInstance(
