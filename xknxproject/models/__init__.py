@@ -19,6 +19,8 @@ from .knxproject import (
 )
 from .models import (
     ApplicationProgram,
+    ApplicationProgramChannel,
+    ParameterInstanceRef,
     Allocator,
     ChannelNode,
     ComObject,

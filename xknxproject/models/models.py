@@ -137,6 +137,7 @@ class DeviceInstance:
         channels: list[ChannelNode],
         com_object_instance_refs: list[ComObjectInstanceRef],
         module_instances: list[ModuleInstance],
+        parameter_instance_refs: list[ParameterInstanceRef],
         com_objects: list[ComObject] | None = None,
     ):
         """Initialize a Device Instance."""
@@ -157,6 +158,7 @@ class DeviceInstance:
         self.com_object_instance_refs = com_object_instance_refs
         self.module_instances = module_instances
         self.com_objects = com_objects or []
+        self.parameter_instance_refs = parameter_instance_refs
         self.application_program_ref: str | None = None
 
         self.individual_address = (
@@ -483,6 +485,14 @@ class ComObjectInstanceRef:
 
 
 @dataclass
+class ParameterInstanceRef:
+    """ParameterInstanceRef."""
+
+    ref_id: str
+    value: str | None
+
+
+@dataclass
 class ApplicationProgram:
     """Class that represents an ApplicationProgram instance."""
 
@@ -491,6 +501,7 @@ class ApplicationProgram:
     allocators: dict[str, Allocator]  # {Id: Allocator}
     module_def_arguments: dict[str, ModuleDefinitionArgumentInfo]  # {Id: ...}
     numeric_args: dict[str, ModuleDefinitionNumericArg]  # {RefId: ...}
+    channels: dict[str, ApplicationProgramChannel]  # {Id: ApplicationProgramChannel}
 
 
 @dataclass
@@ -521,6 +532,29 @@ class ModuleDefinitionNumericArg:
     value: int | None
     # RefId to Argument (<application>_MD-<int>_A-<int>) - Base value for arguments used in SubModules
     base_value: str | None
+
+
+@dataclass
+class ApplicationProgramChannel:
+    """ApplicationProgramChannel."""
+
+    __slots__ = (
+        "identifier",
+        "text",
+        "text_parameter_ref_id",
+        "name",
+        "number",
+    )
+
+    identifier: str  # name="Id" type="xs:ID" use="required"
+    text: (
+        str | None
+    )  # name="Text" type="knx:LanguageDependentString255_t" use="optional"
+    text_parameter_ref_id: (
+        str | None
+    )  # name="TextParameterRefId" type="knx:RELIDREF" use="optional"
+    name: str  # name="Name" type="knx:String255_t" use="required"
+    number: str  # name="Number" type="knx:String50_t" use="required"
 
 
 @dataclass
@@ -582,6 +616,7 @@ class ComObjectRef:
         "update_flag",
         "read_on_init_flag",
         "datapoint_types",
+        "text_parameter_ref_id",
     )
 
     identifier: str  # "Id" - xs:ID - required
@@ -597,6 +632,7 @@ class ComObjectRef:
     update_flag: bool | None  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
     datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS
+    text_parameter_ref_id: str | None  #  type="knx:IDREF" use="optional"
 
 
 @dataclass
