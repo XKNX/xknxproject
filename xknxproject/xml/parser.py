@@ -321,6 +321,18 @@ class XMLParser:
                 )
                 device_com_objects.append(com_object_key)
 
+            channels = {
+                channel.ref_id: Channel(
+                    identifier=channel.ref_id,
+                    name=channel.name,
+                    communication_object_ids=[
+                        f"{device.individual_address}/{go_instance_id}"
+                        for go_instance_id in channel.group_object_instances
+                    ],
+                )
+                for channel in device.channels
+            }
+
             devices_dict[device.individual_address] = Device(
                 name=device.name or device.product_name,
                 hardware_name=device.product_name,
@@ -331,12 +343,7 @@ class XMLParser:
                 application=device.application_program_ref,
                 project_uid=device.project_uid,
                 communication_object_ids=device_com_objects,
-                channels={
-                    channel.ref_id: Channel(
-                        identifier=channel.ref_id, name=channel.name
-                    )
-                    for channel in device.channels
-                },
+                channels=channels,
             )
 
         topology_dict: dict[str, Area] = {}

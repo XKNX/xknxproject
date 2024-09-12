@@ -70,6 +70,7 @@ class Channel(TypedDict):
 
     identifier: str
     name: str
+    communication_object_ids: list[str]
 
 
 class Line(TypedDict):
