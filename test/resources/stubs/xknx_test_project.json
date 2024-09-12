@@ -718,51 +718,123 @@
       "channels": {
         "MD-1_M-13_MI-1_CH-80": {
           "identifier": "MD-1_M-13_MI-1_CH-80",
-          "name": "Ventilausgang 1 (...)"
+          "name": "Ventilausgang 1 (...)",
+          "communication_object_ids": [
+            "1.1.7/MD-1_M-13_MI-1_O-2-1_R-2"
+          ]
         },
         "MD-1_M-8_MI-1_CH-80": {
           "identifier": "MD-1_M-8_MI-1_CH-80",
-          "name": "Ventilausgang 2 (...)"
+          "name": "Ventilausgang 2 (...)",
+          "communication_object_ids": [
+            "1.1.7/MD-1_M-8_MI-1_O-2-1_R-2"
+          ]
         },
         "MD-1_M-1_MI-1_CH-80": {
           "identifier": "MD-1_M-1_MI-1_CH-80",
-          "name": "Ventilausgang 3 (...)"
+          "name": "Ventilausgang 3 (...)",
+          "communication_object_ids": [
+            "1.1.7/MD-1_M-1_MI-1_O-2-1_R-2"
+          ]
         },
         "MD-1_M-2_MI-1_CH-80": {
           "identifier": "MD-1_M-2_MI-1_CH-80",
-          "name": "Ventilausgang 4 (...)"
+          "name": "Ventilausgang 4 (...)",
+          "communication_object_ids": [
+            "1.1.7/MD-1_M-2_MI-1_O-2-1_R-2"
+          ]
         },
         "MD-1_M-6_MI-1_CH-80": {
           "identifier": "MD-1_M-6_MI-1_CH-80",
-          "name": "Ventilausgang 5 (...)"
+          "name": "Ventilausgang 5 (...)",
+          "communication_object_ids": [
+            "1.1.7/MD-1_M-6_MI-1_O-2-1_R-2"
+          ]
         },
         "MD-1_M-3_MI-1_CH-80": {
           "identifier": "MD-1_M-3_MI-1_CH-80",
-          "name": "Ventilausgang 6 (...)"
+          "name": "Ventilausgang 6 (...)",
+          "communication_object_ids": [
+            "1.1.7/MD-1_M-3_MI-1_O-2-1_R-2"
+          ]
         },
         "MD-2_M-20_MI-1_CH-81": {
           "identifier": "MD-2_M-20_MI-1_CH-81",
-          "name": "Raumtemperaturregler 1 (name in application)"
+          "name": "Raumtemperaturregler 1 (name in application)",
+          "communication_object_ids": [
+            "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3",
+            "1.1.7/MD-2_M-20_MI-1_O-5-1_R-9",
+            "1.1.7/MD-2_M-20_MI-1_O-5-2_R-10",
+            "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17",
+            "1.1.7/MD-2_M-20_MI-1_O-5-10_R-18",
+            "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45",
+            "1.1.7/MD-2_M-20_MI-1_O-7-0_R-21"
+          ]
         },
         "MD-2_M-4_MI-1_CH-81": {
           "identifier": "MD-2_M-4_MI-1_CH-81",
-          "name": "channel name in properties"
+          "name": "channel name in properties",
+          "communication_object_ids": [
+            "1.1.7/MD-2_M-4_MI-1_O-2-2_R-3",
+            "1.1.7/MD-2_M-4_MI-1_O-5-1_R-9",
+            "1.1.7/MD-2_M-4_MI-1_O-5-2_R-10",
+            "1.1.7/MD-2_M-4_MI-1_O-5-0_R-17",
+            "1.1.7/MD-2_M-4_MI-1_O-5-10_R-18",
+            "1.1.7/MD-2_M-4_MI-1_O-7-1_R-45",
+            "1.1.7/MD-2_M-4_MI-1_O-7-0_R-21"
+          ]
         },
         "MD-2_M-9_MI-1_CH-81": {
           "identifier": "MD-2_M-9_MI-1_CH-81",
-          "name": "in application and properties"
+          "name": "in application and properties",
+          "communication_object_ids": [
+            "1.1.7/MD-2_M-9_MI-1_O-2-2_R-3",
+            "1.1.7/MD-2_M-9_MI-1_O-5-1_R-9",
+            "1.1.7/MD-2_M-9_MI-1_O-5-2_R-10",
+            "1.1.7/MD-2_M-9_MI-1_O-5-0_R-17",
+            "1.1.7/MD-2_M-9_MI-1_O-5-10_R-18",
+            "1.1.7/MD-2_M-9_MI-1_O-7-1_R-45",
+            "1.1.7/MD-2_M-9_MI-1_O-7-0_R-21"
+          ]
         },
         "MD-2_M-10_MI-1_CH-81": {
           "identifier": "MD-2_M-10_MI-1_CH-81",
-          "name": "Raumtemperaturregler 4 (...)"
+          "name": "Raumtemperaturregler 4 (...)",
+          "communication_object_ids": [
+            "1.1.7/MD-2_M-10_MI-1_O-2-2_R-3",
+            "1.1.7/MD-2_M-10_MI-1_O-5-1_R-9",
+            "1.1.7/MD-2_M-10_MI-1_O-5-2_R-10",
+            "1.1.7/MD-2_M-10_MI-1_O-5-0_R-17",
+            "1.1.7/MD-2_M-10_MI-1_O-5-10_R-18",
+            "1.1.7/MD-2_M-10_MI-1_O-7-1_R-45",
+            "1.1.7/MD-2_M-10_MI-1_O-7-0_R-21"
+          ]
         },
         "MD-2_M-11_MI-1_CH-81": {
           "identifier": "MD-2_M-11_MI-1_CH-81",
-          "name": "Raumtemperaturregler 5 (...)"
+          "name": "Raumtemperaturregler 5 (...)",
+          "communication_object_ids": [
+            "1.1.7/MD-2_M-11_MI-1_O-2-2_R-3",
+            "1.1.7/MD-2_M-11_MI-1_O-5-1_R-9",
+            "1.1.7/MD-2_M-11_MI-1_O-5-2_R-10",
+            "1.1.7/MD-2_M-11_MI-1_O-5-0_R-17",
+            "1.1.7/MD-2_M-11_MI-1_O-5-10_R-18",
+            "1.1.7/MD-2_M-11_MI-1_O-7-1_R-45",
+            "1.1.7/MD-2_M-11_MI-1_O-7-0_R-21"
+          ]
         },
         "MD-2_M-12_MI-1_CH-81": {
           "identifier": "MD-2_M-12_MI-1_CH-81",
-          "name": "Raumtemperaturregler 6 (...)"
+          "name": "Raumtemperaturregler 6 (...)",
+          "communication_object_ids": [
+            "1.1.7/MD-2_M-12_MI-1_O-2-2_R-3",
+            "1.1.7/MD-2_M-12_MI-1_O-5-1_R-9",
+            "1.1.7/MD-2_M-12_MI-1_O-5-2_R-10",
+            "1.1.7/MD-2_M-12_MI-1_O-5-0_R-17",
+            "1.1.7/MD-2_M-12_MI-1_O-5-10_R-18",
+            "1.1.7/MD-2_M-12_MI-1_O-7-1_R-45",
+            "1.1.7/MD-2_M-12_MI-1_O-7-0_R-21"
+          ]
         }
       }
     }

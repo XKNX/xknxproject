@@ -829,15 +829,50 @@
       "channels": {
         "MD-2_M-1_MI-1_CH-1": {
           "identifier": "MD-2_M-1_MI-1_CH-1",
-          "name": "Kanal A: Wohnzimmer"
+          "name": "Kanal A: Wohnzimmer",
+          "communication_object_ids": [
+            "1.1.1/MD-2_M-1_MI-1_O-2-35_R-65",
+            "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1",
+            "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3",
+            "1.1.1/MD-2_M-1_MI-1_O-2-9_R-4",
+            "1.1.1/MD-2_M-1_MI-1_O-2-17_R-5",
+            "1.1.1/MD-2_M-1_MI-1_O-2-19_R-6",
+            "1.1.1/MD-2_M-1_MI-1_O-2-20_R-7",
+            "1.1.1/MD-2_M-1_MI-1_O-2-21_R-8",
+            "1.1.1/MD-2_M-1_MI-1_O-2-3_R-14",
+            "1.1.1/MD-2_M-1_MI-1_O-2-10_R-15",
+            "1.1.1/MD-2_M-1_MI-1_O-2-8_R-18",
+            "1.1.1/MD-2_M-1_MI-1_O-2-22_R-21",
+            "1.1.1/MD-2_M-1_MI-1_O-2-15_R-68",
+            "1.1.1/MD-2_M-1_MI-1_O-2-12_R-55"
+          ]
         },
         "MD-2_M-2_MI-1_CH-1": {
           "identifier": "MD-2_M-2_MI-1_CH-1",
-          "name": "Kanal B: Küche"
+          "name": "Kanal B: Küche",
+          "communication_object_ids": [
+            "1.1.1/MD-2_M-2_MI-1_O-2-35_R-65",
+            "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1",
+            "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3",
+            "1.1.1/MD-2_M-2_MI-1_O-2-9_R-4",
+            "1.1.1/MD-2_M-2_MI-1_O-2-17_R-5",
+            "1.1.1/MD-2_M-2_MI-1_O-2-19_R-6",
+            "1.1.1/MD-2_M-2_MI-1_O-2-20_R-7",
+            "1.1.1/MD-2_M-2_MI-1_O-2-21_R-8",
+            "1.1.1/MD-2_M-2_MI-1_O-2-3_R-14",
+            "1.1.1/MD-2_M-2_MI-1_O-2-10_R-15",
+            "1.1.1/MD-2_M-2_MI-1_O-2-8_R-18",
+            "1.1.1/MD-2_M-2_MI-1_O-2-22_R-21",
+            "1.1.1/MD-2_M-2_MI-1_O-2-15_R-68",
+            "1.1.1/MD-2_M-2_MI-1_O-2-12_R-55"
+          ]
         },
         "CH-9": {
           "identifier": "CH-9",
-          "name": "Szenen"
+          "name": "Szenen",
+          "communication_object_ids": [
+            "1.1.1/O-332_R-19"
+          ]
         }
       }
     },
@@ -860,19 +895,70 @@
       "channels": {
         "MD-2_M-1_MI-1_CH-1": {
           "identifier": "MD-2_M-1_MI-1_CH-1",
-          "name": "Kanal A: Bad"
+          "name": "Kanal A: Bad",
+          "communication_object_ids": [
+            "1.1.2/MD-2_M-1_MI-1_O-2-35_R-65",
+            "1.1.2/MD-2_M-1_MI-1_O-2-1_R-1",
+            "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3",
+            "1.1.2/MD-2_M-1_MI-1_O-2-9_R-4",
+            "1.1.2/MD-2_M-1_MI-1_O-2-17_R-5",
+            "1.1.2/MD-2_M-1_MI-1_O-2-19_R-6",
+            "1.1.2/MD-2_M-1_MI-1_O-2-20_R-7",
+            "1.1.2/MD-2_M-1_MI-1_O-2-21_R-8",
+            "1.1.2/MD-2_M-1_MI-1_O-2-3_R-14",
+            "1.1.2/MD-2_M-1_MI-1_O-2-10_R-15",
+            "1.1.2/MD-2_M-1_MI-1_O-2-8_R-18",
+            "1.1.2/MD-2_M-1_MI-1_O-2-22_R-21",
+            "1.1.2/MD-2_M-1_MI-1_O-2-15_R-68",
+            "1.1.2/MD-2_M-1_MI-1_O-2-12_R-55"
+          ]
         },
         "MD-2_M-5_MI-1_CH-1": {
           "identifier": "MD-2_M-5_MI-1_CH-1",
-          "name": "Kanal E: "
+          "name": "Kanal E: ",
+          "communication_object_ids": [
+            "1.1.2/MD-2_M-5_MI-1_O-2-35_R-65",
+            "1.1.2/MD-2_M-5_MI-1_O-2-1_R-1",
+            "1.1.2/MD-2_M-5_MI-1_O-2-2_R-3",
+            "1.1.2/MD-2_M-5_MI-1_O-2-9_R-4",
+            "1.1.2/MD-2_M-5_MI-1_O-2-17_R-5",
+            "1.1.2/MD-2_M-5_MI-1_O-2-19_R-6",
+            "1.1.2/MD-2_M-5_MI-1_O-2-20_R-7",
+            "1.1.2/MD-2_M-5_MI-1_O-2-21_R-8",
+            "1.1.2/MD-2_M-5_MI-1_O-2-3_R-14",
+            "1.1.2/MD-2_M-5_MI-1_O-2-10_R-15",
+            "1.1.2/MD-2_M-5_MI-1_O-2-8_R-18",
+            "1.1.2/MD-2_M-5_MI-1_O-2-22_R-21",
+            "1.1.2/MD-2_M-5_MI-1_O-2-15_R-68",
+            "1.1.2/MD-2_M-5_MI-1_O-2-12_R-55"
+          ]
         },
         "MD-2_M-6_MI-1_CH-1": {
           "identifier": "MD-2_M-6_MI-1_CH-1",
-          "name": "Kanal F: "
+          "name": "Kanal F: ",
+          "communication_object_ids": [
+            "1.1.2/MD-2_M-6_MI-1_O-2-35_R-65",
+            "1.1.2/MD-2_M-6_MI-1_O-2-1_R-1",
+            "1.1.2/MD-2_M-6_MI-1_O-2-2_R-3",
+            "1.1.2/MD-2_M-6_MI-1_O-2-9_R-4",
+            "1.1.2/MD-2_M-6_MI-1_O-2-17_R-5",
+            "1.1.2/MD-2_M-6_MI-1_O-2-19_R-6",
+            "1.1.2/MD-2_M-6_MI-1_O-2-20_R-7",
+            "1.1.2/MD-2_M-6_MI-1_O-2-21_R-8",
+            "1.1.2/MD-2_M-6_MI-1_O-2-3_R-14",
+            "1.1.2/MD-2_M-6_MI-1_O-2-10_R-15",
+            "1.1.2/MD-2_M-6_MI-1_O-2-8_R-18",
+            "1.1.2/MD-2_M-6_MI-1_O-2-22_R-21",
+            "1.1.2/MD-2_M-6_MI-1_O-2-15_R-68",
+            "1.1.2/MD-2_M-6_MI-1_O-2-12_R-55"
+          ]
         },
         "CH-9": {
           "identifier": "CH-9",
-          "name": "Szenen"
+          "name": "Szenen",
+          "communication_object_ids": [
+            "1.1.2/O-332_R-19"
+          ]
         }
       }
     },
@@ -894,84 +980,7 @@
         "1.1.3/MD-3_M-2_MI-2_O-2-4_R-5",
         "1.1.3/MD-3_M-2_MI-8_O-2-5_R-6"
       ],
-      "channels": {
-        "CH-0": {
-          "identifier": "CH-0",
-          "name": "ALLGEMEIN"
-        },
-        "MD-2_M-3_MI-1_CH-1": {
-          "identifier": "MD-2_M-3_MI-1_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-2_CH-1": {
-          "identifier": "MD-2_M-3_MI-2_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-3_CH-1": {
-          "identifier": "MD-2_M-3_MI-3_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-4_CH-1": {
-          "identifier": "MD-2_M-3_MI-4_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-5_CH-1": {
-          "identifier": "MD-2_M-3_MI-5_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-6_CH-1": {
-          "identifier": "MD-2_M-3_MI-6_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-7_CH-1": {
-          "identifier": "MD-2_M-3_MI-7_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-8_CH-1": {
-          "identifier": "MD-2_M-3_MI-8_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-9_CH-1": {
-          "identifier": "MD-2_M-3_MI-9_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-10_CH-1": {
-          "identifier": "MD-2_M-3_MI-10_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-11_CH-1": {
-          "identifier": "MD-2_M-3_MI-11_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-12_CH-1": {
-          "identifier": "MD-2_M-3_MI-12_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-13_CH-1": {
-          "identifier": "MD-2_M-3_MI-13_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-14_CH-1": {
-          "identifier": "MD-2_M-3_MI-14_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-15_CH-1": {
-          "identifier": "MD-2_M-3_MI-15_CH-1",
-          "name": "GL-4, "
-        },
-        "MD-2_M-3_MI-16_CH-1": {
-          "identifier": "MD-2_M-3_MI-16_CH-1",
-          "name": "GL-4, "
-        },
-        "CH-17": {
-          "identifier": "CH-17",
-          "name": "EVG"
-        },
-        "CH-84": {
-          "identifier": "CH-84",
-          "name": "Bewegungsmelder"
-        }
-      }
+      "channels": {}
     },
     "1.1.4": {
       "name": "Z70 v2",
@@ -994,11 +1003,32 @@
       "channels": {
         "CH-1": {
           "identifier": "CH-1",
-          "name": "Allgemein"
-        },
-        "CH-2": {
-          "identifier": "CH-2",
-          "name": "Visualisierung"
+          "name": "Allgemein",
+          "communication_object_ids": [
+            "1.1.4/O-1_R-2",
+            "1.1.4/O-2_R-3",
+            "1.1.4/O-1474_R-653",
+            "1.1.4/O-1475_R-654",
+            "1.1.4/O-1473_R-652",
+            "1.1.4/O-7_R-8",
+            "1.1.4/O-8_R-688",
+            "1.1.4/O-1470_R-44",
+            "1.1.4/O-256_R-36",
+            "1.1.4/O-260_R-40",
+            "1.1.4/O-56_R-20",
+            "1.1.4/O-3_R-4",
+            "1.1.4/O-4_R-5",
+            "1.1.4/O-5_R-6",
+            "1.1.4/O-55_R-19",
+            "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-1_R-2",
+            "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-0_R-1",
+            "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-1_R-2",
+            "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-0_R-1",
+            "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-1_R-2",
+            "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-0_R-1",
+            "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-1_SM-1_O-3-1_R-2",
+            "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-1_SM-1_O-3-0_R-1"
+          ]
         }
       }
     }
