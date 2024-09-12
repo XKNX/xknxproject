@@ -224,8 +224,11 @@ class DeviceInstance:
 class ChannelNode:
     """Class that represents a Node with Type Channel."""
 
-    ref_id: str
-    name: str
+    ref_id: str  # name="RefId" type="knx:RELIDREF" use="required"
+    name: str  # name="Text" type="xs:string" use="optional"
+    group_object_instances: list[
+        str
+    ]  # name="GroupObjectInstances" type="knx:RELIDREFS" use="optional"
 
 
 @dataclass

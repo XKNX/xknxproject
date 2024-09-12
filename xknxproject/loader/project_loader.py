@@ -237,6 +237,7 @@ class _TopologyLoader:
 
         project_uid = device_element.get("Puid")
         product_ref = device_element.get("ProductRefId", "")
+
         additional_addresses = [
             add_addr
             for address_elem in device_element.findall(
@@ -244,6 +245,7 @@ class _TopologyLoader:
             )
             if (add_addr := address_elem.get("Address")) is not None
         ]
+
         com_obj_inst_refs = [
             com_obj_inst_ref
             for elem in device_element.findall(
@@ -251,6 +253,7 @@ class _TopologyLoader:
             )
             if (com_obj_inst_ref := self._create_com_object_instance(elem)) is not None
         ]
+
         module_instances = [
             module_instance
             for mi_elem in device_element.findall(
@@ -258,15 +261,22 @@ class _TopologyLoader:
             )
             if (module_instance := self._create_module_instance(mi_elem)) is not None
         ]
-        channels = [
-            ChannelNode(
-                ref_id=channel_node_elem.get("RefId"),  # type: ignore[arg-type]
-                name=channel_node_elem.get("Text", ""),
+
+        channels = []
+        for channel_node_elem in device_element.findall(
+            "{*}GroupObjectTree//{*}Nodes/{*}Node[@Type='Channel']"
+        ):
+            if not (_gos := channel_node_elem.get("GroupObjectInstances")):
+                # parse only used channels
+                continue
+            channels.append(
+                ChannelNode(
+                    ref_id=channel_node_elem.get("RefId"),  # type: ignore[arg-type]
+                    name=channel_node_elem.get("Text", ""),
+                    group_object_instances=_gos.split(" "),
+                )
             )
-            for channel_node_elem in device_element.findall(
-                "{*}GroupObjectTree//{*}Nodes/{*}Node[@Type='Channel']"
-            )
-        ]
+
         return DeviceInstance(
             identifier=device_element.get("Id", ""),
             address=int(address),
