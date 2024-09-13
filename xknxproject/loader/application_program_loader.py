@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
-import logging
 from typing import Any
 from xml.etree import ElementTree
 from zipfile import Path
@@ -11,6 +10,7 @@ from zipfile import Path
 from xknxproject.models import (
     Allocator,
     ApplicationProgram,
+    ApplicationProgramChannel,
     ComObject,
     ComObjectRef,
     DeviceInstance,
@@ -18,8 +18,6 @@ from xknxproject.models import (
     ModuleDefinitionNumericArg,
 )
 from xknxproject.util import parse_dpt_types, parse_xml_flag
-
-_LOGGER = logging.getLogger("xknxproject.log")
 
 
 class ApplicationProgramLoader:
@@ -51,6 +49,9 @@ class ApplicationProgramLoader:
             for attribute in device.module_instance_arguments()
         }
         numeric_args: dict[str, ModuleDefinitionNumericArg] = {}
+        channels: dict[
+            str, ApplicationProgramChannel
+        ] = {}  # {Id: ApplicationProgramChannel}
         allocators: dict[str, Allocator] = {}
 
         with application_program_path.open(mode="rb") as application_xml:
@@ -95,6 +96,16 @@ class ApplicationProgramLoader:
                             value=int(value) if value is not None else None,
                         )
                     elem.clear()
+                elif elem.tag.endswith("Channel"):
+                    _id = elem.attrib.get("Id")
+                    channels[_id] = ApplicationProgramChannel(
+                        identifier=_id,
+                        name=elem.attrib.get("Name"),
+                        number=elem.attrib.get("Number"),
+                        text=elem.attrib.get("Text"),
+                        text_parameter_ref_id=elem.attrib.get("TextParameterRefId"),
+                    )
+                    elem.clear()
                 elif elem.tag.endswith("Languages"):
                     elem.clear()
                     # hold iterator for optional translation parsing
@@ -107,6 +118,7 @@ class ApplicationProgramLoader:
                     com_objects=com_objects,
                     com_object_refs=com_object_refs,
                     used_com_object_ref_ids=used_com_object_ref_ids,
+                    channels=channels,
                     language_code=language_code,
                 )
 
@@ -116,6 +128,7 @@ class ApplicationProgramLoader:
                 allocators=allocators,
                 module_def_arguments=used_module_arguments,
                 numeric_args=numeric_args,
+                channels=channels,
             )
 
     @staticmethod
@@ -124,13 +137,16 @@ class ApplicationProgramLoader:
         com_objects: dict[str, ComObject],
         com_object_refs: dict[str, ComObjectRef],
         used_com_object_ref_ids: set[str],
+        channels: dict[str, ApplicationProgramChannel],
         language_code: str,
     ) -> None:
         """Parse translations. Replace translated text in com_objects and com_object_refs."""
-        used_com_object_ids = {
+        _used_com_object_ids = {
             com_object_ref.ref_id for com_object_ref in com_object_refs.values()
         }
-        used_translation_ids = used_com_object_ids | used_com_object_ref_ids
+        used_translation_ids = (
+            _used_com_object_ids | used_com_object_ref_ids | channels.keys()
+        )
         in_language = False
         in_translation_ref: str | None = None  # TranslationElement RefId
         # translation_map: {TranslationElement RefId: {AttributeName: Text}}
@@ -138,7 +154,7 @@ class ApplicationProgramLoader:
         for _, elem in tree_iterator:
             if elem.tag.endswith("Language"):
                 if in_language:
-                    # Already found the language we are looking for.
+                    # Hitting the next language tag after the one we were looking for.
                     # We don't need anything after that tag (there isn't much anyway)
                     elem.clear()
                     break
@@ -158,6 +174,7 @@ class ApplicationProgramLoader:
 
         ApplicationProgramLoader.apply_translations(com_object_refs, translation_map)
         ApplicationProgramLoader.apply_translations(com_objects, translation_map)
+        ApplicationProgramLoader.apply_translations(channels, translation_map)
 
     @staticmethod
     def parse_com_object(
@@ -202,21 +219,26 @@ class ApplicationProgramLoader:
             update_flag=parse_xml_flag(elem.get("UpdateFlag")),
             read_on_init_flag=parse_xml_flag(elem.get("ReadOnInitFlag")),
             datapoint_types=parse_dpt_types(elem.get("DatapointType")),
+            text_parameter_ref_id=elem.get("TextParameterRefId"),
         )
 
     @staticmethod
     def apply_translations(
-        com_objects: dict[str, ComObject] | dict[str, ComObjectRef],
+        translatable_object_map: dict[str, ComObject]
+        | dict[str, ComObjectRef]
+        | dict[str, ApplicationProgramChannel],
         translation_map: dict[str, dict[str, str]],
     ) -> None:
-        """Apply translations to ComObjects and ComObjectRefs."""
-        for identifier in com_objects.keys() & translation_map.keys():
+        """Apply translations to Objects."""
+        for identifier in translatable_object_map.keys() & translation_map.keys():
             translation = translation_map[identifier]
-            com_object = com_objects[identifier]
+            obj = translatable_object_map[identifier]
             if _text := translation.get("Text"):
-                com_object.text = _text
-            if _function_text := translation.get("FunctionText"):
-                com_object.function_text = _function_text
+                obj.text = _text
+            if hasattr(obj, "function_text") and (
+                _function_text := translation.get("FunctionText")
+            ):
+                obj.function_text = _function_text
 
     @staticmethod
     def get_application_program_files_for_devices(

@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 import logging
 import re
 
+from xknxproject import util
 from xknxproject.models.knxproject import DPTType, ModuleInstanceInfos
 from xknxproject.models.static import GroupAddressStyle, SpaceType
 from xknxproject.zip import KNXProjContents
@@ -137,6 +138,7 @@ class DeviceInstance:
         channels: list[ChannelNode],
         com_object_instance_refs: list[ComObjectInstanceRef],
         module_instances: list[ModuleInstance],
+        parameter_instance_refs: list[ParameterInstanceRef],
         com_objects: list[ComObject] | None = None,
     ):
         """Initialize a Device Instance."""
@@ -157,6 +159,7 @@ class DeviceInstance:
         self.com_object_instance_refs = com_object_instance_refs
         self.module_instances = module_instances
         self.com_objects = com_objects or []
+        self.parameter_instance_refs = parameter_instance_refs
         self.application_program_ref: str | None = None
 
         self.individual_address = (
@@ -197,6 +200,15 @@ class DeviceInstance:
                 application=application,
             )
 
+        for channel in self.channels:
+            if not channel.name:
+                application_channel_id = util.strip_module_instance(
+                    channel.ref_id, search_id="CH"
+                )
+                application_channel = application.channels[
+                    f"{self.application_program_ref}_{application_channel_id}"
+                ]
+                channel.name = application_channel.text or application_channel.name
         self._complete_channel_placeholders()
 
     def _complete_channel_placeholders(self) -> None:
@@ -327,20 +339,7 @@ class ComObjectInstanceRef:
             self.com_object_ref_id = self.ref_id
             return
 
-        if self.ref_id.startswith("O-"):
-            ref_id = self.ref_id
-        elif self.ref_id.startswith("MD-"):
-            # Remove module and ModuleInstance occurrence as they will not be in the application program directly
-            module_definition = self.ref_id.split("_")[0]
-            object_reference = self.ref_id[self.ref_id.index("_O-") :]
-            _submodule_match = re.search(r"(_SM-[^_]+)", self.ref_id)
-            submodule = _submodule_match.group() if _submodule_match is not None else ""
-            ref_id = f"{module_definition}{submodule}{object_reference}"
-        else:
-            raise ValueError(
-                f"Unknown ref_id format: {self.ref_id} in application: {application_program_ref}"
-            )
-
+        ref_id = util.strip_module_instance(self.ref_id, search_id="O")
         self.application_program_id_prefix = f"{application_program_ref}_"
         self.com_object_ref_id = f"{application_program_ref}_{ref_id}"
 
@@ -483,6 +482,14 @@ class ComObjectInstanceRef:
 
 
 @dataclass
+class ParameterInstanceRef:
+    """ParameterInstanceRef."""
+
+    ref_id: str
+    value: str | None
+
+
+@dataclass
 class ApplicationProgram:
     """Class that represents an ApplicationProgram instance."""
 
@@ -491,6 +498,7 @@ class ApplicationProgram:
     allocators: dict[str, Allocator]  # {Id: Allocator}
     module_def_arguments: dict[str, ModuleDefinitionArgumentInfo]  # {Id: ...}
     numeric_args: dict[str, ModuleDefinitionNumericArg]  # {RefId: ...}
+    channels: dict[str, ApplicationProgramChannel]  # {Id: ApplicationProgramChannel}
 
 
 @dataclass
@@ -521,6 +529,29 @@ class ModuleDefinitionNumericArg:
     value: int | None
     # RefId to Argument (<application>_MD-<int>_A-<int>) - Base value for arguments used in SubModules
     base_value: str | None
+
+
+@dataclass
+class ApplicationProgramChannel:
+    """ApplicationProgramChannel."""
+
+    __slots__ = (
+        "identifier",
+        "text",
+        "text_parameter_ref_id",
+        "name",
+        "number",
+    )
+
+    identifier: str  # name="Id" type="xs:ID" use="required"
+    text: (
+        str | None
+    )  # name="Text" type="knx:LanguageDependentString255_t" use="optional"
+    text_parameter_ref_id: (
+        str | None
+    )  # name="TextParameterRefId" type="knx:RELIDREF" use="optional"
+    name: str  # name="Name" type="knx:String255_t" use="required"
+    number: str  # name="Number" type="knx:String50_t" use="required"
 
 
 @dataclass
@@ -582,6 +613,7 @@ class ComObjectRef:
         "update_flag",
         "read_on_init_flag",
         "datapoint_types",
+        "text_parameter_ref_id",
     )
 
     identifier: str  # "Id" - xs:ID - required
@@ -597,6 +629,7 @@ class ComObjectRef:
     update_flag: bool | None  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
     datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS
+    text_parameter_ref_id: str | None  #  type="knx:IDREF" use="optional"
 
 
 @dataclass

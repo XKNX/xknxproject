@@ -13,6 +13,7 @@ from xknxproject.models import (
     KNXMasterData,
     ModuleInstance,
     ModuleInstanceArgument,
+    ParameterInstanceRef,
     SpaceType,
     XMLArea,
     XMLFunction,
@@ -277,6 +278,16 @@ class _TopologyLoader:
                 )
             )
 
+        parameter_instances = [
+            ParameterInstanceRef(
+                ref_id=param_instance_node.get("RefId"),  # type: ignore[arg-type]
+                value=param_instance_node.get("Value"),
+            )
+            for param_instance_node in device_element.findall(
+                "{*}ParameterInstanceRefs/{*}ParameterInstancRef"
+            )
+        ]
+
         return DeviceInstance(
             identifier=device_element.get("Id", ""),
             address=int(address),
@@ -292,6 +303,7 @@ class _TopologyLoader:
             channels=channels,
             com_object_instance_refs=com_obj_inst_refs,
             module_instances=module_instances,
+            parameter_instance_refs=parameter_instances,
         )
 
     @staticmethod
