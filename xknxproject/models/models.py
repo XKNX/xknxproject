@@ -7,9 +7,9 @@ from dataclasses import dataclass, field
 import logging
 import re
 
+from xknxproject import util
 from xknxproject.models.knxproject import DPTType, ModuleInstanceInfos
 from xknxproject.models.static import GroupAddressStyle, SpaceType
-import xknxproject.util as util
 from xknxproject.zip import KNXProjContents
 
 _LOGGER = logging.getLogger("xknxproject.log")
