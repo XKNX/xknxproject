@@ -2,7 +2,7 @@
 
 import pytest
 
-from xknxproject.util import get_dpt_type, parse_dpt_types
+from xknxproject.util import get_dpt_type, parse_dpt_types, strip_module_instance
 
 
 @pytest.mark.parametrize(
@@ -49,3 +49,16 @@ def test_get_dpt_type(dpt_string, expected):
 def test_parse_dpt_types(dpt_string, expected):
     """Test parsing list of DPT from ETS project."""
     assert parse_dpt_types(dpt_string) == expected
+
+
+@pytest.mark.parametrize(
+    ("text", "search_id", "expected"),
+    [
+        ("CH-4", "CH", "CH-4"),
+        ("MD-1_M-1_MI-1_CH-4", "CH", "MD-1_CH-4"),
+        ("MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-1_R-2", "O", "MD-4_SM-1_O-3-1_R-2"),
+    ],
+)
+def test_strip_module_instance(text: str, search_id: str, expected: str) -> None:
+    """Test strip_module_instance."""
+    assert strip_module_instance(text, search_id) == expected
