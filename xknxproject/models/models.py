@@ -9,6 +9,7 @@ import re
 
 from xknxproject.models.knxproject import DPTType, ModuleInstanceInfos
 from xknxproject.models.static import GroupAddressStyle, SpaceType
+import xknxproject.util as util
 from xknxproject.zip import KNXProjContents
 
 _LOGGER = logging.getLogger("xknxproject.log")
@@ -199,6 +200,15 @@ class DeviceInstance:
                 application=application,
             )
 
+        for channel in self.channels:
+            if not channel.name:
+                application_channel_id = util.strip_module_instance(
+                    channel.ref_id, search_id="CH"
+                )
+                application_channel = application.channels[
+                    f"{self.application_program_ref}_{application_channel_id}"
+                ]
+                channel.name = application_channel.text or application_channel.name
         self._complete_channel_placeholders()
 
     def _complete_channel_placeholders(self) -> None:
@@ -329,20 +339,7 @@ class ComObjectInstanceRef:
             self.com_object_ref_id = self.ref_id
             return
 
-        if self.ref_id.startswith("O-"):
-            ref_id = self.ref_id
-        elif self.ref_id.startswith("MD-"):
-            # Remove module and ModuleInstance occurrence as they will not be in the application program directly
-            module_definition = self.ref_id.split("_")[0]
-            object_reference = self.ref_id[self.ref_id.index("_O-") :]
-            _submodule_match = re.search(r"(_SM-[^_]+)", self.ref_id)
-            submodule = _submodule_match.group() if _submodule_match is not None else ""
-            ref_id = f"{module_definition}{submodule}{object_reference}"
-        else:
-            raise ValueError(
-                f"Unknown ref_id format: {self.ref_id} in application: {application_program_ref}"
-            )
-
+        ref_id = util.strip_module_instance(self.ref_id, search_id="O")
         self.application_program_id_prefix = f"{application_program_ref}_"
         self.com_object_ref_id = f"{application_program_ref}_{ref_id}"
 

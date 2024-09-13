@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import overload
 
 from xknxproject.const import MAIN_AND_SUB_DPT, MAIN_DPT
@@ -65,3 +66,26 @@ def parse_xml_flag(flag: str | None, default: bool | None = None) -> bool | None
     if flag is None:
         return default
     return flag == "Enabled"
+
+
+def strip_module_instance(text: str, search_id: str) -> str:
+    """
+    Remove module and module instance from text, keep module definition and rest.
+
+    text: full text to be processed
+    search_id: search term to be kept without "-" eg. "CH" for channel
+
+    Examples
+    --------
+    search_id="CH": "CH-4" -> "CH-4"
+    search_id="CH": "MD-1_M-1_MI-1_CH-4" -> "MD-1_CH-4"
+    search_id="O": "MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-1_R-2" -> "MD-4_SM-1_O-3-1_R-2"
+
+    """
+    # For submodules SM- must be the last item before search_id
+    # because I couldn't create a regex that works otherwise :(
+    return re.sub(
+        r"(MD-\w+_)?.*?(SM-\w+_)?(" + re.escape(search_id) + r"-.*)",
+        lambda matchobj: "".join(part for part in matchobj.groups() if part),
+        text,
+    )
