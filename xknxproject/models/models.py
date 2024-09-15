@@ -138,7 +138,7 @@ class DeviceInstance:
         channels: list[ChannelNode],
         com_object_instance_refs: list[ComObjectInstanceRef],
         module_instances: list[ModuleInstance],
-        parameter_instance_refs: list[ParameterInstanceRef],
+        parameter_instance_refs: dict[str, ParameterInstanceRef],
         com_objects: list[ComObject] | None = None,
     ):
         """Initialize a Device Instance."""
@@ -194,42 +194,17 @@ class DeviceInstance:
             ].allocates
 
         for com_instance in self.com_object_instance_refs:
-            com_instance.merge_application_program_info(application)
+            com_instance.merge_application_program_info(
+                application, self.parameter_instance_refs
+            )
             com_instance.apply_module_base_number_argument(
                 module_instances=self.module_instances,
                 application=application,
             )
 
         for channel in self.channels:
-            if not channel.name:
-                application_channel_id = util.strip_module_instance(
-                    channel.ref_id, search_id="CH"
-                )
-                application_channel = application.channels[
-                    f"{self.application_program_ref}_{application_channel_id}"
-                ]
-                channel.name = application_channel.text or application_channel.name
-        self._complete_channel_placeholders()
-
-    def _complete_channel_placeholders(self) -> None:
-        """Replace placeholders in channel names with module instance arguments."""
-        for channel in self.channels:
-            if not (
-                channel.ref_id.startswith("MD-")  # only applicable if modules used
-                and "{{" in channel.name  # placeholders are denoted "{{name}}"
-            ):
-                continue
-
-            module_instance_ref = channel.ref_id.split("_CH")[0]
-            module_instance = next(
-                mi
-                for mi in self.module_instances
-                if mi.identifier == module_instance_ref
-            )
-            for argument in module_instance.arguments:
-                channel.name = channel.name.replace(
-                    f"{{{{{argument.name}}}}}", argument.value
-                )
+            channel.resolve_channel_name(device_instance=self, application=application)
+            channel.resolve_channel_module_placeholders(device_instance=self)
 
 
 @dataclass
@@ -241,6 +216,73 @@ class ChannelNode:
     group_object_instances: list[
         str
     ]  # name="GroupObjectInstances" type="knx:RELIDREFS" use="optional"
+
+    def resolve_channel_name(
+        self,
+        device_instance: DeviceInstance,
+        application: ApplicationProgram,
+    ) -> None:
+        """
+        Resolve the channel name from device instance infos.
+
+        Replace TextParameter values in channel names with the
+        actual values of the parameter instances.
+        """
+        if not self.name:
+            application_channel_id = util.strip_module_instance(
+                self.ref_id, search_id="CH"
+            )
+            application_channel = application.channels[
+                f"{device_instance.application_program_ref}_{application_channel_id}"
+            ]
+            if application_channel.text and application_channel.text_parameter_ref_id:
+                parameter_instance_ref = util.text_parameter_insert_module_instance(
+                    instance_ref=self.ref_id,
+                    instance_next_id="CH",
+                    text_parameter_ref_id=application_channel.text_parameter_ref_id,
+                )
+                try:
+                    parameter = device_instance.parameter_instance_refs[
+                        parameter_instance_ref
+                    ]
+                except KeyError:
+                    _LOGGER.debug(
+                        "ParameterInstanceRef %s not found for Channel %s in device %s (%s)",
+                        parameter_instance_ref,
+                        self.ref_id,
+                        device_instance.identifier,
+                        device_instance.individual_address,
+                    )
+                    parameter = None
+
+                self.name = (
+                    util.text_parameter_template_replace(
+                        application_channel.text, parameter
+                    )
+                    or application_channel.name
+                )
+            else:
+                self.name = application_channel.text or application_channel.name
+
+    def resolve_channel_module_placeholders(
+        self,
+        device_instance: DeviceInstance,
+    ) -> None:
+        """Replace module placeholders in channel names with module instance argument values."""
+        if not (
+            self.ref_id.startswith("MD-")  # only applicable if modules used
+            and "{{" in self.name  # placeholders are denoted "{{name}}"
+        ):
+            return
+
+        module_instance_ref = self.ref_id.split("_CH")[0]
+        module_instance = next(
+            mi
+            for mi in device_instance.module_instances
+            if mi.identifier == module_instance_ref
+        )
+        for argument in module_instance.arguments:
+            self.name = self.name.replace(f"{{{{{argument.name}}}}}", argument.value)
 
 
 @dataclass
@@ -343,7 +385,11 @@ class ComObjectInstanceRef:
         self.application_program_id_prefix = f"{application_program_ref}_"
         self.com_object_ref_id = f"{application_program_ref}_{ref_id}"
 
-    def merge_application_program_info(self, application: ApplicationProgram) -> None:
+    def merge_application_program_info(
+        self,
+        application: ApplicationProgram,
+        parameters: dict[str, ParameterInstanceRef],
+    ) -> None:
         """Fill missing information with information parsed from the application program."""
         if self.com_object_ref_id is None:
             _LOGGER.warning(
@@ -352,16 +398,30 @@ class ComObjectInstanceRef:
             )
             return
         com_object_ref = application.com_object_refs[self.com_object_ref_id]
-        com_object = application.com_objects[com_object_ref.ref_id]
-        self._merge_from_parent_object(com_object_ref)
-        self._merge_from_parent_object(com_object)
+        self._merge_from_parent_object(com_object_ref, parameters=parameters)
 
-    def _merge_from_parent_object(self, com_object: ComObject | ComObjectRef) -> None:
+        com_object = application.com_objects[com_object_ref.ref_id]
+        self._merge_from_parent_object(com_object, parameters=parameters)
+
+    def _merge_from_parent_object(
+        self,
+        com_object: ComObject | ComObjectRef,
+        parameters: dict[str, ParameterInstanceRef],
+    ) -> None:
         """Fill missing information with information parsed from the application program."""
         if self.name is None:
             self.name = com_object.name
         if self.text is None:
-            self.text = com_object.text
+            if isinstance(com_object, ComObjectRef):
+                self.text = (
+                    com_object.com_object_ref_text_with_paramter(
+                        com_object_instance_ref_id=self.ref_id,
+                        instance_parameters=parameters,
+                    )
+                    or com_object.text
+                )
+            else:
+                self.text = com_object.text
         if self.function_text is None:
             self.function_text = com_object.function_text
         if self.object_size is None:
@@ -630,6 +690,33 @@ class ComObjectRef:
     read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
     datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS
     text_parameter_ref_id: str | None  #  type="knx:IDREF" use="optional"
+
+    def com_object_ref_text_with_paramter(
+        self,
+        com_object_instance_ref_id: str,
+        instance_parameters: dict[str, ParameterInstanceRef],
+    ) -> str | None:
+        """Return the text with parameter if available."""
+        if self.text and self.text_parameter_ref_id:
+            parameter_instance_ref = util.text_parameter_insert_module_instance(
+                instance_ref=com_object_instance_ref_id,
+                instance_next_id="O",
+                text_parameter_ref_id=self.text_parameter_ref_id,
+            )
+            try:
+                parameter = instance_parameters[parameter_instance_ref]
+            except KeyError:
+                _LOGGER.debug(
+                    "ParameterInstanceRef %s for ComObjectRef %s not found.",
+                    parameter_instance_ref,
+                    self.identifier,
+                )
+                parameter = None
+            return util.text_parameter_template_replace(
+                self.text or "",
+                parameter=parameter,
+            )
+        return None
 
 
 @dataclass

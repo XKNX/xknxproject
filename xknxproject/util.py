@@ -4,10 +4,13 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import overload
+from typing import TYPE_CHECKING, overload
 
 from xknxproject.const import MAIN_AND_SUB_DPT, MAIN_DPT
 from xknxproject.models import DPTType
+
+if TYPE_CHECKING:
+    from xknxproject.models import ParameterInstanceRef
 
 _LOGGER = logging.getLogger("xknxproject.log")
 
@@ -68,6 +71,25 @@ def parse_xml_flag(flag: str | None, default: bool | None = None) -> bool | None
     return flag == "Enabled"
 
 
+def text_parameter_template_replace(
+    text: str, parameter: ParameterInstanceRef | None
+) -> str:
+    """Replace parameter template in text."""
+    # Text of a Channel, ParameterBlock, ParameterSeparator, ParameterRef or ComObjectRef
+    # may use placeholder "{{0}}" or "{{0:def}}" (without the quotes). def is a default
+    # text to be displayed if the text parameter value is empty.
+    # These placeholders (with or without the default text) are included in translations too.
+
+    # Applications TextParameterRef points to 0.xml ParameterInstanceRef of DeviceInstance
+
+    parameter_value = parameter.value if parameter is not None else None
+    return re.sub(
+        r"{{0(?::?)(.*?)}}",
+        lambda matchobj: parameter_value or matchobj.group(1),
+        text,
+    )
+
+
 def strip_module_instance(text: str, search_id: str) -> str:
     """
     Remove module and module instance from text, keep module definition and rest.
@@ -89,3 +111,39 @@ def strip_module_instance(text: str, search_id: str) -> str:
         lambda matchobj: "".join(part for part in matchobj.groups() if part),
         text,
     )
+
+
+def get_module_instance_part(ref: str, next_id: str) -> str:
+    """
+    Get module and module instance from text or empty string if not found.
+
+    ref: full text to be processed
+    next_id: search term after module definitions. Eg. "CH" for channel
+
+    """
+    # For submodules SM- must be the last item before search_id
+    # because I couldn't create a regex that works otherwise :(
+
+    matchobj = re.search(r"(MD-.*)_" + re.escape(next_id) + r"-", ref)
+    return matchobj.group(1) if matchobj else ""
+
+
+def text_parameter_insert_module_instance(
+    instance_ref: str, instance_next_id: str, text_parameter_ref_id: str
+) -> str:
+    """
+    Insert module and module instance from instance_ref into target_ref.
+
+    instance_ref: reference holding module instance
+    instance_next_id: search term after module definitions. Eg. "CH" for channel
+    text_parameter_ref_id: reference with module definition where module instance
+      should be inserted after module definition
+    """
+    if "_MD-" in text_parameter_ref_id and (
+        _module_ref := get_module_instance_part(instance_ref, next_id=instance_next_id)
+    ):
+        _application_ref = text_parameter_ref_id.split("_MD-")[0]
+        _parameter_ref = text_parameter_ref_id.split("_P-")[1]
+        return f"{_application_ref}_{_module_ref}_P-{_parameter_ref}"
+
+    return text_parameter_ref_id
