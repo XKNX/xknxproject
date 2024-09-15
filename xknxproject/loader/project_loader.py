@@ -278,15 +278,15 @@ class _TopologyLoader:
                 )
             )
 
-        parameter_instances = [
-            ParameterInstanceRef(
-                ref_id=param_instance_node.get("RefId"),  # type: ignore[arg-type]
+        parameter_instances = {}
+        for param_instance_node in device_element.findall(
+            "{*}ParameterInstanceRefs/{*}ParameterInstanceRef"
+        ):
+            pr_ref_id: str = param_instance_node.get("RefId")  # type: ignore[assignment]
+            parameter_instances[pr_ref_id] = ParameterInstanceRef(
+                ref_id=pr_ref_id,
                 value=param_instance_node.get("Value"),
             )
-            for param_instance_node in device_element.findall(
-                "{*}ParameterInstanceRefs/{*}ParameterInstancRef"
-            )
-        ]
 
         return DeviceInstance(
             identifier=device_element.get("Id", ""),
