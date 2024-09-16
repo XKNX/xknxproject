@@ -8,6 +8,7 @@ import logging
 import re
 
 from xknxproject import util
+from xknxproject.exceptions import UnexpectedDataError
 from xknxproject.models.knxproject import DPTType, ModuleInstanceInfos
 from xknxproject.models.static import GroupAddressStyle, SpaceType
 from xknxproject.zip import KNXProjContents
@@ -206,6 +207,15 @@ class DeviceInstance:
             channel.resolve_channel_name(device_instance=self, application=application)
             channel.resolve_channel_module_placeholders(device_instance=self)
 
+    def __str__(self) -> str:
+        """Return string representation."""
+        return (
+            "DeviceInstance("
+            f'"{self.individual_address} {self.manufacturer_name} - {self.product_name}" '
+            f'Id="{self.identifier}" Puid="{self.project_uid}" '
+            f'ApplicationProgram="{self.application_program_ref}")'
+        )
+
 
 @dataclass
 class ChannelNode:
@@ -247,11 +257,10 @@ class ChannelNode:
                     ]
                 except KeyError:
                     _LOGGER.debug(
-                        "ParameterInstanceRef %s not found for Channel %s in device %s (%s)",
+                        "ParameterInstanceRef %s not found for Channel %s of %s",
                         parameter_instance_ref,
                         self.ref_id,
-                        device_instance.identifier,
-                        device_instance.individual_address,
+                        device_instance,
                     )
                     parameter = None
 
@@ -276,11 +285,17 @@ class ChannelNode:
             return
 
         module_instance_ref = self.ref_id.split("_CH")[0]
-        module_instance = next(
-            mi
-            for mi in device_instance.module_instances
-            if mi.identifier == module_instance_ref
-        )
+        try:
+            module_instance = next(
+                mi
+                for mi in device_instance.module_instances
+                if mi.identifier == module_instance_ref
+            )
+        except StopIteration:
+            raise UnexpectedDataError(
+                f"ModuleInstance '{module_instance_ref}' not found for "
+                f"ChannelNode '{self.ref_id}' {self.name} of {device_instance}"
+            ) from None
         for argument in module_instance.arguments:
             self.name = self.name.replace(f"{{{{{argument.name}}}}}", argument.value)
 
@@ -472,11 +487,18 @@ class ComObjectInstanceRef:
             #   for SubModules the NumericArg item may use a BaseValue reference to an
             #   Argument of the base ModuleDef containing the base value for all its SubModules
             result = 0
-            base_number_argument = next(
-                arg
-                for arg in module_instance.arguments
-                if arg.ref_id == base_number_argument_ref
-            )
+            try:
+                base_number_argument = next(
+                    arg
+                    for arg in module_instance.arguments
+                    if arg.ref_id == base_number_argument_ref
+                )
+            except StopIteration:
+                raise UnexpectedDataError(
+                    f"Base number argument {base_number_argument_ref} not found for "
+                    f"ComObjectInstanceRef {self.ref_id=} {self.text=} "
+                    f"of application {self.application_program_id_prefix}",
+                ) from None
 
             try:
                 # path (1) if value is a number, we are done
@@ -491,11 +513,18 @@ class ComObjectInstanceRef:
                         num_arg is not None
                         and (base_value_ref := num_arg.base_value) is not None
                     ):
-                        base_module = next(
-                            mi
-                            for mi in module_instances
-                            if mi.identifier == module_instance.base_module
-                        )
+                        try:
+                            base_module = next(
+                                mi
+                                for mi in module_instances
+                                if mi.identifier == module_instance.base_module
+                            )
+                        except StopIteration:
+                            raise UnexpectedDataError(
+                                f"Base ModuleInstance {module_instance.base_module} not found for "
+                                f"ComObjectInstanceRef {self.ref_id=} {self.text=} "
+                                f"of application {self.application_program_id_prefix}",
+                            ) from None
                         result += _parse_base_number_argument(
                             module_instance=base_module,
                             base_number_argument_ref=base_value_ref,
@@ -504,9 +533,18 @@ class ComObjectInstanceRef:
                     base_number_argument, application.allocators
                 )
 
-        _module_instance = next(
-            mi for mi in module_instances if self.ref_id.startswith(f"{mi.identifier}_")
-        )
+        try:
+            _module_instance = next(
+                mi
+                for mi in module_instances
+                if self.ref_id.startswith(f"{mi.identifier}_")
+            )
+        except StopIteration:
+            raise UnexpectedDataError(
+                f"ModuleInstance not found for ComObjectInstanceRef {self.ref_id=} {self.text=} "
+                f"of application {self.application_program_id_prefix}",
+            ) from None
+
         com_object_number = self.number
         self.number += _parse_base_number_argument(
             _module_instance, self.base_number_argument_ref
@@ -522,12 +560,19 @@ class ComObjectInstanceRef:
         application_allocators: dict[str, Allocator],
     ) -> int:
         """Apply base number from allocator."""
-        allocator_object_base = next(
-            allocator
-            for allocator in application_allocators.values()
-            if allocator.identifier
-            == self.application_program_id_prefix + base_number_argument.value
-        )
+        try:
+            allocator_object_base = next(
+                allocator
+                for allocator in application_allocators.values()
+                if allocator.identifier
+                == self.application_program_id_prefix + base_number_argument.value
+            )
+        except StopIteration:
+            raise UnexpectedDataError(
+                f"Allocator with identifier {base_number_argument.value} not found for "
+                f"ComObjectInstanceRef {self.ref_id=} {self.text=} "
+                f"of application {self.application_program_id_prefix}",
+            ) from None
         if (allocator_size := base_number_argument.allocates) is None:
             _LOGGER.warning(
                 "Base number allocator size not found for %s. Base number argument: %s",

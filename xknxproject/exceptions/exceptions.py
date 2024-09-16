@@ -15,3 +15,7 @@ class ProjectNotFoundException(XknxProjectException):
 
 class UnexpectedFileContent(XknxProjectException):
     """Unexpected file content."""
+
+
+class UnexpectedDataError(XknxProjectException):
+    """Unexpected data in project file."""
