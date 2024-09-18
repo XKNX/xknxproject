@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterator
-from typing import Any
 from xml.etree import ElementTree
 from zipfile import Path
 
@@ -54,73 +52,110 @@ class ApplicationProgramLoader:
         ] = {}  # {Id: ApplicationProgramChannel}
         allocators: dict[str, Allocator] = {}
 
-        with application_program_path.open(mode="rb") as application_xml:
-            tree_iterator = ElementTree.iterparse(application_xml, events=("start",))
-            for _, elem in tree_iterator:
-                if elem.tag.endswith("ComObject"):
-                    # we take all since we don't know which are referenced to yet
-                    identifier = elem.attrib.get("Id")
-                    com_objects[identifier] = ApplicationProgramLoader.parse_com_object(
-                        elem, identifier
-                    )
-                elif elem.tag.endswith("ComObjectRef"):
-                    if (_id := elem.attrib.get("Id")) in used_com_object_ref_ids:
-                        com_object_refs[_id] = (
-                            ApplicationProgramLoader.parse_com_object_ref(elem, _id)
-                        )
-                    elem.clear()
-                elif elem.tag.endswith("Allocator"):  # Allocators/Allocator
-                    allocators[elem.attrib.get("Id")] = Allocator(
-                        identifier=elem.attrib.get("Id"),
-                        name=elem.attrib.get("Name"),
-                        start=int(elem.attrib.get("Start")),
-                        end=int(elem.attrib.get("maxInclusive")),
-                    )
-                elif elem.tag.endswith("Argument"):
-                    # ModuleDefs/ModuleDef/Arguments/
-                    # or ModuleDefs/ModuleDef/SubModuleDefs/ModuleDef/Arguments/
-                    if (_id := elem.attrib.get("Id")) in used_module_arguments:
-                        allocates = elem.attrib.get("Allocates")
-                        used_module_arguments[_id] = ModuleDefinitionArgumentInfo(
-                            name=elem.attrib.get("Name"),
-                            allocates=int(allocates) if allocates is not None else None,
-                        )
-                    elem.clear()
-                elif elem.tag.endswith("NumericArg"):
-                    # in dynamic section of Modules
-                    if (_id := elem.attrib.get("RefId")) in used_module_arguments:
-                        value = elem.attrib.get("Value")
-                        numeric_args[_id] = ModuleDefinitionNumericArg(
-                            allocator_ref_id=elem.attrib.get("AllocatorRefId"),
-                            base_value=elem.attrib.get("BaseValue"),
-                            value=int(value) if value is not None else None,
-                        )
-                    elem.clear()
-                elif elem.tag.endswith("Channel"):
-                    _id = elem.attrib.get("Id")
-                    channels[_id] = ApplicationProgramChannel(
-                        identifier=_id,
-                        name=elem.attrib.get("Name"),
-                        number=elem.attrib.get("Number"),
-                        text=elem.attrib.get("Text"),
-                        text_parameter_ref_id=elem.attrib.get("TextParameterRefId"),
-                    )
-                    elem.clear()
-                elif elem.tag.endswith("Languages"):
-                    elem.clear()
-                    # hold iterator for optional translation parsing
-                    break
-                elem.clear()
+        translated = False
+        keep_nested_level = 0
 
-            if language_code is not None:
-                ApplicationProgramLoader.parse_translations(
-                    tree_iterator=tree_iterator,
-                    com_objects=com_objects,
-                    com_object_refs=com_object_refs,
-                    used_com_object_ref_ids=used_com_object_ref_ids,
-                    channels=channels,
-                    language_code=language_code,
-                )
+        with application_program_path.open(mode="rb") as application_xml:
+            tree_iterator = ElementTree.iterparse(
+                application_xml,
+                events=(
+                    "start",
+                    "end",
+                ),
+            )
+            # get namespace from root element
+            _, elem = next(tree_iterator)
+            namespace = elem.tag.split("KNX")[0]
+            # defining namespaced tag strings for faster comparison
+            # (~10% faster than elem.tag.endswith("tagname") or elem.tag == f"{namespace}tagname")
+            ns_com_object = f"{namespace}ComObject"
+            ns_com_object_ref = f"{namespace}ComObjectRef"
+            ns_allocator = f"{namespace}Allocator"
+            ns_argument = f"{namespace}Argument"
+            ns_numeric_arg = f"{namespace}NumericArg"
+            ns_channel = f"{namespace}Channel"
+            ns_language = f"{namespace}Language"
+
+            for event, elem in tree_iterator:
+                if event == "start":
+                    # when no nested information is needed, we can throw away the element history
+                    if elem.tag == ns_com_object:
+                        # we take all since we don't know which are referenced to yet
+                        identifier = elem.attrib.get("Id")
+                        com_objects[identifier] = (
+                            ApplicationProgramLoader.parse_com_object(elem, identifier)
+                        )
+                        elem.clear()
+                    elif elem.tag == ns_com_object_ref:
+                        if (_id := elem.attrib.get("Id")) in used_com_object_ref_ids:
+                            com_object_refs[_id] = (
+                                ApplicationProgramLoader.parse_com_object_ref(elem, _id)
+                            )
+                        elem.clear()
+                    elif elem.tag == ns_allocator:  # Allocators/Allocator
+                        allocators[elem.attrib.get("Id")] = Allocator(
+                            identifier=elem.attrib.get("Id"),
+                            name=elem.attrib.get("Name"),
+                            start=int(elem.attrib.get("Start")),
+                            end=int(elem.attrib.get("maxInclusive")),
+                        )
+                    elif elem.tag == ns_argument:
+                        # ModuleDefs/ModuleDef/Arguments/
+                        # or ModuleDefs/ModuleDef/SubModuleDefs/ModuleDef/Arguments/
+                        if (_id := elem.attrib.get("Id")) in used_module_arguments:
+                            allocates = elem.attrib.get("Allocates")
+                            used_module_arguments[_id] = ModuleDefinitionArgumentInfo(
+                                name=elem.attrib.get("Name"),
+                                allocates=int(allocates)
+                                if allocates is not None
+                                else None,
+                            )
+                        elem.clear()
+                    elif elem.tag == ns_numeric_arg:
+                        # in dynamic section of Modules
+                        if (_id := elem.attrib.get("RefId")) in used_module_arguments:
+                            value = elem.attrib.get("Value")
+                            numeric_args[_id] = ModuleDefinitionNumericArg(
+                                allocator_ref_id=elem.attrib.get("AllocatorRefId"),
+                                base_value=elem.attrib.get("BaseValue"),
+                                value=int(value) if value is not None else None,
+                            )
+                        elem.clear()
+                    elif elem.tag == ns_channel:
+                        _id = elem.attrib.get("Id")
+                        channels[_id] = ApplicationProgramChannel(
+                            identifier=_id,
+                            name=elem.attrib.get("Name"),
+                            number=elem.attrib.get("Number"),
+                            text=elem.attrib.get("Text"),
+                            text_parameter_ref_id=elem.attrib.get("TextParameterRefId"),
+                        )
+                        elem.clear()
+                    elif elem.tag == ns_language:
+                        keep_nested_level += 1
+                elif event == "end":
+                    if elem.tag == ns_language:
+                        if (
+                            language_code is not None
+                            and elem.get("Identifier") == language_code
+                        ):
+                            ApplicationProgramLoader.parse_translations(
+                                element=elem,
+                                com_objects=com_objects,
+                                com_object_refs=com_object_refs,
+                                used_com_object_ref_ids=used_com_object_ref_ids,
+                                channels=channels,
+                                language_code=language_code,
+                            )
+                            translated = True
+                        keep_nested_level -= 1
+                        if translated:
+                            # no further processing needed
+                            elem.clear()
+                            break
+
+                if keep_nested_level == 0:
+                    elem.clear()
 
             return ApplicationProgram(
                 com_objects=com_objects,
@@ -133,7 +168,7 @@ class ApplicationProgramLoader:
 
     @staticmethod
     def parse_translations(
-        tree_iterator: Iterator[tuple[str, Any]],
+        element: ElementTree.Element,
         com_objects: dict[str, ComObject],
         com_object_refs: dict[str, ComObjectRef],
         used_com_object_ref_ids: set[str],
@@ -147,30 +182,16 @@ class ApplicationProgramLoader:
         used_translation_ids = (
             _used_com_object_ids | used_com_object_ref_ids | channels.keys()
         )
-        in_language = False
-        in_translation_ref: str | None = None  # TranslationElement RefId
         # translation_map: {TranslationElement RefId: {AttributeName: Text}}
         translation_map: dict[str, dict[str, str]] = {}
-        for _, elem in tree_iterator:
-            if elem.tag.endswith("Language"):
-                if in_language:
-                    # Hitting the next language tag after the one we were looking for.
-                    # We don't need anything after that tag (there isn't much anyway)
-                    elem.clear()
-                    break
-                in_language = elem.get("Identifier") == language_code
-            elif in_language and elem.tag.endswith("TranslationElement"):
-                ref_id = elem.get("RefId")
-                in_translation_ref = ref_id if ref_id in used_translation_ids else None
-            elif (
-                in_language
-                and in_translation_ref is not None
-                and elem.tag.endswith("Translation")
-            ):
-                translation_map.setdefault(in_translation_ref, {})[
-                    elem.get("AttributeName")
-                ] = elem.get("Text")
-            elem.clear()
+        for elem in element.findall("{*}TranslationUnit/{*}TranslationElement"):
+            ref_id = elem.get("RefId")
+            if ref_id not in used_translation_ids:
+                continue
+            for translation in elem.findall("{*}Translation"):
+                translation_map.setdefault(ref_id, {})[
+                    translation.get("AttributeName")
+                ] = translation.get("Text")
 
         ApplicationProgramLoader.apply_translations(com_object_refs, translation_map)
         ApplicationProgramLoader.apply_translations(com_objects, translation_map)
