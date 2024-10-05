@@ -84,9 +84,9 @@ class XMLGroupRange:
         if self.style == GroupAddressStyle.FREE:
             return f"{self.range_start}...{self.range_end}"
         if self.style == GroupAddressStyle.TWOLEVEL:
-            return XMLGroupAddress.str_address(self.range_start, self.style).split("/")[
-                0
-            ]
+            return XMLGroupAddress.str_address(self.range_start, self.style).split(
+                "/", maxsplit=1
+            )[0]
         if self.style == GroupAddressStyle.THREELEVEL:
             start_address_token = XMLGroupAddress.str_address(
                 self.range_start, self.style
