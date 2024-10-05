@@ -322,7 +322,9 @@ class _TopologyLoader:
         ga_list = connectors.findall("{*}Send") + connectors.findall("{*}Receive")
 
         # Remove the project ID from GA
-        return [ga.get("GroupAddressRefId", "").split("_")[1] for ga in ga_list]
+        return [
+            ga.get("GroupAddressRefId", "").split("_", maxsplit=1)[1] for ga in ga_list
+        ]
 
     @staticmethod
     def __get_links_from_ets5(com_object: ElementTree.Element) -> list[str]:
@@ -451,7 +453,7 @@ class _LocationLoader:
 
     def parse_functions(self, node: ElementTree.Element) -> XMLFunction:
         """Parse a functions from the document."""
-        identifier = node.get("Id", "").split("_")[1]
+        identifier = node.get("Id", "").split("_", 1)[1]
         project_uid = node.get("Puid")
         function_type = node.get("Type", "")
 
@@ -468,7 +470,7 @@ class _LocationLoader:
         for sub_node in node:
             if sub_node.tag.endswith("GroupAddressRef"):
                 project_uid = sub_node.get("Puid")
-                ref_id = sub_node.get("RefId", "").split("_")[1]
+                ref_id = sub_node.get("RefId", "").split("_", 1)[1]
 
                 group_address_ref: XMLGroupAddressRef = XMLGroupAddressRef(
                     ref_id=ref_id,

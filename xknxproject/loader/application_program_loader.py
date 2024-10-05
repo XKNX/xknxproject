@@ -58,7 +58,7 @@ class ApplicationProgramLoader:
             tree_iterator = ElementTree.iterparse(application_xml, events=("start",))
             # get namespace from root element
             _, elem = next(tree_iterator)
-            namespace = elem.tag.split("KNX")[0]
+            namespace = elem.tag.split("KNX", maxsplit=1)[0]
             # define namespaced tag strings for faster comparison - ~15% faster
             # than elem.tag.endswith("tagname") or elem.tag == f"{namespace}tagname"
             ns_com_object = f"{namespace}ComObject"

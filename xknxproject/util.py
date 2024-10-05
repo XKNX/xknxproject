@@ -142,8 +142,8 @@ def text_parameter_insert_module_instance(
     if "_MD-" in text_parameter_ref_id and (
         _module_ref := get_module_instance_part(instance_ref, next_id=instance_next_id)
     ):
-        _application_ref = text_parameter_ref_id.split("_MD-")[0]
-        _parameter_ref = text_parameter_ref_id.split("_P-")[1]
+        _application_ref = text_parameter_ref_id.split("_MD-", maxsplit=1)[0]
+        _parameter_ref = text_parameter_ref_id.rsplit("_P-", maxsplit=1)[-1]
         return f"{_application_ref}_{_module_ref}_P-{_parameter_ref}"
 
     return text_parameter_ref_id
