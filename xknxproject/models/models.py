@@ -35,7 +35,7 @@ class XMLGroupAddress:
     ):
         """Initialize a group address."""
         self.name = name
-        self.identifier = identifier.split("_")[1]
+        self.identifier = identifier.split("_", 1)[1]
         self.raw_address = int(address)
         self.project_uid = project_uid
         self.description = description
@@ -84,9 +84,9 @@ class XMLGroupRange:
         if self.style == GroupAddressStyle.FREE:
             return f"{self.range_start}...{self.range_end}"
         if self.style == GroupAddressStyle.TWOLEVEL:
-            return XMLGroupAddress.str_address(self.range_start, self.style).split("/")[
-                0
-            ]
+            return XMLGroupAddress.str_address(self.range_start, self.style).split(
+                "/", maxsplit=1
+            )[0]
         if self.style == GroupAddressStyle.THREELEVEL:
             start_address_token = XMLGroupAddress.str_address(
                 self.range_start, self.style
@@ -284,7 +284,7 @@ class ChannelNode:
         ):
             return
 
-        module_instance_ref = self.ref_id.split("_CH")[0]
+        module_instance_ref = self.ref_id.split("_CH", maxsplit=1)[0]
         try:
             module_instance = next(
                 mi
@@ -316,10 +316,10 @@ class ModuleInstance:
 
     def __post_init__(self) -> None:
         """Set is_submodule based on the identifier."""
-        self.module_def_id = self.ref_id.split("_")[0]
+        self.module_def_id = self.ref_id.split("_", maxsplit=1)[0]
         _submodule_match = re.search(r"(_SM-[^_]+)", self.identifier)
         if _submodule_match is not None:
-            self.base_module = f"{self.identifier.split('_SM-')[0]}"
+            self.base_module = f"{self.identifier.split('_SM-', maxsplit=1)[0]}"
             self.definition_id = f"{self.module_def_id}{_submodule_match.group()}"
         else:
             self.base_module = None
@@ -580,7 +580,9 @@ class ComObjectInstanceRef:
                 base_number_argument,
             )
             return 0
-        module_instance_index = int(self.ref_id.split("_MI-")[1].split("_")[0])
+        module_instance_index = int(
+            self.ref_id.split("_MI-", maxsplit=1)[1].split("_", maxsplit=1)[0]
+        )
         return allocator_object_base.start + (
             allocator_size * (module_instance_index - 1)
         )

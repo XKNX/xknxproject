@@ -169,7 +169,7 @@ def _get_xml_namespace(project_zip: ZipFile) -> str:
 def _get_schema_version(namespace: str) -> int:
     """Get the schema version of the project."""
     try:
-        schema_version = int(namespace.split("/")[-1])
+        schema_version = int(namespace.rsplit("/", 1)[-1])
     except ValueError:
         _LOGGER.error("Could not parse schema version from %s", namespace)
         raise UnexpectedFileContent("Could not parse schema version.") from None
