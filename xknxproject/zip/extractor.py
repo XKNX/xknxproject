@@ -147,12 +147,15 @@ def _get_xml_namespace(project_zip: ZipFile) -> str:
     """Get the XML namespace of the project."""
     with project_zip.open("knx_master.xml", mode="r") as master:
         for line_number, line in enumerate(master, start=1):
-            if line_number == 2:
+            # ETS 4.1 has namespace in the first line, newer versions in second
+            if line_number in (1, 2):
                 try:
                     namespace_match = re.match(
                         r".+ xmlns=\"(.+?)\"",
                         line.decode(),
                     )
+                    if namespace_match is None and line_number == 1:
+                        continue
                     namespace = namespace_match.group(1)  # type: ignore[union-attr]
                     _LOGGER.debug("Namespace: %s", namespace)
                     return namespace
@@ -161,7 +164,7 @@ def _get_xml_namespace(project_zip: ZipFile) -> str:
                     raise UnexpectedFileContent(
                         "Could not parse XML namespace."
                     ) from None
-            if line_number > 2:
+            else:
                 break
         raise UnexpectedFileContent("Could not find XML namespace.")
 
