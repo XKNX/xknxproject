@@ -18,4 +18,4 @@ class UnexpectedFileContent(XknxProjectException):
 
 
 class UnexpectedDataError(XknxProjectException):
-    """Unexpected data in project file."""
+    """Unexpected data in project or application file."""

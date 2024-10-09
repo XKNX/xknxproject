@@ -130,6 +130,12 @@ def test_get_module_instance_part(ref: str, next_id: str, expected: str) -> None
             "M-0004_A-20D3-11-EC49-O000A_P-875_R-2697",  # no module - return same string,
             "M-0004_A-20D3-11-EC49-O000A_P-875_R-2697",
         ),
+        (
+            "MD-5_M-2_MI-1_O-3-0_R-1",
+            "O",
+            "M-007C_A-0004-72-F374_MD-5_UP-3_R-3",  # UnionParameter
+            "M-007C_A-0004-72-F374_MD-5_M-2_MI-1_UP-3_R-3",
+        ),
     ],
 )
 def test_text_parameter_insert_module_instance(
