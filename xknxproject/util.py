@@ -7,6 +7,7 @@ import re
 from typing import TYPE_CHECKING, overload
 
 from xknxproject.const import MAIN_AND_SUB_DPT, MAIN_DPT
+from xknxproject.exceptions import UnexpectedDataError
 from xknxproject.models import DPTType
 
 if TYPE_CHECKING:
@@ -143,7 +144,14 @@ def text_parameter_insert_module_instance(
         _module_ref := get_module_instance_part(instance_ref, next_id=instance_next_id)
     ):
         _application_ref = text_parameter_ref_id.split("_MD-", maxsplit=1)[0]
-        _parameter_ref = text_parameter_ref_id.rsplit("_P-", maxsplit=1)[-1]
-        return f"{_application_ref}_{_module_ref}_P-{_parameter_ref}"
+        try:
+            # `_P-` for Parameter `_UP-` for UnionParameter
+            _parameter_ref = re.search(r"_(U?P-.*)", text_parameter_ref_id).group(1)  # type: ignore[union-attr]
+        except AttributeError:
+            raise UnexpectedDataError(
+                f"No Parameter block found in TextParameterRefId {text_parameter_ref_id} "
+                f"(instance: {instance_ref})"
+            ) from None
+        return f"{_application_ref}_{_module_ref}_{_parameter_ref}"
 
     return text_parameter_ref_id
