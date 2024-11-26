@@ -9,9 +9,9 @@ from .exceptions import (
 )
 
 __all__ = [
-    "XknxProjectException",
     "InvalidPasswordException",
     "ProjectNotFoundException",
-    "UnexpectedFileContent",
     "UnexpectedDataError",
+    "UnexpectedFileContent",
+    "XknxProjectException",
 ]

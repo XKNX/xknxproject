@@ -644,10 +644,10 @@ class ApplicationProgramChannel:
 
     __slots__ = (
         "identifier",
-        "text",
-        "text_parameter_ref_id",
         "name",
         "number",
+        "text",
+        "text_parameter_ref_id",
     )
 
     identifier: str  # name="Id" type="xs:ID" use="required"
@@ -666,20 +666,20 @@ class ComObject:
     """Class that represents a ComObject instance."""
 
     __slots__ = (
+        "base_number_argument_ref",
+        "communication_flag",
+        "datapoint_types",
+        "function_text",
         "identifier",
         "name",
-        "text",
         "number",
-        "function_text",
         "object_size",
         "read_flag",
-        "write_flag",
-        "communication_flag",
+        "read_on_init_flag",
+        "text",
         "transmit_flag",
         "update_flag",
-        "read_on_init_flag",
-        "datapoint_types",
-        "base_number_argument_ref",
+        "write_flag",
     )
 
     # all items required in the XML
@@ -707,20 +707,20 @@ class ComObjectRef:
     """Class that represents a ComObjectRef instance."""
 
     __slots__ = (
-        "identifier",
-        "ref_id",
-        "name",
-        "text",
+        "communication_flag",
+        "datapoint_types",
         "function_text",
+        "identifier",
+        "name",
         "object_size",
         "read_flag",
-        "write_flag",
-        "communication_flag",
+        "read_on_init_flag",
+        "ref_id",
+        "text",
+        "text_parameter_ref_id",
         "transmit_flag",
         "update_flag",
-        "read_on_init_flag",
-        "datapoint_types",
-        "text_parameter_ref_id",
+        "write_flag",
     )
 
     identifier: str  # "Id" - xs:ID - required
