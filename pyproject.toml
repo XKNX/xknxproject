@@ -143,3 +143,9 @@ combine-as-imports = true
   "SLF",    # private member access
   "SIM117", # multiple-with-statements
 ]
+
+
+[tool.ruff.lint.flake8-builtins]
+builtins-allowed-modules = [
+  "parser", # was there before ruff check A005 was added - backwards compatibility
+]
