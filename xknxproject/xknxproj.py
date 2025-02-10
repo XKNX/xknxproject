@@ -23,7 +23,7 @@ class XKNXProj:
         path: str | Path,
         password: str | None = None,
         language: str | None = None,
-    ):
+    ) -> None:
         """Initialize a KNXProjParser."""
         self.path = Path(path)
         self.password = password

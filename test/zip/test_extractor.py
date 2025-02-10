@@ -13,7 +13,7 @@ xknx_test_project_ets5 = RESOURCES_PATH / "xknx_test_project_no_password.knxproj
 xknx_test_project_protected_ets6 = RESOURCES_PATH / "testprojekt-ets6.knxproj"
 
 
-def test_extract_knx_project_ets5():
+def test_extract_knx_project_ets5() -> None:
     """Test reading a KNX ETS5 project without an error."""
     with extract(xknx_test_project_ets5) as knx_project_contents:
         assert knx_project_contents.root.read("P-01D2/project.xml")
@@ -22,7 +22,7 @@ def test_extract_knx_project_ets5():
         knx_project_contents.root.read("P-01D2/project.xml")
 
 
-def test_extract_protected_knx_project_ets5():
+def test_extract_protected_knx_project_ets5() -> None:
     """Test reading a KNX ETS5 project without an error."""
     with extract(xknx_test_project_protected_ets5, "test") as knx_project_contents:
         assert knx_project_contents.root.read("P-0242.signature")
@@ -35,7 +35,7 @@ def test_extract_protected_knx_project_ets5():
         knx_project_contents.root.read("P-0242.signature")
 
 
-def test_ets6_password_generation():
+def test_ets6_password_generation() -> None:
     """Test generating ZIP password for ETS6 files."""
     assert (
         _generate_ets6_zip_password("a").decode("utf-8")
@@ -51,7 +51,7 @@ def test_ets6_password_generation():
     )
 
 
-def test_extract_protected_knx_project_ets6():
+def test_extract_protected_knx_project_ets6() -> None:
     """Test reading a KNX ETS6 project without an error."""
     with extract(xknx_test_project_protected_ets6, "test") as knx_project_contents:
         assert knx_project_contents.root.read("P-04BF.signature")
@@ -64,7 +64,7 @@ def test_extract_protected_knx_project_ets6():
         knx_project_contents.root.read("P-04BF.signature")
 
 
-def test_wrong_password_ets5():
+def test_wrong_password_ets5() -> None:
     """Test reading a KNX ETS5 project with wrong password."""
     with raises(InvalidPasswordException):
         with extract(xknx_test_project_protected_ets5, "wrong") as knx_project_contents:
@@ -72,7 +72,7 @@ def test_wrong_password_ets5():
                 pass
 
 
-def test_wrong_password_ets6():
+def test_wrong_password_ets6() -> None:
     """Test reading a KNX ETS6 project with wrong password."""
     with raises(InvalidPasswordException):
         with extract(xknx_test_project_protected_ets6, "wrong") as knx_project_contents:
@@ -80,7 +80,7 @@ def test_wrong_password_ets6():
                 pass
 
 
-def test_required_password_ets6():
+def test_required_password_ets6() -> None:
     """Test reading a KNX ETS6 project with wrong password."""
     with raises(InvalidPasswordException):
         with extract(xknx_test_project_protected_ets6, "") as knx_project_contents:

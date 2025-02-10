@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import pytest
 
 from xknxproject import util
-from xknxproject.models import ParameterInstanceRef
+from xknxproject.models import DPTType, ParameterInstanceRef
 
 
 @pytest.mark.parametrize(
@@ -26,7 +28,9 @@ from xknxproject.models import ParameterInstanceRef
         (None, None),
     ],
 )
-def test_get_dpt_type(dpt_string, expected):
+def test_get_dpt_type(
+    dpt_string: str | list[Any] | None, expected: dict[str, int | None] | None
+) -> None:
     """Test parsing single DPT from ETS project."""
     assert util.get_dpt_type(dpt_string) == expected
 
@@ -49,7 +53,9 @@ def test_get_dpt_type(dpt_string, expected):
         (None, []),
     ],
 )
-def test_parse_dpt_types(dpt_string, expected):
+def test_parse_dpt_types(
+    dpt_string: str | list[Any] | None, expected: list[DPTType]
+) -> None:
     """Test parsing list of DPT from ETS project."""
     assert util.parse_dpt_types(dpt_string) == expected
 
