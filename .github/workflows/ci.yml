@@ -56,6 +56,9 @@ jobs:
             requirements_production.txt
             requirements_testing.txt
             .pre-commit-config.yaml
+      - name: Install dependencies
+        run: |
+          pip install -r requirements_testing.txt
       - name: Download all coverage artifacts
         uses: actions/download-artifact@v4
       - name: Create coverage report
