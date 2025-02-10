@@ -33,7 +33,7 @@ class KNXProjContents:
         project_archive: ZipFile,
         project_relative_path: str,
         xml_namespace: str,
-    ):
+    ) -> None:
         """Initialize a KNXProjContents."""
         self._project_archive = project_archive
         self._project_relative_path = project_relative_path

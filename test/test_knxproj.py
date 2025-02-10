@@ -27,7 +27,7 @@ from .conftest import assert_stub
         ("ets6_free", None, "de-DE"),
     ],
 )
-def test_parse_project(file_stem: str, password: str, language: str):
+def test_parse_project(file_stem: str, password: str, language: str) -> None:
     """Test parsing of various ETS projects (see pytest parameters)."""
     knxproj = XKNXProj(
         RESOURCES_PATH / f"{file_stem}.knxproj", password, language=language

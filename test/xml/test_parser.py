@@ -1,5 +1,9 @@
 """Test parser."""
 
+from __future__ import annotations
+
+from pathlib import Path
+
 import pytest
 
 from xknxproject.xml.parser import XMLParser
@@ -13,7 +17,7 @@ xknx_test_project_ets5 = RESOURCES_PATH / "xknx_test_project_no_password.knxproj
 xknx_test_project_protected_ets6 = RESOURCES_PATH / "testprojekt-ets6.knxproj"
 
 
-def test_parse_project_ets6():
+def test_parse_project_ets6() -> None:
     """Test parsing of group addresses."""
     with extract(xknx_test_project_protected_ets6, "test") as knx_project_contents:
         parser = XMLParser(knx_project_contents)
@@ -32,7 +36,7 @@ def test_parse_project_ets6():
     assert parser.areas[1].lines[1].devices[0].manufacturer_name == "MDT technologies"
 
 
-def test_parse_project_ets5():
+def test_parse_project_ets5() -> None:
     """Test parsing of ETS5 project."""
     with extract(xknx_test_project_protected_ets5, "test") as knx_project_contents:
         parser = XMLParser(knx_project_contents)
@@ -77,7 +81,7 @@ def test_parse_project_ets5():
         (RESOURCES_PATH / "test_project-ets4.knxproj", "test"),
     ],
 )
-def test_parse_project_ets4(filename, password):
+def test_parse_project_ets4(filename: Path, password: str | None) -> None:
     """Test parsing of ETS4 project."""
     with extract(filename, password) as knx_project_contents:
         parser = XMLParser(knx_project_contents)
@@ -103,7 +107,7 @@ def test_parse_project_ets4(filename, password):
     assert parser.devices[1].individual_address == "0.0.2"
 
 
-def test_parse_project_with_module_defs():
+def test_parse_project_with_module_defs() -> None:
     """Test parsing of ETS5 project with module definitions."""
     with extract(xknx_test_project_module_defs) as knx_project_contents:
         parser = XMLParser(knx_project_contents)

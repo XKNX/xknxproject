@@ -394,7 +394,7 @@ class _LocationLoader:
         knx_proj_contents: KNXProjContents,
         knx_master_data: KNXMasterData,
         devices: list[DeviceInstance],
-    ):
+    ) -> None:
         """Initialize the LocationLoader."""
         self.knx_master_data = knx_master_data
         self._element_name = (

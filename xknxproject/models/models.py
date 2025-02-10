@@ -32,7 +32,7 @@ class XMLGroupAddress:
         data_secure_key: str | None,
         comment: str,
         style: GroupAddressStyle,
-    ):
+    ) -> None:
         """Initialize a group address."""
         self.name = name
         self.identifier = identifier.split("_", 1)[1]
@@ -141,7 +141,7 @@ class DeviceInstance:
         module_instances: list[ModuleInstance],
         parameter_instance_refs: dict[str, ParameterInstanceRef],
         com_objects: list[ComObject] | None = None,
-    ):
+    ) -> None:
         """Initialize a Device Instance."""
         self.identifier = identifier
         self.address = address
