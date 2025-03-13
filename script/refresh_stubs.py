@@ -1,5 +1,7 @@
 """Refresh stubs for testing."""
+
 import json
+from pathlib import Path
 
 from xknxproject import XKNXProj
 
@@ -24,5 +26,7 @@ for file_name, password, language in file_names:
     )
     project = knxproj.parse()
 
-    with open(f"test/resources/stubs/{file_name}.json", "w", encoding="utf8") as f:
+    with Path(f"test/resources/stubs/{file_name}.json").open(
+        mode="w", encoding="utf8"
+    ) as f:
         json.dump(project, f, indent=2, ensure_ascii=False)

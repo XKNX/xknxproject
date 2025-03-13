@@ -103,8 +103,9 @@ output-format = "colorized"
 [tool.pytest.ini_options]
 testpaths = "test"
 
-[tool.ruff]
-lint.select = [
+
+[tool.ruff.lint]
+select = [
   "A",     # builtins shadowing
   "ANN",   # annotations
   "ASYNC", # async
@@ -126,7 +127,7 @@ lint.select = [
   "UP",    # pyupgrade
   "W",     # pydocstyle warning
 ]
-lint.ignore = [
+ignore = [
   "D202",
   "D203",
   "D212",
@@ -134,13 +135,13 @@ lint.ignore = [
   "SIM102", # collapsible-if
   "SIM105", #suppressible-exception
 ]
-extend-exclude = ["script"]
 
 [tool.ruff.lint.isort]
 force-sort-within-sections = true
 combine-as-imports = true
 
 [tool.ruff.lint.per-file-ignores]
+"script/*" = ["T20"] # print-used
 "test/*" = [
   "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
   "SLF",    # private member access
