@@ -315,7 +315,7 @@ class _TopologyLoader:
 
     @staticmethod
     def __get_links_from_schema_1x(com_object: ElementTree.Element) -> list[str]:
-        # Check if "Connectors" is available. This will always fail for ETS5/6
+        # Check if "Connectors" is available. Schema version <= 14
         if (connectors := com_object.find("{*}Connectors")) is None:
             return []
 
