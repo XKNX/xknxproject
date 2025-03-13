@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from xml.etree import ElementTree
 
+from xknxproject.const import ETS_5_7_SCHEMA_VERSION
 from xknxproject.exceptions import UnexpectedDataError
 from xknxproject.models import (
     ChannelNode,
@@ -313,8 +314,8 @@ class _TopologyLoader:
         )
 
     @staticmethod
-    def __get_links_from_ets4(com_object: ElementTree.Element) -> list[str]:
-        # Check if "Connectors" is available. This will always fail for ETS5/6
+    def __get_links_from_schema_1x(com_object: ElementTree.Element) -> list[str]:
+        # Check if "Connectors" is available. Schema version <= 14
         if (connectors := com_object.find("{*}Connectors")) is None:
             return []
 
@@ -327,8 +328,8 @@ class _TopologyLoader:
         ]
 
     @staticmethod
-    def __get_links_from_ets5(com_object: ElementTree.Element) -> list[str]:
-        # ETS5/6 uses a space-separated string of GA
+    def __get_links_from_schema_2x(com_object: ElementTree.Element) -> list[str]:
+        # ETS 5.7+ / 6 uses a space-separated string of GA
         links = com_object.get("Links")
 
         if links is None:
@@ -342,10 +343,10 @@ class _TopologyLoader:
     ) -> ComObjectInstanceRef | None:
         """Create ComObjectInstanceRef."""
 
-        if self.__knx_proj_contents.is_ets4_project():
-            links = self.__get_links_from_ets4(com_object)
+        if self.__knx_proj_contents.schema_version < ETS_5_7_SCHEMA_VERSION:
+            links = self.__get_links_from_schema_1x(com_object)
         else:
-            links = self.__get_links_from_ets5(com_object)
+            links = self.__get_links_from_schema_2x(com_object)
 
         if not links:
             return None
