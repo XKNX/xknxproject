@@ -1,5 +1,5 @@
 -r requirements_production.txt
-pre-commit==4.1.0
+pre-commit==4.2.0
 pylint==3.3.4
 pytest==8.3.4
 pytest-cov==6.1.0
