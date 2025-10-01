@@ -6,6 +6,6 @@ pytest-cov==6.2.1
 pytest-icdiff==0.9
 ruff==0.12.11
 setuptools==80.9.0
-tox==4.29.0
+tox==4.30.2
 tox-gh-actions==3.3.0
 mypy==1.15.0
