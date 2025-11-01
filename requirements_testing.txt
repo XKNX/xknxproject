@@ -1,6 +1,6 @@
 -r requirements_production.txt
 pre-commit==4.3.0
-pylint==3.3.8
+pylint==3.3.9
 pytest==8.4.2
 pytest-cov==7.0.0
 pytest-icdiff==0.9
