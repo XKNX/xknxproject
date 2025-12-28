@@ -19,6 +19,17 @@ Currently, xknxproject supports extracting (password protected) ETS 4, 5 and 6 p
 * Location information of devices (in which rooms they are)
 * Functions assigned to rooms
 
+### **New: Device Configuration Parsing**
+
+The library now includes support for parsing KNX device configuration files (.knxprod) to extract device-specific information:
+
+* Device name and manufacturer information
+* Parameter types and definitions
+* Individual parameters with names, types, and values
+* Parameter blocks and their hierarchical structure
+* Device channels and their configuration
+* Communication objects and their properties
+
 Caution: Loading a middle-sized project with this tool takes about 1.5 seconds. For bigger projects this might as well be >3s.
 
 Not all supported languages are included in project / application data. If the configured language is not found, the default language will be used - which is manufacturer / product dependent.
@@ -28,6 +39,8 @@ Not all supported languages are included in project / application data. If the c
 `pip install xknxproject`
 
 ## Usage
+
+### **Project File Parsing**
 
 ```python
 """Extract and parse a KNX project file."""
@@ -41,6 +54,22 @@ knxproj: XKNXProj = XKNXProj(
     language="de-DE",  # optional
 )
 project: KNXProject = knxproj.parse()
+```
+
+### **Device Configuration Parsing**
+
+```python
+"""Parse a KNX device configuration file."""
+from xknxproject.xml.simple_device_parser import SimpleDeviceParser
+
+# Parse device configuration file
+parser = SimpleDeviceParser('/path/to/device.knxprod')
+config = parser.parse()
+
+# Access parsed data
+print(f"Device: {config.name}")
+print(f"Parameter Blocks: {len(config.parameter_blocks)}")
+print(f"Channels: {len(config.channels)}")
 ```
 
 The resulting `KNXProject` is a typed dictionary and can be used just like a dictionary, or can be exported as JSON.
