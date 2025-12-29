@@ -52,9 +52,14 @@ class SimpleDeviceParser:
         try:
             with ZipFile(self.device_file_path, mode="r") as zip_archive:
                 return self._parse_xml(zip_archive, config)
+        except FileNotFoundError as e:
+            _LOGGER.error("Device file not found: %s", e)
+            config.name = "Unknown Device (File Not Found)"
+            return config
         except Exception as e:
             _LOGGER.error("Failed to parse device configuration: %s", e)
-            raise
+            config.name = "Unknown Device (Parsing Failed)"
+            return config
             
     def _parse_xml(self, zip_archive: ZipFile, config: SimpleDeviceConfig) -> SimpleDeviceConfig:
         """Parse XML content from device file."""
@@ -125,11 +130,13 @@ class SimpleDeviceParser:
                 p_name = p_elem.get('Name', p_id)
                 p_type = p_elem.get('ParameterType', '')
                 p_value = p_elem.get('Value', '')
+                p_access = p_elem.get('Access', 'Full')  # Default to Full access if not specified
                 
                 config.parameters[p_id] = {
                     'name': p_name,
                     'type': p_type,
-                    'value': p_value
+                    'value': p_value,
+                    'access': p_access
                 }
         
         # Parse segments
@@ -201,7 +208,7 @@ class SimpleDeviceParser:
                     }
         
     def _parse_com_objects(self, root: ElementTree.Element, ns: dict[str, str], config: SimpleDeviceConfig) -> None:
-        """Parse communication objects from ComObjectTable."""
+        """Parse communication objects from ComObjectTable with enhanced details."""
         # Look for ComObjectTable at root level
         comobj_table = root.find('knx:ComObjectTable', ns)
         if comobj_table is None:
@@ -216,13 +223,60 @@ class SimpleDeviceParser:
             co_size = co_elem.get('ObjectSize', '')
             co_dpt = co_elem.get('DatapointType', '')
             
+            # Parse COM object flags
+            co_flags = {
+                'communicate': co_elem.get('CommunicationFlag', '') == 'Enabled',
+                'read': co_elem.get('ReadFlag', '') == 'Enabled',
+                'write': co_elem.get('WriteFlag', '') == 'Enabled',
+                'transmit': co_elem.get('TransmitFlag', '') == 'Enabled',
+                'update': co_elem.get('UpdateFlag', '') == 'Enabled',
+                'read_on_init': co_elem.get('ReadOnInitFlag', '') == 'Enabled'
+            }
+            
+            # Parse memory mapping if available
+            memory_elem = co_elem.find('knx:Memory', ns)
+            co_memory = {}
+            if memory_elem is not None:
+                co_memory = {
+                    'segment_id': memory_elem.get('CodeSegment', ''),
+                    'offset': memory_elem.get('Offset', ''),
+                    'bit_offset': memory_elem.get('BitOffset', '')
+                }
+            
             config.com_objects[co_id] = {
                 'name': co_name,
                 'number': co_number,
                 'text': co_text,
                 'function': co_function,
                 'size': co_size,
-                'dpt': co_dpt
+                'dpt': co_dpt,
+                'flags': co_flags,
+                'memory': co_memory
+            }
+        
+        # Parse AddressTable and AssociationTable
+        self._parse_address_and_association_tables(root, ns, config)
+    
+    def _parse_address_and_association_tables(self, root: ElementTree.Element, ns: dict[str, str], config: SimpleDeviceConfig) -> None:
+        """Parse AddressTable and AssociationTable information."""
+        # Parse AddressTable
+        address_table = root.find('knx:AddressTable', ns)
+        if address_table is not None:
+            config.address_table = {
+                'segment_id': address_table.get('CodeSegment', ''),
+                'offset': address_table.get('Offset', ''),
+                'max_entries': address_table.get('MaxEntries', ''),
+                'table_type': 'address'
+            }
+        
+        # Parse AssociationTable
+        association_table = root.find('knx:AssociationTable', ns)
+        if association_table is not None:
+            config.association_table = {
+                'segment_id': association_table.get('CodeSegment', ''),
+                'offset': association_table.get('Offset', ''),
+                'max_entries': association_table.get('MaxEntries', ''),
+                'table_type': 'association'
             }
 
     def parse_with_parameterization(self) -> Tuple['SimpleDeviceConfig', Dict[str, Any]]:
@@ -237,7 +291,13 @@ class SimpleDeviceParser:
                 - Full hardware parameterization data (may be empty if parsing fails)
         """
         # First do basic parsing
-        config = self.parse()
+        try:
+            config = self.parse()
+        except Exception as e:
+            _LOGGER.error("Basic parsing failed: %s", e)
+            # Create a minimal config to continue
+            config = SimpleDeviceConfig()
+            config.name = "Unknown Device (Parsing Failed)"
         
         # Then extract memory mapping and type details directly from the XML
         try:
@@ -249,7 +309,7 @@ class SimpleDeviceParser:
             return config, hw_data
             
         except Exception as e:
-            _LOGGER.warning("Enhanced parameterization parsing failed, falling back to basic parsing: %s", e)
+            _LOGGER.warning("Enhanced parameterization parsing failed, continuing with basic parsing: %s", e)
             return config, {}
             
     def _parse_memory_mapping_and_types(self) -> Dict[str, Any]:
@@ -328,7 +388,24 @@ class SimpleDeviceParser:
                     'id': seg_id,
                     'address': int(address),
                     'size': int(size),
-                    'memory_type': memory_type
+                    'memory_type': memory_type,
+                    'segment_type': 'absolute'
+                }
+        
+        # Parse RelativeSegment elements
+        for seg_elem in code_elem.findall('knx:RelativeSegment', ns):
+            seg_id = seg_elem.get('Id', '')
+            offset = seg_elem.get('Offset', '')
+            size = seg_elem.get('Size', '')
+            lsm_id = seg_elem.get('LoadStateMachine', '')
+            
+            if seg_id and offset and size:
+                hw_data['segments'][seg_id] = {
+                    'id': seg_id,
+                    'offset': int(offset),
+                    'size': int(size),
+                    'lsm_id': lsm_id,
+                    'segment_type': 'relative'
                 }
         
     def _parse_parameter_types_detailed(self, root: ElementTree.Element, ns: dict[str, str], hw_data: Dict[str, Any]) -> None:
@@ -344,9 +421,16 @@ class SimpleDeviceParser:
             if not pt_id:
                 continue
                 
-            # Parse type restriction or type number
+            # Parse type restriction or type number or other types
             type_restriction = pt_elem.find('knx:TypeRestriction', ns)
             type_number = pt_elem.find('knx:TypeNumber', ns)
+            type_time = pt_elem.find('knx:TypeTime', ns)
+            type_text = pt_elem.find('knx:TypeText', ns)
+            type_float = pt_elem.find('knx:TypeFloat', ns)
+            type_picture = pt_elem.find('knx:TypePicture', ns)
+            type_ip_address = pt_elem.find('knx:TypeIPAddress', ns)
+            type_color = pt_elem.find('knx:TypeColor', ns)
+            type_none = pt_elem.find('knx:TypeNone', ns)
             
             if type_restriction is not None:
                 base_type = type_restriction.get('Base', '')
@@ -375,6 +459,7 @@ class SimpleDeviceParser:
                 size_in_bit = type_number.get('SizeInBit', '0')
                 min_inclusive = type_number.get('minInclusive', '')
                 max_inclusive = type_number.get('maxInclusive', '')
+                ui_hint = type_number.get('UIHint', '')
                 
                 hw_data['parameter_types'][pt_id] = {
                     'id': pt_id,
@@ -383,7 +468,109 @@ class SimpleDeviceParser:
                     'size': int(size_in_bit) if size_in_bit.isdigit() else 0,
                     'enum': {},
                     'min_value': float(min_inclusive) if min_inclusive else None,
-                    'max_value': float(max_inclusive) if max_inclusive else None
+                    'max_value': float(max_inclusive) if max_inclusive else None,
+                    'ui_hint': ui_hint
+                }
+            
+            elif type_time is not None:
+                size_in_bit = type_time.get('SizeInBit', '0')
+                min_inclusive = type_time.get('minInclusive', '')
+                max_inclusive = type_time.get('maxInclusive', '')
+                unit = type_time.get('Unit', '')
+                
+                hw_data['parameter_types'][pt_id] = {
+                    'id': pt_id,
+                    'name': pt_name,
+                    'type': 'Time',
+                    'size': int(size_in_bit) if size_in_bit.isdigit() else 0,
+                    'enum': {},
+                    'min_value': min_inclusive,
+                    'max_value': max_inclusive,
+                    'unit': unit
+                }
+            
+            elif type_text is not None:
+                size_in_bit = type_text.get('SizeInBit', '0')
+                
+                hw_data['parameter_types'][pt_id] = {
+                    'id': pt_id,
+                    'name': pt_name,
+                    'type': 'Text',
+                    'size': int(size_in_bit) if size_in_bit.isdigit() else 0,
+                    'enum': {}
+                }
+            
+            elif type_float is not None:
+                encoding = type_float.get('Encoding', '')
+                min_inclusive = type_float.get('minInclusive', '')
+                max_inclusive = type_float.get('maxInclusive', '')
+                display_format = type_float.get('DisplayFormat', '')
+                
+                hw_data['parameter_types'][pt_id] = {
+                    'id': pt_id,
+                    'name': pt_name,
+                    'type': 'Float',
+                    'size': 32,  # Float is typically 32 bits
+                    'enum': {},
+                    'encoding': encoding,
+                    'min_value': float(min_inclusive) if min_inclusive else None,
+                    'max_value': float(max_inclusive) if max_inclusive else None,
+                    'display_format': display_format
+                }
+            
+            elif type_picture is not None:
+                ref_id = type_picture.get('RefId', '')
+                
+                hw_data['parameter_types'][pt_id] = {
+                    'id': pt_id,
+                    'name': pt_name,
+                    'type': 'Picture',
+                    'size': 0,  # Size determined by referenced picture
+                    'enum': {},
+                    'ref_id': ref_id
+                }
+            
+            elif type_ip_address is not None:
+                address_type = type_ip_address.get('AddressType', '')
+                
+                hw_data['parameter_types'][pt_id] = {
+                    'id': pt_id,
+                    'name': pt_name,
+                    'type': 'IPAddress',
+                    'size': 32,  # IPv4 is 32 bits
+                    'enum': {},
+                    'address_type': address_type
+                }
+            
+            elif type_color is not None:
+                space = type_color.get('Space', '')
+                
+                hw_data['parameter_types'][pt_id] = {
+                    'id': pt_id,
+                    'name': pt_name,
+                    'type': 'Color',
+                    'size': 24,  # Typically 24 bits for RGB
+                    'enum': {},
+                    'color_space': space
+                }
+            
+            elif type_none is not None:
+                hw_data['parameter_types'][pt_id] = {
+                    'id': pt_id,
+                    'name': pt_name,
+                    'type': 'None',
+                    'size': 0,
+                    'enum': {}
+                }
+            
+            else:
+                _LOGGER.warning(f"Unknown parameter type for {pt_id}")
+                hw_data['parameter_types'][pt_id] = {
+                    'id': pt_id,
+                    'name': pt_name,
+                    'type': 'Unknown',
+                    'size': 0,
+                    'enum': {}
                 }
         
     def _parse_parameters_with_memory(self, root: ElementTree.Element, ns: dict[str, str], hw_data: Dict[str, Any]) -> None:
@@ -434,8 +621,14 @@ class SimpleDeviceParser:
         union_elem = p_elem.find('..', ns)  # Parent element
         if union_elem is not None and union_elem.tag.endswith('Union'):
             union_id = union_elem.get('Id')
+            # Check both UnionDefault and DefaultUnionParameter attributes
             union_default_str = p_elem.get('UnionDefault')
-            union_default = union_default_str and union_default_str.lower() == 'true'
+            default_union_param_str = p_elem.get('DefaultUnionParameter')
+            union_default = (union_default_str and union_default_str.lower() == 'true') or \
+                           (default_union_param_str and default_union_param_str.lower() == 'true')
+        
+        # Parse access control
+        p_access = p_elem.get('Access', 'Full')  # Default to Full access if not specified
         
         hw_data['parameters'][p_id] = {
             'id': p_id,
@@ -446,7 +639,8 @@ class SimpleDeviceParser:
             'offset': offset,
             'offset_bit': offset_bit,
             'union_id': union_id,
-            'union_default': union_default
+            'union_default': union_default,
+            'access': p_access
         }
         
     def _parse_unions(self, root: ElementTree.Element, ns: dict[str, str], hw_data: Dict[str, Any]) -> None:
@@ -475,21 +669,150 @@ class SimpleDeviceParser:
                 if offset_bit_str is not None:
                     offset_bit = int(offset_bit_str)
             
-            # Parse union parameters
+            # Parse union parameters and identify default parameter
             parameters = []
+            default_param_id = None
+            
             for param_elem in union_elem.findall('knx:Parameter', ns):
                 param_id = param_elem.get('Id', '')
                 if param_id:
                     parameters.append(param_id)
+                    # Check if this is the default parameter for the union
+                    default_param_attr = param_elem.get('DefaultUnionParameter', '')
+                    if default_param_attr and default_param_attr.lower() in ('true', '1'):
+                        default_param_id = param_id
             
             hw_data['unions'].append({
                 'size_in_bit': int(size_in_bit) if size_in_bit.isdigit() else 0,
                 'segment_id': segment_id,
                 'offset': offset,
                 'offset_bit': offset_bit,
-                'parameters': parameters
+                'parameters': parameters,
+                'default_parameter': default_param_id
             })
             
+    def _validate_memory_mapping(self, config: 'SimpleDeviceConfig', hw_data: Dict[str, Any]) -> None:
+        """Validate memory mapping of parameters against segments."""
+        segments = {}
+        # Build segment information from config or hw_data
+        if hasattr(config, 'segments') and config.segments:
+            for seg in config.segments:
+                segments[seg['id']] = {
+                    'size': int(seg['size']) if seg['size'] else 0,
+                    'address': int(seg['address']) if seg['address'] else 0
+                }
+        
+        # Also check hw_data segments if available
+        for seg_id, seg_info in hw_data.get('segments', {}).items():
+            segments[seg_id] = {
+                'size': seg_info.get('size', 0),
+                'address': seg_info.get('address', 0)
+            }
+        
+        # Validate parameter offsets against segment bounds
+        for param_id, param in config.parameters.items():
+            seg_id = param.get('segment_id')
+            offset = param.get('offset')
+            
+            if seg_id and offset is not None and seg_id in segments:
+                seg = segments[seg_id]
+                param_size = 1  # Default size for parameters without explicit size
+                
+                # Try to get parameter size from type information
+                param_type_id = param.get('type_id') or param.get('type', '')
+                if param_type_id and param_type_id in config.parameter_types:
+                    pt = config.parameter_types[param_type_id]
+                    if 'size' in pt and pt['size'] > 0:
+                        param_size = (pt['size'] + 7) // 8  # Convert bits to bytes
+                
+                # Check if offset is within segment bounds
+                if offset < 0:
+                    _LOGGER.warning(f"Parameter {param_id} has negative offset: {offset}")
+                elif seg.get('segment_type') == 'absolute':
+                    # For absolute segments, check against segment size
+                    if offset + param_size > seg['size']:
+                        _LOGGER.warning(f"Parameter {param_id} offset {offset} + size {param_size} exceeds absolute segment {seg_id} size {seg['size']}")
+                elif seg.get('segment_type') == 'relative':
+                    # For relative segments, we can't validate absolute bounds without base address
+                    # But we can check if offset is reasonable
+                    if offset < 0:
+                        _LOGGER.warning(f"Parameter {param_id} has negative offset in relative segment {seg_id}: {offset}")
+                    elif offset > 10000:  # Arbitrary large offset warning
+                        _LOGGER.warning(f"Parameter {param_id} has very large offset in relative segment {seg_id}: {offset}")
+        
+        # Check for parameter overlaps within the same segment
+        seg_params = {}
+        for param_id, param in config.parameters.items():
+            seg_id = param.get('segment_id')
+            offset = param.get('offset')
+            
+            if seg_id and offset is not None:
+                if seg_id not in seg_params:
+                    seg_params[seg_id] = []
+                seg_params[seg_id].append((param_id, offset, param.get('size', 1)))
+        
+        # Check for overlaps
+        for seg_id, params in seg_params.items():
+            # Sort by offset
+            params.sort(key=lambda x: x[1])
+            
+            for i in range(len(params) - 1):
+                param1_id, offset1, size1 = params[i]
+                param2_id, offset2, size2 = params[i + 1]
+                
+                if offset1 + size1 > offset2:
+                    _LOGGER.warning(f"Parameters {param1_id} and {param2_id} overlap in segment {seg_id}")
+
+    def _validate_parameter_types(self, config: 'SimpleDeviceConfig', hw_data: Dict[str, Any]) -> None:
+        """Validate parameter types and their usage."""
+        # Validate that all parameters reference valid parameter types
+        for param_id, param in config.parameters.items():
+            param_type_id = param.get('type_id') or param.get('type', '')
+            if param_type_id and param_type_id not in config.parameter_types:
+                _LOGGER.warning(f"Parameter {param_id} references unknown parameter type: {param_type_id}")
+        
+        # Validate parameter type sizes and ranges
+        for pt_id, pt in config.parameter_types.items():
+            pt_type = pt.get('type', 'Unknown')
+            
+            if 'size' in pt and pt['size'] <= 0:
+                # Allow size 0 for special types like None and Picture
+                if pt_type not in ['None', 'Picture']:
+                    _LOGGER.warning(f"Parameter type {pt_id} has invalid size: {pt['size']}")
+            
+            if 'min_value' in pt and 'max_value' in pt:
+                if pt['min_value'] is not None and pt['max_value'] is not None:
+                    if pt['min_value'] > pt['max_value']:
+                        _LOGGER.warning(f"Parameter type {pt_id} has invalid range: min {pt['min_value']} > max {pt['max_value']}")
+        
+        # Validate enum values
+        for pt_id, pt in config.parameter_types.items():
+            if 'enum' in pt and pt['enum']:
+                enum_size = len(pt['enum'])
+                if 'size' in pt and pt['size'] > 0:
+                    max_enum_values = 2 ** pt['size']
+                    if enum_size > max_enum_values:
+                        _LOGGER.warning(f"Parameter type {pt_id} has {enum_size} enum values but only {pt['size']} bits")
+        
+        # Validate specific parameter types
+        for pt_id, pt in config.parameter_types.items():
+            pt_type = pt.get('type', 'Unknown')
+            
+            if pt_type == 'Time' and 'unit' not in pt:
+                _LOGGER.warning(f"Time parameter type {pt_id} missing unit information")
+            
+            elif pt_type == 'Float' and 'encoding' not in pt:
+                _LOGGER.warning(f"Float parameter type {pt_id} missing encoding information")
+            
+            elif pt_type == 'Picture' and 'ref_id' not in pt:
+                _LOGGER.warning(f"Picture parameter type {pt_id} missing reference ID")
+            
+            elif pt_type == 'IPAddress' and 'address_type' not in pt:
+                _LOGGER.warning(f"IPAddress parameter type {pt_id} missing address type")
+            
+            elif pt_type == 'Color' and 'color_space' not in pt:
+                _LOGGER.warning(f"Color parameter type {pt_id} missing color space")
+
     def _enhance_config_with_parameterization(self, config: 'SimpleDeviceConfig', hw_data: Dict[str, Any]) -> None:
         """Enhance SimpleDeviceConfig with memory mapping and type details from hardware parameterization data."""
         
@@ -501,7 +824,8 @@ class SimpleDeviceParser:
                     'offset': hw_param.get('offset'),
                     'offset_bit': hw_param.get('offset_bit'),
                     'union_id': hw_param.get('union_id'),
-                    'union_default': hw_param.get('union_default')
+                    'union_default': hw_param.get('union_default'),
+                    'access': hw_param.get('access')  # Add access control from enhanced parsing
                 })
         
         # Enhance parameter types with detailed type information
@@ -519,3 +843,7 @@ class SimpleDeviceParser:
         if 'unions' not in config.__dict__:
             config.unions = []
         config.unions.extend(hw_data.get('unions', []))
+        
+        # Validate parameter types and memory mapping after enhancement
+        self._validate_parameter_types(config, hw_data)
+        self._validate_memory_mapping(config, hw_data)
