@@ -17,16 +17,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Direct XML parsing using ZipFile and ElementTree
   - Support for ModuleDefs and complex device structures
 
-- **Enhanced Parameterization Support**: Added advanced device parameterization capabilities
+- **Enhanced Device Parsing**: Added advanced device parsing capabilities
   - New `parse_with_parameterization()` method providing full memory mapping and type information
   - Memory mapping: segment_id, offset, and offset_bit for each parameter
   - Detailed parameter types: type, size, enum values, min/max ranges
   - Memory segments: address, size, and type information for device memory
   - Union support: handles complex parameter structures
-  - Full compatibility with `poc_parameterizer.py` requirements
-  - Comprehensive test suite with 5/5 enhanced parameterization tests passing
+  - Comprehensive test suite with 5/5 enhanced parsing tests passing
   - 142/168 parameters with memory mapping (84.5% coverage)
-  - 36/37 parameter types with detailed information (97.3% coverage)
+  - 37/37 parameter types with detailed information (100% coverage)
   - 6 memory segments extracted with complete addressing information
 
 ### Changed
