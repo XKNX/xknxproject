@@ -9,10 +9,11 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 from zipfile import ZipFile
-from typing import Any
+from typing import Any, Dict, Tuple, Optional
 from xml.etree import ElementTree
 
 from xknxproject.zip.extractor import extract
+from xknxproject.loader.hardware_parameterization_loader import HardwareParameterizationLoader
 
 _LOGGER = logging.getLogger("xknxproject.log")
 
@@ -223,3 +224,298 @@ class SimpleDeviceParser:
                 'size': co_size,
                 'dpt': co_dpt
             }
+
+    def parse_with_parameterization(self) -> Tuple['SimpleDeviceConfig', Dict[str, Any]]:
+        """Parse the device configuration file with full parameterization support.
+        
+        This method provides enhanced parsing that includes memory mapping information
+        and detailed parameter type data needed for device parameterization.
+        
+        Returns:
+            Tuple[SimpleDeviceConfig, Dict[str, Any]]: 
+                - Enhanced SimpleDeviceConfig with memory mapping
+                - Full hardware parameterization data (may be empty if parsing fails)
+        """
+        # First do basic parsing
+        config = self.parse()
+        
+        # Then extract memory mapping and type details directly from the XML
+        try:
+            hw_data = self._parse_memory_mapping_and_types()
+            
+            # Enhance the simple config with memory mapping and type details
+            self._enhance_config_with_parameterization(config, hw_data)
+            
+            return config, hw_data
+            
+        except Exception as e:
+            _LOGGER.warning("Enhanced parameterization parsing failed, falling back to basic parsing: %s", e)
+            return config, {}
+            
+    def _parse_memory_mapping_and_types(self) -> Dict[str, Any]:
+        """Parse memory mapping and detailed type information directly from the device XML.
+        
+        This method handles the MDT-style XML format where memory mapping is in <Memory> elements
+        and segments are defined as <AbsoluteSegment> elements.
+        
+        Returns:
+            Dictionary containing parsed parameterization data
+        """
+        hw_data = {
+            'parameters': {},
+            'parameter_types': {},
+            'segments': {},
+            'unions': []
+        }
+        
+        try:
+            with ZipFile(self.device_file_path, mode="r") as zip_archive:
+                # Find application program XML files (same logic as in basic parsing)
+                app_program_files = []
+                for path in zip_archive.namelist():
+                    if (path.startswith('M-') and 
+                        path.endswith('.xml') and 
+                        not path.endswith('Catalog.xml') and 
+                        not path.endswith('Hardware.xml')):
+                        app_program_files.append(path)
+                
+                if not app_program_files:
+                    _LOGGER.warning("No application program files found in device configuration")
+                    return hw_data
+                    
+                # Use the first application program file
+                app_program_path = app_program_files[0]
+                _LOGGER.info("Parsing memory mapping from: %s", app_program_path)
+                
+                with zip_archive.open(app_program_path) as app_program_file:
+                    tree = ElementTree.parse(app_program_file)
+                    root = tree.getroot()
+                    ns = {'knx': root.tag.split('}')[0].strip('{')}
+                    
+                    # Parse segments (AbsoluteSegment elements)
+                    self._parse_absolute_segments(root, ns, hw_data)
+                    
+                    # Parse parameter types with detailed information
+                    self._parse_parameter_types_detailed(root, ns, hw_data)
+                    
+                    # Parse parameters with memory mapping
+                    self._parse_parameters_with_memory(root, ns, hw_data)
+                    
+                    # Parse unions
+                    self._parse_unions(root, ns, hw_data)
+                    
+        except Exception as e:
+            _LOGGER.error("Failed to parse memory mapping and types: %s", e)
+            # Return empty data instead of raising exception
+            return hw_data
+            
+        return hw_data
+        
+    def _parse_absolute_segments(self, root: ElementTree.Element, ns: dict[str, str], hw_data: Dict[str, Any]) -> None:
+        """Parse AbsoluteSegment elements as memory segments."""
+        code_elem = root.find('knx:ManufacturerData/knx:Manufacturer/knx:ApplicationPrograms/knx:ApplicationProgram/knx:Static/knx:Code', ns)
+        if code_elem is None:
+            return
+            
+        for seg_elem in code_elem.findall('knx:AbsoluteSegment', ns):
+            seg_id = seg_elem.get('Id', '')
+            address = seg_elem.get('Address', '')
+            size = seg_elem.get('Size', '')
+            memory_type = seg_elem.get('MemoryType', '')
+            
+            if seg_id and address and size:
+                hw_data['segments'][seg_id] = {
+                    'id': seg_id,
+                    'address': int(address),
+                    'size': int(size),
+                    'memory_type': memory_type
+                }
+        
+    def _parse_parameter_types_detailed(self, root: ElementTree.Element, ns: dict[str, str], hw_data: Dict[str, Any]) -> None:
+        """Parse parameter types with detailed type information and enums."""
+        param_types_elem = root.find('knx:ManufacturerData/knx:Manufacturer/knx:ApplicationPrograms/knx:ApplicationProgram/knx:Static/knx:ParameterTypes', ns)
+        if param_types_elem is None:
+            return
+            
+        for pt_elem in param_types_elem.findall('knx:ParameterType', ns):
+            pt_id = pt_elem.get('Id', '')
+            pt_name = pt_elem.get('Name', pt_id)
+            
+            if not pt_id:
+                continue
+                
+            # Parse type restriction or type number
+            type_restriction = pt_elem.find('knx:TypeRestriction', ns)
+            type_number = pt_elem.find('knx:TypeNumber', ns)
+            
+            if type_restriction is not None:
+                base_type = type_restriction.get('Base', '')
+                size_in_bit = type_restriction.get('SizeInBit', '0')
+                
+                # Parse enumeration
+                enum_dict = {}
+                enumeration = type_restriction.find('knx:Enumeration', ns)
+                if enumeration is not None:
+                    for enum_item in enumeration.findall('knx:EnumerationValue', ns):
+                        value = enum_item.get('Value', '')
+                        text = enum_item.get('Text', '')
+                        if value and text:
+                            enum_dict[value] = text
+                
+                hw_data['parameter_types'][pt_id] = {
+                    'id': pt_id,
+                    'name': pt_name,
+                    'type': base_type,
+                    'size': int(size_in_bit) if size_in_bit.isdigit() else 0,
+                    'enum': enum_dict
+                }
+            
+            elif type_number is not None:
+                base_type = type_number.get('Type', '')
+                size_in_bit = type_number.get('SizeInBit', '0')
+                min_inclusive = type_number.get('minInclusive', '')
+                max_inclusive = type_number.get('maxInclusive', '')
+                
+                hw_data['parameter_types'][pt_id] = {
+                    'id': pt_id,
+                    'name': pt_name,
+                    'type': base_type,
+                    'size': int(size_in_bit) if size_in_bit.isdigit() else 0,
+                    'enum': {},
+                    'min_value': float(min_inclusive) if min_inclusive else None,
+                    'max_value': float(max_inclusive) if max_inclusive else None
+                }
+        
+    def _parse_parameters_with_memory(self, root: ElementTree.Element, ns: dict[str, str], hw_data: Dict[str, Any]) -> None:
+        """Parse parameters with memory mapping information."""
+        # Parse parameters from Static section
+        params_elem = root.find('knx:ManufacturerData/knx:Manufacturer/knx:ApplicationPrograms/knx:ApplicationProgram/knx:Static/knx:Parameters', ns)
+        if params_elem is not None:
+            for p_elem in params_elem.findall('knx:Parameter', ns):
+                self._parse_parameter_element(p_elem, ns, hw_data)
+        
+        # Parse parameters from Dynamic section (including unions)
+        dynamic_elem = root.find('knx:ManufacturerData/knx:Manufacturer/knx:ApplicationPrograms/knx:ApplicationProgram/knx:Dynamic', ns)
+        if dynamic_elem is not None:
+            for param_elem in dynamic_elem.findall('.//knx:Parameter', ns):
+                self._parse_parameter_element(param_elem, ns, hw_data)
+        
+    def _parse_parameter_element(self, p_elem: ElementTree.Element, ns: dict[str, str], hw_data: Dict[str, Any]) -> None:
+        """Parse a single parameter element with memory mapping."""
+        p_id = p_elem.get('Id', '')
+        p_name = p_elem.get('Name', p_id)
+        p_type = p_elem.get('ParameterType', '')
+        p_value = p_elem.get('Value', '')
+        
+        if not p_id:
+            return
+            
+        # Parse memory mapping from <Memory> element (MDT format)
+        memory_elem = p_elem.find('knx:Memory', ns)
+        segment_id = None
+        offset = None
+        offset_bit = None
+        
+        if memory_elem is not None:
+            segment_id = memory_elem.get('CodeSegment')
+            offset_str = memory_elem.get('Offset')
+            offset_bit_str = memory_elem.get('BitOffset')
+            
+            if offset_str is not None:
+                offset = int(offset_str)
+            if offset_bit_str is not None:
+                offset_bit = int(offset_bit_str)
+        
+        # Parse union information
+        union_id = None
+        union_default = False
+        
+        # Check if this parameter is inside a union
+        union_elem = p_elem.find('..', ns)  # Parent element
+        if union_elem is not None and union_elem.tag.endswith('Union'):
+            union_id = union_elem.get('Id')
+            union_default_str = p_elem.get('UnionDefault')
+            union_default = union_default_str and union_default_str.lower() == 'true'
+        
+        hw_data['parameters'][p_id] = {
+            'id': p_id,
+            'name': p_name,
+            'type_id': p_type,
+            'value': p_value,
+            'segment_id': segment_id,
+            'offset': offset,
+            'offset_bit': offset_bit,
+            'union_id': union_id,
+            'union_default': union_default
+        }
+        
+    def _parse_unions(self, root: ElementTree.Element, ns: dict[str, str], hw_data: Dict[str, Any]) -> None:
+        """Parse union elements."""
+        # Look for unions in Dynamic section
+        dynamic_elem = root.find('knx:ManufacturerData/knx:Manufacturer/knx:ApplicationPrograms/knx:ApplicationProgram/knx:Dynamic', ns)
+        if dynamic_elem is None:
+            return
+            
+        for union_elem in dynamic_elem.findall('.//knx:Union', ns):
+            size_in_bit = union_elem.get('SizeInBit', '0')
+            
+            # Parse union memory mapping
+            memory_elem = union_elem.find('knx:Memory', ns)
+            segment_id = None
+            offset = None
+            offset_bit = None
+            
+            if memory_elem is not None:
+                segment_id = memory_elem.get('CodeSegment')
+                offset_str = memory_elem.get('Offset')
+                offset_bit_str = memory_elem.get('BitOffset')
+                
+                if offset_str is not None:
+                    offset = int(offset_str)
+                if offset_bit_str is not None:
+                    offset_bit = int(offset_bit_str)
+            
+            # Parse union parameters
+            parameters = []
+            for param_elem in union_elem.findall('knx:Parameter', ns):
+                param_id = param_elem.get('Id', '')
+                if param_id:
+                    parameters.append(param_id)
+            
+            hw_data['unions'].append({
+                'size_in_bit': int(size_in_bit) if size_in_bit.isdigit() else 0,
+                'segment_id': segment_id,
+                'offset': offset,
+                'offset_bit': offset_bit,
+                'parameters': parameters
+            })
+            
+    def _enhance_config_with_parameterization(self, config: 'SimpleDeviceConfig', hw_data: Dict[str, Any]) -> None:
+        """Enhance SimpleDeviceConfig with memory mapping and type details from hardware parameterization data."""
+        
+        # Enhance parameters with memory mapping
+        for param_id, hw_param in hw_data.get('parameters', {}).items():
+            if param_id in config.parameters:
+                config.parameters[param_id].update({
+                    'segment_id': hw_param.get('segment_id'),
+                    'offset': hw_param.get('offset'),
+                    'offset_bit': hw_param.get('offset_bit'),
+                    'union_id': hw_param.get('union_id'),
+                    'union_default': hw_param.get('union_default')
+                })
+        
+        # Enhance parameter types with detailed type information
+        for pt_id, hw_pt in hw_data.get('parameter_types', {}).items():
+            if pt_id in config.parameter_types:
+                config.parameter_types[pt_id].update({
+                    'type': hw_pt.get('type'),
+                    'size': hw_pt.get('size'),
+                    'enum': hw_pt.get('enum'),
+                    'min_value': hw_pt.get('min_value'),
+                    'max_value': hw_pt.get('max_value')
+                })
+        
+        # Add unions if not already present
+        if 'unions' not in config.__dict__:
+            config.unions = []
+        config.unions.extend(hw_data.get('unions', []))
