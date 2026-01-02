@@ -70,38 +70,40 @@ class ApplicationProgramLoader:
             ns_languages = f"{namespace}Languages"
 
             for _, elem in tree_iterator:
+                _id: str
                 if elem.tag == ns_com_object:
                     # we take all since we don't know which are referenced to yet
-                    identifier = elem.attrib.get("Id")
-                    com_objects[identifier] = ApplicationProgramLoader.parse_com_object(
-                        elem, identifier
+                    _id = elem.attrib.get("Id")  # type: ignore[assignment]
+                    com_objects[_id] = ApplicationProgramLoader.parse_com_object(
+                        elem, _id
                     )
                 elif elem.tag == ns_com_object_ref:
-                    if (_id := elem.attrib.get("Id")) in used_com_object_ref_ids:
+                    if (_id := elem.attrib.get("Id")) in used_com_object_ref_ids:  # type: ignore[operator,assignment]
                         com_object_refs[_id] = (
                             ApplicationProgramLoader.parse_com_object_ref(elem, _id)
                         )
                     elem.clear()
                 elif elem.tag == ns_allocator:  # Allocators/Allocator
-                    allocators[elem.attrib.get("Id")] = Allocator(
-                        identifier=elem.attrib.get("Id"),
-                        name=elem.attrib.get("Name"),
-                        start=int(elem.attrib.get("Start")),
-                        end=int(elem.attrib.get("maxInclusive")),
+                    _id = elem.attrib.get("Id")  # type: ignore[assignment]
+                    allocators[_id] = Allocator(
+                        identifier=_id,
+                        name=elem.attrib.get("Name"),  # type: ignore[arg-type]
+                        start=int(elem.attrib.get("Start")),  # type: ignore[arg-type]
+                        end=int(elem.attrib.get("maxInclusive")),  # type: ignore[arg-type]
                     )
                 elif elem.tag == ns_argument:
                     # ModuleDefs/ModuleDef/Arguments/
                     # or ModuleDefs/ModuleDef/SubModuleDefs/ModuleDef/Arguments/
-                    if (_id := elem.attrib.get("Id")) in used_module_arguments:
+                    if (_id := elem.attrib.get("Id")) in used_module_arguments:  # type: ignore[operator,assignment]
                         allocates = elem.attrib.get("Allocates")
                         used_module_arguments[_id] = ModuleDefinitionArgumentInfo(
-                            name=elem.attrib.get("Name"),
+                            name=elem.attrib.get("Name"),  # type: ignore[arg-type]
                             allocates=int(allocates) if allocates is not None else None,
                         )
                     elem.clear()
                 elif elem.tag == ns_numeric_arg:
                     # in dynamic section of Modules
-                    if (_id := elem.attrib.get("RefId")) in used_module_arguments:
+                    if (_id := elem.attrib.get("RefId")) in used_module_arguments:  # type: ignore[operator,assignment]
                         value = elem.attrib.get("Value")
                         numeric_args[_id] = ModuleDefinitionNumericArg(
                             allocator_ref_id=elem.attrib.get("AllocatorRefId"),
@@ -110,11 +112,11 @@ class ApplicationProgramLoader:
                         )
                     elem.clear()
                 elif elem.tag == ns_channel:
-                    _id = elem.attrib.get("Id")
+                    _id = elem.attrib.get("Id")  # type: ignore[assignment]
                     channels[_id] = ApplicationProgramChannel(
                         identifier=_id,
-                        name=elem.attrib.get("Name"),
-                        number=elem.attrib.get("Number"),
+                        name=elem.attrib.get("Name"),  # type: ignore[arg-type]
+                        number=elem.attrib.get("Number"),  # type: ignore[arg-type]
                         text=elem.attrib.get("Text"),
                         text_parameter_ref_id=elem.attrib.get("TextParameterRefId"),
                     )

@@ -8,4 +8,4 @@ ruff==0.14.10
 setuptools==80.9.0
 tox==4.30.3
 tox-gh-actions==3.5.0
-mypy==1.15.0
+mypy==1.19.1
