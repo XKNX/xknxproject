@@ -56,7 +56,7 @@ class ProjectLoader:
 
         with knx_proj_contents.open_project_meta() as project_file:
             tree = ElementTree.parse(project_file)
-            project_info = load_project_info(tree)
+            project_info = load_project_info(tree)  # type: ignore[arg-type]
 
         with knx_proj_contents.open_project_0() as project_0_file:
             tree = ElementTree.parse(project_0_file)
@@ -489,6 +489,10 @@ class _LocationLoader:
 def load_project_info(tree: ElementTree.ElementTree) -> XMLProjectInformation:
     """Load project information."""
     knx_root = tree.getroot()
+    if knx_root is None:
+        raise UnexpectedDataError(
+            "Invalid project file: missing root element"
+        ) from None
     _namespace_match = re.match(r"{.+\/project\/(.+)}", knx_root.tag)
     schema_version = _namespace_match.group(1) if _namespace_match else ""
     created_by = knx_root.get("CreatedBy", "")
