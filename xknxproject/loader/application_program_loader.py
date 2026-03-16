@@ -19,8 +19,8 @@ from xknxproject.models import (
 )
 from xknxproject.util import (
     parse_dpt_types,
-    parse_semantic_dpa,
-    parse_semantic_functional_block,
+    parse_semantics_dpas,
+    parse_semantics_functional_blocks,
     parse_xml_flag,
 )
 
@@ -124,7 +124,7 @@ class ApplicationProgramLoader:
                         number=elem.attrib.get("Number"),  # type: ignore[arg-type]
                         text=elem.attrib.get("Text"),
                         text_parameter_ref_id=elem.attrib.get("TextParameterRefId"),
-                        semantics=parse_semantic_functional_block(
+                        semantics=parse_semantics_functional_blocks(
                             elem.attrib.get("Semantics")
                         ),
                     )
@@ -250,7 +250,7 @@ class ApplicationProgramLoader:
             read_on_init_flag=parse_xml_flag(elem.get("ReadOnInitFlag")),
             datapoint_types=parse_dpt_types(elem.get("DatapointType")),
             text_parameter_ref_id=elem.get("TextParameterRefId"),
-            semantics=parse_semantic_dpa(elem.get("Semantics")),
+            semantics=parse_semantics_dpas(elem.get("Semantics")),
         )
 
     @staticmethod

@@ -57,7 +57,7 @@ def parse_dpt_types(dpt_string: str | None) -> list[DPTType]:
     return supported_dpts
 
 
-def parse_semantic_functional_block(semantic_string: str | None) -> list[str] | None:
+def parse_semantics_functional_blocks(semantic_string: str | None) -> list[str] | None:
     """Parse functional blocks from the XML representation."""
     # example for Channel: Semantics="knx:fb.417"
     if not semantic_string:
@@ -77,10 +77,10 @@ def parse_semantic_functional_block(semantic_string: str | None) -> list[str] | 
                 semantic_string,
             )
             continue
-    return list(functional_blocks.keys())
+    return list(functional_blocks.keys()) or None
 
 
-def parse_semantic_dpa(semantic_string: str | None) -> list[str] | None:
+def parse_semantics_dpas(semantic_string: str | None) -> list[str] | None:
     """Parse DPAs from the XML representation."""
     if not semantic_string:
         return None
@@ -89,16 +89,16 @@ def parse_semantic_dpa(semantic_string: str | None) -> list[str] | None:
     dpas: dict[str, None] = {}
     for dpa in semantic_string.split():
         try:
-            dpa = dpa.removeprefix("knx:dpa.")
+            dpa_id = dpa.removeprefix("knx:dpa.")
             # check for "." separated integers - we don't need the values
-            _fb, _dpa_num = map(int, dpa.split(".", 1))
-            dpas[dpa] = None
+            _fb, _dpa_num = map(int, dpa_id.split(".", 1))
+            dpas[dpa_id] = None
         except ValueError:
             _LOGGER.warning(
                 'Could not parse DPA from: "%s" in "%s"', dpa, semantic_string
             )
             continue
-    return list(dpas.keys())
+    return list(dpas.keys()) or None
 
 
 @overload
