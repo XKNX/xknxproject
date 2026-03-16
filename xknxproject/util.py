@@ -90,8 +90,8 @@ def parse_semantic_dpa(semantic_string: str | None) -> list[str] | None:
     for dpa in semantic_string.split():
         try:
             dpa = dpa.removeprefix("knx:dpa.")
-            # check for "." seaprated integers - we don't need the values
-            map(int, dpa.split(".", 1))
+            # check for "." separated integers - we don't need the values
+            _fb, _dpa_num = map(int, dpa.split(".", 1))
             dpas[dpa] = None
         except ValueError:
             _LOGGER.warning(
