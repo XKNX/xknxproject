@@ -17,7 +17,12 @@ from xknxproject.models import (
     ModuleDefinitionArgumentInfo,
     ModuleDefinitionNumericArg,
 )
-from xknxproject.util import parse_dpt_types, parse_xml_flag
+from xknxproject.util import (
+    parse_dpt_types,
+    parse_semantic_dpa,
+    parse_semantic_functional_block,
+    parse_xml_flag,
+)
 
 
 class ApplicationProgramLoader:
@@ -119,6 +124,9 @@ class ApplicationProgramLoader:
                         number=elem.attrib.get("Number"),  # type: ignore[arg-type]
                         text=elem.attrib.get("Text"),
                         text_parameter_ref_id=elem.attrib.get("TextParameterRefId"),
+                        semantics=parse_semantic_functional_block(
+                            elem.attrib.get("Semantics")
+                        ),
                     )
                     elem.clear()
                 elif elem.tag == ns_languages:
@@ -242,6 +250,7 @@ class ApplicationProgramLoader:
             read_on_init_flag=parse_xml_flag(elem.get("ReadOnInitFlag")),
             datapoint_types=parse_dpt_types(elem.get("DatapointType")),
             text_parameter_ref_id=elem.get("TextParameterRefId"),
+            semantics=parse_semantic_dpa(elem.get("Semantics")),
         )
 
     @staticmethod
