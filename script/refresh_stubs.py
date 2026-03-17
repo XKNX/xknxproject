@@ -3,21 +3,13 @@
 import json
 from pathlib import Path
 
+from test.test_knxproj import PROJECT_FIXTURES
 from xknxproject import XKNXProj
 
 # run from project directory
 # python3 -m script.refresh_stubs
 
-file_names = [
-    ("module-definition-test", "test", "de-DE"),
-    ("xknx_test_project", "test", None),
-    ("test_project-ets4", "test", "de-DE"),
-    ("testprojekt-ets6-functions", None, "de-DE"),
-    ("ets6_free", None, "de-DE"),
-    ("ets6_two_level", None, "de-DE"),
-]
-
-for file_name, password, language in file_names:
+for file_name, password, language in PROJECT_FIXTURES:
     print(f"Parsing {file_name}.knxproj")
     knxproj = XKNXProj(
         path=f"test/resources/{file_name}.knxproj",
