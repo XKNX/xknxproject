@@ -1,0 +1,2280 @@
+{
+  "info": {
+    "project_id": "P-04FF",
+    "name": "Smart Linking Test",
+    "last_modified": "2026-03-17T21:58:52.2104946Z",
+    "group_address_style": "ThreeLevel",
+    "guid": "240a1887-0faa-409b-86cb-8318a87c530a",
+    "created_by": "ETS6",
+    "schema_version": "23",
+    "tool_version": "6.4.8658.0",
+    "xknxproject_version": "3.8.2",
+    "language_code": "de-DE"
+  },
+  "communication_objects": {
+    "1.0.1/O-0_R-1": {
+      "name": "OtSwNo",
+      "number": 0,
+      "text": "Eingang A, CH1 Schalten",
+      "function_text": "Kanal A, CH1 Objekt 1",
+      "description": "",
+      "device_address": "1.0.1",
+      "device_application": "M-00E1_A-2036-40-865C",
+      "module_def": null,
+      "channel": "CH-1",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/1"
+      ],
+      "dpas": [
+        "417.52"
+      ]
+    },
+    "1.0.1/O-9_R-85": {
+      "name": "OtSwNo",
+      "number": 9,
+      "text": "Eingang B, CH2 Schalten",
+      "function_text": "Kanal B, CH2 Objekt 1",
+      "description": "",
+      "device_address": "1.0.1",
+      "device_application": "M-00E1_A-2036-40-865C",
+      "module_def": null,
+      "channel": "CH-2",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/1/0"
+      ],
+      "dpas": [
+        "417.52"
+      ]
+    },
+    "1.0.1/O-11_R-70": {
+      "name": "OtSt",
+      "number": 11,
+      "text": "Ausgang B, CH2 Status",
+      "function_text": "Kanal B, CH2 Objekt 3",
+      "description": "",
+      "device_address": "1.0.1",
+      "device_application": "M-00E1_A-2036-40-865C",
+      "module_def": null,
+      "channel": "CH-2",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/1/1"
+      ],
+      "dpas": [
+        "417.51"
+      ]
+    },
+    "1.0.1/O-18_R-98": {
+      "name": "OtSwNo",
+      "number": 18,
+      "text": "Eingang C, CH3 Schalten",
+      "function_text": "Kanal C, CH3 Objekt 1",
+      "description": "",
+      "device_address": "1.0.1",
+      "device_application": "M-00E1_A-2036-40-865C",
+      "module_def": null,
+      "channel": "CH-3",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/7"
+      ],
+      "dpas": [
+        "417.52"
+      ]
+    },
+    "1.0.1/O-20_R-88": {
+      "name": "OtSt",
+      "number": 20,
+      "text": "Ausgang C, CH3 Status",
+      "function_text": "Kanal C, CH3 Objekt 3",
+      "description": "",
+      "device_address": "1.0.1",
+      "device_application": "M-00E1_A-2036-40-865C",
+      "module_def": null,
+      "channel": "CH-3",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/4"
+      ],
+      "dpas": [
+        "417.51"
+      ]
+    },
+    "1.0.1/O-21_R-90": {
+      "name": "OtSc",
+      "number": 21,
+      "text": "Eingang C, CH3 Szenen",
+      "function_text": "Kanal C, CH3 Objekt 4",
+      "description": "",
+      "device_address": "1.0.1",
+      "device_application": "M-00E1_A-2036-40-865C",
+      "module_def": null,
+      "channel": "CH-3",
+      "dpts": [
+        {
+          "main": 18,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Byte",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/5"
+      ],
+      "dpas": [
+        "417.73"
+      ]
+    },
+    "1.0.1/O-23_R-100": {
+      "name": "OtIn",
+      "number": 23,
+      "text": "Eingang C, CH3 Sperren",
+      "function_text": "Kanal C, CH3 Objekt 6",
+      "description": "",
+      "device_address": "1.0.1",
+      "device_application": "M-00E1_A-2036-40-865C",
+      "module_def": null,
+      "channel": "CH-3",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": 3
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/6"
+      ],
+      "dpas": [
+        "417.69"
+      ]
+    },
+    "1.0.2/O-55_R-43": {
+      "name": "GO_SW8_SWITCH0",
+      "number": 55,
+      "text": "Master Ausgang 1 ",
+      "function_text": "Schalten",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-1",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/8"
+      ],
+      "dpas": [
+        "417.52"
+      ]
+    },
+    "1.0.2/O-60_R-50": {
+      "name": "GO_SW8_SCENE0",
+      "number": 60,
+      "text": "Master Ausgang 1 ",
+      "function_text": "Szene",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-1",
+      "dpts": [
+        {
+          "main": 18,
+          "sub": null
+        },
+        {
+          "main": 18,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Byte",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/15"
+      ],
+      "dpas": [
+        "417.73"
+      ]
+    },
+    "1.0.2/O-61_R-51": {
+      "name": "GO_SW8_SWITCH_STATUS0",
+      "number": 61,
+      "text": "Master Ausgang 1 ",
+      "function_text": "Rückmeldung",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-1",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/9"
+      ],
+      "dpas": [
+        "417.51"
+      ]
+    },
+    "1.0.2/O-66_R-95": {
+      "name": "GO_SW8_SWITCH1",
+      "number": 66,
+      "text": "Master Ausgang 2 ",
+      "function_text": "Schalten",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-4",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/10"
+      ],
+      "dpas": [
+        "417.52"
+      ]
+    },
+    "1.0.2/O-72_R-103": {
+      "name": "GO_SW8_SWITCH_STATUS1",
+      "number": 72,
+      "text": "Master Ausgang 2 ",
+      "function_text": "Rückmeldung",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-4",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/11"
+      ],
+      "dpas": [
+        "417.51"
+      ]
+    },
+    "1.0.2/O-77_R-121": {
+      "name": "GO_SH_UP_DOWN2",
+      "number": 77,
+      "text": "Master Ausgänge 3+4 ",
+      "function_text": "Bewegung Manuell",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-8",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 8
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/12"
+      ],
+      "dpas": [
+        "800.81"
+      ]
+    },
+    "1.0.2/O-78_R-122": {
+      "name": "GO_SH_STEP2",
+      "number": 78,
+      "text": "Master Ausgänge 3+4 ",
+      "function_text": "Stopp Manuell",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-8",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 7
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/13"
+      ],
+      "dpas": [
+        "800.82"
+      ]
+    },
+    "1.0.2/O-79_R-123": {
+      "name": "GO_SH_HEIGHT_POS2",
+      "number": 79,
+      "text": "Master Ausgänge 3+4 ",
+      "function_text": "Position Höhe Manuell",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-8",
+      "dpts": [
+        {
+          "main": 5,
+          "sub": null
+        },
+        {
+          "main": 5,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Byte",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/14"
+      ],
+      "dpas": [
+        "800.71"
+      ]
+    },
+    "1.0.2/O-89_R-131": {
+      "name": "GO_SH_SCENE2",
+      "number": 89,
+      "text": "Master Ausgänge 3+4 ",
+      "function_text": "Szene",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-8",
+      "dpts": [
+        {
+          "main": 18,
+          "sub": null
+        },
+        {
+          "main": 18,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Byte",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/15"
+      ],
+      "dpas": [
+        "800.75"
+      ]
+    },
+    "1.0.2/O-92_R-133": {
+      "name": "GO_SH_HEIGHT_STATUS2",
+      "number": 92,
+      "text": "Master Ausgänge 3+4 ",
+      "function_text": "Rückmeldung Höhe",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-8",
+      "dpts": [
+        {
+          "main": 5,
+          "sub": null
+        },
+        {
+          "main": 5,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Byte",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/16"
+      ],
+      "dpas": [
+        "800.85"
+      ]
+    },
+    "1.0.2/O-97_R-137": {
+      "name": "GO_SH_STATUS_RUNNING2",
+      "number": 97,
+      "text": "Master Ausgänge 3+4 ",
+      "function_text": "Rückmeldung für Fahrt",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-8",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 10
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/17"
+      ],
+      "dpas": null
+    },
+    "1.0.2/O-98_R-138": {
+      "name": "GO_SH_STATUS_DIRECTION2",
+      "number": 98,
+      "text": "Master Ausgänge 3+4 ",
+      "function_text": "Rückmeldung der letzten Richtung",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-8",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 8
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/18"
+      ],
+      "dpas": [
+        "800.51"
+      ]
+    },
+    "1.0.2/O-99_R-204": {
+      "name": "GO_BL_UP_DOWN4",
+      "number": 99,
+      "text": "Master Ausgänge 5+6 ",
+      "function_text": "Bewegung Manuell",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-15",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 8
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/19"
+      ],
+      "dpas": [
+        "800.81"
+      ]
+    },
+    "1.0.2/O-100_R-205": {
+      "name": "GO_BL_STEP4",
+      "number": 100,
+      "text": "Master Ausgänge 5+6 ",
+      "function_text": "Stopp-/Schritt Manuell",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-15",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 7
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/20"
+      ],
+      "dpas": [
+        "800.82"
+      ]
+    },
+    "1.0.2/O-101_R-206": {
+      "name": "GO_BL_HEIGHT_POS4",
+      "number": 101,
+      "text": "Master Ausgänge 5+6 ",
+      "function_text": "Position Höhe Manuell",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-15",
+      "dpts": [
+        {
+          "main": 5,
+          "sub": null
+        },
+        {
+          "main": 5,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Byte",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/21"
+      ],
+      "dpas": [
+        "800.71"
+      ]
+    },
+    "1.0.2/O-102_R-207": {
+      "name": "GO_BL_SLAT_POS4",
+      "number": 102,
+      "text": "Master Ausgänge 5+6 ",
+      "function_text": "Position Lamelle Manuell",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-15",
+      "dpts": [
+        {
+          "main": 5,
+          "sub": null
+        },
+        {
+          "main": 5,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Byte",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/22"
+      ],
+      "dpas": [
+        "800.72"
+      ]
+    },
+    "1.0.2/O-114_R-218": {
+      "name": "GO_BL_HEIGHT_STATUS4",
+      "number": 114,
+      "text": "Master Ausgänge 5+6 ",
+      "function_text": "Rückmeldung Höhe",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-15",
+      "dpts": [
+        {
+          "main": 5,
+          "sub": null
+        },
+        {
+          "main": 5,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Byte",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/23"
+      ],
+      "dpas": [
+        "800.85"
+      ]
+    },
+    "1.0.2/O-115_R-219": {
+      "name": "GO_BL_SLAT_STATUS4",
+      "number": 115,
+      "text": "Master Ausgänge 5+6 ",
+      "function_text": "Rückmeldung für Lamelle",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-15",
+      "dpts": [
+        {
+          "main": 5,
+          "sub": null
+        },
+        {
+          "main": 5,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Byte",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/24"
+      ],
+      "dpas": [
+        "800.56"
+      ]
+    },
+    "1.0.2/O-119_R-223": {
+      "name": "GO_BL_STATUS_RUNNING4",
+      "number": 119,
+      "text": "Master Ausgänge 5+6 ",
+      "function_text": "Rückmeldung für Fahrt",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-15",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 10
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/25"
+      ],
+      "dpas": null
+    },
+    "1.0.2/O-120_R-224": {
+      "name": "GO_BL_STATUS_DIRECTION4",
+      "number": 120,
+      "text": "Master Ausgänge 5+6 ",
+      "function_text": "Rückmeldung der letzten Richtung",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-15",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 8
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/26"
+      ],
+      "dpas": [
+        "800.51"
+      ]
+    },
+    "1.0.2/O-121_R-238": {
+      "name": "GO_SW8_SWITCH6",
+      "number": 121,
+      "text": "Master Ausgang 7 ",
+      "function_text": "Schalten",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-19",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/27"
+      ],
+      "dpas": [
+        "417.52"
+      ]
+    },
+    "1.0.2/O-127_R-246": {
+      "name": "GO_SW8_SWITCH_STATUS6",
+      "number": 127,
+      "text": "Master Ausgang 7 ",
+      "function_text": "Rückmeldung",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-19",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/28"
+      ],
+      "dpas": [
+        "417.51"
+      ]
+    },
+    "1.0.2/O-132_R-290": {
+      "name": "GO_SW8_SWITCH7",
+      "number": 132,
+      "text": "Master Ausgang 8 ",
+      "function_text": "Schalten",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-22",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": false
+      },
+      "group_address_links": [
+        "0/0/29"
+      ],
+      "dpas": [
+        "417.52"
+      ]
+    },
+    "1.0.2/O-138_R-298": {
+      "name": "GO_SW8_SWITCH_STATUS7",
+      "number": 138,
+      "text": "Master Ausgang 8 ",
+      "function_text": "Rückmeldung",
+      "description": "",
+      "device_address": "1.0.2",
+      "device_application": "M-0064_A-5810-12-2E9D",
+      "module_def": null,
+      "channel": "CH-22",
+      "dpts": [
+        {
+          "main": 1,
+          "sub": null
+        },
+        {
+          "main": 1,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Bit",
+      "flags": {
+        "read": true,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/30"
+      ],
+      "dpas": [
+        "417.51"
+      ]
+    },
+    "1.1.1/O-4_R-7": {
+      "name": "CO_VALVE_POSITION_INPUT",
+      "number": 4,
+      "text": "Temperaturregler",
+      "function_text": "Stellgröße empfangen",
+      "description": "",
+      "device_address": "1.1.1",
+      "device_application": "M-0083_A-00F3-10-1728",
+      "module_def": null,
+      "channel": "CH-2",
+      "dpts": [
+        {
+          "main": 5,
+          "sub": 1
+        }
+      ],
+      "object_size": "1 Byte",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/33"
+      ],
+      "dpas": [
+        "400.50"
+      ]
+    },
+    "1.1.1/O-2_R-11": {
+      "name": "CO_TEMPERATURE_SETPOINT_OUTPUT_external",
+      "number": 2,
+      "text": "Temperaturregler",
+      "function_text": "Sollwert vorgeben",
+      "description": "",
+      "device_address": "1.1.1",
+      "device_application": "M-0083_A-00F3-10-1728",
+      "module_def": null,
+      "channel": "CH-2",
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
+      "object_size": "2 Bytes",
+      "flags": {
+        "read": false,
+        "write": false,
+        "communication": true,
+        "update": false,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/31"
+      ],
+      "dpas": [
+        "101.51"
+      ]
+    },
+    "1.1.1/O-3_R-12": {
+      "name": "CO_TEMPERATURE_SETPOINT_INPUT_external",
+      "number": 3,
+      "text": "Temperaturregler",
+      "function_text": "Aktueller Sollwert empfangen",
+      "description": "",
+      "device_address": "1.1.1",
+      "device_application": "M-0083_A-00F3-10-1728",
+      "module_def": null,
+      "channel": "CH-2",
+      "dpts": [
+        {
+          "main": 9,
+          "sub": 1
+        }
+      ],
+      "object_size": "2 Bytes",
+      "flags": {
+        "read": false,
+        "write": true,
+        "communication": true,
+        "update": true,
+        "read_on_init": false,
+        "transmit": true
+      },
+      "group_address_links": [
+        "0/0/32"
+      ],
+      "dpas": [
+        "113.51"
+      ]
+    }
+  },
+  "topology": {
+    "0": {
+      "name": "",
+      "description": null,
+      "lines": {
+        "0": {
+          "name": "",
+          "description": null,
+          "devices": [],
+          "medium_type": "KNXnet/IP (IP)"
+        }
+      }
+    },
+    "1": {
+      "name": "",
+      "description": null,
+      "lines": {
+        "0": {
+          "name": "",
+          "description": null,
+          "devices": [
+            "1.0.0",
+            "1.0.1",
+            "1.0.2"
+          ],
+          "medium_type": "Twisted Pair (TP)"
+        },
+        "1": {
+          "name": "",
+          "description": null,
+          "devices": [
+            "1.1.0",
+            "1.1.1",
+            "1.1.2"
+          ],
+          "medium_type": "KNX RF (RF)"
+        }
+      }
+    }
+  },
+  "devices": {
+    "1.0.0": {
+      "name": "KNX IP Router 752 secure",
+      "hardware_name": "KNX IP Router 752 secure",
+      "order_number": "KNX IP Router 752 secure",
+      "description": "",
+      "manufacturer_name": "Weinzierl Engineering GmbH",
+      "individual_address": "1.0.0",
+      "application": "M-00C5_A-0717-11-0D5A",
+      "project_uid": 10,
+      "communication_object_ids": [],
+      "channels": {}
+    },
+    "1.0.1": {
+      "name": "AH3F16H-SEC Schaltaktor 3f",
+      "hardware_name": "AH3F16H-SEC Schaltaktor 3f",
+      "order_number": "79236-SEC",
+      "description": "",
+      "manufacturer_name": "Lingg & Janke",
+      "individual_address": "1.0.1",
+      "application": "M-00E1_A-2036-40-865C",
+      "project_uid": 19,
+      "communication_object_ids": [
+        "1.0.1/O-0_R-1",
+        "1.0.1/O-9_R-85",
+        "1.0.1/O-11_R-70",
+        "1.0.1/O-18_R-98",
+        "1.0.1/O-20_R-88",
+        "1.0.1/O-21_R-90",
+        "1.0.1/O-23_R-100"
+      ],
+      "channels": {
+        "CH-1": {
+          "identifier": "CH-1",
+          "name": "Ausgang A, CH1 Schalten SL",
+          "communication_object_ids": [
+            "1.0.1/O-0_R-1"
+          ],
+          "functional_blocks": [
+            "417"
+          ]
+        },
+        "CH-2": {
+          "identifier": "CH-2",
+          "name": "Ausgang B, CH2 Schalten SL",
+          "communication_object_ids": [
+            "1.0.1/O-9_R-85",
+            "1.0.1/O-11_R-70"
+          ],
+          "functional_blocks": [
+            "417"
+          ]
+        },
+        "CH-3": {
+          "identifier": "CH-3",
+          "name": "Ausgang C, CH3 Schalten SL",
+          "communication_object_ids": [
+            "1.0.1/O-18_R-98",
+            "1.0.1/O-20_R-88",
+            "1.0.1/O-21_R-90",
+            "1.0.1/O-23_R-100"
+          ],
+          "functional_blocks": [
+            "417"
+          ]
+        }
+      }
+    },
+    "1.0.2": {
+      "name": "SpaceLogic KNX, Secure, Schalter/Jalousie 8-fach, Master",
+      "hardware_name": "SpaceLogic KNX, Secure, Schalter/Jalousie 8-fach, Master",
+      "order_number": "MTN6705-0008S",
+      "description": "",
+      "manufacturer_name": "Schneider Electric Industries SAS",
+      "individual_address": "1.0.2",
+      "application": "M-0064_A-5810-12-2E9D",
+      "project_uid": 29,
+      "communication_object_ids": [
+        "1.0.2/O-55_R-43",
+        "1.0.2/O-60_R-50",
+        "1.0.2/O-61_R-51",
+        "1.0.2/O-66_R-95",
+        "1.0.2/O-72_R-103",
+        "1.0.2/O-77_R-121",
+        "1.0.2/O-78_R-122",
+        "1.0.2/O-79_R-123",
+        "1.0.2/O-89_R-131",
+        "1.0.2/O-92_R-133",
+        "1.0.2/O-97_R-137",
+        "1.0.2/O-98_R-138",
+        "1.0.2/O-99_R-204",
+        "1.0.2/O-100_R-205",
+        "1.0.2/O-101_R-206",
+        "1.0.2/O-102_R-207",
+        "1.0.2/O-114_R-218",
+        "1.0.2/O-115_R-219",
+        "1.0.2/O-119_R-223",
+        "1.0.2/O-120_R-224",
+        "1.0.2/O-121_R-238",
+        "1.0.2/O-127_R-246",
+        "1.0.2/O-132_R-290",
+        "1.0.2/O-138_R-298"
+      ],
+      "channels": {
+        "CH-1": {
+          "identifier": "CH-1",
+          "name": "Master Ausgang 1 - Schalten ",
+          "communication_object_ids": [
+            "1.0.2/O-55_R-43",
+            "1.0.2/O-60_R-50",
+            "1.0.2/O-61_R-51"
+          ],
+          "functional_blocks": [
+            "417"
+          ]
+        },
+        "CH-4": {
+          "identifier": "CH-4",
+          "name": "Master Ausgang 2 - Schalten ",
+          "communication_object_ids": [
+            "1.0.2/O-66_R-95",
+            "1.0.2/O-72_R-103"
+          ],
+          "functional_blocks": [
+            "417"
+          ]
+        },
+        "CH-8": {
+          "identifier": "CH-8",
+          "name": "Master Ausgänge 3+4 - Rollladen ",
+          "communication_object_ids": [
+            "1.0.2/O-77_R-121",
+            "1.0.2/O-78_R-122",
+            "1.0.2/O-79_R-123",
+            "1.0.2/O-89_R-131",
+            "1.0.2/O-92_R-133",
+            "1.0.2/O-97_R-137",
+            "1.0.2/O-98_R-138"
+          ],
+          "functional_blocks": [
+            "800"
+          ]
+        },
+        "CH-15": {
+          "identifier": "CH-15",
+          "name": "Master Ausgänge 5+6 - Jalousie ",
+          "communication_object_ids": [
+            "1.0.2/O-99_R-204",
+            "1.0.2/O-100_R-205",
+            "1.0.2/O-101_R-206",
+            "1.0.2/O-102_R-207",
+            "1.0.2/O-114_R-218",
+            "1.0.2/O-115_R-219",
+            "1.0.2/O-119_R-223",
+            "1.0.2/O-120_R-224"
+          ],
+          "functional_blocks": [
+            "800"
+          ]
+        },
+        "CH-19": {
+          "identifier": "CH-19",
+          "name": "Master Ausgang 7 - Schalten ",
+          "communication_object_ids": [
+            "1.0.2/O-121_R-238",
+            "1.0.2/O-127_R-246"
+          ],
+          "functional_blocks": [
+            "417"
+          ]
+        },
+        "CH-22": {
+          "identifier": "CH-22",
+          "name": "Master Ausgang 8 - Schalten ",
+          "communication_object_ids": [
+            "1.0.2/O-132_R-290",
+            "1.0.2/O-138_R-298"
+          ],
+          "functional_blocks": [
+            "417"
+          ]
+        }
+      }
+    },
+    "1.1.0": {
+      "name": "KNX RF Multi/TP Medienkoppler",
+      "hardware_name": "KNX RF Multi/TP Medienkoppler",
+      "order_number": "3-0002-005",
+      "description": "",
+      "manufacturer_name": "ise GmbH",
+      "individual_address": "1.1.0",
+      "application": "M-007C_A-001C-14-E802",
+      "project_uid": 58,
+      "communication_object_ids": [],
+      "channels": {}
+    },
+    "1.1.1": {
+      "name": "KNX RF+ Heizkörperthermostat mit Display und Longlife-Batterie, Secure",
+      "hardware_name": "KNX RF+ Heizkörperthermostat mit Display und Longlife-Batterie, Secure",
+      "order_number": "RF-HVA1DLB.01S",
+      "description": "",
+      "manufacturer_name": "MDT technologies",
+      "individual_address": "1.1.1",
+      "application": "M-0083_A-00F3-10-1728",
+      "project_uid": 53,
+      "communication_object_ids": [
+        "1.1.1/O-4_R-7",
+        "1.1.1/O-2_R-11",
+        "1.1.1/O-3_R-12"
+      ],
+      "channels": {
+        "CH-2": {
+          "identifier": "CH-2",
+          "name": "Raumtemperaturregler extern",
+          "communication_object_ids": [
+            "1.1.1/O-4_R-7",
+            "1.1.1/O-2_R-11",
+            "1.1.1/O-3_R-12"
+          ],
+          "functional_blocks": [
+            "400"
+          ]
+        },
+        "CH-1": {
+          "identifier": "CH-1",
+          "name": "Batterie",
+          "communication_object_ids": [
+            "1.1.1/O-11_R-2",
+            "1.1.1/O-12_R-3"
+          ],
+          "functional_blocks": null
+        }
+      }
+    },
+    "1.1.2": {
+      "name": "KNX RF+ LED Controller CC/CV 60W / 230V 2-Kanäle, Secure",
+      "hardware_name": "KNX RF+ LED Controller CC/CV 60W / 230V 2-Kanäle, Secure",
+      "order_number": "RF-AKD260CC.02S",
+      "description": "",
+      "manufacturer_name": "MDT technologies",
+      "individual_address": "1.1.2",
+      "application": "M-0083_A-00ED-10-33FD",
+      "project_uid": 57,
+      "communication_object_ids": [],
+      "channels": {
+        "CH-2": {
+          "identifier": "CH-2",
+          "name": "Tunable White (TW): ",
+          "communication_object_ids": [
+            "1.1.2/O-33_R-16",
+            "1.1.2/O-41_R-17",
+            "1.1.2/O-42_R-29",
+            "1.1.2/O-43_R-30",
+            "1.1.2/O-44_R-31",
+            "1.1.2/O-35_R-32",
+            "1.1.2/O-36_R-33",
+            "1.1.2/O-37_R-34",
+            "1.1.2/O-38_R-35",
+            "1.1.2/O-39_R-36",
+            "1.1.2/O-40_R-37"
+          ],
+          "functional_blocks": [
+            "427"
+          ]
+        }
+      }
+    }
+  },
+  "group_addresses": {
+    "0/0/1": {
+      "name": "CH1 SW",
+      "identifier": "GA-1",
+      "raw_address": 1,
+      "address": "0/0/1",
+      "project_uid": 22,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.1/O-0_R-1"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/2": {
+      "name": "CH2 SW",
+      "identifier": "GA-2",
+      "raw_address": 2,
+      "address": "0/0/2",
+      "project_uid": 23,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/3": {
+      "name": "CH2 SW RM",
+      "identifier": "GA-3",
+      "raw_address": 3,
+      "address": "0/0/3",
+      "project_uid": 24,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": false,
+      "communication_object_ids": [],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/4": {
+      "name": "CH 3 SW",
+      "identifier": "GA-4",
+      "raw_address": 4,
+      "address": "0/0/4",
+      "project_uid": 25,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.1/O-20_R-88"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/5": {
+      "name": "CH 3 SW RM",
+      "identifier": "GA-5",
+      "raw_address": 5,
+      "address": "0/0/5",
+      "project_uid": 26,
+      "dpt": {
+        "main": 18,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.1/O-21_R-90"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/6": {
+      "name": "CH 3 Szene",
+      "identifier": "GA-6",
+      "raw_address": 6,
+      "address": "0/0/6",
+      "project_uid": 27,
+      "dpt": {
+        "main": 1,
+        "sub": 3
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.1/O-23_R-100"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/7": {
+      "name": "CH 3 Sperren",
+      "identifier": "GA-7",
+      "raw_address": 7,
+      "address": "0/0/7",
+      "project_uid": 28,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.1/O-18_R-98"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/8": {
+      "name": "GA 1",
+      "identifier": "GA-8",
+      "raw_address": 8,
+      "address": "0/0/8",
+      "project_uid": 30,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-55_R-43"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/9": {
+      "name": "GA 2",
+      "identifier": "GA-9",
+      "raw_address": 9,
+      "address": "0/0/9",
+      "project_uid": 31,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-61_R-51"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/10": {
+      "name": "GA 3",
+      "identifier": "GA-10",
+      "raw_address": 10,
+      "address": "0/0/10",
+      "project_uid": 32,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-66_R-95"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/11": {
+      "name": "GA 4",
+      "identifier": "GA-11",
+      "raw_address": 11,
+      "address": "0/0/11",
+      "project_uid": 33,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-72_R-103"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/12": {
+      "name": "GA 5",
+      "identifier": "GA-12",
+      "raw_address": 12,
+      "address": "0/0/12",
+      "project_uid": 34,
+      "dpt": {
+        "main": 1,
+        "sub": 8
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-77_R-121"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/13": {
+      "name": "GA 6",
+      "identifier": "GA-13",
+      "raw_address": 13,
+      "address": "0/0/13",
+      "project_uid": 35,
+      "dpt": {
+        "main": 1,
+        "sub": 7
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-78_R-122"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/14": {
+      "name": "GA 7",
+      "identifier": "GA-14",
+      "raw_address": 14,
+      "address": "0/0/14",
+      "project_uid": 36,
+      "dpt": {
+        "main": 5,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-79_R-123"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/15": {
+      "name": "GA 8",
+      "identifier": "GA-15",
+      "raw_address": 15,
+      "address": "0/0/15",
+      "project_uid": 37,
+      "dpt": {
+        "main": 18,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-60_R-50",
+        "1.0.2/O-89_R-131"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/16": {
+      "name": "GA 9",
+      "identifier": "GA-16",
+      "raw_address": 16,
+      "address": "0/0/16",
+      "project_uid": 38,
+      "dpt": {
+        "main": 5,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-92_R-133"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/17": {
+      "name": "GA 10",
+      "identifier": "GA-17",
+      "raw_address": 17,
+      "address": "0/0/17",
+      "project_uid": 39,
+      "dpt": {
+        "main": 1,
+        "sub": 10
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-97_R-137"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/18": {
+      "name": "GA 11",
+      "identifier": "GA-18",
+      "raw_address": 18,
+      "address": "0/0/18",
+      "project_uid": 40,
+      "dpt": {
+        "main": 1,
+        "sub": 8
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-98_R-138"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/19": {
+      "name": "GA 12",
+      "identifier": "GA-19",
+      "raw_address": 19,
+      "address": "0/0/19",
+      "project_uid": 41,
+      "dpt": {
+        "main": 1,
+        "sub": 8
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-99_R-204"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/20": {
+      "name": "GA 13",
+      "identifier": "GA-20",
+      "raw_address": 20,
+      "address": "0/0/20",
+      "project_uid": 42,
+      "dpt": {
+        "main": 1,
+        "sub": 7
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-100_R-205"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/21": {
+      "name": "GA 14",
+      "identifier": "GA-21",
+      "raw_address": 21,
+      "address": "0/0/21",
+      "project_uid": 43,
+      "dpt": {
+        "main": 5,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-101_R-206"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/22": {
+      "name": "GA 15",
+      "identifier": "GA-22",
+      "raw_address": 22,
+      "address": "0/0/22",
+      "project_uid": 44,
+      "dpt": {
+        "main": 5,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-102_R-207"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/23": {
+      "name": "GA 16",
+      "identifier": "GA-23",
+      "raw_address": 23,
+      "address": "0/0/23",
+      "project_uid": 45,
+      "dpt": {
+        "main": 5,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-114_R-218"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/24": {
+      "name": "GA 17",
+      "identifier": "GA-24",
+      "raw_address": 24,
+      "address": "0/0/24",
+      "project_uid": 46,
+      "dpt": {
+        "main": 5,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-115_R-219"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/25": {
+      "name": "GA 18",
+      "identifier": "GA-25",
+      "raw_address": 25,
+      "address": "0/0/25",
+      "project_uid": 47,
+      "dpt": {
+        "main": 1,
+        "sub": 10
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-119_R-223"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/26": {
+      "name": "GA 19",
+      "identifier": "GA-26",
+      "raw_address": 26,
+      "address": "0/0/26",
+      "project_uid": 48,
+      "dpt": {
+        "main": 1,
+        "sub": 8
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-120_R-224"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/27": {
+      "name": "GA 20",
+      "identifier": "GA-27",
+      "raw_address": 27,
+      "address": "0/0/27",
+      "project_uid": 49,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-121_R-238"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/28": {
+      "name": "GA 21",
+      "identifier": "GA-28",
+      "raw_address": 28,
+      "address": "0/0/28",
+      "project_uid": 50,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-127_R-246"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/29": {
+      "name": "GA 22",
+      "identifier": "GA-29",
+      "raw_address": 29,
+      "address": "0/0/29",
+      "project_uid": 51,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-132_R-290"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/30": {
+      "name": "GA 23",
+      "identifier": "GA-30",
+      "raw_address": 30,
+      "address": "0/0/30",
+      "project_uid": 52,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.2/O-138_R-298"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/31": {
+      "name": "GA 24",
+      "identifier": "GA-31",
+      "raw_address": 31,
+      "address": "0/0/31",
+      "project_uid": 54,
+      "dpt": {
+        "main": 9,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.1.1/O-2_R-11"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/32": {
+      "name": "GA 25",
+      "identifier": "GA-32",
+      "raw_address": 32,
+      "address": "0/0/32",
+      "project_uid": 55,
+      "dpt": {
+        "main": 9,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.1.1/O-3_R-12"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/0/33": {
+      "name": "GA 26",
+      "identifier": "GA-33",
+      "raw_address": 33,
+      "address": "0/0/33",
+      "project_uid": 56,
+      "dpt": {
+        "main": 5,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.1.1/O-4_R-7"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/1/0": {
+      "name": "Schalten",
+      "identifier": "GA-34",
+      "raw_address": 256,
+      "address": "0/1/0",
+      "project_uid": 61,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.1/O-9_R-85"
+      ],
+      "description": "",
+      "comment": ""
+    },
+    "0/1/1": {
+      "name": "Status",
+      "identifier": "GA-35",
+      "raw_address": 257,
+      "address": "0/1/1",
+      "project_uid": 63,
+      "dpt": {
+        "main": 1,
+        "sub": 1
+      },
+      "data_secure": true,
+      "communication_object_ids": [
+        "1.0.1/O-11_R-70"
+      ],
+      "description": "",
+      "comment": ""
+    }
+  },
+  "group_ranges": {
+    "0": {
+      "name": "Test",
+      "address_start": 1,
+      "address_end": 2047,
+      "group_addresses": [],
+      "comment": "",
+      "group_ranges": {
+        "0/0": {
+          "name": "Test Mitte",
+          "address_start": 1,
+          "address_end": 255,
+          "group_addresses": [
+            "0/0/1",
+            "0/0/2",
+            "0/0/3",
+            "0/0/4",
+            "0/0/5",
+            "0/0/6",
+            "0/0/7",
+            "0/0/8",
+            "0/0/9",
+            "0/0/10",
+            "0/0/11",
+            "0/0/12",
+            "0/0/13",
+            "0/0/14",
+            "0/0/15",
+            "0/0/16",
+            "0/0/17",
+            "0/0/18",
+            "0/0/19",
+            "0/0/20",
+            "0/0/21",
+            "0/0/22",
+            "0/0/23",
+            "0/0/24",
+            "0/0/25",
+            "0/0/26",
+            "0/0/27",
+            "0/0/28",
+            "0/0/29",
+            "0/0/30",
+            "0/0/31",
+            "0/0/32",
+            "0/0/33"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        },
+        "0/1": {
+          "name": "Neue Mittelgruppe",
+          "address_start": 256,
+          "address_end": 511,
+          "group_addresses": [
+            "0/1/0",
+            "0/1/1"
+          ],
+          "comment": "",
+          "group_ranges": {}
+        }
+      }
+    }
+  },
+  "locations": {
+    "Neues Projekt": {
+      "type": "Building",
+      "identifier": "P-04FF-0_BP-1",
+      "name": "Neues Projekt",
+      "usage_id": null,
+      "usage_text": "",
+      "number": "",
+      "description": "",
+      "project_uid": 9,
+      "devices": [],
+      "spaces": {
+        "Teil 1": {
+          "type": "BuildingPart",
+          "identifier": "P-04FF-0_BP-2",
+          "name": "Teil 1",
+          "usage_id": null,
+          "usage_text": "",
+          "number": "",
+          "description": "",
+          "project_uid": 65,
+          "devices": [],
+          "spaces": {
+            "Etage 1": {
+              "type": "Floor",
+              "identifier": "P-04FF-0_BP-3",
+              "name": "Etage 1",
+              "usage_id": null,
+              "usage_text": "",
+              "number": "",
+              "description": "",
+              "project_uid": 66,
+              "devices": [],
+              "spaces": {
+                "Flur": {
+                  "type": "Corridor",
+                  "identifier": "P-04FF-0_BP-4",
+                  "name": "Flur",
+                  "usage_id": null,
+                  "usage_text": "",
+                  "number": "",
+                  "description": "",
+                  "project_uid": 67,
+                  "devices": [
+                    "1.1.0",
+                    "1.1.1"
+                  ],
+                  "spaces": {},
+                  "functions": [
+                    "F-1"
+                  ]
+                },
+                "Büro": {
+                  "type": "Room",
+                  "identifier": "P-04FF-0_BP-5",
+                  "name": "Büro",
+                  "usage_id": "tag:office",
+                  "usage_text": "",
+                  "number": "",
+                  "description": "",
+                  "project_uid": 68,
+                  "devices": [
+                    "1.1.2"
+                  ],
+                  "spaces": {},
+                  "functions": []
+                },
+                "Technikraum": {
+                  "type": "Room",
+                  "identifier": "P-04FF-0_BP-6",
+                  "name": "Technikraum",
+                  "usage_id": "tag:technicalRoom",
+                  "usage_text": "",
+                  "number": "",
+                  "description": "",
+                  "project_uid": 69,
+                  "devices": [
+                    "1.0.0",
+                    "1.0.1",
+                    "1.0.2"
+                  ],
+                  "spaces": {},
+                  "functions": []
+                }
+              },
+              "functions": []
+            }
+          },
+          "functions": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "functions": {
+    "F-1": {
+      "function_type": "FT-1",
+      "group_addresses": {
+        "0/1/0": {
+          "address": "0/1/0",
+          "name": "",
+          "project_uid": 62,
+          "role": "SwitchOnOff"
+        },
+        "0/1/1": {
+          "address": "0/1/1",
+          "name": "",
+          "project_uid": 64,
+          "role": "InfoOnOff"
+        }
+      },
+      "identifier": "F-1",
+      "name": "Licht 1",
+      "project_uid": 59,
+      "space_id": "P-04FF-0_BP-4",
+      "usage_text": "Licht schalten"
+    }
+  }
+}

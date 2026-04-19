@@ -318,6 +318,7 @@ class XMLParser:
                         transmit=com_object.transmit_flag,  # type: ignore[typeddict-item]
                     ),
                     group_address_links=group_address_links,
+                    dpas=com_object.dpas,
                 )
                 device_com_objects.append(com_object_key)
 
@@ -329,6 +330,7 @@ class XMLParser:
                         f"{device.individual_address}/{go_instance_id}"
                         for go_instance_id in channel.group_object_instances
                     ],
+                    functional_blocks=channel.functional_blocks,
                 )
                 for channel in device.channels
             }

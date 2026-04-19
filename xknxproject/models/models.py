@@ -204,7 +204,9 @@ class DeviceInstance:
             )
 
         for channel in self.channels:
-            channel.resolve_channel_name(device_instance=self, application=application)
+            channel.resolve_channel_attributes(
+                device_instance=self, application=application
+            )
             channel.resolve_channel_module_placeholders(device_instance=self)
 
     def __str__(self) -> str:
@@ -226,25 +228,36 @@ class ChannelNode:
     group_object_instances: list[
         str
     ]  # name="GroupObjectInstances" type="knx:RELIDREFS" use="optional"
+    functional_blocks: list[str] | None = None
 
-    def resolve_channel_name(
+    def resolve_channel_attributes(
         self,
         device_instance: DeviceInstance,
         application: ApplicationProgram,
     ) -> None:
         """
-        Resolve the channel name from device instance infos.
+        Resolve the channel attributes from device instance infos.
 
         Replace TextParameter values in channel names with the
         actual values of the parameter instances.
         """
-        if not self.name:
-            application_channel_id = util.strip_module_instance(
-                self.ref_id, search_id="CH"
-            )
+
+        application_channel_id = util.strip_module_instance(self.ref_id, search_id="CH")
+        try:
             application_channel = application.channels[
                 f"{device_instance.application_program_ref}_{application_channel_id}"
             ]
+        except KeyError:
+            _LOGGER.warning(
+                "ApplicationProgramChannel with id %s not found for ChannelNode %s (%s) of %s",
+                application_channel_id,
+                self.ref_id,
+                self.name,
+                device_instance,
+            )
+            return
+
+        if not self.name:
             if application_channel.text and application_channel.text_parameter_ref_id:
                 parameter_instance_ref = util.text_parameter_insert_module_instance(
                     instance_ref=self.ref_id,
@@ -272,6 +285,9 @@ class ChannelNode:
                 )
             else:
                 self.name = application_channel.text or application_channel.name
+
+        # TODO: check xsd (>=23) if ChannelNode can have its own Semantics attribute containing functional blocks
+        self.functional_blocks = application_channel.semantics
 
     def resolve_channel_module_placeholders(
         self,
@@ -379,6 +395,8 @@ class ComObjectInstanceRef:
     # only available form ComObject and ComObjectRef
     name: str | None = None
     object_size: str | None = None
+    # only available from ComObjectRef  # TODO: verify in xsd
+    dpas: list[str] | None = None
     # only available form ComObject
     base_number_argument_ref: str | None = None  # optional in ComObject
     number: int | None = None  # required in ComObject
@@ -458,6 +476,9 @@ class ComObjectInstanceRef:
         if isinstance(com_object, ComObject):
             self.number = com_object.number
             self.base_number_argument_ref = com_object.base_number_argument_ref
+        # TODO: verify in xsd if ComObject could have Semantics containing dpas too
+        if isinstance(com_object, ComObjectRef):
+            self.dpas = com_object.semantics
 
     def apply_module_base_number_argument(
         self,
@@ -646,6 +667,7 @@ class ApplicationProgramChannel:
         "identifier",
         "name",
         "number",
+        "semantics",
         "text",
         "text_parameter_ref_id",
     )
@@ -659,6 +681,7 @@ class ApplicationProgramChannel:
     )  # name="TextParameterRefId" type="knx:RELIDREF" use="optional"
     name: str  # name="Name" type="knx:String255_t" use="required"
     number: str  # name="Number" type="knx:String50_t" use="required"
+    semantics: list[str] | None  # name="Semantics" use="optional"
 
 
 @dataclass
@@ -716,6 +739,7 @@ class ComObjectRef:
         "read_flag",
         "read_on_init_flag",
         "ref_id",
+        "semantics",
         "text",
         "text_parameter_ref_id",
         "transmit_flag",
@@ -737,6 +761,7 @@ class ComObjectRef:
     read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
     datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS
     text_parameter_ref_id: str | None  #  type="knx:IDREF" use="optional"
+    semantics: list[str] | None  # "Semantics" - optional
 
     def com_object_ref_text_with_paramter(
         self,

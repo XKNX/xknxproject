@@ -39,6 +39,7 @@ class CommunicationObject(TypedDict):
     object_size: str
     group_address_links: list[str]
     flags: Flags
+    dpas: list[str] | None
 
 
 class ModuleInstanceInfos(TypedDict):
@@ -71,6 +72,7 @@ class Channel(TypedDict):
     identifier: str
     name: str
     communication_object_ids: list[str]
+    functional_blocks: list[str] | None
 
 
 class Line(TypedDict):

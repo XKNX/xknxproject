@@ -154,3 +154,32 @@ def test_text_parameter_insert_module_instance(
         )
         == expected
     )
+
+
+@pytest.mark.parametrize(
+    ("semantics", "expected"),
+    [
+        ("knx:fb.417", ["417"]),
+        (None, None),
+        ("Wrong", None),
+    ],
+)
+def test_semantics_functional_blocks(
+    semantics: str | None, expected: list[str] | None
+) -> None:
+    """Test semantics functional blocks."""
+    assert util.parse_semantics_functional_blocks(semantics) == expected
+
+
+@pytest.mark.parametrize(
+    ("semantics", "expected"),
+    [
+        ("knx:dpa.417.73", ["417.73"]),
+        ("knx:dpa.800.51 knx:dpa.800.81", ["800.51", "800.81"]),
+        (None, None),
+        ("Wrong", None),
+    ],
+)
+def test_semantics_dpas(semantics: str | None, expected: list[str] | None) -> None:
+    """Test semantics dpas."""
+    assert util.parse_semantics_dpas(semantics) == expected
