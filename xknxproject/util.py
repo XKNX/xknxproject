@@ -57,6 +57,50 @@ def parse_dpt_types(dpt_string: str | None) -> list[DPTType]:
     return supported_dpts
 
 
+def parse_semantics_functional_blocks(semantic_string: str | None) -> list[str] | None:
+    """Parse functional blocks from the XML representation."""
+    # example for Channel: Semantics="knx:fb.417"
+    if not semantic_string:
+        return None
+
+    # unique with preserved order, value is not used
+    functional_blocks: dict[str, None] = {}
+    for fb in semantic_string.split():
+        try:
+            fb_string = fb.removeprefix("knx:fb.")
+            int(fb_string)  # check for int - we don't need the value
+            functional_blocks[fb_string] = None
+        except ValueError:
+            _LOGGER.warning(
+                'Could not parse functional block from: "%s" in "%s"',
+                fb,
+                semantic_string,
+            )
+            continue
+    return list(functional_blocks.keys()) or None
+
+
+def parse_semantics_dpas(semantic_string: str | None) -> list[str] | None:
+    """Parse DPAs from the XML representation."""
+    if not semantic_string:
+        return None
+
+    # unique with preserved order, value is not used
+    dpas: dict[str, None] = {}
+    for dpa in semantic_string.split():
+        try:
+            dpa_id = dpa.removeprefix("knx:dpa.")
+            # check for "." separated integers - we don't need the values
+            _fb, _dpa_num = map(int, dpa_id.split(".", 1))
+            dpas[dpa_id] = None
+        except ValueError:
+            _LOGGER.warning(
+                'Could not parse DPA from: "%s" in "%s"', dpa, semantic_string
+            )
+            continue
+    return list(dpas.keys()) or None
+
+
 @overload
 def parse_xml_flag(flag: str | None, default: bool) -> bool: ...
 
