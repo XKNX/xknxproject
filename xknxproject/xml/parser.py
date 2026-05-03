@@ -113,7 +113,7 @@ def _recursive_convert_group_range(
                 for ga in group_range.group_addresses
             ],
             comment=html.unescape(
-                rtf_to_text(group_range.comment),  # typing: ignore[no-untyped-call]
+                rtf_to_text(group_range.comment),  # type: ignore[no-untyped-call]
             ),
             group_ranges=_recursive_convert_group_range(
                 group_range.group_ranges,
@@ -381,9 +381,7 @@ class XMLParser:
                 ],
                 description=group_address.description,
                 comment=html.unescape(
-                    rtf_to_text(  # typing: ignore[no-untyped-call]
-                        group_address.comment
-                    )
+                    rtf_to_text(group_address.comment),  # type: ignore[no-untyped-call]
                 ),
             )
             for group_address in self.group_addresses
