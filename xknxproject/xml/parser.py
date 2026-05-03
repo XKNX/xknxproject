@@ -112,7 +112,9 @@ def _recursive_convert_group_range(
                 XMLGroupAddress.str_address(ga, group_address_style)
                 for ga in group_range.group_addresses
             ],
-            comment=html.unescape(rtf_to_text(group_range.comment)),
+            comment=html.unescape(
+                rtf_to_text(group_range.comment),  # typing: ignore[no-untyped-call]
+            ),
             group_ranges=_recursive_convert_group_range(
                 group_range.group_ranges,
                 group_address_style,
@@ -378,7 +380,11 @@ class XMLParser:
                     if group_address.address in com_object["group_address_links"]
                 ],
                 description=group_address.description,
-                comment=html.unescape(rtf_to_text(group_address.comment)),
+                comment=html.unescape(
+                    rtf_to_text(  # typing: ignore[no-untyped-call]
+                        group_address.comment
+                    )
+                ),
             )
             for group_address in self.group_addresses
         }
