@@ -9,12 +9,15 @@ import pytest
 from xknxproject.mcp import (
     CommunicationObjectFilter,
     DeviceFilter,
+    FunctionFilter,
     GroupAddressFilter,
     describe_group_address,
+    describe_function,
     get_project_info,
     get_topology,
     list_communication_objects,
     list_devices,
+    list_functions,
     list_group_addresses,
     list_locations,
 )
@@ -135,3 +138,58 @@ def test_list_locations(project: KNXProject) -> None:
     locations = asyncio.run(list_locations(project))
     assert len(locations.spaces) == 1
     assert locations.spaces[0].type == "Building"
+
+
+@pytest.fixture(name="project_with_functions")
+def project_with_functions_fixture() -> KNXProject:
+    """Load the parsed ``testprojekt-ets6-functions`` stub as a KNXProject."""
+    with (STUBS_PATH / "testprojekt-ets6-functions.json").open(encoding="utf-8") as stub:
+        return cast(KNXProject, json.load(stub))
+
+
+def test_list_functions(project_with_functions: KNXProject) -> None:
+    """Functions are listed and filterable."""
+    everything = asyncio.run(list_functions(project_with_functions))
+    assert everything.total_count == 1
+    assert everything.functions[0].identifier == "F-1"
+    assert everything.functions[0].name == "LivingroomLight"
+    assert everything.functions[0].function_type == "FT-1"
+    assert everything.functions[0].group_address_count == 2
+
+    # Test filtering by text
+    by_text = asyncio.run(
+        list_functions(project_with_functions, FunctionFilter(text="Livingroom"))
+    )
+    assert by_text.total_count == 1
+
+    # Test filtering by space_id
+    by_space = asyncio.run(
+        list_functions(project_with_functions, FunctionFilter(space_id="P-05C0-0_BP-2"))
+    )
+    assert by_space.total_count == 1
+
+    # Test missing match
+    no_match = asyncio.run(
+        list_functions(project_with_functions, FunctionFilter(text="Nonexistent"))
+    )
+    assert no_match.total_count == 0
+
+
+def test_describe_function(project_with_functions: KNXProject) -> None:
+    """A known function resolves to its detail and GA refs."""
+    detail = asyncio.run(describe_function(project_with_functions, "F-1"))
+    assert detail.found
+    assert detail.function is not None
+    assert detail.function.identifier == "F-1"
+    assert len(detail.group_addresses) == 2
+    roles = {ref.role: ref.address for ref in detail.group_addresses}
+    assert roles == {"SwitchOnOff": "0/0/1", "InfoOnOff": "0/0/2"}
+
+
+def test_describe_function_missing(project_with_functions: KNXProject) -> None:
+    """An unknown function returns an empty, not-found result."""
+    detail = asyncio.run(describe_function(project_with_functions, "F-999"))
+    assert not detail.found
+    assert detail.function is None
+    assert detail.group_addresses == []
+

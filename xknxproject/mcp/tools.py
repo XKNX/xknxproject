@@ -20,7 +20,9 @@ from ..models import (
     CommunicationObject,
     Device,
     DPTType,
+    Function,
     GroupAddress,
+    GroupAddressRef,
     KNXProject,
     Space,
 )
@@ -32,10 +34,15 @@ from .types import (
     DeviceFilter,
     DeviceListResult,
     DeviceSummary,
+    FunctionDetail,
+    FunctionFilter,
+    FunctionListResult,
+    FunctionSummary,
     GroupAddressDetail,
     GroupAddressFilter,
     GroupAddressListResult,
     GroupAddressSummary,
+    GroupAddressRefSummary,
     LineSummary,
     LocationsResult,
     ProjectInfoResult,
@@ -295,3 +302,65 @@ async def list_locations(project: KNXProject) -> LocationsResult:
     return LocationsResult(
         spaces=[_summarize_space(space) for space in project["locations"].values()]
     )
+
+
+def _summarize_function(func: Function) -> FunctionSummary:
+    return FunctionSummary(
+        identifier=func["identifier"],
+        name=func["name"],
+        function_type=func["function_type"],
+        space_id=func["space_id"],
+        usage_text=func["usage_text"],
+        group_address_count=len(func["group_addresses"]),
+    )
+
+
+async def list_functions(
+    project: KNXProject, filters: FunctionFilter | None = None
+) -> FunctionListResult:
+    """List project functions, optionally filtered by text and/or space_id."""
+    filters = filters or FunctionFilter()
+    needle = filters.text.lower() if filters.text else None
+
+    matches: list[FunctionSummary] = []
+    functions_dict = project.get("functions", {})
+    for func in functions_dict.values():
+        if filters.space_id is not None and func["space_id"] != filters.space_id:
+            continue
+        if needle is not None and needle not in (
+            f"{func['identifier']}\n{func['name']}\n{func['function_type']}\n{func['usage_text']}".lower()
+        ):
+            continue
+        matches.append(_summarize_function(func))
+
+    window, limit_reached = _paginate(matches, filters.limit, filters.offset)
+    return FunctionListResult(
+        functions=window,
+        total_count=len(matches),
+        offset=filters.offset,
+        next_offset=filters.offset + len(window) if limit_reached else None,
+        limit_reached=limit_reached,
+    )
+
+
+async def describe_function(project: KNXProject, identifier: str) -> FunctionDetail:
+    """Resolve a functional block (ETS function) by its identifier."""
+    functions_dict = project.get("functions", {})
+    target = functions_dict.get(identifier)
+    if target is None:
+        return FunctionDetail(found=False, function=None, group_addresses=[])
+
+    ga_refs = [
+        GroupAddressRefSummary(
+            address=ga_ref["address"],
+            name=ga_ref["name"],
+            role=ga_ref["role"],
+        )
+        for ga_ref in target["group_addresses"].values()
+    ]
+    return FunctionDetail(
+        found=True,
+        function=_summarize_function(target),
+        group_addresses=ga_refs,
+    )
+

@@ -216,3 +216,61 @@ class ProjectInfoResult:
     area_count: int
     location_count: int
     function_count: int
+
+
+@dataclass(frozen=True)
+class FunctionFilter:
+    """Filters for :func:`~xknxproject.mcp.tools.list_functions`."""
+
+    text: Annotated[
+        str | None,
+        "Case-insensitive match on the identifier, name, function_type and usage_text.",
+    ] = None
+    space_id: Annotated[
+        str | None,
+        "Optional parent space identifier to restrict results to a specific floor or room.",
+    ] = None
+    limit: Annotated[int, "Maximum number of results to return."] = 100
+    offset: Annotated[int, "Number of results to skip, for pagination."] = 0
+
+
+@dataclass(frozen=True)
+class FunctionSummary:
+    """A JSON-serialisable summary of a functional block (ETS function)."""
+
+    identifier: str
+    name: str
+    function_type: str
+    space_id: str
+    usage_text: str
+    group_address_count: int
+
+
+@dataclass(frozen=True)
+class FunctionListResult:
+    """Result of :func:`~xknxproject.mcp.tools.list_functions`."""
+
+    functions: list[FunctionSummary]
+    total_count: int
+    offset: int
+    next_offset: int | None
+    limit_reached: bool
+
+
+@dataclass(frozen=True)
+class GroupAddressRefSummary:
+    """A JSON-serialisable summary of a group address reference in a function."""
+
+    address: str
+    name: str
+    role: str
+
+
+@dataclass(frozen=True)
+class FunctionDetail:
+    """Result of :func:`~xknxproject.mcp.tools.describe_function`."""
+
+    found: bool
+    function: FunctionSummary | None
+    group_addresses: list[GroupAddressRefSummary]
+
