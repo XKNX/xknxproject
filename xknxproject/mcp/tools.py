@@ -165,6 +165,8 @@ async def list_group_addresses(
     return GroupAddressListResult(
         group_addresses=window,
         total_count=len(matches),
+        offset=filters.offset,
+        next_offset=filters.offset + len(window) if limit_reached else None,
         limit_reached=limit_reached,
     )
 
@@ -214,6 +216,8 @@ async def list_devices(
     return DeviceListResult(
         devices=window,
         total_count=len(matches),
+        offset=filters.offset,
+        next_offset=filters.offset + len(window) if limit_reached else None,
         limit_reached=limit_reached,
     )
 
@@ -245,6 +249,8 @@ async def list_communication_objects(
     return CommunicationObjectListResult(
         communication_objects=window,
         total_count=len(matches),
+        offset=filters.offset,
+        next_offset=filters.offset + len(window) if limit_reached else None,
         limit_reached=limit_reached,
     )
 

@@ -4,58 +4,64 @@ Input/output dataclasses for the xknxproject MCP tools.
 All fields are JSON-native, so a consumer can build inputs directly from tool
 arguments and serialise outputs with :func:`dataclasses.asdict` without custom
 encoders. DPTs are rendered as ``"main"`` or ``"main.sub"`` strings.
+
+Input fields carry their human-readable description as :data:`typing.Annotated`
+metadata (a plain string). This keeps the library free of any schema/validation
+dependency while letting a consumer surface per-parameter descriptions in its
+tool schema via ``typing.get_type_hints(..., include_extras=True)``.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Annotated
 
 
 @dataclass(frozen=True)
 class GroupAddressFilter:
-    """
-    Filters for :func:`~xknxproject.mcp.tools.list_group_addresses`.
+    """Filters for :func:`~xknxproject.mcp.tools.list_group_addresses`."""
 
-    ``text`` matches case-insensitively against the address, name, description
-    and comment. ``dpts`` accept ``"main"`` or ``"main.sub"`` strings; a bare
-    main matches every subtype. Within a category values are OR-ed.
-    """
-
-    text: str | None = None
-    dpts: list[str] = field(default_factory=list)
-    limit: int = 100
-    offset: int = 0
+    text: Annotated[
+        str | None,
+        "Case-insensitive match on the address, name, description and comment.",
+    ] = None
+    dpts: Annotated[
+        list[str],
+        'DPTs as "main" or "main.sub" strings; a bare main matches every subtype.',
+    ] = field(default_factory=list)
+    limit: Annotated[int, "Maximum number of results to return."] = 100
+    offset: Annotated[int, "Number of results to skip, for pagination."] = 0
 
 
 @dataclass(frozen=True)
 class DeviceFilter:
-    """
-    Filters for :func:`~xknxproject.mcp.tools.list_devices`.
+    """Filters for :func:`~xknxproject.mcp.tools.list_devices`."""
 
-    ``text`` matches case-insensitively against the individual address, name,
-    hardware name, manufacturer and order number.
-    """
-
-    text: str | None = None
-    limit: int = 100
-    offset: int = 0
+    text: Annotated[
+        str | None,
+        "Case-insensitive match on the individual address, name, hardware name, "
+        "manufacturer and order number.",
+    ] = None
+    limit: Annotated[int, "Maximum number of results to return."] = 100
+    offset: Annotated[int, "Number of results to skip, for pagination."] = 0
 
 
 @dataclass(frozen=True)
 class CommunicationObjectFilter:
-    """
-    Filters for :func:`~xknxproject.mcp.tools.list_communication_objects`.
+    """Filters for :func:`~xknxproject.mcp.tools.list_communication_objects`."""
 
-    Set ``device_address`` to restrict to one device's objects, and/or
-    ``group_address`` to only objects linked to that GA. ``text`` matches
-    case-insensitively against the name, text, function text and description.
-    """
-
-    device_address: str | None = None
-    group_address: str | None = None
-    text: str | None = None
-    limit: int = 100
-    offset: int = 0
+    device_address: Annotated[
+        str | None, "Restrict to one device's objects by individual address."
+    ] = None
+    group_address: Annotated[
+        str | None, "Restrict to objects linked to this group address."
+    ] = None
+    text: Annotated[
+        str | None,
+        "Case-insensitive match on the name, text, function text and description.",
+    ] = None
+    limit: Annotated[int, "Maximum number of results to return."] = 100
+    offset: Annotated[int, "Number of results to skip, for pagination."] = 0
 
 
 @dataclass(frozen=True)
@@ -77,6 +83,8 @@ class GroupAddressListResult:
 
     group_addresses: list[GroupAddressSummary]
     total_count: int
+    offset: int
+    next_offset: int | None  # pass as ``offset`` for the next page; ``None`` when exhausted
     limit_reached: bool
 
 
@@ -102,6 +110,8 @@ class CommunicationObjectListResult:
 
     communication_objects: list[CommunicationObjectSummary]
     total_count: int
+    offset: int
+    next_offset: int | None  # pass as ``offset`` for the next page; ``None`` when exhausted
     limit_reached: bool
 
 
@@ -139,6 +149,8 @@ class DeviceListResult:
 
     devices: list[DeviceSummary]
     total_count: int
+    offset: int
+    next_offset: int | None  # pass as ``offset`` for the next page; ``None`` when exhausted
     limit_reached: bool
 
 

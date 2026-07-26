@@ -56,6 +56,11 @@ def test_list_group_addresses_pagination(project: KNXProject) -> None:
     assert result.total_count == 19
     assert len(result.group_addresses) == 5
     assert result.limit_reached
+    # Pagination is self-describing: next_offset points past the returned window.
+    assert result.offset == 0
+    assert result.next_offset == 5
+    full = asyncio.run(list_group_addresses(project, GroupAddressFilter(limit=1000)))
+    assert full.next_offset is None
 
 
 def test_list_group_addresses_text_and_dpt_filters(project: KNXProject) -> None:
