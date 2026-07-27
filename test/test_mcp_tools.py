@@ -11,8 +11,8 @@ from xknxproject.mcp import (
     DeviceFilter,
     FunctionFilter,
     GroupAddressFilter,
-    describe_group_address,
     describe_function,
+    describe_group_address,
     get_project_info,
     get_topology,
     list_communication_objects,
@@ -167,6 +167,12 @@ def test_list_functions(project_with_functions: KNXProject) -> None:
         list_functions(project_with_functions, FunctionFilter(space_id="P-05C0-0_BP-2"))
     )
     assert by_space.total_count == 1
+
+    # A non-matching space_id excludes the function.
+    other_space = asyncio.run(
+        list_functions(project_with_functions, FunctionFilter(space_id="does-not-exist"))
+    )
+    assert other_space.total_count == 0
 
     # Test missing match
     no_match = asyncio.run(

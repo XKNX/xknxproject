@@ -22,7 +22,6 @@ from ..models import (
     DPTType,
     Function,
     GroupAddress,
-    GroupAddressRef,
     KNXProject,
     Space,
 )
@@ -41,8 +40,8 @@ from .types import (
     GroupAddressDetail,
     GroupAddressFilter,
     GroupAddressListResult,
-    GroupAddressSummary,
     GroupAddressRefSummary,
+    GroupAddressSummary,
     LineSummary,
     LocationsResult,
     ProjectInfoResult,

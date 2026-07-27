@@ -12,8 +12,8 @@ See :mod:`xknxproject.mcp.tools` for the tool functions and
 """
 
 from .tools import (
-    describe_group_address,
     describe_function,
+    describe_group_address,
     get_project_info,
     get_topology,
     list_communication_objects,
@@ -37,8 +37,8 @@ from .types import (
     GroupAddressDetail,
     GroupAddressFilter,
     GroupAddressListResult,
-    GroupAddressSummary,
     GroupAddressRefSummary,
+    GroupAddressSummary,
     LineSummary,
     LocationsResult,
     ProjectInfoResult,
@@ -62,16 +62,16 @@ __all__ = [
     # inputs
     "GroupAddressFilter",
     "GroupAddressListResult",
-    "GroupAddressSummary",
     "GroupAddressRefSummary",
+    "GroupAddressSummary",
     "LineSummary",
     "LocationsResult",
     # outputs
     "ProjectInfoResult",
     "SpaceSummary",
     "TopologyResult",
-    "describe_group_address",
     "describe_function",
+    "describe_group_address",
     # tools
     "get_project_info",
     "get_topology",
