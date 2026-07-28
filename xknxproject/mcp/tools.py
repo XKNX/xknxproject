@@ -17,6 +17,7 @@ from typing import TypeVar
 
 from ..models import (
     Area,
+    Channel,
     CommunicationObject,
     Device,
     DPTType,
@@ -25,14 +26,23 @@ from ..models import (
     KNXProject,
     Space,
 )
+from ..models.knxproject import ModuleInstanceInfos
 from .types import (
+    AlignedEntry,
+    AlignedGroupObject,
     AreaSummary,
+    ChannelDetail,
+    ChannelFilter,
+    ChannelListResult,
+    ChannelSummary,
     CommunicationObjectFilter,
     CommunicationObjectListResult,
     CommunicationObjectSummary,
     DeviceFilter,
     DeviceListResult,
     DeviceSummary,
+    FindSimilarChannelsInput,
+    FindSimilarChannelsResult,
     FunctionDetail,
     FunctionFilter,
     FunctionListResult,
@@ -44,7 +54,9 @@ from .types import (
     GroupAddressSummary,
     LineSummary,
     LocationsResult,
+    ModuleRef,
     ProjectInfoResult,
+    SimilarChannel,
     SpaceSummary,
     TopologyResult,
 )
@@ -92,7 +104,16 @@ def _summarize_ga(ga: GroupAddress) -> GroupAddressSummary:
     )
 
 
+def _module_ref(module: ModuleInstanceInfos | None) -> ModuleRef | None:
+    """Convert a parsed module-instance dict to a :class:`ModuleRef`, if present."""
+    if module is None:
+        return None
+    return ModuleRef(definition=module["definition"], root_number=module["root_number"])
+
+
 def _summarize_comobj(comobj: CommunicationObject) -> CommunicationObjectSummary:
+    # channel / dpas / module were added to the model later (semantics parsing);
+    # read them defensively so older parses and fixtures don't KeyError.
     return CommunicationObjectSummary(
         number=comobj["number"],
         name=comobj["name"],
@@ -104,6 +125,19 @@ def _summarize_comobj(comobj: CommunicationObject) -> CommunicationObjectSummary
         object_size=comobj["object_size"],
         flags=_flag_names(comobj),
         group_address_links=list(comobj["group_address_links"]),
+        channel=comobj.get("channel"),
+        dpas=list(comobj.get("dpas") or []),
+        module=_module_ref(comobj.get("module")),
+    )
+
+
+def _summarize_channel(device_address: str, channel: Channel) -> ChannelSummary:
+    return ChannelSummary(
+        device_address=device_address,
+        identifier=channel["identifier"],
+        name=channel["name"],
+        functional_blocks=list(channel.get("functional_blocks") or []),
+        communication_object_ids=list(channel["communication_object_ids"]),
     )
 
 
@@ -116,6 +150,11 @@ def _summarize_device(device: Device) -> DeviceSummary:
         order_number=device["order_number"],
         description=device["description"],
         communication_object_ids=list(device["communication_object_ids"]),
+        application=device.get("application"),
+        channels=[
+            _summarize_channel(device["individual_address"], channel)
+            for channel in (device.get("channels") or {}).values()
+        ],
     )
 
 
@@ -179,10 +218,8 @@ async def list_group_addresses(
 
 async def describe_group_address(project: KNXProject, address: str) -> GroupAddressDetail:
     """Resolve one group address to its linked communication objects and devices."""
-    target = next(
-        (ga for ga in project["group_addresses"].values() if ga["address"] == address),
-        None,
-    )
+    # ``group_addresses`` is keyed by the address string, so this is O(1).
+    target = project["group_addresses"].get(address)
     if target is None:
         return GroupAddressDetail(
             found=False, group_address=None, communication_objects=[], devices=[]
@@ -363,3 +400,196 @@ async def describe_function(project: KNXProject, identifier: str) -> FunctionDet
         group_addresses=ga_refs,
     )
 
+
+
+def _find_channel(
+    project: KNXProject, device_address: str, channel_identifier: str
+) -> Channel | None:
+    device = project["devices"].get(device_address)
+    if device is None:
+        return None
+    return next(
+        (ch for ch in (device.get("channels") or {}).values() if ch["identifier"] == channel_identifier),
+        None,
+    )
+
+
+def _module_definitions(project: KNXProject, channel: Channel) -> set[str]:
+    """Return the module definitions among a channel's communication objects."""
+    definitions: set[str] = set()
+    for co_id in channel["communication_object_ids"]:
+        comobj = project["communication_objects"].get(co_id)
+        module = comobj.get("module") if comobj is not None else None
+        if module is not None:
+            definitions.add(module["definition"])
+    return definitions
+
+
+def _alignment_key(comobj: CommunicationObject) -> str:
+    """
+    Return a stable semantic slot key for aligning a group object across channels.
+
+    Prefer the DPA (semantic role), then the module offset, then the raw number.
+    """
+    dpas = comobj.get("dpas")
+    if dpas:
+        return dpas[0]
+    module = comobj.get("module")
+    if module is not None:
+        return f"root:{module['root_number']}"
+    return f"num:{comobj['number']}"
+
+
+async def list_channels(
+    project: KNXProject, filters: ChannelFilter | None = None
+) -> ChannelListResult:
+    """List device channels, optionally filtered by device, functional block or text."""
+    filters = filters or ChannelFilter()
+    needle = filters.text.lower() if filters.text else None
+
+    matches: list[ChannelSummary] = []
+    for device in project["devices"].values():
+        if (
+            filters.device_address is not None
+            and device["individual_address"] != filters.device_address
+        ):
+            continue
+        for channel in (device.get("channels") or {}).values():
+            summary = _summarize_channel(device["individual_address"], channel)
+            if (
+                filters.functional_block is not None
+                and filters.functional_block not in summary.functional_blocks
+            ):
+                continue
+            if needle is not None and needle not in f"{summary.identifier}\n{summary.name}".lower():
+                continue
+            matches.append(summary)
+
+    window, limit_reached = _paginate(matches, filters.limit, filters.offset)
+    return ChannelListResult(
+        channels=window,
+        total_count=len(matches),
+        offset=filters.offset,
+        next_offset=filters.offset + len(window) if limit_reached else None,
+        limit_reached=limit_reached,
+    )
+
+
+async def describe_channel(
+    project: KNXProject, device_address: str, channel_identifier: str
+) -> ChannelDetail:
+    """Resolve one channel to its communication objects and their group addresses."""
+    channel = _find_channel(project, device_address, channel_identifier)
+    if channel is None:
+        return ChannelDetail(
+            found=False, channel=None, communication_objects=[], group_addresses=[]
+        )
+
+    comobjs = [
+        project["communication_objects"][co_id]
+        for co_id in channel["communication_object_ids"]
+        if co_id in project["communication_objects"]
+    ]
+    group_addresses = list(
+        dict.fromkeys(ga for co in comobjs for ga in co["group_address_links"])
+    )
+    return ChannelDetail(
+        found=True,
+        channel=_summarize_channel(device_address, channel),
+        communication_objects=[_summarize_comobj(co) for co in comobjs],
+        group_addresses=group_addresses,
+    )
+
+
+def _match_reason(
+    request: FindSimilarChannelsInput,
+    reference_fbs: set[str],
+    reference_defs: set[str],
+    project: KNXProject,
+    channel: Channel,
+) -> str | None:
+    if request.match_functional_blocks:
+        shared = reference_fbs & set(channel.get("functional_blocks") or [])
+        if shared:
+            return f"functional_block:{sorted(shared)[0]}"
+    if request.match_module_definition:
+        shared_defs = reference_defs & _module_definitions(project, channel)
+        if shared_defs:
+            return f"module:{sorted(shared_defs)[0]}"
+    return None
+
+
+async def find_similar_channels(
+    project: KNXProject, request: FindSimilarChannelsInput
+) -> FindSimilarChannelsResult:
+    """
+    Find channels like the reference and align their group objects (and GAs).
+
+    Channels are "similar" when they share a functional block or a module
+    definition. Group objects are aligned into semantic slots (keyed by DPA or
+    module offset) so a consumer can read off, per slot, which GA each similar
+    channel uses.
+    """
+    reference = _find_channel(project, request.device_address, request.channel_identifier)
+    if reference is None:
+        return FindSimilarChannelsResult(
+            found=False, reference=None, channels=[], aligned_group_objects=[]
+        )
+
+    reference_fbs = set(reference.get("functional_blocks") or [])
+    reference_defs = _module_definitions(project, reference)
+
+    matches: list[SimilarChannel] = []
+    to_align: list[tuple[str, Channel]] = [(request.device_address, reference)]
+    for device in project["devices"].values():
+        for channel in (device.get("channels") or {}).values():
+            if (
+                device["individual_address"] == request.device_address
+                and channel["identifier"] == request.channel_identifier
+            ):
+                continue
+            reason = _match_reason(request, reference_fbs, reference_defs, project, channel)
+            if reason is None:
+                continue
+            matches.append(
+                SimilarChannel(
+                    device_address=device["individual_address"],
+                    identifier=channel["identifier"],
+                    name=channel["name"],
+                    functional_blocks=list(channel.get("functional_blocks") or []),
+                    match_reason=reason,
+                )
+            )
+            to_align.append((device["individual_address"], channel))
+
+    entries_by_key: dict[str, list[AlignedEntry]] = {}
+    label_by_key: dict[str, str] = {}
+    for device_address, channel in to_align:
+        for co_id in channel["communication_object_ids"]:
+            comobj = project["communication_objects"].get(co_id)
+            if comobj is None:
+                continue
+            key = _alignment_key(comobj)
+            label_by_key.setdefault(key, comobj["function_text"])
+            entries_by_key.setdefault(key, []).append(
+                AlignedEntry(
+                    device_address=device_address,
+                    channel_identifier=channel["identifier"],
+                    number=comobj["number"],
+                    dpas=list(comobj.get("dpas") or []),
+                    group_addresses=list(comobj["group_address_links"]),
+                )
+            )
+
+    aligned = [
+        AlignedGroupObject(
+            key=key, function_text=label_by_key[key], entries=entries_by_key[key]
+        )
+        for key in sorted(entries_by_key)
+    ]
+    return FindSimilarChannelsResult(
+        found=True,
+        reference=_summarize_channel(request.device_address, reference),
+        channels=matches,
+        aligned_group_objects=aligned,
+    )

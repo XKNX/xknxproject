@@ -7,14 +7,19 @@ from typing import cast
 import pytest
 
 from xknxproject.mcp import (
+    ChannelFilter,
     CommunicationObjectFilter,
     DeviceFilter,
+    FindSimilarChannelsInput,
     FunctionFilter,
     GroupAddressFilter,
+    describe_channel,
     describe_function,
     describe_group_address,
+    find_similar_channels,
     get_project_info,
     get_topology,
+    list_channels,
     list_communication_objects,
     list_devices,
     list_functions,
@@ -199,3 +204,193 @@ def test_describe_function_missing(project_with_functions: KNXProject) -> None:
     assert detail.function is None
     assert detail.group_addresses == []
 
+
+
+@pytest.fixture(name="smart")
+def smart_linking_fixture() -> KNXProject:
+    """Load the parsed ``smart_linking`` stub (rich channels/functional-blocks/DPAs)."""
+    with (STUBS_PATH / "smart_linking.json").open(encoding="utf-8") as stub:
+        return cast(KNXProject, json.load(stub))
+
+
+def test_device_summary_exposes_channels(smart: KNXProject) -> None:
+    """Devices now carry their application id and channel list."""
+    result = asyncio.run(list_devices(smart, DeviceFilter(text="1.0.1")))
+    device = result.devices[0]
+    assert device.application == "M-00E1_A-2036-40-865C"
+    identifiers = {ch.identifier for ch in device.channels}
+    assert {"CH-1", "CH-2", "CH-3"} <= identifiers
+    ch1 = next(ch for ch in device.channels if ch.identifier == "CH-1")
+    assert ch1.functional_blocks == ["417"]
+
+
+def test_communication_object_summary_exposes_semantics(smart: KNXProject) -> None:
+    """Communication objects now carry channel and DPA semantics."""
+    result = asyncio.run(
+        list_communication_objects(smart, CommunicationObjectFilter(group_address="0/0/1"))
+    )
+    comobj = result.communication_objects[0]
+    assert comobj.channel == "CH-1"
+    assert comobj.dpas == ["417.52"]
+
+
+def test_list_channels_filters(smart: KNXProject) -> None:
+    """Channels are listed and filterable by device, functional block and text."""
+    everything = asyncio.run(list_channels(smart))
+    assert everything.total_count == 12
+    assert all(ch.device_address for ch in everything.channels)
+
+    by_fb = asyncio.run(list_channels(smart, ChannelFilter(functional_block="417")))
+    assert by_fb.total_count == 7
+
+    by_device = asyncio.run(list_channels(smart, ChannelFilter(device_address="1.0.1")))
+    assert {ch.identifier for ch in by_device.channels} == {"CH-1", "CH-2", "CH-3"}
+
+    by_text = asyncio.run(list_channels(smart, ChannelFilter(text="Ausgang A")))
+    assert [ch.identifier for ch in by_text.channels] == ["CH-1"]
+
+
+def test_describe_channel(smart: KNXProject) -> None:
+    """A channel resolves to its communication objects and their GAs."""
+    detail = asyncio.run(describe_channel(smart, "1.0.1", "CH-1"))
+    assert detail.found
+    assert detail.channel is not None
+    assert detail.channel.functional_blocks == ["417"]
+    assert detail.group_addresses == ["0/0/1"]
+    assert detail.communication_objects[0].dpas == ["417.52"]
+
+
+def test_describe_channel_missing(smart: KNXProject) -> None:
+    """An unknown device or channel returns a not-found result."""
+    assert not asyncio.run(describe_channel(smart, "1.0.1", "CH-999")).found
+    assert not asyncio.run(describe_channel(smart, "9.9.9", "CH-1")).found
+
+
+def test_find_similar_channels(smart: KNXProject) -> None:
+    """Similar channels are found by functional block and their GAs aligned by DPA."""
+    result = asyncio.run(
+        find_similar_channels(smart, FindSimilarChannelsInput(device_address="1.0.1", channel_identifier="CH-1"))
+    )
+    assert result.found
+    assert result.reference is not None
+    assert result.reference.identifier == "CH-1"
+
+    # The other six 417 channels (2 same-device, 4 on 1.0.2) match by functional block.
+    assert len(result.channels) == 6
+    assert all(sc.match_reason == "functional_block:417" for sc in result.channels)
+
+    # The reference's "417.52" object aligns with the same slot on the other channels.
+    slot = next(a for a in result.aligned_group_objects if a.key == "417.52")
+    ref_entry = next(e for e in slot.entries if e.device_address == "1.0.1" and e.channel_identifier == "CH-1")
+    assert ref_entry.group_addresses == ["0/0/1"]
+    assert any(e.device_address == "1.0.2" for e in slot.entries)
+
+
+def test_find_similar_channels_missing(smart: KNXProject) -> None:
+    """An unknown reference channel returns an empty, not-found result."""
+    result = asyncio.run(
+        find_similar_channels(smart, FindSimilarChannelsInput(device_address="1.0.1", channel_identifier="CH-999"))
+    )
+    assert not result.found
+    assert result.reference is None
+    assert result.channels == []
+    assert result.aligned_group_objects == []
+
+
+def _module_project() -> KNXProject:
+    """Build a tiny synthetic project where channels align by module, not DPA."""
+    flags = {
+        "read": False,
+        "write": True,
+        "communication": True,
+        "transmit": True,
+        "update": False,
+        "read_on_init": False,
+    }
+
+    def comobj(number: int, device: str, channel: str, module: object, dpas: object) -> dict:
+        return {
+            "name": f"CO{number}",
+            "number": number,
+            "text": "",
+            "function_text": "Switch",
+            "description": "",
+            "device_address": device,
+            "device_application": None,
+            "module": module,
+            "channel": channel,
+            "dpts": [],
+            "object_size": "1 Bit",
+            "group_address_links": [f"1/0/{number}"],
+            "flags": flags,
+            "dpas": dpas,
+        }
+
+    def device(addr: str, channel_id: str, co_ids: list[str]) -> dict:
+        return {
+            "name": f"Dev {addr}",
+            "hardware_name": "HW",
+            "order_number": "ORD",
+            "description": "",
+            "manufacturer_name": "ACME",
+            "individual_address": addr,
+            "application": "APP-1",
+            "project_uid": None,
+            "communication_object_ids": co_ids,
+            "channels": {
+                channel_id: {
+                    "identifier": channel_id,
+                    "name": f"Channel {channel_id}",
+                    "communication_object_ids": co_ids,
+                    "functional_blocks": [],  # force module-based matching
+                }
+            },
+        }
+
+    mod = {"definition": "MOD-1", "root_number": 0}
+    return cast(
+        KNXProject,
+        {
+            "info": {
+                "project_id": "P", "name": "mod", "last_modified": None,
+                "group_address_style": "ThreeLevel", "guid": "g", "created_by": "ETS",
+                "schema_version": "21", "tool_version": "6", "xknxproject_version": "3.9.0",
+                "language_code": None,
+            },
+            "communication_objects": {
+                "A/O-1": comobj(1, "1.1.1", "CH-A", mod, []),
+                "B/O-1": comobj(1, "1.1.2", "CH-B", mod, []),
+                "B/O-2": comobj(2, "1.1.2", "CH-B", None, []),  # no module, no dpa -> num key
+            },
+            "devices": {
+                "1.1.1": device("1.1.1", "CH-A", ["A/O-1", "A/O-missing"]),  # dangling id
+                "1.1.2": device("1.1.2", "CH-B", ["B/O-1", "B/O-2"]),
+            },
+            "topology": {}, "locations": {}, "group_addresses": {},
+            "group_ranges": {}, "functions": {},
+        },
+    )
+
+
+def test_find_similar_channels_by_module() -> None:
+    """Channels align by module definition/offset when they carry no DPAs."""
+    project = _module_project()
+
+    # describe_channel surfaces the module ref on the summarized comobj.
+    detail = asyncio.run(describe_channel(project, "1.1.1", "CH-A"))
+    assert detail.communication_objects[0].module is not None
+    assert detail.communication_objects[0].module.definition == "MOD-1"
+
+    result = asyncio.run(
+        find_similar_channels(
+            project, FindSimilarChannelsInput(device_address="1.1.1", channel_identifier="CH-A")
+        )
+    )
+    assert result.found
+    assert [sc.match_reason for sc in result.channels] == ["module:MOD-1"]
+
+    keys = {a.key for a in result.aligned_group_objects}
+    assert "root:0" in keys  # module offset key
+    assert "num:2" in keys  # the object with neither DPA nor module
+    root_slot = next(a for a in result.aligned_group_objects if a.key == "root:0")
+    assert {e.device_address for e in root_slot.entries} == {"1.1.1", "1.1.2"}

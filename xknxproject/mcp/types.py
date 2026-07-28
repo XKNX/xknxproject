@@ -89,6 +89,20 @@ class GroupAddressListResult:
 
 
 @dataclass(frozen=True)
+class ModuleRef:
+    """
+    The module instance a communication object belongs to.
+
+    ``definition`` is the module (channel template) reused across similar
+    devices; ``root_number`` is the object's base number within that module —
+    the offset used to align the "same" object across instances.
+    """
+
+    definition: str
+    root_number: int
+
+
+@dataclass(frozen=True)
 class CommunicationObjectSummary:
     """A JSON-serialisable view of a device communication object."""
 
@@ -102,6 +116,9 @@ class CommunicationObjectSummary:
     object_size: str
     flags: list[str]
     group_address_links: list[str]
+    channel: str | None  # identifier of the owning channel, if any
+    dpas: list[str]  # semantic device parameter addresses, e.g. "417.52"
+    module: ModuleRef | None  # module instance + offset, when the object is modular
 
 
 @dataclass(frozen=True)
@@ -131,6 +148,23 @@ class GroupAddressDetail:
 
 
 @dataclass(frozen=True)
+class ChannelSummary:
+    """
+    A JSON-serialisable view of a device channel.
+
+    ``functional_blocks`` is the channel's semantic type (e.g. ``"417"`` for a
+    switch-actuator output); channels sharing it are instances of the same
+    function across devices.
+    """
+
+    device_address: str
+    identifier: str
+    name: str
+    functional_blocks: list[str]
+    communication_object_ids: list[str]
+
+
+@dataclass(frozen=True)
 class DeviceSummary:
     """A JSON-serialisable view of a topology device."""
 
@@ -141,6 +175,8 @@ class DeviceSummary:
     order_number: str
     description: str
     communication_object_ids: list[str]
+    application: str | None  # same application program => same channel layout
+    channels: list[ChannelSummary]
 
 
 @dataclass(frozen=True)
@@ -274,3 +310,106 @@ class FunctionDetail:
     function: FunctionSummary | None
     group_addresses: list[GroupAddressRefSummary]
 
+
+
+@dataclass(frozen=True)
+class ChannelFilter:
+    """Filters for :func:`~xknxproject.mcp.tools.list_channels`."""
+
+    device_address: Annotated[
+        str | None, "Restrict to channels of this device (individual address)."
+    ] = None
+    functional_block: Annotated[
+        str | None, 'Restrict to channels with this functional block, e.g. "417".'
+    ] = None
+    text: Annotated[
+        str | None, "Case-insensitive match on the channel identifier and name."
+    ] = None
+    limit: Annotated[int, "Maximum number of results to return."] = 100
+    offset: Annotated[int, "Number of results to skip, for pagination."] = 0
+
+
+@dataclass(frozen=True)
+class ChannelListResult:
+    """Result of :func:`~xknxproject.mcp.tools.list_channels`."""
+
+    channels: list[ChannelSummary]
+    total_count: int
+    offset: int
+    next_offset: int | None
+    limit_reached: bool
+
+
+@dataclass(frozen=True)
+class ChannelDetail:
+    """
+    Result of :func:`~xknxproject.mcp.tools.describe_channel`.
+
+    ``found`` is ``False`` when the device or channel does not exist, in which
+    case the remaining fields are empty.
+    """
+
+    found: bool
+    channel: ChannelSummary | None
+    communication_objects: list[CommunicationObjectSummary]
+    group_addresses: list[str]
+
+
+@dataclass(frozen=True)
+class FindSimilarChannelsInput:
+    """Input for :func:`~xknxproject.mcp.tools.find_similar_channels`."""
+
+    device_address: Annotated[str, "Individual address of the reference channel's device."]
+    channel_identifier: Annotated[str, 'Identifier of the reference channel, e.g. "CH-1".']
+    match_functional_blocks: Annotated[
+        bool, "Treat channels sharing a functional block as similar."
+    ] = True
+    match_module_definition: Annotated[
+        bool, "Treat channels whose objects share a module definition as similar."
+    ] = True
+
+
+@dataclass(frozen=True)
+class SimilarChannel:
+    """A channel judged similar to the reference, with the reason it matched."""
+
+    device_address: str
+    identifier: str
+    name: str
+    functional_blocks: list[str]
+    match_reason: str  # "reference", "functional_block:<id>" or "module:<definition>"
+
+
+@dataclass(frozen=True)
+class AlignedEntry:
+    """One channel's group object at a given semantic slot."""
+
+    device_address: str
+    channel_identifier: str
+    number: int
+    dpas: list[str]
+    group_addresses: list[str]
+
+
+@dataclass(frozen=True)
+class AlignedGroupObject:
+    """
+    A semantic slot aligned across the similar channels.
+
+    ``key`` is the alignment key (a shared DPA, or a module ``root_number``);
+    ``entries`` gives the matching group object — and its GAs — per channel.
+    """
+
+    key: str
+    function_text: str
+    entries: list[AlignedEntry]
+
+
+@dataclass(frozen=True)
+class FindSimilarChannelsResult:
+    """Result of :func:`~xknxproject.mcp.tools.find_similar_channels`."""
+
+    found: bool
+    reference: ChannelSummary | None
+    channels: list[SimilarChannel]
+    aligned_group_objects: list[AlignedGroupObject]
