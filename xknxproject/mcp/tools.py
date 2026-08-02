@@ -84,7 +84,9 @@ def _dpt_matches(dpt: DPTType | None, wanted: Iterable[tuple[int, int | None]]) 
     """Whether ``dpt`` matches any ``(main, sub|None)`` selector (sub ``None`` matches any)."""
     if dpt is None:
         return False
-    return any(dpt["main"] == main and sub in (None, dpt["sub"]) for main, sub in wanted)
+    return any(
+        dpt["main"] == main and sub in (None, dpt["sub"]) for main, sub in wanted
+    )
 
 
 def _flag_names(comobj: CommunicationObject) -> list[str]:
@@ -121,7 +123,9 @@ def _summarize_comobj(comobj: CommunicationObject) -> CommunicationObjectSummary
         function_text=comobj["function_text"],
         description=comobj["description"],
         device_address=comobj["device_address"],
-        dpts=[dpt for dpt in (_format_dpt(d) for d in comobj["dpts"]) if dpt is not None],
+        dpts=[
+            dpt for dpt in (_format_dpt(d) for d in comobj["dpts"]) if dpt is not None
+        ],
         object_size=comobj["object_size"],
         flags=_flag_names(comobj),
         group_address_links=list(comobj["group_address_links"]),
@@ -216,7 +220,9 @@ async def list_group_addresses(
     )
 
 
-async def describe_group_address(project: KNXProject, address: str) -> GroupAddressDetail:
+async def describe_group_address(
+    project: KNXProject, address: str
+) -> GroupAddressDetail:
     """Resolve one group address to its linked communication objects and devices."""
     # ``group_addresses`` is keyed by the address string, so this is O(1).
     target = project["group_addresses"].get(address)
@@ -274,7 +280,10 @@ async def list_communication_objects(
 
     matches: list[CommunicationObjectSummary] = []
     for comobj in project["communication_objects"].values():
-        if filters.device_address is not None and comobj["device_address"] != filters.device_address:
+        if (
+            filters.device_address is not None
+            and comobj["device_address"] != filters.device_address
+        ):
             continue
         if (
             filters.group_address is not None
@@ -401,7 +410,6 @@ async def describe_function(project: KNXProject, identifier: str) -> FunctionDet
     )
 
 
-
 def _find_channel(
     project: KNXProject, device_address: str, channel_identifier: str
 ) -> Channel | None:
@@ -409,7 +417,11 @@ def _find_channel(
     if device is None:
         return None
     return next(
-        (ch for ch in (device.get("channels") or {}).values() if ch["identifier"] == channel_identifier),
+        (
+            ch
+            for ch in (device.get("channels") or {}).values()
+            if ch["identifier"] == channel_identifier
+        ),
         None,
     )
 
@@ -461,7 +473,10 @@ async def list_channels(
                 and filters.functional_block not in summary.functional_blocks
             ):
                 continue
-            if needle is not None and needle not in f"{summary.identifier}\n{summary.name}".lower():
+            if (
+                needle is not None
+                and needle not in f"{summary.identifier}\n{summary.name}".lower()
+            ):
                 continue
             matches.append(summary)
 
@@ -511,11 +526,11 @@ def _match_reason(
     if request.match_functional_blocks:
         shared = reference_fbs & set(channel.get("functional_blocks") or [])
         if shared:
-            return f"functional_block:{sorted(shared)[0]}"
+            return f"functional_block:{min(shared)}"
     if request.match_module_definition:
         shared_defs = reference_defs & _module_definitions(project, channel)
         if shared_defs:
-            return f"module:{sorted(shared_defs)[0]}"
+            return f"module:{min(shared_defs)}"
     return None
 
 
@@ -530,7 +545,9 @@ async def find_similar_channels(
     module offset) so a consumer can read off, per slot, which GA each similar
     channel uses.
     """
-    reference = _find_channel(project, request.device_address, request.channel_identifier)
+    reference = _find_channel(
+        project, request.device_address, request.channel_identifier
+    )
     if reference is None:
         return FindSimilarChannelsResult(
             found=False, reference=None, channels=[], aligned_group_objects=[]
@@ -548,7 +565,9 @@ async def find_similar_channels(
                 and channel["identifier"] == request.channel_identifier
             ):
                 continue
-            reason = _match_reason(request, reference_fbs, reference_defs, project, channel)
+            reason = _match_reason(
+                request, reference_fbs, reference_defs, project, channel
+            )
             if reason is None:
                 continue
             matches.append(

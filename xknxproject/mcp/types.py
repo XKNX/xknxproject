@@ -16,18 +16,21 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 
-
 @dataclass(frozen=True)
 class GroupAddressFilter:
     """Filters for :func:`~xknxproject.mcp.tools.list_group_addresses`."""
 
     text: str | None = field(
         default=None,
-        metadata={"description": "Case-insensitive match on the address, name, description and comment."},
+        metadata={
+            "description": "Case-insensitive match on the address, name, description and comment."
+        },
     )
     dpts: list[str] = field(
         default_factory=list,
-        metadata={"description": 'DPTs as "main" or "main.sub" strings; a bare main matches every subtype.'},
+        metadata={
+            "description": 'DPTs as "main" or "main.sub" strings; a bare main matches every subtype.'
+        },
     )
     limit: int = field(
         default=100,
@@ -68,7 +71,9 @@ class CommunicationObjectFilter:
 
     device_address: str | None = field(
         default=None,
-        metadata={"description": "Restrict to one device's objects by individual address."},
+        metadata={
+            "description": "Restrict to one device's objects by individual address."
+        },
     )
     group_address: str | None = field(
         default=None,
@@ -76,7 +81,9 @@ class CommunicationObjectFilter:
     )
     text: str | None = field(
         default=None,
-        metadata={"description": "Case-insensitive match on the name, text, function text and description."},
+        metadata={
+            "description": "Case-insensitive match on the name, text, function text and description."
+        },
     )
     limit: int = field(
         default=100,
@@ -108,7 +115,9 @@ class GroupAddressListResult:
     group_addresses: list[GroupAddressSummary]
     total_count: int
     offset: int
-    next_offset: int | None  # pass as ``offset`` for the next page; ``None`` when exhausted
+    next_offset: (
+        int | None
+    )  # pass as ``offset`` for the next page; ``None`` when exhausted
     limit_reached: bool
 
 
@@ -152,7 +161,9 @@ class CommunicationObjectListResult:
     communication_objects: list[CommunicationObjectSummary]
     total_count: int
     offset: int
-    next_offset: int | None  # pass as ``offset`` for the next page; ``None`` when exhausted
+    next_offset: (
+        int | None
+    )  # pass as ``offset`` for the next page; ``None`` when exhausted
     limit_reached: bool
 
 
@@ -210,7 +221,9 @@ class DeviceListResult:
     devices: list[DeviceSummary]
     total_count: int
     offset: int
-    next_offset: int | None  # pass as ``offset`` for the next page; ``None`` when exhausted
+    next_offset: (
+        int | None
+    )  # pass as ``offset`` for the next page; ``None`` when exhausted
     limit_reached: bool
 
 
@@ -284,11 +297,15 @@ class FunctionFilter:
 
     text: str | None = field(
         default=None,
-        metadata={"description": "Case-insensitive match on the identifier, name, function_type and usage_text."},
+        metadata={
+            "description": "Case-insensitive match on the identifier, name, function_type and usage_text."
+        },
     )
     space_id: str | None = field(
         default=None,
-        metadata={"description": "Optional parent space identifier to restrict results to a specific floor or room."},
+        metadata={
+            "description": "Optional parent space identifier to restrict results to a specific floor or room."
+        },
     )
     limit: int = field(
         default=100,
@@ -341,22 +358,27 @@ class FunctionDetail:
     group_addresses: list[GroupAddressRefSummary]
 
 
-
 @dataclass(frozen=True)
 class ChannelFilter:
     """Filters for :func:`~xknxproject.mcp.tools.list_channels`."""
 
     device_address: str | None = field(
         default=None,
-        metadata={"description": "Restrict to channels of this device (individual address)."},
+        metadata={
+            "description": "Restrict to channels of this device (individual address)."
+        },
     )
     functional_block: str | None = field(
         default=None,
-        metadata={"description": 'Restrict to channels with this functional block, e.g. "417".'},
+        metadata={
+            "description": 'Restrict to channels with this functional block, e.g. "417".'
+        },
     )
     text: str | None = field(
         default=None,
-        metadata={"description": "Case-insensitive match on the channel identifier and name."},
+        metadata={
+            "description": "Case-insensitive match on the channel identifier and name."
+        },
     )
     limit: int = field(
         default=100,
@@ -399,18 +421,24 @@ class FindSimilarChannelsInput:
     """Input for :func:`~xknxproject.mcp.tools.find_similar_channels`."""
 
     device_address: str = field(
-        metadata={"description": "Individual address of the reference channel's device."}
+        metadata={
+            "description": "Individual address of the reference channel's device."
+        }
     )
     channel_identifier: str = field(
         metadata={"description": 'Identifier of the reference channel, e.g. "CH-1".'}
     )
     match_functional_blocks: bool = field(
         default=True,
-        metadata={"description": "Treat channels sharing a functional block as similar."},
+        metadata={
+            "description": "Treat channels sharing a functional block as similar."
+        },
     )
     match_module_definition: bool = field(
         default=True,
-        metadata={"description": "Treat channels whose objects share a module definition as similar."},
+        metadata={
+            "description": "Treat channels whose objects share a module definition as similar."
+        },
     )
 
 
