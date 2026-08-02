@@ -1,0 +1,106 @@
+"""
+Host-agnostic MCP tool functions for parsed ETS projects.
+
+These are plain async functions operating on a parsed
+:class:`~xknxproject.models.KNXProject`, with frozen, JSON-serialisable
+dataclass inputs and outputs. They carry **no dependency on any MCP SDK, Home
+Assistant or a web framework** — each consumer (SpectrumKNX, Home Assistant, …)
+wraps them into its own MCP transport.
+
+See :mod:`xknxproject.mcp.tools` for the tool functions and
+:mod:`xknxproject.mcp.types` for the input/output models.
+"""
+
+from .tools import (
+    describe_channel,
+    describe_function,
+    describe_group_address,
+    find_similar_channels,
+    get_project_info,
+    get_topology,
+    list_channels,
+    list_communication_objects,
+    list_devices,
+    list_functions,
+    list_group_addresses,
+    list_locations,
+)
+from .types import (
+    AlignedEntry,
+    AlignedGroupObject,
+    AreaSummary,
+    ChannelDetail,
+    ChannelFilter,
+    ChannelListResult,
+    ChannelSummary,
+    CommunicationObjectFilter,
+    CommunicationObjectListResult,
+    CommunicationObjectSummary,
+    DeviceFilter,
+    DeviceListResult,
+    DeviceSummary,
+    FindSimilarChannelsInput,
+    FindSimilarChannelsResult,
+    FunctionDetail,
+    FunctionFilter,
+    FunctionListResult,
+    FunctionSummary,
+    GroupAddressDetail,
+    GroupAddressFilter,
+    GroupAddressListResult,
+    GroupAddressRefSummary,
+    GroupAddressSummary,
+    LineSummary,
+    LocationsResult,
+    ModuleRef,
+    ProjectInfoResult,
+    SimilarChannel,
+    SpaceSummary,
+    TopologyResult,
+)
+
+__all__ = [
+    "AlignedEntry",
+    "AlignedGroupObject",
+    "AreaSummary",
+    "ChannelDetail",
+    "ChannelFilter",
+    "ChannelListResult",
+    "ChannelSummary",
+    "CommunicationObjectFilter",
+    "CommunicationObjectListResult",
+    "CommunicationObjectSummary",
+    "DeviceFilter",
+    "DeviceListResult",
+    "DeviceSummary",
+    "FindSimilarChannelsInput",
+    "FindSimilarChannelsResult",
+    "FunctionDetail",
+    "FunctionFilter",
+    "FunctionListResult",
+    "FunctionSummary",
+    "GroupAddressDetail",
+    "GroupAddressFilter",
+    "GroupAddressListResult",
+    "GroupAddressRefSummary",
+    "GroupAddressSummary",
+    "LineSummary",
+    "LocationsResult",
+    "ModuleRef",
+    "ProjectInfoResult",
+    "SimilarChannel",
+    "SpaceSummary",
+    "TopologyResult",
+    "describe_channel",
+    "describe_function",
+    "describe_group_address",
+    "find_similar_channels",
+    "get_project_info",
+    "get_topology",
+    "list_channels",
+    "list_communication_objects",
+    "list_devices",
+    "list_functions",
+    "list_group_addresses",
+    "list_locations",
+]
