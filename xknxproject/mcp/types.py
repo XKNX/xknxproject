@@ -14,54 +14,78 @@ tool schema via ``typing.get_type_hints(..., include_extras=True)``.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Annotated
+
 
 
 @dataclass(frozen=True)
 class GroupAddressFilter:
     """Filters for :func:`~xknxproject.mcp.tools.list_group_addresses`."""
 
-    text: Annotated[
-        str | None,
-        "Case-insensitive match on the address, name, description and comment.",
-    ] = None
-    dpts: Annotated[
-        list[str],
-        'DPTs as "main" or "main.sub" strings; a bare main matches every subtype.',
-    ] = field(default_factory=list)
-    limit: Annotated[int, "Maximum number of results to return."] = 100
-    offset: Annotated[int, "Number of results to skip, for pagination."] = 0
+    text: str | None = field(
+        default=None,
+        metadata={"description": "Case-insensitive match on the address, name, description and comment."},
+    )
+    dpts: list[str] = field(
+        default_factory=list,
+        metadata={"description": 'DPTs as "main" or "main.sub" strings; a bare main matches every subtype.'},
+    )
+    limit: int = field(
+        default=100,
+        metadata={"description": "Maximum number of results to return."},
+    )
+    offset: int = field(
+        default=0,
+        metadata={"description": "Number of results to skip, for pagination."},
+    )
 
 
 @dataclass(frozen=True)
 class DeviceFilter:
     """Filters for :func:`~xknxproject.mcp.tools.list_devices`."""
 
-    text: Annotated[
-        str | None,
-        "Case-insensitive match on the individual address, name, hardware name, "
-        "manufacturer and order number.",
-    ] = None
-    limit: Annotated[int, "Maximum number of results to return."] = 100
-    offset: Annotated[int, "Number of results to skip, for pagination."] = 0
+    text: str | None = field(
+        default=None,
+        metadata={
+            "description": (
+                "Case-insensitive match on the individual address, name, hardware name, "
+                "manufacturer and order number."
+            )
+        },
+    )
+    limit: int = field(
+        default=100,
+        metadata={"description": "Maximum number of results to return."},
+    )
+    offset: int = field(
+        default=0,
+        metadata={"description": "Number of results to skip, for pagination."},
+    )
 
 
 @dataclass(frozen=True)
 class CommunicationObjectFilter:
     """Filters for :func:`~xknxproject.mcp.tools.list_communication_objects`."""
 
-    device_address: Annotated[
-        str | None, "Restrict to one device's objects by individual address."
-    ] = None
-    group_address: Annotated[
-        str | None, "Restrict to objects linked to this group address."
-    ] = None
-    text: Annotated[
-        str | None,
-        "Case-insensitive match on the name, text, function text and description.",
-    ] = None
-    limit: Annotated[int, "Maximum number of results to return."] = 100
-    offset: Annotated[int, "Number of results to skip, for pagination."] = 0
+    device_address: str | None = field(
+        default=None,
+        metadata={"description": "Restrict to one device's objects by individual address."},
+    )
+    group_address: str | None = field(
+        default=None,
+        metadata={"description": "Restrict to objects linked to this group address."},
+    )
+    text: str | None = field(
+        default=None,
+        metadata={"description": "Case-insensitive match on the name, text, function text and description."},
+    )
+    limit: int = field(
+        default=100,
+        metadata={"description": "Maximum number of results to return."},
+    )
+    offset: int = field(
+        default=0,
+        metadata={"description": "Number of results to skip, for pagination."},
+    )
 
 
 @dataclass(frozen=True)
@@ -258,16 +282,22 @@ class ProjectInfoResult:
 class FunctionFilter:
     """Filters for :func:`~xknxproject.mcp.tools.list_functions`."""
 
-    text: Annotated[
-        str | None,
-        "Case-insensitive match on the identifier, name, function_type and usage_text.",
-    ] = None
-    space_id: Annotated[
-        str | None,
-        "Optional parent space identifier to restrict results to a specific floor or room.",
-    ] = None
-    limit: Annotated[int, "Maximum number of results to return."] = 100
-    offset: Annotated[int, "Number of results to skip, for pagination."] = 0
+    text: str | None = field(
+        default=None,
+        metadata={"description": "Case-insensitive match on the identifier, name, function_type and usage_text."},
+    )
+    space_id: str | None = field(
+        default=None,
+        metadata={"description": "Optional parent space identifier to restrict results to a specific floor or room."},
+    )
+    limit: int = field(
+        default=100,
+        metadata={"description": "Maximum number of results to return."},
+    )
+    offset: int = field(
+        default=0,
+        metadata={"description": "Number of results to skip, for pagination."},
+    )
 
 
 @dataclass(frozen=True)
@@ -316,17 +346,26 @@ class FunctionDetail:
 class ChannelFilter:
     """Filters for :func:`~xknxproject.mcp.tools.list_channels`."""
 
-    device_address: Annotated[
-        str | None, "Restrict to channels of this device (individual address)."
-    ] = None
-    functional_block: Annotated[
-        str | None, 'Restrict to channels with this functional block, e.g. "417".'
-    ] = None
-    text: Annotated[
-        str | None, "Case-insensitive match on the channel identifier and name."
-    ] = None
-    limit: Annotated[int, "Maximum number of results to return."] = 100
-    offset: Annotated[int, "Number of results to skip, for pagination."] = 0
+    device_address: str | None = field(
+        default=None,
+        metadata={"description": "Restrict to channels of this device (individual address)."},
+    )
+    functional_block: str | None = field(
+        default=None,
+        metadata={"description": 'Restrict to channels with this functional block, e.g. "417".'},
+    )
+    text: str | None = field(
+        default=None,
+        metadata={"description": "Case-insensitive match on the channel identifier and name."},
+    )
+    limit: int = field(
+        default=100,
+        metadata={"description": "Maximum number of results to return."},
+    )
+    offset: int = field(
+        default=0,
+        metadata={"description": "Number of results to skip, for pagination."},
+    )
 
 
 @dataclass(frozen=True)
@@ -359,14 +398,20 @@ class ChannelDetail:
 class FindSimilarChannelsInput:
     """Input for :func:`~xknxproject.mcp.tools.find_similar_channels`."""
 
-    device_address: Annotated[str, "Individual address of the reference channel's device."]
-    channel_identifier: Annotated[str, 'Identifier of the reference channel, e.g. "CH-1".']
-    match_functional_blocks: Annotated[
-        bool, "Treat channels sharing a functional block as similar."
-    ] = True
-    match_module_definition: Annotated[
-        bool, "Treat channels whose objects share a module definition as similar."
-    ] = True
+    device_address: str = field(
+        metadata={"description": "Individual address of the reference channel's device."}
+    )
+    channel_identifier: str = field(
+        metadata={"description": 'Identifier of the reference channel, e.g. "CH-1".'}
+    )
+    match_functional_blocks: bool = field(
+        default=True,
+        metadata={"description": "Treat channels sharing a functional block as similar."},
+    )
+    match_module_definition: bool = field(
+        default=True,
+        metadata={"description": "Treat channels whose objects share a module definition as similar."},
+    )
 
 
 @dataclass(frozen=True)
