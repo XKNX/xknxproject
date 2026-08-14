@@ -181,3 +181,77 @@ class KNXProject(TypedDict):
     group_addresses: dict[str, GroupAddress]
     group_ranges: dict[str, GroupRange]
     functions: dict[str, Function]
+
+
+class ProductComObject(TypedDict):
+    """
+    A communication object of a product application program.
+
+    Values are the ComObjectRef merged onto its base ComObject (ref wins).
+    """
+
+    identifier: str
+    number: int
+    name: str
+    text: str
+    function_text: str
+    object_size: str
+    dpts: list[DPTType]
+    flags: Flags
+
+
+class ProductParameter(TypedDict):
+    """
+    An application parameter of a product application program.
+
+    ``value`` and ``text`` are the effective defaults: overrides of the
+    parameters (single) ParameterRef win over the Parameter itself.
+    """
+
+    identifier: str
+    name: str | None
+    text: str | None
+    value: str | None  # default value
+    segment: str | None  # segment id; None if not stored in memory
+    offset: int | None  # octet offset within the segment
+    bit_offset: int | None
+    size_in_bit: int | None
+    type: str  # ParameterType restriction kind
+    base: str | None
+    minimum: int | float | None
+    maximum: int | float | None
+    enumerations: dict[int, str]
+
+
+class ProductSegment(TypedDict):
+    """A memory segment of a product application program."""
+
+    identifier: str
+    kind: str  # "relative" | "absolute"
+    size: int | None
+    object_index: int | None  # RelativeSegment LoadStateMachine
+    offset: int | None
+    address: int | None
+    memory_type: str | None
+
+
+class ProductApplicationProgram(TypedDict):
+    """A parsed application program from a product database."""
+
+    identifier: str
+    name: str
+    application_number: int
+    application_version: int
+    mask_version: str
+    pei_type: int | None
+    communication_objects: list[ProductComObject]
+    parameters: list[ProductParameter]
+    segments: list[ProductSegment]
+
+
+class KNXProduct(TypedDict):
+    """Top-level result of parsing a ``.knxprod`` product database."""
+
+    manufacturer: str
+    schema_version: int
+    application_programs: dict[str, ProductApplicationProgram]

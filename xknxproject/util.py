@@ -116,6 +116,16 @@ def parse_xml_flag(flag: str | None, default: bool | None = None) -> bool | None
     return flag == "Enabled"
 
 
+def parse_number(value: str | None) -> int | float | None:
+    """Parse a numeric XML attribute to an int, or a float if not integral."""
+    if value is None:
+        return None
+    try:
+        return int(value)
+    except ValueError:
+        return float(value)
+
+
 def text_parameter_template_replace(
     text: str, parameter: ParameterInstanceRef | None
 ) -> str:

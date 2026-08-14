@@ -47,3 +47,14 @@ The resulting `KNXProject` is a typed dictionary and can be used just like a dic
 You can find an example file (exported JSON) in our test suite under https://github.com/XKNX/xknxproject/tree/main/test/resources/stubs
 
 The full type definition can be found here: https://github.com/XKNX/xknxproject/blob/main/xknxproject/models/knxproject.py
+
+Standalone manufacturer product databases (`.knxprod`) can be parsed with `XKNXProd`, yielding per application program the full static definition: communication objects, parameters and the memory/segment layout.
+
+```python
+"""Extract and parse a KNX product file."""
+from xknxproject.models import KNXProduct
+from xknxproject import XKNXProd
+
+
+product: KNXProduct = XKNXProd("path/to/your/file.knxprod").parse()
+```

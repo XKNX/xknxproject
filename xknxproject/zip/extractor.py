@@ -193,3 +193,52 @@ def _generate_ets6_zip_password(password: str) -> bytes:
             dklen=32,
         )
     )
+
+
+# M-XXXX/....._A-....xml (application program),
+# excluding Catalog/Hardware and Baggages subdirectories
+_APPLICATION_PROGRAM_RE = re.compile(r"^M-[0-9A-Fa-f]{4}/[^/]*_A-[^/]*\.xml$")
+
+
+class KNXProdContents:
+    """Class for holding the contents of a KNXProd (``.knxprod``) file."""
+
+    def __init__(
+        self,
+        root_zip: ZipFile,
+        manufacturer_id: str,
+        xml_namespace: str,
+    ) -> None:
+        """Initialize a KNXProdContents."""
+        self.root = root_zip
+        self.manufacturer_id = manufacturer_id
+        self.xml_namespace = xml_namespace
+        self.schema_version = _get_schema_version(xml_namespace)
+
+    def application_program_paths(self) -> list[ZipPath]:
+        """Return the application-program XML files in the archive."""
+        return [
+            ZipPath(self.root, at=info.filename)
+            for info in self.root.infolist()
+            if _APPLICATION_PROGRAM_RE.match(info.filename)
+        ]
+
+
+@contextmanager
+def extract_prod(archive_path: Path) -> Iterator[KNXProdContents]:
+    """Provide the contents of a ``.knxprod`` product file."""
+    _LOGGER.debug('Opening KNX product file "%s"', archive_path)
+    with ZipFile(archive_path, mode="r") as zip_archive:
+        yield KNXProdContents(
+            root_zip=zip_archive,
+            manufacturer_id=_get_manufacturer_id(zip_archive),
+            xml_namespace=_get_xml_namespace(zip_archive),  # reads knx_master.xml
+        )
+
+
+def _get_manufacturer_id(zip_archive: ZipFile) -> str:
+    """Return the manufacturer id (``M-XXXX``) from the signature marker."""
+    for info in zip_archive.infolist():
+        if info.filename.startswith("M-") and info.filename.endswith(".signature"):
+            return info.filename.removesuffix(".signature")
+    raise ProjectNotFoundException("Manufacturer signature file not found.")

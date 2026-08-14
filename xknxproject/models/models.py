@@ -618,6 +618,106 @@ class ParameterInstanceRef:
 
 
 @dataclass
+class ApplicationProgramSegment:
+    """
+    A code/memory segment of an application program (Static/Code/*).
+
+    ``RelativeSegment`` carries a ``LoadStateMachine`` (the interface object index,
+    e.g. 4/5 for the application program objects) and an ``Offset``;
+    ``AbsoluteSegment`` carries a fixed ``Address`` and ``MemoryType``.
+    """
+
+    __slots__ = (
+        "address",
+        "identifier",
+        "kind",
+        "load_state_machine",
+        "memory_type",
+        "offset",
+        "size",
+    )
+
+    identifier: str  # "Id" - xs:ID
+    kind: str  # "relative" | "absolute" - local name of the segment element
+    size: int | None  # "Size"
+    load_state_machine: int | None  # RelativeSegment "LoadStateMachine"
+    offset: int | None  # RelativeSegment "Offset"
+    address: int | None  # AbsoluteSegment "Address"
+    memory_type: str | None  # AbsoluteSegment "MemoryType"
+
+
+@dataclass
+class ParameterMemory:
+    """The memory location a stored parameter occupies (Parameter/Memory)."""
+
+    __slots__ = ("base_offset_ref", "bit_offset", "offset", "segment_ref")
+
+    segment_ref: str  # "CodeSegment" - IDREF to an ApplicationProgramSegment
+    offset: int  # "Offset" - octet offset within the segment
+    bit_offset: int  # "BitOffset" - bit offset within the octet (MSB = 0)
+    base_offset_ref: str | None  # "BaseOffset" - optional allocator/argument base
+
+
+@dataclass
+class ParameterType:
+    """
+    An application parameter type (Static/ParameterTypes/ParameterType).
+
+    The concrete restriction is a single child element whose local name is
+    recorded in :attr:`kind` (``TypeNumber``, ``TypeFloat``, ``TypeText``,
+    ``TypeRestriction``, …).
+    """
+
+    __slots__ = (
+        "base",
+        "encoding",
+        "enumerations",
+        "identifier",
+        "kind",
+        "maximum",
+        "minimum",
+        "name",
+        "size_in_bit",
+    )
+
+    identifier: str  # "Id" - xs:ID
+    name: str  # "Name"
+    kind: str  # local name of the restriction child element
+    size_in_bit: int | None  # "SizeInBit"; for TypeFloat derived from "Encoding"
+    base: str | None  # TypeRestriction "Base": "Value" | "Text" | "None"
+    minimum: int | float | None  # TypeNumber/TypeFloat "minInclusive"
+    maximum: int | float | None  # TypeNumber/TypeFloat "maxInclusive"
+    encoding: str | None  # TypeFloat "Encoding"
+    enumerations: dict[int, str]  # TypeRestriction enumerations {value: text}
+
+
+@dataclass
+class Parameter:
+    """An application parameter (Static/Parameters/Parameter)."""
+
+    __slots__ = ("identifier", "memory", "name", "parameter_type_ref", "text", "value")
+
+    identifier: str  # "Id" - xs:ID
+    name: str | None  # "Name"
+    text: str | None  # "Text" - language dependent
+    parameter_type_ref: str  # "ParameterType" - IDREF to a ParameterType
+    value: str | None  # "Value" - default value (string; typed per ParameterType)
+    memory: ParameterMemory | None  # child "Memory"; None => not stored in memory
+
+
+@dataclass
+class ParameterRef:
+    """A reference to a parameter (Static/ParameterRefs/ParameterRef)."""
+
+    __slots__ = ("identifier", "ref_id", "text", "value")
+
+    identifier: str  # "Id" - xs:ID
+    ref_id: str  # "RefId" - IDREF to a Parameter
+    value: str | None  # "Value" - optional default override
+    text: str | None  # "Text" - optional override
+
+
+@dataclass
 class ApplicationProgram:
     """Class that represents an ApplicationProgram instance."""
 
@@ -627,6 +727,20 @@ class ApplicationProgram:
     module_def_arguments: dict[str, ModuleDefinitionArgumentInfo]  # {Id: ...}
     numeric_args: dict[str, ModuleDefinitionNumericArg]  # {RefId: ...}
     channels: dict[str, ApplicationProgramChannel]  # {Id: ApplicationProgramChannel}
+    # Product-scope fields, populated by ApplicationProgramLoader.load_static();
+    # left at their defaults when parsing a project (.knxproj).
+    identifier: str = ""  # "Id"
+    name: str = ""  # "Name"
+    application_number: int = 0  # "ApplicationNumber"
+    application_version: int = 0  # "ApplicationVersion"
+    mask_version: str = ""  # "MaskVersion" e.g. "MV-07B0"
+    pei_type: int | None = None  # "PeiType"
+    load_procedure_style: str | None = None  # "LoadProcedureStyle"
+    dynamic_table_management: bool = False  # "DynamicTableManagement"
+    parameters: dict[str, Parameter] = field(default_factory=dict)
+    parameter_types: dict[str, ParameterType] = field(default_factory=dict)
+    parameter_refs: dict[str, ParameterRef] = field(default_factory=dict)
+    segments: dict[str, ApplicationProgramSegment] = field(default_factory=dict)
 
 
 @dataclass

@@ -11,18 +11,32 @@ from xknxproject.models import (
     Allocator,
     ApplicationProgram,
     ApplicationProgramChannel,
+    ApplicationProgramSegment,
     ComObject,
     ComObjectRef,
     DeviceInstance,
     ModuleDefinitionArgumentInfo,
     ModuleDefinitionNumericArg,
+    Parameter,
+    ParameterMemory,
+    ParameterRef,
+    ParameterType,
 )
 from xknxproject.util import (
     parse_dpt_types,
+    parse_number,
     parse_semantics_dpas,
     parse_semantics_functional_blocks,
     parse_xml_flag,
 )
+
+# TypeFloat carries no SizeInBit attribute; the size follows from its encoding
+_FLOAT_ENCODING_SIZES = {
+    "DPT 9": 16,
+    "DPT 14": 32,
+    "IEEE-754 Single": 32,
+    "IEEE-754 Double": 64,
+}
 
 
 class ApplicationProgramLoader:
@@ -251,6 +265,247 @@ class ApplicationProgramLoader:
             datapoint_types=parse_dpt_types(elem.get("DatapointType")),
             text_parameter_ref_id=elem.get("TextParameterRefId"),
             semantics=parse_semantics_dpas(elem.get("Semantics")),
+        )
+
+    @staticmethod
+    def load_static(application_program_path: Path) -> ApplicationProgram:
+        """
+        Load the complete static definition of an application program.
+
+        Unlike :meth:`load`, this is not filtered by device instances (a
+        standalone product has none) and additionally parses parameters,
+        parameter types and the memory/segment layout - the parts a product
+        (``.knxprod``) needs but a project (``.knxproj``) does not.
+        ModuleDefs (instantiation templates) are not included.
+        """
+        com_objects: dict[str, ComObject] = {}
+        com_object_refs: dict[str, ComObjectRef] = {}
+        parameters: dict[str, Parameter] = {}
+        parameter_types: dict[str, ParameterType] = {}
+        parameter_refs: dict[str, ParameterRef] = {}
+        segments: dict[str, ApplicationProgramSegment] = {}
+        app_attrs: dict[str, str] = {}
+
+        with application_program_path.open(mode="rb") as application_xml:
+            tree_iterator = ElementTree.iterparse(
+                application_xml, events=("start", "end")
+            )
+            _, root = next(tree_iterator)
+            namespace = root.tag.split("KNX", maxsplit=1)[0]
+
+            ns_app = f"{namespace}ApplicationProgram"
+            ns_dynamic = f"{namespace}Dynamic"
+            ns_module_defs = f"{namespace}ModuleDefs"
+            ns_com_object = f"{namespace}ComObject"
+            ns_com_object_ref = f"{namespace}ComObjectRef"
+            ns_parameter = f"{namespace}Parameter"
+            ns_parameter_type = f"{namespace}ParameterType"
+            ns_parameter_ref = f"{namespace}ParameterRef"
+            ns_rel_segment = f"{namespace}RelativeSegment"
+            ns_abs_segment = f"{namespace}AbsoluteSegment"
+            ns_memory = f"{namespace}Memory"
+            ns_union = f"{namespace}Union"
+
+            in_union = False
+            for event, elem in tree_iterator:
+                if event == "start":
+                    # identity is only reliably available on the opening tag
+                    if elem.tag == ns_app and not app_attrs:
+                        app_attrs = dict(elem.attrib)
+                    elif elem.tag == ns_union:
+                        in_union = True
+                    elif elem.tag in (ns_module_defs, ns_dynamic):
+                        # ModuleDefs hold instantiation templates (each with its
+                        # own Dynamic section) and the Dynamic section is
+                        # UI/visibility logic; neither is part of the static
+                        # definition. ModuleDefs precede the Dynamic section.
+                        break
+                    continue
+                # event == "end": element and its children are complete
+                _id = elem.get("Id")
+                if elem.tag == ns_com_object and _id:
+                    com_objects[_id] = ApplicationProgramLoader.parse_com_object(
+                        elem, _id
+                    )
+                elif elem.tag == ns_com_object_ref and _id:
+                    com_object_refs[_id] = (
+                        ApplicationProgramLoader.parse_com_object_ref(elem, _id)
+                    )
+                elif elem.tag == ns_parameter and _id:
+                    if in_union:
+                        # parsed by the enclosing Union end tag
+                        continue
+                    parameters[_id] = ApplicationProgramLoader.parse_parameter(
+                        elem, _id, ns_memory
+                    )
+                elif elem.tag == ns_union:
+                    in_union = False
+                    for parameter in ApplicationProgramLoader.parse_union(
+                        elem, ns_memory, ns_parameter
+                    ):
+                        parameters[parameter.identifier] = parameter
+                elif elem.tag == ns_parameter_type and _id:
+                    parameter_types[_id] = (
+                        ApplicationProgramLoader.parse_parameter_type(
+                            elem, _id, namespace
+                        )
+                    )
+                elif elem.tag == ns_parameter_ref and _id:
+                    parameter_refs[_id] = ParameterRef(
+                        identifier=_id,
+                        ref_id=elem.get("RefId"),  # type: ignore[arg-type]
+                        value=elem.get("Value"),
+                        text=elem.get("Text"),
+                    )
+                elif elem.tag in (ns_rel_segment, ns_abs_segment) and _id:
+                    segments[_id] = ApplicationProgramLoader.parse_segment(
+                        elem, _id, relative=elem.tag == ns_rel_segment
+                    )
+                else:
+                    continue
+                elem.clear()
+
+        _pei = app_attrs.get("PeiType")
+        return ApplicationProgram(
+            com_objects=com_objects,
+            com_object_refs=com_object_refs,
+            allocators={},
+            module_def_arguments={},
+            numeric_args={},
+            channels={},
+            identifier=app_attrs.get("Id", ""),
+            name=app_attrs.get("Name", ""),
+            application_number=int(app_attrs.get("ApplicationNumber", 0)),
+            application_version=int(app_attrs.get("ApplicationVersion", 0)),
+            mask_version=app_attrs.get("MaskVersion", ""),
+            pei_type=int(_pei) if _pei is not None else None,
+            load_procedure_style=app_attrs.get("LoadProcedureStyle"),
+            dynamic_table_management=app_attrs.get("DynamicTableManagement") == "true",
+            parameters=parameters,
+            parameter_types=parameter_types,
+            parameter_refs=parameter_refs,
+            segments=segments,
+        )
+
+    @staticmethod
+    def parse_parameter(
+        elem: ElementTree.Element,
+        identifier: str,
+        ns_memory: str,
+        union_memory: ParameterMemory | None = None,
+    ) -> Parameter:
+        """Parse a Parameter tag (with optional Memory child)."""
+        memory: ParameterMemory | None = None
+        mem = elem.find(ns_memory)
+        if mem is not None:
+            memory = ApplicationProgramLoader.parse_memory(mem)
+        elif union_memory is not None:
+            # union member: the shared union Memory shifted by the
+            # Offset/BitOffset attributes of the Parameter tag itself
+            memory = ParameterMemory(
+                segment_ref=union_memory.segment_ref,
+                offset=union_memory.offset + int(elem.get("Offset", 0)),
+                bit_offset=union_memory.bit_offset + int(elem.get("BitOffset", 0)),
+                base_offset_ref=union_memory.base_offset_ref,
+            )
+        return Parameter(
+            identifier=identifier,
+            name=elem.get("Name"),
+            text=elem.get("Text"),
+            parameter_type_ref=elem.get("ParameterType"),  # type: ignore[arg-type]
+            value=elem.get("Value"),
+            memory=memory,
+        )
+
+    @staticmethod
+    def parse_memory(elem: ElementTree.Element) -> ParameterMemory:
+        """Parse a Memory tag."""
+        return ParameterMemory(
+            segment_ref=elem.get("CodeSegment"),  # type: ignore[arg-type]
+            offset=int(elem.get("Offset", 0)),
+            bit_offset=int(elem.get("BitOffset", 0)),
+            base_offset_ref=elem.get("BaseOffset"),
+        )
+
+    @staticmethod
+    def parse_union(
+        elem: ElementTree.Element, ns_memory: str, ns_parameter: str
+    ) -> list[Parameter]:
+        """
+        Parse a Union tag into its member Parameters.
+
+        Union members share one memory block: the union holds the Memory child
+        and each Parameter tag carries its own relative Offset/BitOffset
+        attributes instead of an individual Memory child.
+        """
+        mem = elem.find(ns_memory)
+        union_memory = (
+            ApplicationProgramLoader.parse_memory(mem) if mem is not None else None
+        )
+        return [
+            ApplicationProgramLoader.parse_parameter(
+                parameter, _id, ns_memory, union_memory
+            )
+            for parameter in elem.findall(ns_parameter)
+            if (_id := parameter.get("Id"))
+        ]
+
+    @staticmethod
+    def parse_parameter_type(
+        elem: ElementTree.Element, identifier: str, namespace: str
+    ) -> ParameterType:
+        """Parse a ParameterType tag and its restriction child."""
+        kind = ""
+        size_in_bit: int | None = None
+        base: str | None = None
+        minimum: int | float | None = None
+        maximum: int | float | None = None
+        encoding: str | None = None
+        enumerations: dict[int, str] = {}
+
+        for child in elem:  # the single restriction child (TypeNumber/TypeText/...)
+            kind = child.tag.removeprefix(namespace)
+            _size = child.get("SizeInBit")
+            size_in_bit = int(_size) if _size is not None else None
+            base = child.get("Base")
+            minimum = parse_number(child.get("minInclusive"))
+            maximum = parse_number(child.get("maxInclusive"))
+            encoding = child.get("Encoding")
+            if size_in_bit is None and encoding is not None:
+                size_in_bit = _FLOAT_ENCODING_SIZES.get(encoding)
+            for enum in child.findall(f"{namespace}Enumeration"):
+                enumerations[int(enum.get("Value", 0))] = enum.get("Text", "")
+            break
+
+        return ParameterType(
+            identifier=identifier,
+            name=elem.get("Name", ""),
+            kind=kind,
+            size_in_bit=size_in_bit,
+            base=base,
+            minimum=minimum,
+            maximum=maximum,
+            encoding=encoding,
+            enumerations=enumerations,
+        )
+
+    @staticmethod
+    def parse_segment(
+        elem: ElementTree.Element, identifier: str, relative: bool
+    ) -> ApplicationProgramSegment:
+        """Parse a RelativeSegment / AbsoluteSegment tag."""
+        _size = elem.get("Size")
+        _lsm = elem.get("LoadStateMachine")
+        _offset = elem.get("Offset")
+        _address = elem.get("Address")
+        return ApplicationProgramSegment(
+            identifier=identifier,
+            kind="relative" if relative else "absolute",
+            size=int(_size) if _size is not None else None,
+            load_state_machine=int(_lsm) if _lsm is not None else None,
+            offset=int(_offset) if _offset is not None else None,
+            address=int(_address) if _address is not None else None,
+            memory_type=elem.get("MemoryType"),
         )
 
     @staticmethod
