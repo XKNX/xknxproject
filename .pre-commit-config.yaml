@@ -11,12 +11,13 @@ repos:
     # Ruff version.
     rev: 'v0.16.3'
     hooks:
-      - id: ruff
+      - id: ruff-check
         # in CI it is directly run by tox to allow dependency upgrade checks
         stages: [pre-commit]
         args: [ --fix, --exit-non-zero-on-fix ]
       - id: ruff-format
-        files: ^((xknxproject|test)/.+)?[^/]+\.py$
+        # markdown: `ruff format` formats python code blocks in documentation
+        types_or: [python, pyi, markdown]
         # in CI it is directly run by tox to allow dependency upgrade checks
         stages: [pre-commit]
   - repo: https://github.com/pre-commit/pre-commit-hooks

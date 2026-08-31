@@ -31,6 +31,7 @@ Not all supported languages are included in project / application data. If the c
 
 ```python
 """Extract and parse a KNX project file."""
+
 from xknxproject.models import KNXProject
 from xknxproject import XKNXProj
 
