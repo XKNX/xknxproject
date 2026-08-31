@@ -73,14 +73,18 @@ def test_list_group_addresses_pagination(project: KNXProject) -> None:
 
 def test_list_group_addresses_text_and_dpt_filters(project: KNXProject) -> None:
     """Text matches the address; a bare DPT main matches every subtype."""
-    by_text = asyncio.run(list_group_addresses(project, GroupAddressFilter(text="1/0/0")))
+    by_text = asyncio.run(
+        list_group_addresses(project, GroupAddressFilter(text="1/0/0"))
+    )
     assert by_text.total_count == 1
     assert by_text.group_addresses[0].address == "1/0/0"
     assert by_text.group_addresses[0].dpt == "1.008"
 
     by_dpt = asyncio.run(list_group_addresses(project, GroupAddressFilter(dpts=["9"])))
     assert by_dpt.total_count == 8
-    assert all(ga.dpt is not None and ga.dpt.startswith("9") for ga in by_dpt.group_addresses)
+    assert all(
+        ga.dpt is not None and ga.dpt.startswith("9") for ga in by_dpt.group_addresses
+    )
 
 
 def test_describe_group_address(project: KNXProject) -> None:
@@ -118,13 +122,17 @@ def test_list_devices(project: KNXProject) -> None:
 def test_list_communication_objects_filters(project: KNXProject) -> None:
     """Communication objects scope to a device and/or a linked group address."""
     by_device = asyncio.run(
-        list_communication_objects(project, CommunicationObjectFilter(device_address="1.1.5"))
+        list_communication_objects(
+            project, CommunicationObjectFilter(device_address="1.1.5")
+        )
     )
     assert by_device.total_count > 0
     assert all(co.device_address == "1.1.5" for co in by_device.communication_objects)
 
     by_ga = asyncio.run(
-        list_communication_objects(project, CommunicationObjectFilter(group_address="1/0/0"))
+        list_communication_objects(
+            project, CommunicationObjectFilter(group_address="1/0/0")
+        )
     )
     assert by_ga.total_count == 1
     assert "1/0/0" in by_ga.communication_objects[0].group_address_links
@@ -148,7 +156,9 @@ def test_list_locations(project: KNXProject) -> None:
 @pytest.fixture(name="project_with_functions")
 def project_with_functions_fixture() -> KNXProject:
     """Load the parsed ``testprojekt-ets6-functions`` stub as a KNXProject."""
-    with (STUBS_PATH / "testprojekt-ets6-functions.json").open(encoding="utf-8") as stub:
+    with (STUBS_PATH / "testprojekt-ets6-functions.json").open(
+        encoding="utf-8"
+    ) as stub:
         return cast(KNXProject, json.load(stub))
 
 
@@ -175,7 +185,9 @@ def test_list_functions(project_with_functions: KNXProject) -> None:
 
     # A non-matching space_id excludes the function.
     other_space = asyncio.run(
-        list_functions(project_with_functions, FunctionFilter(space_id="does-not-exist"))
+        list_functions(
+            project_with_functions, FunctionFilter(space_id="does-not-exist")
+        )
     )
     assert other_space.total_count == 0
 
@@ -205,7 +217,6 @@ def test_describe_function_missing(project_with_functions: KNXProject) -> None:
     assert detail.group_addresses == []
 
 
-
 @pytest.fixture(name="smart")
 def smart_linking_fixture() -> KNXProject:
     """Load the parsed ``smart_linking`` stub (rich channels/functional-blocks/DPAs)."""
@@ -227,7 +238,9 @@ def test_device_summary_exposes_channels(smart: KNXProject) -> None:
 def test_communication_object_summary_exposes_semantics(smart: KNXProject) -> None:
     """Communication objects now carry channel and DPA semantics."""
     result = asyncio.run(
-        list_communication_objects(smart, CommunicationObjectFilter(group_address="0/0/1"))
+        list_communication_objects(
+            smart, CommunicationObjectFilter(group_address="0/0/1")
+        )
     )
     comobj = result.communication_objects[0]
     assert comobj.channel == "CH-1"
@@ -269,7 +282,10 @@ def test_describe_channel_missing(smart: KNXProject) -> None:
 def test_find_similar_channels(smart: KNXProject) -> None:
     """Similar channels are found by functional block and their GAs aligned by DPA."""
     result = asyncio.run(
-        find_similar_channels(smart, FindSimilarChannelsInput(device_address="1.0.1", channel_identifier="CH-1"))
+        find_similar_channels(
+            smart,
+            FindSimilarChannelsInput(device_address="1.0.1", channel_identifier="CH-1"),
+        )
     )
     assert result.found
     assert result.reference is not None
@@ -281,7 +297,11 @@ def test_find_similar_channels(smart: KNXProject) -> None:
 
     # The reference's "417.52" object aligns with the same slot on the other channels.
     slot = next(a for a in result.aligned_group_objects if a.key == "417.52")
-    ref_entry = next(e for e in slot.entries if e.device_address == "1.0.1" and e.channel_identifier == "CH-1")
+    ref_entry = next(
+        e
+        for e in slot.entries
+        if e.device_address == "1.0.1" and e.channel_identifier == "CH-1"
+    )
     assert ref_entry.group_addresses == ["0/0/1"]
     assert any(e.device_address == "1.0.2" for e in slot.entries)
 
@@ -289,7 +309,12 @@ def test_find_similar_channels(smart: KNXProject) -> None:
 def test_find_similar_channels_missing(smart: KNXProject) -> None:
     """An unknown reference channel returns an empty, not-found result."""
     result = asyncio.run(
-        find_similar_channels(smart, FindSimilarChannelsInput(device_address="1.0.1", channel_identifier="CH-999"))
+        find_similar_channels(
+            smart,
+            FindSimilarChannelsInput(
+                device_address="1.0.1", channel_identifier="CH-999"
+            ),
+        )
     )
     assert not result.found
     assert result.reference is None
@@ -308,7 +333,9 @@ def _module_project() -> KNXProject:
         "read_on_init": False,
     }
 
-    def comobj(number: int, device: str, channel: str, module: object, dpas: object) -> dict:
+    def comobj(
+        number: int, device: str, channel: str, module: object, dpas: object
+    ) -> dict:
         return {
             "name": f"CO{number}",
             "number": number,
@@ -352,22 +379,35 @@ def _module_project() -> KNXProject:
         KNXProject,
         {
             "info": {
-                "project_id": "P", "name": "mod", "last_modified": None,
-                "group_address_style": "ThreeLevel", "guid": "g", "created_by": "ETS",
-                "schema_version": "21", "tool_version": "6", "xknxproject_version": "3.9.0",
+                "project_id": "P",
+                "name": "mod",
+                "last_modified": None,
+                "group_address_style": "ThreeLevel",
+                "guid": "g",
+                "created_by": "ETS",
+                "schema_version": "21",
+                "tool_version": "6",
+                "xknxproject_version": "3.9.0",
                 "language_code": None,
             },
             "communication_objects": {
                 "A/O-1": comobj(1, "1.1.1", "CH-A", mod, []),
                 "B/O-1": comobj(1, "1.1.2", "CH-B", mod, []),
-                "B/O-2": comobj(2, "1.1.2", "CH-B", None, []),  # no module, no dpa -> num key
+                "B/O-2": comobj(
+                    2, "1.1.2", "CH-B", None, []
+                ),  # no module, no dpa -> num key
             },
             "devices": {
-                "1.1.1": device("1.1.1", "CH-A", ["A/O-1", "A/O-missing"]),  # dangling id
+                "1.1.1": device(
+                    "1.1.1", "CH-A", ["A/O-1", "A/O-missing"]
+                ),  # dangling id
                 "1.1.2": device("1.1.2", "CH-B", ["B/O-1", "B/O-2"]),
             },
-            "topology": {}, "locations": {}, "group_addresses": {},
-            "group_ranges": {}, "functions": {},
+            "topology": {},
+            "locations": {},
+            "group_addresses": {},
+            "group_ranges": {},
+            "functions": {},
         },
     )
 
@@ -383,7 +423,8 @@ def test_find_similar_channels_by_module() -> None:
 
     result = asyncio.run(
         find_similar_channels(
-            project, FindSimilarChannelsInput(device_address="1.1.1", channel_identifier="CH-A")
+            project,
+            FindSimilarChannelsInput(device_address="1.1.1", channel_identifier="CH-A"),
         )
     )
     assert result.found
