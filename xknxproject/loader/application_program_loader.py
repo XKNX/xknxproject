@@ -58,6 +58,9 @@ class ApplicationProgramLoader:
             str, ApplicationProgramChannel
         ] = {}  # {Id: ApplicationProgramChannel}
         allocators: dict[str, Allocator] = {}
+        # `iterparse` yields `Any` since the type depends on the requested events;
+        # with `events=("start",)` it is always an `Element`
+        elem: ElementTree.Element
 
         with application_program_path.open(mode="rb") as application_xml:
             tree_iterator = ElementTree.iterparse(application_xml, events=("start",))
