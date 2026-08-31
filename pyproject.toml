@@ -114,6 +114,7 @@ select = [
   "D",     # pydocstyle
   "E",     # pycodestyle
   "F",     # pyflakes
+  "FA",    # future annotations
   "FLY",   # flynt
   "FURB",  # refurb
   "G",     # logging
