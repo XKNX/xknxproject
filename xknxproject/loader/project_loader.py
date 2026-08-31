@@ -255,11 +255,10 @@ class _TopologyLoader:
         ]
 
         com_obj_inst_refs = [
-            com_obj_inst_ref
+            self._create_com_object_instance(elem)
             for elem in device_element.findall(
                 "{*}ComObjectInstanceRefs/{*}ComObjectInstanceRef"
             )
-            if (com_obj_inst_ref := self._create_com_object_instance(elem)) is not None
         ]
 
         module_instances = [
@@ -340,16 +339,23 @@ class _TopologyLoader:
     def _create_com_object_instance(
         self,
         com_object: ElementTree.Element,
-    ) -> ComObjectInstanceRef | None:
-        """Create ComObjectInstanceRef."""
+    ) -> ComObjectInstanceRef:
+        """
+        Create ComObjectInstanceRef.
+
+        A ``ComObjectInstanceRef`` without group address links is still kept: it
+        is an instantiated communication object of the device (it appears in the
+        device's ``GroupObjectTree``) and carries the flags/DPT the device was
+        programmed with, which downstream consumers need to reconstruct the full
+        Group Object Table. The high-level ``KNXProject`` view still filters
+        link-less objects out of ``communication_objects`` (see ``_transform``),
+        so this does not change that output.
+        """
 
         if self.__knx_proj_contents.schema_version < ETS_5_7_SCHEMA_VERSION:
             links = self.__get_links_from_schema_1x(com_object)
         else:
             links = self.__get_links_from_schema_2x(com_object)
-
-        if not links:
-            return None
 
         return ComObjectInstanceRef(
             identifier=com_object.get("Id"),
