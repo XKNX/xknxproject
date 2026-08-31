@@ -33,7 +33,7 @@ class CommunicationObject(TypedDict):
     description: str
     device_address: str
     device_application: str | None
-    module: ModuleInstanceInfos | None
+    module_def: ModuleInstanceInfos | None
     channel: str | None
     dpts: list[DPTType]
     object_size: str
