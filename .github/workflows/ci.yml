@@ -38,6 +38,26 @@ jobs:
           path: .coverage
           include-hidden-files: true
 
+  memory:
+    name: Memory usage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: "pip"
+          cache-dependency-path: |
+            requirements_production.txt
+      - name: Install dependencies
+        run: |
+          pip install -r requirements_production.txt
+      - name: Measure peak memory usage of parsing
+        run: |
+          set -o pipefail
+          python3 -m script.memory_usage | tee -a "$GITHUB_STEP_SUMMARY"
+
   coverage:
     name: Process test coverage
     runs-on: ubuntu-latest
