@@ -131,7 +131,7 @@ def _summarize_comobj(comobj: CommunicationObject) -> CommunicationObjectSummary
         group_address_links=list(comobj["group_address_links"]),
         channel=comobj.get("channel"),
         dpas=list(comobj.get("dpas") or []),
-        module=_module_ref(comobj.get("module")),
+        module=_module_ref(comobj.get("module_def")),
     )
 
 
@@ -431,7 +431,7 @@ def _module_definitions(project: KNXProject, channel: Channel) -> set[str]:
     definitions: set[str] = set()
     for co_id in channel["communication_object_ids"]:
         comobj = project["communication_objects"].get(co_id)
-        module = comobj.get("module") if comobj is not None else None
+        module = comobj.get("module_def") if comobj is not None else None
         if module is not None:
             definitions.add(module["definition"])
     return definitions
@@ -446,7 +446,7 @@ def _alignment_key(comobj: CommunicationObject) -> str:
     dpas = comobj.get("dpas")
     if dpas:
         return dpas[0]
-    module = comobj.get("module")
+    module = comobj.get("module_def")
     if module is not None:
         return f"root:{module['root_number']}"
     return f"num:{comobj['number']}"

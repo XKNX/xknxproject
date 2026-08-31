@@ -317,7 +317,7 @@ def _module_project() -> KNXProject:
             "description": "",
             "device_address": device,
             "device_application": None,
-            "module": module,
+            "module_def": module,
             "channel": channel,
             "dpts": [],
             "object_size": "1 Bit",
