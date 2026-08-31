@@ -384,7 +384,7 @@ class ComObjectInstanceRef:
     datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS
     description: str | None  # "Description" - language dependent
     channel: str | None  # "ChannelId" - knx:IDREFS
-    links: list[str] | None  # "Links" - knx:RELIDREFS
+    links: list[str]  # "Links" - knx:RELIDREFS (always a list; empty when link-less)
 
     # resolved via Hardware.xml from the containing DeviceInstance
     application_program_id_prefix: str = (
@@ -430,10 +430,29 @@ class ComObjectInstanceRef:
                 self.identifier,
             )
             return
-        com_object_ref = application.com_object_refs[self.com_object_ref_id]
+        # A com object instance without group address links is kept (it is still an
+        # instantiated object of the device), but such an object can carry a RefId that
+        # does not resolve in the application program (module-instance stripping edge
+        # cases, template objects). Degrade to a warning instead of aborting the whole
+        # project parse: the object stays, only its merged application info is missing.
+        com_object_ref = application.com_object_refs.get(self.com_object_ref_id)
+        if com_object_ref is None:
+            _LOGGER.warning(
+                "ComObjectInstanceRef %s references unknown ComObjectRef %s",
+                self.identifier,
+                self.com_object_ref_id,
+            )
+            return
         self._merge_from_parent_object(com_object_ref, parameters=parameters)
 
-        com_object = application.com_objects[com_object_ref.ref_id]
+        com_object = application.com_objects.get(com_object_ref.ref_id)
+        if com_object is None:
+            _LOGGER.warning(
+                "ComObjectRef %s references unknown ComObject %s",
+                self.com_object_ref_id,
+                com_object_ref.ref_id,
+            )
+            return
         self._merge_from_parent_object(com_object, parameters=parameters)
 
     def _merge_from_parent_object(

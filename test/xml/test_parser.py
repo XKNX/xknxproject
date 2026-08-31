@@ -32,7 +32,17 @@ def test_parse_project_ets6() -> None:
     assert len(parser.areas[1].lines) == 2
     assert len(parser.areas[1].lines[1].devices) == 3
     assert len(parser.areas[1].lines[1].devices[0].additional_addresses) == 4
-    assert len(parser.areas[1].lines[1].devices[1].com_object_instance_refs) == 2
+    # All instantiated communication objects are exposed, including those with no
+    # group address links; the subset that carries links stays at 2.
+    _device = parser.areas[1].lines[1].devices[1]
+    assert len(_device.com_object_instance_refs) == 8
+    _linkless = [c for c in _device.com_object_instance_refs if not c.links]
+    assert len(_linkless) == 6
+    assert sum(bool(c.links) for c in _device.com_object_instance_refs) == 2
+    # The kept link-less objects are usable, not just present: each is merged from the
+    # application program (com object number and DPT), which is the point of keeping them.
+    assert all(c.number is not None for c in _linkless)
+    assert all(c.datapoint_types for c in _linkless)
     assert parser.areas[1].lines[1].devices[0].manufacturer_name == "MDT technologies"
 
 
