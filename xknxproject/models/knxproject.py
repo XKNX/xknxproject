@@ -51,6 +51,24 @@ class ModuleInstanceInfos(TypedDict):
     )
 
 
+class BusInterface(TypedDict):
+    """Secure credentials associated with a device bus interface."""
+
+    password: str
+    password_hash: str
+
+
+class SecureInfo(TypedDict):
+    """Security credentials exported by ETS for a device."""
+
+    device_authentication_code: str
+    device_authentication_code_hash: str
+    device_management_password: str
+    device_management_password_hash: str
+    tool_key: str
+    bus_interfaces: dict[str, BusInterface]
+
+
 class Device(TypedDict):
     """Devices dictionary."""
 
@@ -71,6 +89,12 @@ class Device(TypedDict):
     communication_part_loaded: bool
     medium_config_loaded: bool
     parameters_loaded: bool
+
+
+class SecureDevice(Device):
+    """Device dictionary including opt-in ETS security information."""
+
+    secure_info: SecureInfo
 
 
 class Channel(TypedDict):

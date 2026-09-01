@@ -3,6 +3,7 @@
 # flake8: noqa
 from .knxproject import (
     Area,
+    BusInterface,
     Channel,
     CommunicationObject,
     Device,
@@ -15,6 +16,8 @@ from .knxproject import (
     KNXProject,
     Line,
     ProjectInfo,
+    SecureDevice,
+    SecureInfo,
     Space,
 )
 from .models import (
@@ -36,12 +39,14 @@ from .models import (
     Product,
     TranslationsType,
     XMLArea,
+    XMLBusInterface,
     XMLFunction,
     XMLGroupAddress,
     XMLGroupAddressRef,
     XMLGroupRange,
     XMLLine,
     XMLProjectInformation,
+    XMLSecureInfo,
     XMLSpace,
 )
 from .static import MEDIUM_TYPES, GroupAddressStyle, SpaceType
