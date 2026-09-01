@@ -8,7 +8,7 @@
     "created_by": "ETS6",
     "schema_version": "23",
     "tool_version": "6.4.8718.0",
-    "xknxproject_version": "3.9.0",
+    "xknxproject_version": "3.10.0",
     "language_code": "de-DE"
   },
   "communication_objects": {
@@ -1244,7 +1244,14 @@
       "application": "M-00C5_A-0717-11-0D5A",
       "project_uid": 10,
       "communication_object_ids": [],
-      "channels": {}
+      "channels": {},
+      "serial_number": "",
+      "last_download": "",
+      "individual_address_loaded": false,
+      "application_program_loaded": false,
+      "communication_part_loaded": false,
+      "medium_config_loaded": false,
+      "parameters_loaded": false
     },
     "1.0.1": {
       "name": "AH3F16H-SEC Schaltaktor 3f",
@@ -1299,7 +1306,14 @@
             "417"
           ]
         }
-      }
+      },
+      "serial_number": "",
+      "last_download": "",
+      "individual_address_loaded": false,
+      "application_program_loaded": false,
+      "communication_part_loaded": false,
+      "medium_config_loaded": false,
+      "parameters_loaded": false
     },
     "1.0.2": {
       "name": "SpaceLogic KNX, Secure, Schalter/Jalousie 8-fach, Master",
@@ -1415,7 +1429,14 @@
             "417"
           ]
         }
-      }
+      },
+      "serial_number": "",
+      "last_download": "",
+      "individual_address_loaded": false,
+      "application_program_loaded": false,
+      "communication_part_loaded": false,
+      "medium_config_loaded": false,
+      "parameters_loaded": false
     },
     "1.1.0": {
       "name": "KNX RF Multi/TP Medienkoppler",
@@ -1427,7 +1448,14 @@
       "application": "M-007C_A-001C-14-E802",
       "project_uid": 58,
       "communication_object_ids": [],
-      "channels": {}
+      "channels": {},
+      "serial_number": "",
+      "last_download": "",
+      "individual_address_loaded": false,
+      "application_program_loaded": false,
+      "communication_part_loaded": false,
+      "medium_config_loaded": false,
+      "parameters_loaded": false
     },
     "1.1.1": {
       "name": "KNX RF+ Heizkörperthermostat mit Display und Longlife-Batterie, Secure",
@@ -1465,7 +1493,14 @@
           ],
           "functional_blocks": null
         }
-      }
+      },
+      "serial_number": "",
+      "last_download": "",
+      "individual_address_loaded": false,
+      "application_program_loaded": false,
+      "communication_part_loaded": false,
+      "medium_config_loaded": false,
+      "parameters_loaded": false
     },
     "1.1.2": {
       "name": "KNX RF+ LED Controller CC/CV 60W / 230V 2-Kanäle, Secure",
@@ -1498,7 +1533,14 @@
             "427"
           ]
         }
-      }
+      },
+      "serial_number": "",
+      "last_download": "",
+      "individual_address_loaded": false,
+      "application_program_loaded": false,
+      "communication_part_loaded": false,
+      "medium_config_loaded": false,
+      "parameters_loaded": false
     }
   },
   "group_addresses": {

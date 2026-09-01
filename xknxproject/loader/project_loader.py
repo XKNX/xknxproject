@@ -310,6 +310,16 @@ class _TopologyLoader:
             com_object_instance_refs=com_obj_inst_refs,
             module_instances=module_instances,
             parameter_instance_refs=parameter_instances,
+            serial_number=device_element.get("SerialNumber", ""),
+            last_download=device_element.get("LastDownload", ""),
+            individual_address_loaded=device_element.get("IndividualAddressLoaded")
+            == "true",
+            application_program_loaded=device_element.get("ApplicationProgramLoaded")
+            == "true",
+            communication_part_loaded=device_element.get("CommunicationPartLoaded")
+            == "true",
+            medium_config_loaded=device_element.get("MediumConfigLoaded") == "true",
+            parameters_loaded=device_element.get("ParametersLoaded") == "true",
         )
 
     @staticmethod

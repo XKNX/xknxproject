@@ -141,6 +141,13 @@ class DeviceInstance:
         module_instances: list[ModuleInstance],
         parameter_instance_refs: dict[str, ParameterInstanceRef],
         com_objects: list[ComObject] | None = None,
+        serial_number: str = "",
+        last_download: str = "",
+        individual_address_loaded: bool = False,
+        application_program_loaded: bool = False,
+        communication_part_loaded: bool = False,
+        medium_config_loaded: bool = False,
+        parameters_loaded: bool = False,
     ) -> None:
         """Initialize a Device Instance."""
         self.identifier = identifier
@@ -151,6 +158,15 @@ class DeviceInstance:
         self.last_modified = last_modified
         self.product_ref = product_ref
         self.hardware_program_ref = hardware_program_ref
+        # Commissioning state (what ETS shows as the per-device "loaded" ticks, serial number and
+        # last download time). Empty/False when the project was never downloaded to the device.
+        self.serial_number = serial_number
+        self.last_download = last_download
+        self.individual_address_loaded = individual_address_loaded
+        self.application_program_loaded = application_program_loaded
+        self.communication_part_loaded = communication_part_loaded
+        self.medium_config_loaded = medium_config_loaded
+        self.parameters_loaded = parameters_loaded
         self.line = line
         self.area_address = line.area.address  # used for sorting
         self.line_address = line.address  # used for sorting

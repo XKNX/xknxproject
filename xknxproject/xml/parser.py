@@ -348,6 +348,13 @@ class XMLParser:
                 project_uid=device.project_uid,
                 communication_object_ids=device_com_objects,
                 channels=channels,
+                serial_number=device.serial_number,
+                last_download=device.last_download,
+                individual_address_loaded=device.individual_address_loaded,
+                application_program_loaded=device.application_program_loaded,
+                communication_part_loaded=device.communication_part_loaded,
+                medium_config_loaded=device.medium_config_loaded,
+                parameters_loaded=device.parameters_loaded,
             )
 
         topology_dict: dict[str, Area] = {}
