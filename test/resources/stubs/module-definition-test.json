@@ -903,7 +903,7 @@
         }
       },
       "serial_number": "",
-      "last_download": "",
+      "last_download": null,
       "individual_address_loaded": false,
       "application_program_loaded": false,
       "communication_part_loaded": false,
@@ -1000,7 +1000,7 @@
         }
       },
       "serial_number": "",
-      "last_download": "",
+      "last_download": null,
       "individual_address_loaded": false,
       "application_program_loaded": false,
       "communication_part_loaded": false,
@@ -1027,7 +1027,7 @@
       ],
       "channels": {},
       "serial_number": "",
-      "last_download": "",
+      "last_download": null,
       "individual_address_loaded": false,
       "application_program_loaded": false,
       "communication_part_loaded": false,
@@ -1085,7 +1085,7 @@
         }
       },
       "serial_number": "",
-      "last_download": "",
+      "last_download": null,
       "individual_address_loaded": false,
       "application_program_loaded": false,
       "communication_part_loaded": false,

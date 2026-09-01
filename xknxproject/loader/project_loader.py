@@ -300,7 +300,7 @@ class _TopologyLoader:
             project_uid=int(project_uid) if project_uid else None,
             name=device_element.get("Name", ""),
             description=device_element.get("Description", ""),
-            last_modified=device_element.get("LastModified", ""),
+            last_modified=device_element.get("LastModified"),
             product_ref=product_ref,
             hardware_program_ref=device_element.get("Hardware2ProgramRefId", ""),
             line=line,
@@ -311,7 +311,7 @@ class _TopologyLoader:
             module_instances=module_instances,
             parameter_instance_refs=parameter_instances,
             serial_number=device_element.get("SerialNumber", ""),
-            last_download=device_element.get("LastDownload", ""),
+            last_download=device_element.get("LastDownload"),
             individual_address_loaded=device_element.get("IndividualAddressLoaded")
             == "true",
             application_program_loaded=device_element.get("ApplicationProgramLoaded")

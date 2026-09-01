@@ -130,7 +130,7 @@ class DeviceInstance:
         project_uid: int | None,
         name: str,
         description: str,
-        last_modified: str,
+        last_modified: str | None,
         product_ref: str,
         hardware_program_ref: str,
         line: XMLLine,
@@ -142,7 +142,7 @@ class DeviceInstance:
         parameter_instance_refs: dict[str, ParameterInstanceRef],
         com_objects: list[ComObject] | None = None,
         serial_number: str = "",
-        last_download: str = "",
+        last_download: str | None = None,
         individual_address_loaded: bool = False,
         application_program_loaded: bool = False,
         communication_part_loaded: bool = False,
@@ -158,8 +158,10 @@ class DeviceInstance:
         self.last_modified = last_modified
         self.product_ref = product_ref
         self.hardware_program_ref = hardware_program_ref
-        # Commissioning state (what ETS shows as the per-device "loaded" ticks, serial number and
-        # last download time). Empty/False when the project was never downloaded to the device.
+        # Commissioning state, as ETS records it per device: the "loaded" ticks, serial number and
+        # last download time. Taken verbatim from the device's project attributes - last_download
+        # is the raw LastDownload string (or None when the attribute is absent), serial_number
+        # defaults to "" and the loaded flags to False when their attributes are absent.
         self.serial_number = serial_number
         self.last_download = last_download
         self.individual_address_loaded = individual_address_loaded
