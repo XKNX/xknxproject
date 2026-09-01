@@ -130,7 +130,7 @@ class DeviceInstance:
         project_uid: int | None,
         name: str,
         description: str,
-        last_modified: str,
+        last_modified: str | None,
         product_ref: str,
         hardware_program_ref: str,
         line: XMLLine,
@@ -141,6 +141,13 @@ class DeviceInstance:
         module_instances: list[ModuleInstance],
         parameter_instance_refs: dict[str, ParameterInstanceRef],
         com_objects: list[ComObject] | None = None,
+        serial_number: str = "",
+        last_download: str | None = None,
+        individual_address_loaded: bool = False,
+        application_program_loaded: bool = False,
+        communication_part_loaded: bool = False,
+        medium_config_loaded: bool = False,
+        parameters_loaded: bool = False,
     ) -> None:
         """Initialize a Device Instance."""
         self.identifier = identifier
@@ -151,6 +158,17 @@ class DeviceInstance:
         self.last_modified = last_modified
         self.product_ref = product_ref
         self.hardware_program_ref = hardware_program_ref
+        # Commissioning state, as ETS records it per device: the "loaded" ticks, serial number and
+        # last download time. Taken verbatim from the device's project attributes - last_download
+        # is the raw LastDownload string (or None when the attribute is absent), serial_number
+        # defaults to "" and the loaded flags to False when their attributes are absent.
+        self.serial_number = serial_number
+        self.last_download = last_download
+        self.individual_address_loaded = individual_address_loaded
+        self.application_program_loaded = application_program_loaded
+        self.communication_part_loaded = communication_part_loaded
+        self.medium_config_loaded = medium_config_loaded
+        self.parameters_loaded = parameters_loaded
         self.line = line
         self.area_address = line.area.address  # used for sorting
         self.line_address = line.address  # used for sorting

@@ -8,7 +8,7 @@
     "created_by": "ETS5",
     "schema_version": "20",
     "tool_version": "5.7.1428.39779",
-    "xknxproject_version": "3.9.0",
+    "xknxproject_version": "3.10.0",
     "language_code": null
   },
   "communication_objects": {
@@ -676,7 +676,14 @@
       "application": "M-0083_A-0139-22-F35B-O0072",
       "project_uid": 25,
       "communication_object_ids": [],
-      "channels": {}
+      "channels": {},
+      "serial_number": "AIN6QBMW",
+      "last_download": null,
+      "individual_address_loaded": false,
+      "application_program_loaded": false,
+      "communication_part_loaded": false,
+      "medium_config_loaded": false,
+      "parameters_loaded": false
     },
     "1.1.5": {
       "name": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
@@ -696,7 +703,14 @@
         "1.1.5/O-101_R-1578",
         "1.1.5/O-4_R-1417"
       ],
-      "channels": {}
+      "channels": {},
+      "serial_number": "",
+      "last_download": null,
+      "individual_address_loaded": false,
+      "application_program_loaded": false,
+      "communication_part_loaded": false,
+      "medium_config_loaded": false,
+      "parameters_loaded": false
     },
     "1.1.6": {
       "name": "AE/S4.2 Analogue Input,4-fold,MDRC",
@@ -713,7 +727,14 @@
         "1.1.6/O-9_R-9073",
         "1.1.6/O-18_R-7994"
       ],
-      "channels": {}
+      "channels": {},
+      "serial_number": "",
+      "last_download": null,
+      "individual_address_loaded": false,
+      "application_program_loaded": false,
+      "communication_part_loaded": false,
+      "medium_config_loaded": false,
+      "parameters_loaded": false
     },
     "1.1.7": {
       "name": "Custom name prefix - Heizungsaktor 6fach mit Regler",
@@ -865,7 +886,14 @@
           ],
           "functional_blocks": null
         }
-      }
+      },
+      "serial_number": "",
+      "last_download": null,
+      "individual_address_loaded": false,
+      "application_program_loaded": false,
+      "communication_part_loaded": false,
+      "medium_config_loaded": false,
+      "parameters_loaded": false
     }
   },
   "group_addresses": {

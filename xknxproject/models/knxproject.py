@@ -64,6 +64,13 @@ class Device(TypedDict):
     project_uid: int | None
     communication_object_ids: list[str]
     channels: dict[str, Channel]  # id: Channel
+    serial_number: str
+    last_download: str | None
+    individual_address_loaded: bool
+    application_program_loaded: bool
+    communication_part_loaded: bool
+    medium_config_loaded: bool
+    parameters_loaded: bool
 
 
 class Channel(TypedDict):
