@@ -1,16 +1,44 @@
 """Test reading KNX projects."""
 
+from io import BytesIO
+from zipfile import ZipFile
+
 from pytest import raises
 
-from xknxproject.exceptions import InvalidPasswordException
+from xknxproject.exceptions import InvalidPasswordException, UnexpectedFileContent
 from xknxproject.zip import extract
-from xknxproject.zip.extractor import _generate_ets6_zip_password
+from xknxproject.zip.extractor import (
+    _generate_ets6_zip_password,
+    _get_xml_namespace,
+)
 
 from .. import RESOURCES_PATH
 
 xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
 xknx_test_project_ets5 = RESOURCES_PATH / "xknx_test_project_no_password.knxproj"
 xknx_test_project_protected_ets6 = RESOURCES_PATH / "testprojekt-ets6.knxproj"
+
+
+def test_namespace_can_be_declared_after_xml_declaration() -> None:
+    """Read namespaces regardless of their position in valid XML."""
+    archive = BytesIO()
+    with ZipFile(archive, "w") as project_zip:
+        project_zip.writestr(
+            "knx_master.xml",
+            "<?xml version='1.0'?>\n<KNX xmlns='http://knx.org/xml/project/23'></KNX>",
+        )
+    with ZipFile(BytesIO(archive.getvalue())) as project_zip:
+        assert _get_xml_namespace(project_zip) == "http://knx.org/xml/project/23"
+
+
+def test_malformed_namespace_xml_raises() -> None:
+    """Report malformed master XML as unexpected project content."""
+    archive = BytesIO()
+    with ZipFile(archive, "w") as project_zip:
+        project_zip.writestr("knx_master.xml", b"<KNX")
+    with ZipFile(BytesIO(archive.getvalue())) as project_zip:
+        with raises(UnexpectedFileContent, match="Could not parse XML namespace"):
+            _get_xml_namespace(project_zip)
 
 
 def test_extract_knx_project_ets5() -> None:
