@@ -131,5 +131,10 @@ def test_parse_project_with_module_defs() -> None:
     assert len(parser.areas) == 2
     assert len(parser.areas[1].lines) == 2
     assert len(parser.areas[1].lines[1].devices) == 4
+    assert all(
+        "{{" not in (com_object.name or "")
+        for device in parser.devices
+        for com_object in device.com_object_instance_refs
+    )
 
     assert len(parser.devices) == 4
