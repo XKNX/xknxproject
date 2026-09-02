@@ -123,6 +123,7 @@ def _extract_protected_project_file(
     if not password:
         raise InvalidPasswordException("Password required.")
 
+    project_archive_file: IO[bytes] | None = None
     try:
         project_archive: ZipFile
         pwd: bytes
@@ -140,7 +141,8 @@ def _extract_protected_project_file(
         raise InvalidPasswordException("Invalid password.") from exception
     finally:
         _LOGGER.debug("Closed protected project archive")
-        project_archive_file.close()
+        if project_archive_file is not None:
+            project_archive_file.close()
 
 
 def _get_xml_namespace(project_zip: ZipFile) -> str:
