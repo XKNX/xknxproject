@@ -1202,7 +1202,8 @@
           "name": "",
           "description": null,
           "devices": [],
-          "medium_type": "KNXnet/IP (IP)"
+          "medium_type": "KNXnet/IP (IP)",
+          "additional_group_addresses": []
         }
       }
     },
@@ -1218,7 +1219,8 @@
             "1.0.1",
             "1.0.2"
           ],
-          "medium_type": "Twisted Pair (TP)"
+          "medium_type": "Twisted Pair (TP)",
+          "additional_group_addresses": []
         },
         "1": {
           "name": "",
@@ -1228,7 +1230,8 @@
             "1.1.1",
             "1.1.2"
           ],
-          "medium_type": "KNX RF (RF)"
+          "medium_type": "KNX RF (RF)",
+          "additional_group_addresses": []
         }
       }
     }
@@ -1238,6 +1241,35 @@
       "name": "KNX IP Router 752 secure",
       "hardware_name": "KNX IP Router 752 secure",
       "order_number": "KNX IP Router 752 secure",
+      "hardware_serial_number": "KNX IP Router 752 secure",
+      "version_number": 256,
+      "bus_current": 20.0,
+      "width_in_millimeter": 18.0,
+      "has_individual_address": true,
+      "has_application_program": true,
+      "is_coupler": true,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": true,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": true,
+      "has_application_program2": false,
+      "tp256": true,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "",
+      "default_language": "de-DE",
+      "hash": "Lf2yt8VN8MMxs1MjSp8K279mFp4=",
+      "non_reg_relevant_data_version": null,
+      "internal_description": "",
+      "attributes": {
+        "CatalogName": "KNX IP Router 752 secure",
+        "Colour": "grau"
+      },
       "description": "",
       "manufacturer_name": "Weinzierl Engineering GmbH",
       "individual_address": "1.0.0",
@@ -1257,6 +1289,32 @@
       "name": "AH3F16H-SEC Schaltaktor 3f",
       "hardware_name": "AH3F16H-SEC Schaltaktor 3f",
       "order_number": "79236-SEC",
+      "hardware_serial_number": "2036-10",
+      "version_number": 1,
+      "bus_current": 5.0,
+      "width_in_millimeter": 160.0,
+      "has_individual_address": true,
+      "has_application_program": true,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": true,
+      "has_application_program2": false,
+      "tp256": true,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "sFyZrJzUKz01IMLgx9ujzZuVUqY=",
+      "non_reg_relevant_data_version": 1,
+      "internal_description": "",
+      "attributes": {},
       "description": "",
       "manufacturer_name": "Lingg & Janke",
       "individual_address": "1.0.1",
@@ -1319,6 +1377,36 @@
       "name": "SpaceLogic KNX, Secure, Schalter/Jalousie 8-fach, Master",
       "hardware_name": "SpaceLogic KNX, Secure, Schalter/Jalousie 8-fach, Master",
       "order_number": "MTN6705-0008S",
+      "hardware_serial_number": "SpaceLogic KNX Switch Secure",
+      "version_number": 1,
+      "bus_current": 12.5,
+      "width_in_millimeter": 72.0,
+      "has_individual_address": true,
+      "has_application_program": true,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": true,
+      "has_application_program2": false,
+      "tp256": false,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "KTtkVpovfyBPM+wo9ASvgtVE6lU=",
+      "non_reg_relevant_data_version": 1,
+      "internal_description": "Internal Description (HW-Products)",
+      "attributes": {
+        "CatalogName": "Switch Blind Roller shutter actuator",
+        "Series": "",
+        "Colour": "white"
+      },
       "description": "",
       "manufacturer_name": "Schneider Electric Industries SAS",
       "individual_address": "1.0.2",
@@ -1442,6 +1530,32 @@
       "name": "KNX RF Multi/TP Medienkoppler",
       "hardware_name": "KNX RF Multi/TP Medienkoppler",
       "order_number": "3-0002-005",
+      "hardware_serial_number": "ISTPRFMK01",
+      "version_number": 1,
+      "bus_current": 8.0,
+      "width_in_millimeter": null,
+      "has_individual_address": true,
+      "has_application_program": false,
+      "is_coupler": true,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": false,
+      "has_application_program2": false,
+      "tp256": false,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "Ready, Fast, Slow; Secure; Segment Coupler; SecurityProxy",
+      "default_language": "en-US",
+      "hash": "GPxgk4bywR8FwNIMMDibahxV6rw=",
+      "non_reg_relevant_data_version": 4,
+      "internal_description": "",
+      "attributes": {},
       "description": "",
       "manufacturer_name": "ise GmbH",
       "individual_address": "1.1.0",
@@ -1461,6 +1575,32 @@
       "name": "KNX RF+ Heizkörperthermostat mit Display und Longlife-Batterie, Secure",
       "hardware_name": "KNX RF+ Heizkörperthermostat mit Display und Longlife-Batterie, Secure",
       "order_number": "RF-HVA1DLB.01S",
+      "hardware_serial_number": "265",
+      "version_number": 1,
+      "bus_current": null,
+      "width_in_millimeter": null,
+      "has_individual_address": true,
+      "has_application_program": true,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": false,
+      "has_application_program2": false,
+      "tp256": false,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "LYHoldkEvFyaSZtmv+h2GPj/EKM=",
+      "non_reg_relevant_data_version": 1,
+      "internal_description": "",
+      "attributes": {},
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.1",
@@ -1506,6 +1646,32 @@
       "name": "KNX RF+ LED Controller CC/CV 60W / 230V 2-Kanäle, Secure",
       "hardware_name": "KNX RF+ LED Controller CC/CV 60W / 230V 2-Kanäle, Secure",
       "order_number": "RF-AKD260CC.02S",
+      "hardware_serial_number": "248",
+      "version_number": 1,
+      "bus_current": null,
+      "width_in_millimeter": null,
+      "has_individual_address": true,
+      "has_application_program": true,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": true,
+      "is_accessory": false,
+      "is_rail_mounted": false,
+      "has_application_program2": false,
+      "tp256": false,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "PIsohcl4BAcVy8GtbI0SiltFfbQ=",
+      "non_reg_relevant_data_version": 1,
+      "internal_description": "",
+      "attributes": {},
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.2",
@@ -1555,6 +1721,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.1/O-0_R-1"
       ],
@@ -1572,6 +1739,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [],
       "description": "",
       "comment": ""
@@ -1587,6 +1755,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [],
       "description": "",
       "comment": ""
@@ -1602,6 +1771,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.1/O-20_R-88"
       ],
@@ -1619,6 +1789,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.1/O-21_R-90"
       ],
@@ -1636,6 +1807,7 @@
         "sub": 3
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.1/O-23_R-100"
       ],
@@ -1653,6 +1825,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.1/O-18_R-98"
       ],
@@ -1670,6 +1843,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-55_R-43"
       ],
@@ -1687,6 +1861,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-61_R-51"
       ],
@@ -1704,6 +1879,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-66_R-95"
       ],
@@ -1721,6 +1897,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-72_R-103"
       ],
@@ -1738,6 +1915,7 @@
         "sub": 8
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-77_R-121"
       ],
@@ -1755,6 +1933,7 @@
         "sub": 7
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-78_R-122"
       ],
@@ -1772,6 +1951,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-79_R-123"
       ],
@@ -1789,6 +1969,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-60_R-50",
         "1.0.2/O-89_R-131"
@@ -1807,6 +1988,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-92_R-133"
       ],
@@ -1824,6 +2006,7 @@
         "sub": 10
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-97_R-137"
       ],
@@ -1841,6 +2024,7 @@
         "sub": 8
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-98_R-138"
       ],
@@ -1858,6 +2042,7 @@
         "sub": 8
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-99_R-204"
       ],
@@ -1875,6 +2060,7 @@
         "sub": 7
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-100_R-205"
       ],
@@ -1892,6 +2078,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-101_R-206"
       ],
@@ -1909,6 +2096,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-102_R-207"
       ],
@@ -1926,6 +2114,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-114_R-218"
       ],
@@ -1943,6 +2132,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-115_R-219"
       ],
@@ -1960,6 +2150,7 @@
         "sub": 10
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-119_R-223"
       ],
@@ -1977,6 +2168,7 @@
         "sub": 8
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-120_R-224"
       ],
@@ -1994,6 +2186,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-121_R-238"
       ],
@@ -2011,6 +2204,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-127_R-246"
       ],
@@ -2028,6 +2222,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-132_R-290"
       ],
@@ -2045,6 +2240,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.2/O-138_R-298"
       ],
@@ -2062,6 +2258,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.1/O-2_R-11"
       ],
@@ -2079,6 +2276,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.1/O-3_R-12"
       ],
@@ -2096,6 +2294,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.1/O-4_R-7"
       ],
@@ -2113,6 +2312,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.1/O-9_R-85"
       ],
@@ -2130,6 +2330,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.0.1/O-11_R-70"
       ],
@@ -2144,6 +2345,7 @@
       "address_end": 2047,
       "group_addresses": [],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {
         "0/0": {
           "name": "Test Mitte",
@@ -2185,6 +2387,7 @@
             "0/0/33"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         },
         "0/1": {
@@ -2196,6 +2399,7 @@
             "0/1/1"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         }
       }

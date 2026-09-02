@@ -115,6 +115,7 @@ def _recursive_convert_group_range(
             comment=html.unescape(
                 rtf_to_text(group_range.comment),  # type: ignore[no-untyped-call]
             ),
+            unfiltered=group_range.unfiltered,
             group_ranges=_recursive_convert_group_range(
                 group_range.group_ranges,
                 group_address_style,
@@ -201,6 +202,36 @@ class XMLParser:
             device.product_name = product.text
             device.hardware_name = product.hardware_name
             device.order_number = product.order_number
+            # hardware.xml identity + capability attributes (same names on Product and device)
+            for _hw_attr in (
+                "hardware_serial_number",
+                "version_number",
+                "bus_current",
+                "width_in_millimeter",
+                "has_individual_address",
+                "has_application_program",
+                "is_coupler",
+                "is_power_supply",
+                "is_choke",
+                "is_power_line_repeater",
+                "is_power_line_signal_filter",
+                "is_cable",
+                "is_ip_enabled",
+                "is_rf_retransmitter",
+                "is_accessory",
+                "is_rail_mounted",
+                "has_application_program2",
+                "tp256",
+                "no_download_without_plugin",
+                "original_manufacturer",
+                "visible_description",
+                "default_language",
+                "hash",
+                "non_reg_relevant_data_version",
+                "internal_description",
+                "attributes",
+            ):
+                setattr(device, _hw_attr, getattr(product, _hw_attr))
 
             try:
                 application_program_ref = hardware_application_map[
@@ -341,6 +372,32 @@ class XMLParser:
                 name=device.name or device.product_name,
                 hardware_name=device.product_name,
                 order_number=device.order_number,
+                hardware_serial_number=device.hardware_serial_number,
+                version_number=device.version_number,
+                bus_current=device.bus_current,
+                width_in_millimeter=device.width_in_millimeter,
+                has_individual_address=device.has_individual_address,
+                has_application_program=device.has_application_program,
+                is_coupler=device.is_coupler,
+                is_power_supply=device.is_power_supply,
+                is_choke=device.is_choke,
+                is_power_line_repeater=device.is_power_line_repeater,
+                is_power_line_signal_filter=device.is_power_line_signal_filter,
+                is_cable=device.is_cable,
+                is_ip_enabled=device.is_ip_enabled,
+                is_rf_retransmitter=device.is_rf_retransmitter,
+                is_accessory=device.is_accessory,
+                is_rail_mounted=device.is_rail_mounted,
+                has_application_program2=device.has_application_program2,
+                tp256=device.tp256,
+                no_download_without_plugin=device.no_download_without_plugin,
+                original_manufacturer=device.original_manufacturer,
+                visible_description=device.visible_description,
+                default_language=device.default_language,
+                hash=device.hash,
+                non_reg_relevant_data_version=device.non_reg_relevant_data_version,
+                internal_description=device.internal_description,
+                attributes=device.attributes,
                 description=device.description,
                 manufacturer_name=device.manufacturer_name,
                 individual_address=device.individual_address,
@@ -369,6 +426,12 @@ class XMLParser:
                     description=line.description,
                     devices=devices_topology,
                     medium_type=MEDIUM_TYPES.get(line.medium_type, "Unknown"),
+                    additional_group_addresses=[
+                        XMLGroupAddress.str_address(
+                            ga, self.project_info.group_address_style
+                        )
+                        for ga in line.additional_group_addresses
+                    ],
                 )
             topology_dict[str(area.address)] = Area(
                 name=area.name, description=area.description, lines=lines_dict
@@ -383,6 +446,7 @@ class XMLParser:
                 project_uid=group_address.project_uid,
                 dpt=group_address.dpt,
                 data_secure=bool(group_address.data_secure_key),
+                unfiltered=group_address.unfiltered,
                 communication_object_ids=[
                     com_object_id
                     for com_object_id, com_object in communication_objects.items()

@@ -637,7 +637,8 @@
           "name": "Bereichslinie",
           "description": null,
           "devices": [],
-          "medium_type": "KNXnet/IP (IP)"
+          "medium_type": "KNXnet/IP (IP)",
+          "additional_group_addresses": []
         }
       }
     },
@@ -649,7 +650,8 @@
           "name": "Hauptlinie",
           "description": null,
           "devices": [],
-          "medium_type": "KNXnet/IP (IP)"
+          "medium_type": "KNXnet/IP (IP)",
+          "additional_group_addresses": []
         },
         "1": {
           "name": "Neue Linie",
@@ -660,7 +662,8 @@
             "1.1.6",
             "1.1.7"
           ],
-          "medium_type": "Twisted Pair (TP)"
+          "medium_type": "Twisted Pair (TP)",
+          "additional_group_addresses": []
         }
       }
     }
@@ -670,6 +673,32 @@
       "name": "SCN-IP100.03 IP Router with Secure",
       "hardware_name": "SCN-IP100.03 IP Router with Secure",
       "order_number": "SCN-IP100.03",
+      "hardware_serial_number": "136",
+      "version_number": 5,
+      "bus_current": 40.0,
+      "width_in_millimeter": 35.0,
+      "has_individual_address": true,
+      "has_application_program": true,
+      "is_coupler": true,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": true,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": true,
+      "has_application_program2": false,
+      "tp256": false,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "M-0072",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "tNXj9aJEmB8LuGH2VA1oBsmHogE=",
+      "non_reg_relevant_data_version": null,
+      "internal_description": "",
+      "attributes": {},
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.0",
@@ -689,6 +718,35 @@
       "name": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
       "hardware_name": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
       "order_number": "2CDG 110 121 R0011",
+      "hardware_serial_number": "2CDG 110 121 R0011",
+      "version_number": 1,
+      "bus_current": 10.0,
+      "width_in_millimeter": 72.0,
+      "has_individual_address": true,
+      "has_application_program": true,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": true,
+      "has_application_program2": false,
+      "tp256": false,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "T9QqzBq0lxB9nspEV9EeHgmPaOc=",
+      "non_reg_relevant_data_version": null,
+      "internal_description": "",
+      "attributes": {
+        "CatalogName": "Blind",
+        "Series": "ProM"
+      },
       "description": "",
       "manufacturer_name": "ABB",
       "individual_address": "1.1.5",
@@ -716,6 +774,34 @@
       "name": "AE/S4.2 Analogue Input,4-fold,MDRC",
       "hardware_name": "AE/S4.2 Analogue Input,4-fold,MDRC",
       "order_number": "2CDG 110 030 R0011",
+      "hardware_serial_number": "2CDG 110 030 R0011",
+      "version_number": 1,
+      "bus_current": null,
+      "width_in_millimeter": null,
+      "has_individual_address": false,
+      "has_application_program": false,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": false,
+      "has_application_program2": false,
+      "tp256": false,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "FobLXreEWGzo1YvggQRGs2VT8nY=",
+      "non_reg_relevant_data_version": 0,
+      "internal_description": "",
+      "attributes": {
+        "Series": "ab ETS2 V.1.2a"
+      },
       "description": "",
       "manufacturer_name": "ABB",
       "individual_address": "1.1.6",
@@ -740,6 +826,32 @@
       "name": "Custom name prefix - Heizungsaktor 6fach mit Regler",
       "hardware_name": "Heating actuator 6-gang with controller",
       "order_number": "2139 00",
+      "hardware_serial_number": "8 // 2139 00",
+      "version_number": 0,
+      "bus_current": 10.0,
+      "width_in_millimeter": 72.0,
+      "has_individual_address": true,
+      "has_application_program": true,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": true,
+      "has_application_program2": false,
+      "tp256": true,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "M-000A",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "0ibXCVG2RTWlQzuzM3AvzEtWvCA=",
+      "non_reg_relevant_data_version": null,
+      "internal_description": "",
+      "attributes": {},
       "description": "",
       "manufacturer_name": "GIRA Giersiepen",
       "individual_address": "1.1.7",
@@ -908,6 +1020,7 @@
         "sub": 8
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.5/O-101_R-1578"
       ],
@@ -925,6 +1038,7 @@
         "sub": null
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.5/O-100_R-1577"
       ],
@@ -942,6 +1056,7 @@
         "sub": 8
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.5/O-71_R-1506"
       ],
@@ -959,6 +1074,7 @@
         "sub": 8
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.5/O-70_R-1505"
       ],
@@ -976,6 +1092,7 @@
         "sub": null
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.5/O-41_R-1434"
       ],
@@ -993,6 +1110,7 @@
         "sub": null
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.5/O-40_R-1433"
       ],
@@ -1010,6 +1128,7 @@
         "sub": 2
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.7/O-3_R-3"
       ],
@@ -1027,6 +1146,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.7/MD-2_M-4_MI-1_O-7-1_R-45"
       ],
@@ -1044,6 +1164,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.5/O-4_R-1417"
       ],
@@ -1058,6 +1179,7 @@
       "project_uid": 43,
       "dpt": null,
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [],
       "description": "no dpt",
       "comment": ""
@@ -1073,6 +1195,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [],
       "description": "temperature",
       "comment": ""
@@ -1088,6 +1211,7 @@
         "sub": null
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.6/O-20_R-8108"
       ],
@@ -1105,6 +1229,7 @@
         "sub": null
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.6/O-9_R-9073"
       ],
@@ -1122,6 +1247,7 @@
         "sub": null
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.6/O-0_R-665",
         "1.1.6/O-9_R-9073"
@@ -1140,6 +1266,7 @@
         "sub": null
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.6/O-9_R-9073",
         "1.1.6/O-18_R-7994"
@@ -1158,6 +1285,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.7/MD-2_M-20_MI-1_O-5-10_R-18"
       ],
@@ -1175,6 +1303,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17"
       ],
@@ -1192,6 +1321,7 @@
         "sub": 1
       },
       "data_secure": true,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3"
       ],
@@ -1209,6 +1339,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.6/O-18_R-7994",
         "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45"
@@ -1224,6 +1355,7 @@
       "address_end": 4095,
       "group_addresses": [],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {
         "1/0": {
           "name": "Neue Mittelgruppe",
@@ -1238,6 +1370,7 @@
             "1/0/5"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         }
       }
@@ -1248,6 +1381,7 @@
       "address_end": 6143,
       "group_addresses": [],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {
         "2/0": {
           "name": "Neue Mittelgruppe",
@@ -1259,6 +1393,7 @@
             "2/0/0"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         },
         "2/1": {
@@ -1274,6 +1409,7 @@
             "2/1/10"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         }
       }
@@ -1284,6 +1420,7 @@
       "address_end": 16383,
       "group_addresses": [],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {
         "7/0": {
           "name": "Non-DS",
@@ -1293,6 +1430,7 @@
             "7/0/0"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         },
         "7/1": {
@@ -1305,6 +1443,7 @@
             "7/1/2"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         }
       }
