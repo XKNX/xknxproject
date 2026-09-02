@@ -1,16 +1,32 @@
 """Test reading KNX projects."""
 
+from unittest.mock import Mock
+from zipfile import ZipFile
+
 from pytest import raises
 
 from xknxproject.exceptions import InvalidPasswordException
 from xknxproject.zip import extract
-from xknxproject.zip.extractor import _generate_ets6_zip_password
+from xknxproject.zip.extractor import (
+    _extract_protected_project_file,
+    _generate_ets6_zip_password,
+)
 
 from .. import RESOURCES_PATH
 
 xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
 xknx_test_project_ets5 = RESOURCES_PATH / "xknx_test_project_no_password.knxproj"
 xknx_test_project_protected_ets6 = RESOURCES_PATH / "testprojekt-ets6.knxproj"
+
+
+def test_protected_archive_open_failure_preserves_error() -> None:
+    """Do not mask an archive stream open failure during cleanup."""
+    archive = Mock(spec=ZipFile)
+    archive.open.side_effect = OSError("archive stream unavailable")
+
+    with raises(OSError, match="archive stream unavailable"):
+        with _extract_protected_project_file(archive, Mock(), "test", 21):
+            pass
 
 
 def test_extract_knx_project_ets5() -> None:
