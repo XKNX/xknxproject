@@ -21,7 +21,8 @@
           "name": "",
           "description": null,
           "devices": [],
-          "medium_type": "Twisted Pair (TP)"
+          "medium_type": "Twisted Pair (TP)",
+          "additional_group_addresses": []
         }
       }
     },
@@ -33,13 +34,15 @@
           "name": "",
           "description": null,
           "devices": [],
-          "medium_type": "Twisted Pair (TP)"
+          "medium_type": "Twisted Pair (TP)",
+          "additional_group_addresses": []
         },
         "1": {
           "name": "",
           "description": null,
           "devices": [],
-          "medium_type": "Twisted Pair (TP)"
+          "medium_type": "Twisted Pair (TP)",
+          "additional_group_addresses": []
         }
       }
     }
@@ -54,6 +57,7 @@
       "project_uid": 12,
       "dpt": null,
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [],
       "description": "",
       "comment": ""
@@ -66,6 +70,7 @@
       "project_uid": 14,
       "dpt": null,
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [],
       "description": "",
       "comment": ""
@@ -78,6 +83,7 @@
       "project_uid": 16,
       "dpt": null,
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [],
       "description": "",
       "comment": ""
@@ -90,6 +96,7 @@
       "project_uid": 21,
       "dpt": null,
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [],
       "description": "",
       "comment": ""
@@ -104,6 +111,7 @@
         "1"
       ],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {
         "2...128": {
           "name": "Group 1.1",
@@ -113,6 +121,7 @@
             "2"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {
             "3...33": {
               "name": "Group 1.1.1",
@@ -122,6 +131,7 @@
                 "3"
               ],
               "comment": "",
+              "unfiltered": false,
               "group_ranges": {}
             }
           }
@@ -134,6 +144,7 @@
       "address_end": 1024,
       "group_addresses": [],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {}
     },
     "1025...1536": {
@@ -142,6 +153,7 @@
       "address_end": 1536,
       "group_addresses": [],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {
         "1025...1151": {
           "name": "Sub",
@@ -151,6 +163,7 @@
             "1025"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         }
       }

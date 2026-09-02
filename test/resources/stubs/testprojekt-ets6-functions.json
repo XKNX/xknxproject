@@ -21,7 +21,8 @@
           "name": "",
           "description": null,
           "devices": [],
-          "medium_type": "KNXnet/IP (IP)"
+          "medium_type": "KNXnet/IP (IP)",
+          "additional_group_addresses": []
         }
       }
     },
@@ -33,13 +34,15 @@
           "name": "",
           "description": null,
           "devices": [],
-          "medium_type": "KNXnet/IP (IP)"
+          "medium_type": "KNXnet/IP (IP)",
+          "additional_group_addresses": []
         },
         "1": {
           "name": "",
           "description": null,
           "devices": [],
-          "medium_type": "Twisted Pair (TP)"
+          "medium_type": "Twisted Pair (TP)",
+          "additional_group_addresses": []
         }
       }
     }
@@ -57,6 +60,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [],
       "description": "Livingroom LivingroomLight",
       "comment": ""
@@ -72,6 +76,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [],
       "description": "Livingroom LivingroomLight",
       "comment": ""
@@ -84,6 +89,7 @@
       "address_end": 2047,
       "group_addresses": [],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {
         "0/0": {
           "name": "Neue Mittelgruppe",
@@ -94,6 +100,7 @@
             "0/0/2"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         }
       }

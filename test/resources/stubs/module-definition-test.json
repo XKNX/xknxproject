@@ -805,7 +805,8 @@
           "name": "Bereichslinie",
           "description": null,
           "devices": [],
-          "medium_type": "KNXnet/IP (IP)"
+          "medium_type": "KNXnet/IP (IP)",
+          "additional_group_addresses": []
         }
       }
     },
@@ -817,7 +818,8 @@
           "name": "Hauptlinie",
           "description": null,
           "devices": [],
-          "medium_type": "KNXnet/IP (IP)"
+          "medium_type": "KNXnet/IP (IP)",
+          "additional_group_addresses": []
         },
         "1": {
           "name": "Neue Linie",
@@ -828,7 +830,8 @@
             "1.1.3",
             "1.1.4"
           ],
-          "medium_type": "Twisted Pair (TP)"
+          "medium_type": "Twisted Pair (TP)",
+          "additional_group_addresses": []
         }
       }
     }
@@ -838,6 +841,32 @@
       "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "hardware_name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "order_number": "AKH-0800.03",
+      "hardware_serial_number": "358",
+      "version_number": 1,
+      "bus_current": 10.0,
+      "width_in_millimeter": 71.0,
+      "has_individual_address": true,
+      "has_application_program": true,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": true,
+      "has_application_program2": false,
+      "tp256": true,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "qENlB3WO3RN8Rg2JBTLbTncsSy4=",
+      "non_reg_relevant_data_version": null,
+      "internal_description": "",
+      "attributes": {},
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.1",
@@ -914,6 +943,32 @@
       "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "hardware_name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "order_number": "AKH-0800.03",
+      "hardware_serial_number": "358",
+      "version_number": 1,
+      "bus_current": 10.0,
+      "width_in_millimeter": 71.0,
+      "has_individual_address": true,
+      "has_application_program": true,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": true,
+      "has_application_program2": false,
+      "tp256": true,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "qENlB3WO3RN8Rg2JBTLbTncsSy4=",
+      "non_reg_relevant_data_version": null,
+      "internal_description": "",
+      "attributes": {},
       "description": "Modules use ObjBaseNumber argument",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.2",
@@ -1011,6 +1066,32 @@
       "name": "DALI Control Pro64 Gateway",
       "hardware_name": "DALI Control Pro64 Gateway",
       "order_number": "SCN-DA641P.04S",
+      "hardware_serial_number": "191",
+      "version_number": 1,
+      "bus_current": 10.0,
+      "width_in_millimeter": 72.0,
+      "has_individual_address": true,
+      "has_application_program": true,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": true,
+      "has_application_program2": false,
+      "tp256": false,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "M-00EF",
+      "visible_description": "DALI Control Pro64 Gateway",
+      "default_language": "en-US",
+      "hash": "8xpE6b503AjOIL811tjqkOxLIqE=",
+      "non_reg_relevant_data_version": null,
+      "internal_description": "",
+      "attributes": {},
       "description": "Modules use Allocators for ObjBaseNumber ",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.3",
@@ -1038,6 +1119,32 @@
       "name": "Z70 v2",
       "hardware_name": "Z70 v2",
       "order_number": "ZVIZ70V2",
+      "hardware_serial_number": "ZVIZ70V2",
+      "version_number": 1,
+      "bus_current": 10.0,
+      "width_in_millimeter": null,
+      "has_individual_address": true,
+      "has_application_program": true,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": false,
+      "has_application_program2": false,
+      "tp256": false,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "ZuZdCUC2W+cbI35UeQjtt1+rTds=",
+      "non_reg_relevant_data_version": 1,
+      "internal_description": "",
+      "attributes": {},
       "description": "SubModules with Allocators",
       "manufacturer_name": "Zennio",
       "individual_address": "1.1.4",
@@ -1105,6 +1212,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1"
       ],
@@ -1122,6 +1230,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
@@ -1139,6 +1248,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.1/O-334_R-21"
       ],
@@ -1156,6 +1266,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1"
       ],
@@ -1173,6 +1284,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"
       ],
@@ -1190,6 +1302,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
@@ -1207,6 +1320,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.3/O-24_R-966"
       ],
@@ -1224,6 +1338,7 @@
         "sub": 7
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.3/MD-2_M-3_MI-2_O-2-1_R-11"
       ],
@@ -1241,6 +1356,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.3/MD-2_M-3_MI-3_O-2-0_R-10"
       ],
@@ -1258,6 +1374,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.3/MD-1_M-1_MI-1_O-2-0_R-7"
       ],
@@ -1275,6 +1392,7 @@
         "sub": 7
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.3/MD-1_M-1_MI-4_O-2-1_R-8"
       ],
@@ -1292,6 +1410,7 @@
         "sub": 5
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.3/MD-3_M-2_MI-2_O-2-4_R-5"
       ],
@@ -1309,6 +1428,7 @@
         "sub": 5
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.3/MD-3_M-2_MI-8_O-2-5_R-6"
       ],
@@ -1326,6 +1446,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.2/MD-2_M-1_MI-1_O-2-19_R-6"
       ],
@@ -1343,6 +1464,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.2/MD-2_M-5_MI-1_O-2-8_R-18"
       ],
@@ -1360,6 +1482,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.2/MD-2_M-6_MI-1_O-2-20_R-7"
       ],
@@ -1377,6 +1500,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.2/O-334_R-21"
       ],
@@ -1394,6 +1518,7 @@
         "sub": 10
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.4/O-256_R-36"
       ],
@@ -1411,6 +1536,7 @@
         "sub": 10
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-0_R-1"
       ],
@@ -1428,6 +1554,7 @@
         "sub": 56
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-1_R-2"
       ],
@@ -1445,6 +1572,7 @@
         "sub": 10
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-0_R-1"
       ],
@@ -1462,6 +1590,7 @@
         "sub": 10
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-1_SM-1_O-3-0_R-1"
       ],
@@ -1479,6 +1608,7 @@
         "sub": 10
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-0_R-1"
       ],
@@ -1496,6 +1626,7 @@
         "sub": 56
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-1_R-2"
       ],
@@ -1513,6 +1644,7 @@
         "sub": 1
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3",
         "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3",
@@ -1529,6 +1661,7 @@
       "address_end": 2047,
       "group_addresses": [],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {
         "0/0": {
           "name": "Wohnzimmer",
@@ -1540,6 +1673,7 @@
             "0/0/3"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         },
         "0/1": {
@@ -1551,6 +1685,7 @@
             "0/1/1"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         },
         "0/2": {
@@ -1561,6 +1696,7 @@
             "0/2/2"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         },
         "0/6": {
@@ -1588,6 +1724,7 @@
             "0/6/17"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         },
         "0/7": {
@@ -1598,6 +1735,7 @@
             "0/7/2"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         }
       }
@@ -1608,6 +1746,7 @@
       "address_end": 4095,
       "group_addresses": [],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {}
     },
     "2": {
@@ -1616,6 +1755,7 @@
       "address_end": 6143,
       "group_addresses": [],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {
         "2/0": {
           "name": "Sub",
@@ -1623,6 +1763,7 @@
           "address_end": 4351,
           "group_addresses": [],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         }
       }
