@@ -58,7 +58,7 @@ class XMLGroupAddress:
         if group_address_style == GroupAddressStyle.TWOLEVEL:
             sub = raw_address & 0b11111111111
             return f"{main}/{sub}"
-        raise ValueError(f"GroupAddressSyste '{group_address_style}' not supported!")
+        raise ValueError(f"GroupAddressStyle '{group_address_style}' not supported!")
 
     def __repr__(self) -> str:
         """Return string representation."""
@@ -94,7 +94,7 @@ class XMLGroupRange:
             if (self.range_end - self.range_start) >= 2046:
                 return start_address_token[0]
             return "/".join(start_address_token[0:2])
-        raise ValueError(f"GroupAddressSyste '{self.style}' not supported!")
+        raise ValueError(f"GroupAddressStyle '{self.style}' not supported!")
 
 
 @dataclass
