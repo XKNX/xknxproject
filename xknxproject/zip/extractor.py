@@ -8,8 +8,8 @@ from contextlib import contextmanager
 import hashlib
 import logging
 from pathlib import Path
-import re
 from typing import IO
+import xml.etree.ElementTree as ElementTree
 from zipfile import Path as ZipPath, ZipFile, ZipInfo
 
 import pyzipper
@@ -144,29 +144,21 @@ def _extract_protected_project_file(
 
 
 def _get_xml_namespace(project_zip: ZipFile) -> str:
-    """Get the XML namespace of the project."""
-    with project_zip.open("knx_master.xml", mode="r") as master:
-        for line_number, line in enumerate(master, start=1):
-            # ETS 4.1 has namespace in the first line, newer versions in second
-            if line_number in (1, 2):
-                try:
-                    namespace_match = re.match(
-                        r".+ xmlns=\"(.+?)\"",
-                        line.decode(),
-                    )
-                    if namespace_match is None and line_number == 1:
-                        continue
-                    namespace = namespace_match.group(1)  # type: ignore[union-attr]
-                    _LOGGER.debug("Namespace: %s", namespace)
-                    return namespace
-                except (AttributeError, IndexError, UnicodeDecodeError):
-                    _LOGGER.error("Could not parse XML namespace from %s", line)
-                    raise UnexpectedFileContent(
-                        "Could not parse XML namespace."
-                    ) from None
-            else:
-                break
-        raise UnexpectedFileContent("Could not find XML namespace.")
+    """Get the default XML namespace of the project."""
+    try:
+        with project_zip.open("knx_master.xml", mode="r") as master:
+            for _event, namespace in ElementTree.iterparse(
+                master, events=("start-ns",)
+            ):
+                prefix, uri = namespace
+                if prefix == "":
+                    _LOGGER.debug("Namespace: %s", uri)
+                    return str(uri)
+    except ElementTree.ParseError:
+        _LOGGER.exception("Could not parse XML namespace")
+        raise UnexpectedFileContent("Could not parse XML namespace.") from None
+
+    raise UnexpectedFileContent("Could not find XML namespace.")
 
 
 def _get_schema_version(namespace: str) -> int:
