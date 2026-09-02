@@ -598,10 +598,13 @@ class ComObjectInstanceRef:
                 if self.ref_id.startswith(f"{mi.identifier}_")
             )
         except StopIteration:
-            raise UnexpectedDataError(
-                f"ModuleInstance not found for ComObjectInstanceRef {self.ref_id=} {self.text=} "
-                f"of application {self.application_program_id_prefix}",
-            ) from None
+            _LOGGER.warning(
+                "ModuleInstance not found for ComObjectInstanceRef %s %s of application %s",
+                self.ref_id,
+                self.text,
+                self.application_program_id_prefix,
+            )
+            return
 
         com_object_number = self.number
         self.number += _parse_base_number_argument(
