@@ -568,7 +568,7 @@
       "dpas": null
     },
     "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-0_R-1": {
-      "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
+      "name": "oEnMon.devicePage[0][MD-4_L-1].energy",
       "number": 263,
       "text": "[EM][IC1][Dev 1.1] Verbrauchte Energie",
       "function_text": "W·h",
@@ -601,7 +601,7 @@
       "dpas": null
     },
     "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-1_R-2": {
-      "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].power",
+      "name": "oEnMon.devicePage[0][MD-4_L-1].power",
       "number": 264,
       "text": "[EM][IC1][Dev 1.1] Verbrauchte Leistung",
       "function_text": "W",
@@ -664,7 +664,7 @@
       "dpas": null
     },
     "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-1_SM-1_O-3-0_R-1": {
-      "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
+      "name": "oEnMon.devicePage[0][MD-4_L-1].energy",
       "number": 277,
       "text": "[EM][IC2][Dev 2.1] Verbrauchte Energie",
       "function_text": "W·h",
@@ -697,7 +697,7 @@
       "dpas": null
     },
     "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-0_R-1": {
-      "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
+      "name": "oEnMon.devicePage[0][MD-4_L-1].energy",
       "number": 263,
       "text": "[EM][IC1][Dev 1.2] Verbrauchte Energie",
       "function_text": "W·h",
@@ -730,7 +730,7 @@
       "dpas": null
     },
     "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-0_R-1": {
-      "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
+      "name": "oEnMon.devicePage[0][MD-4_L-1].energy",
       "number": 277,
       "text": "[EM][IC2][Dev 2.2] Verbrauchte Energie",
       "function_text": "W·h",
@@ -763,7 +763,7 @@
       "dpas": null
     },
     "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-1_R-2": {
-      "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].power",
+      "name": "oEnMon.devicePage[0][MD-4_L-1].power",
       "number": 278,
       "text": "[EM][IC2][Dev 2.2] Verbrauchte Leistung",
       "function_text": "W",
