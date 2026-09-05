@@ -1,8 +1,12 @@
 """Test reading KNX projects."""
 
+from pathlib import Path
+import struct
+import zipfile
+
 from pytest import raises
 
-from xknxproject.exceptions import InvalidPasswordException
+from xknxproject.exceptions import InvalidPasswordException, InvalidProjectArchive
 from xknxproject.zip import extract
 from xknxproject.zip.extractor import _generate_ets6_zip_password
 
@@ -86,3 +90,78 @@ def test_required_password_ets6() -> None:
         with extract(xknx_test_project_protected_ets6, "") as knx_project_contents:
             with knx_project_contents.open_project_0():
                 pass
+
+
+def _corrupt_entry(source: Path, entry_name: str, target: Path) -> Path:
+    """Write a copy of `source` with the compressed data of one entry scrambled."""
+    with zipfile.ZipFile(source) as archive:
+        info = archive.getinfo(entry_name)
+    raw = bytearray(source.read_bytes())
+    offset = info.header_offset
+    name_len, extra_len = struct.unpack("<HH", raw[offset + 26 : offset + 30])
+    data_start = offset + 30 + name_len + extra_len
+    # scramble a run inside the deflate stream, past any encryption header
+    scramble_at = data_start + 64
+    for index in range(scramble_at, scramble_at + 64):
+        raw[index] ^= 0xFF
+    target.write_bytes(raw)
+    return target
+
+
+def test_damaged_project_file(tmp_path: Path) -> None:
+    """Test reading a project whose contents can not be decompressed."""
+    damaged = _corrupt_entry(
+        xknx_test_project_ets5, "P-01D2/0.xml", tmp_path / "damaged.knxproj"
+    )
+    with raises(InvalidProjectArchive):
+        with extract(damaged) as knx_project_contents:
+            with knx_project_contents.open_project_0() as proj_0:
+                proj_0.read()
+
+
+def test_damaged_protected_project_file(tmp_path: Path) -> None:
+    """Test reading a protected project whose contents can not be decompressed."""
+    damaged = _corrupt_entry(
+        xknx_test_project_protected_ets6, "P-04BF.zip", tmp_path / "damaged.knxproj"
+    )
+    with raises(InvalidProjectArchive):
+        with extract(damaged, "test") as knx_project_contents:
+            with knx_project_contents.open_project_0() as proj_0:
+                proj_0.read()
+
+
+def _break_crc(source: Path, entry_name: str, target: Path) -> Path:
+    """Write a copy of `source` with one entry's stored CRC-32 replaced."""
+    raw = bytearray(source.read_bytes())
+    name = entry_name.encode()
+    position = 0
+    while (position := raw.find(b"PK\x01\x02", position)) != -1:
+        name_len = struct.unpack("<H", raw[position + 28 : position + 30])[0]
+        if raw[position + 46 : position + 46 + name_len] == name:
+            raw[position + 16 : position + 20] = b"\x00\x00\x00\x00"
+            break
+        position += 4
+    else:  # pragma: no cover - guards against a silently useless test
+        raise AssertionError(f"{entry_name} not found in central directory")
+    target.write_bytes(raw)
+    return target
+
+
+def test_no_zip_file(tmp_path: Path) -> None:
+    """Test reading a file that is not a ZIP archive."""
+    not_a_project = tmp_path / "not_a_project.knxproj"
+    not_a_project.write_bytes(b"this is not a KNX project")
+    with raises(InvalidProjectArchive):
+        with extract(not_a_project):
+            pass
+
+
+def test_project_file_failing_checksum(tmp_path: Path) -> None:
+    """Test reading a project whose contents don't match their checksum."""
+    damaged = _break_crc(
+        xknx_test_project_ets5, "P-01D2/0.xml", tmp_path / "damaged.knxproj"
+    )
+    with raises(InvalidProjectArchive):
+        with extract(damaged) as knx_project_contents:
+            with knx_project_contents.open_project_0() as proj_0:
+                proj_0.read()
