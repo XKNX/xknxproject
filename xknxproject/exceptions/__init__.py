@@ -2,6 +2,7 @@
 
 from .exceptions import (
     InvalidPasswordException,
+    InvalidProjectArchive,
     ProjectNotFoundException,
     UnexpectedDataError,
     UnexpectedFileContent,
@@ -10,6 +11,7 @@ from .exceptions import (
 
 __all__ = [
     "InvalidPasswordException",
+    "InvalidProjectArchive",
     "ProjectNotFoundException",
     "UnexpectedDataError",
     "UnexpectedFileContent",

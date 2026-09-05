@@ -13,6 +13,10 @@ class ProjectNotFoundException(XknxProjectException):
     """Project files not found in archive."""
 
 
+class InvalidProjectArchive(XknxProjectException):
+    """Project archive can not be decompressed."""
+
+
 class UnexpectedFileContent(XknxProjectException):
     """Unexpected file content."""
 

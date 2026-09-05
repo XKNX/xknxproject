@@ -10,13 +10,15 @@ import logging
 from pathlib import Path
 import re
 from typing import IO
-from zipfile import Path as ZipPath, ZipFile, ZipInfo
+from zipfile import BadZipFile, Path as ZipPath, ZipFile, ZipInfo
+import zlib
 
 import pyzipper
 
 from xknxproject.const import ETS_4_2_SCHEMA_VERSION, ETS_6_SCHEMA_VERSION
 from xknxproject.exceptions import (
     InvalidPasswordException,
+    InvalidProjectArchive,
     ProjectNotFoundException,
     UnexpectedFileContent,
 )
@@ -68,42 +70,63 @@ def extract(
 ) -> Iterator[KNXProjContents]:
     """Provide the contents of a KNXProj file."""
     _LOGGER.debug('Opening KNX Project file "%s"', archive_path)
-    with ZipFile(archive_path, mode="r") as zip_archive:
-        project_id = _get_project_id(zip_archive)
-        xml_namespace = _get_xml_namespace(zip_archive)
+    try:
+        with ZipFile(archive_path, mode="r") as zip_archive:
+            project_id = _get_project_id(zip_archive)
+            xml_namespace = _get_xml_namespace(zip_archive)
 
-        password_protected: bool
-        try:
-            protected_info = zip_archive.getinfo(name=project_id + ".zip")
-        except KeyError:
-            _LOGGER.debug("Project %s is not password protected", project_id)
-            password_protected = False
-            # move yield out of except block to clear exception context
-        else:
-            _LOGGER.debug("Project %s is password protected", project_id)
-            password_protected = True
+            password_protected: bool
+            try:
+                protected_info = zip_archive.getinfo(name=project_id + ".zip")
+            except KeyError:
+                _LOGGER.debug("Project %s is not password protected", project_id)
+                password_protected = False
+                # move yield out of except block to clear exception context
+            else:
+                _LOGGER.debug("Project %s is password protected", project_id)
+                password_protected = True
 
-        if not password_protected:
-            yield KNXProjContents(
-                root_zip=zip_archive,
-                project_archive=zip_archive,
-                project_relative_path=f"{project_id}/",
-                xml_namespace=xml_namespace,
-            )
-            return
-        # Password protected project
-        schema_version = _get_schema_version(xml_namespace)
-        with _extract_protected_project_file(
-            zip_archive, protected_info, password, schema_version
-        ) as project_zip:
-            # ZipPath is not supported by pyzipper thus we use
-            # string name for project_relative_path
-            yield KNXProjContents(
-                root_zip=zip_archive,
-                project_archive=project_zip,
-                project_relative_path="",
-                xml_namespace=xml_namespace,
-            )
+            if not password_protected:
+                yield KNXProjContents(
+                    root_zip=zip_archive,
+                    project_archive=zip_archive,
+                    project_relative_path=f"{project_id}/",
+                    xml_namespace=xml_namespace,
+                )
+                return
+            # Password protected project
+            schema_version = _get_schema_version(xml_namespace)
+            with _extract_protected_project_file(
+                zip_archive, protected_info, password, schema_version
+            ) as project_zip:
+                # ZipPath is not supported by pyzipper thus we use
+                # string name for project_relative_path
+                yield KNXProjContents(
+                    root_zip=zip_archive,
+                    project_archive=project_zip,
+                    project_relative_path="",
+                    xml_namespace=xml_namespace,
+                )
+    except zlib.error as exception:
+        # Decompression fails when the archive contents are damaged - eg. a broken
+        # ETS export. ETS6 archives verify the password before decompression, so
+        # this is not a wrong password there. ETS4/5 ZipCrypto only validates a
+        # single check byte, so a wrong password does reach this about once in 256
+        # attempts - but reporting every damaged file as "invalid password" would
+        # send users down the wrong path far more often than the other way round.
+        _LOGGER.error("Could not decompress project file: %s", exception)
+        raise InvalidProjectArchive(
+            "Could not decompress project data. The project file may be damaged."
+            " Please try exporting it from ETS again."
+        ) from exception
+    except BadZipFile as exception:
+        # The file is not a ZIP archive at all, is truncated, or a member fails its
+        # CRC or - for password protected ETS6 projects - its authentication code.
+        _LOGGER.error("Could not read project file: %s", exception)
+        raise InvalidProjectArchive(
+            "Could not read project data. The file may be damaged or not be an ETS"
+            " project file. Please try exporting it from ETS again."
+        ) from exception
 
 
 def _get_project_id(zip_archive: ZipFile) -> str:
