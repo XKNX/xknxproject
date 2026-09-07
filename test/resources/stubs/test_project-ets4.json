@@ -176,7 +176,8 @@
             "0.0.1",
             "0.0.2"
           ],
-          "medium_type": "Twisted Pair (TP)"
+          "medium_type": "Twisted Pair (TP)",
+          "additional_group_addresses": []
         }
       }
     }
@@ -186,6 +187,32 @@
       "name": "AKS-2016.02 Switch Actuator 20-fold, 12TE, 16A",
       "hardware_name": "AKS-2016.02 Switch Actuator 20-fold, 12TE, 16A",
       "order_number": "AKS-2016.02",
+      "hardware_serial_number": "19",
+      "version_number": 1,
+      "bus_current": 10.0,
+      "width_in_millimeter": 209.8,
+      "has_individual_address": false,
+      "has_application_program": false,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": false,
+      "has_application_program2": false,
+      "tp256": false,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "ZbW68lw4AZjvirG7b7kGyfy3CHU=",
+      "non_reg_relevant_data_version": 0,
+      "internal_description": "",
+      "attributes": {},
       "description": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "0.0.1",
@@ -209,6 +236,35 @@
       "name": "JRA/S4.230.5.1 Jal./Rol.Akt.Fahrzt.man.4f,230V,REG",
       "hardware_name": "JRA/S4.230.5.1 Jal./Rol.Akt.Fahrzt.man.4f,230V,REG",
       "order_number": "2CDG 110 125 R0011",
+      "hardware_serial_number": "2CDG 110 125 R0011",
+      "version_number": 1,
+      "bus_current": 10.0,
+      "width_in_millimeter": 72.0,
+      "has_individual_address": false,
+      "has_application_program": false,
+      "is_coupler": false,
+      "is_power_supply": false,
+      "is_choke": false,
+      "is_power_line_repeater": false,
+      "is_power_line_signal_filter": false,
+      "is_cable": false,
+      "is_ip_enabled": false,
+      "is_rf_retransmitter": false,
+      "is_accessory": false,
+      "is_rail_mounted": false,
+      "has_application_program2": false,
+      "tp256": false,
+      "no_download_without_plugin": false,
+      "original_manufacturer": "",
+      "visible_description": "",
+      "default_language": "en-US",
+      "hash": "q1bWjnuxYCXw3wbS2L0W0DwDMX8=",
+      "non_reg_relevant_data_version": 0,
+      "internal_description": "",
+      "attributes": {
+        "CatalogName": "Blind",
+        "Series": "ProM"
+      },
       "description": "",
       "manufacturer_name": "ABB",
       "individual_address": "0.0.2",
@@ -240,6 +296,7 @@
         "sub": null
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "0.0.1/M-0083_A-0013-11-A9D6_O-0_R-10000",
         "0.0.2/M-0002_A-A061-14-BE27_O-10_R-485"
@@ -258,6 +315,7 @@
         "sub": null
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "0.0.1/M-0083_A-0013-11-A9D6_O-5_R-10005",
         "0.0.2/M-0002_A-A061-14-BE27_O-71_R-1506"
@@ -276,6 +334,7 @@
         "sub": null
       },
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [
         "0.0.1/M-0083_A-0013-11-A9D6_O-13_R-4",
         "0.0.2/M-0002_A-A061-14-BE27_O-10_R-485"
@@ -291,6 +350,7 @@
       "address_end": 2047,
       "group_addresses": [],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {
         "0/0": {
           "name": "Test 2nd level",
@@ -302,6 +362,7 @@
             "0/0/3"
           ],
           "comment": "",
+          "unfiltered": false,
           "group_ranges": {}
         }
       }
