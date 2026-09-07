@@ -119,6 +119,27 @@ class XMLLine:
     area: XMLArea
 
 
+@dataclass
+class XMLBusInterface:
+    """Security credentials for one device bus interface."""
+
+    ref_id: str
+    password: str
+    password_hash: str
+
+
+@dataclass
+class XMLSecureInfo:
+    """Security credentials exported for a device."""
+
+    device_authentication_code: str
+    device_authentication_code_hash: str
+    device_management_password: str
+    device_management_password_hash: str
+    tool_key: str
+    bus_interfaces: list[XMLBusInterface]
+
+
 class DeviceInstance:
     """Class that represents a device instance."""
 
@@ -148,6 +169,7 @@ class DeviceInstance:
         communication_part_loaded: bool = False,
         medium_config_loaded: bool = False,
         parameters_loaded: bool = False,
+        secure_info: XMLSecureInfo | None = None,
     ) -> None:
         """Initialize a Device Instance."""
         self.identifier = identifier
@@ -179,6 +201,7 @@ class DeviceInstance:
         self.module_instances = module_instances
         self.com_objects = com_objects or []
         self.parameter_instance_refs = parameter_instance_refs
+        self.secure_info = secure_info
         self.application_program_ref: str | None = None
 
         self.individual_address = (

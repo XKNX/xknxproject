@@ -5,6 +5,7 @@ from __future__ import annotations
 import html
 import logging
 from operator import attrgetter
+from typing import cast
 
 from striprtf.striprtf import rtf_to_text
 
@@ -19,6 +20,7 @@ from xknxproject.models import (
     MEDIUM_TYPES,
     ApplicationProgram,
     Area,
+    BusInterface,
     Channel,
     CommunicationObject,
     Device,
@@ -34,6 +36,8 @@ from xknxproject.models import (
     Line,
     Product,
     ProjectInfo,
+    SecureDevice,
+    SecureInfo,
     Space,
     XMLArea,
     XMLFunction,
@@ -140,13 +144,24 @@ class XMLParser:
         self.project_info: XMLProjectInformation
         self.functions: list[XMLFunction] = []
 
-    def parse(self, language: str | None = None) -> KNXProject:
+    def parse(
+        self,
+        language: str | None = None,
+        include_secure_info: bool = False,
+    ) -> KNXProject:
         """Parse ETS project."""
-        self._load(language=language)
+        self._load(
+            language=language,
+            include_secure_info=include_secure_info,
+        )
         self._sort()
         return self._transform()
 
-    def _load(self, language: str | None) -> None:
+    def _load(
+        self,
+        language: str | None,
+        include_secure_info: bool,
+    ) -> None:
         """Load XML files."""
         (
             knx_master_data,
@@ -167,6 +182,7 @@ class XMLParser:
         ) = ProjectLoader.load(
             knx_proj_contents=self.knx_proj_contents,
             knx_master_data=knx_master_data,
+            include_secure_info=include_secure_info,
         )
 
         products_dict: dict[str, Product] = {}
@@ -337,7 +353,7 @@ class XMLParser:
                 for channel in device.channels
             }
 
-            devices_dict[device.individual_address] = Device(
+            device_data = Device(
                 name=device.name or device.product_name,
                 hardware_name=device.product_name,
                 order_number=device.order_number,
@@ -356,6 +372,23 @@ class XMLParser:
                 medium_config_loaded=device.medium_config_loaded,
                 parameters_loaded=device.parameters_loaded,
             )
+            if device.secure_info is not None:
+                secure_device = cast(SecureDevice, device_data)
+                secure_device["secure_info"] = SecureInfo(
+                    device_authentication_code=device.secure_info.device_authentication_code,
+                    device_authentication_code_hash=device.secure_info.device_authentication_code_hash,
+                    device_management_password=device.secure_info.device_management_password,
+                    device_management_password_hash=device.secure_info.device_management_password_hash,
+                    tool_key=device.secure_info.tool_key,
+                    bus_interfaces={
+                        bus_interface.ref_id: BusInterface(
+                            password=bus_interface.password,
+                            password_hash=bus_interface.password_hash,
+                        )
+                        for bus_interface in device.secure_info.bus_interfaces
+                    },
+                )
+            devices_dict[device.individual_address] = device_data
 
         topology_dict: dict[str, Area] = {}
         for area in self.areas:

@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import cast
+from xml.etree import ElementTree
 
 import pytest
 
+from xknxproject.loader.project_loader import _TopologyLoader
+from xknxproject.models.models import XMLArea, XMLLine
 from xknxproject.xml.parser import XMLParser
-from xknxproject.zip import extract
+from xknxproject.zip import KNXProjContents, extract
 
 from .. import RESOURCES_PATH
 
@@ -15,6 +19,51 @@ xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
 xknx_test_project_module_defs = RESOURCES_PATH / "module-definition-test.knxproj"
 xknx_test_project_ets5 = RESOURCES_PATH / "xknx_test_project_no_password.knxproj"
 xknx_test_project_protected_ets6 = RESOURCES_PATH / "testprojekt-ets6.knxproj"
+
+
+def test_secure_info_is_opt_in() -> None:
+    """Parse ETS6 security credentials only when explicitly requested."""
+    device_element = ElementTree.fromstring(
+        """
+        <DeviceInstance xmlns="http://knx.org/xml/project/23"
+            Id="P-1_DI-1" Address="1" Puid="1">
+          <Security DeviceAuthenticationCode="auth-code"
+              DeviceAuthenticationCodeHash="auth-hash"
+              DeviceManagementPassword="management-password"
+              DeviceManagementPasswordHash="management-hash"
+              ToolKey="tool-key" />
+          <BusInterfaces>
+            <BusInterface RefId="BI-1" Password="bus-password"
+                PasswordHash="bus-hash" />
+          </BusInterfaces>
+        </DeviceInstance>
+        """
+    )
+    area = XMLArea(0, "", None, [])
+    line = XMLLine(0, None, "", "", [], area)
+
+    project_contents = cast(KNXProjContents, None)
+    default_device = _TopologyLoader(project_contents)._create_device(
+        device_element, line
+    )
+    assert default_device is not None
+    assert default_device.secure_info is None
+
+    secure_device = _TopologyLoader(
+        project_contents, include_secure_info=True
+    )._create_device(device_element, line)
+    assert secure_device is not None
+    assert secure_device.secure_info is not None
+    assert secure_device.secure_info.device_authentication_code == "auth-code"
+    assert secure_device.secure_info.device_authentication_code_hash == "auth-hash"
+    assert secure_device.secure_info.device_management_password == "management-password"
+    assert (
+        secure_device.secure_info.device_management_password_hash == "management-hash"
+    )
+    assert secure_device.secure_info.tool_key == "tool-key"
+    assert secure_device.secure_info.bus_interfaces[0].ref_id == "BI-1"
+    assert secure_device.secure_info.bus_interfaces[0].password == "bus-password"
+    assert secure_device.secure_info.bus_interfaces[0].password_hash == "bus-hash"
 
 
 def test_parse_project_ets6() -> None:

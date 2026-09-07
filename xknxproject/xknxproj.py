@@ -29,8 +29,16 @@ class XKNXProj:
         self.password = password
         self.language = language
 
-    def parse(self, combine: bool = True) -> KNXProject:
-        """Parse the KNX project."""
+    def parse(
+        self,
+        combine: bool = True,
+        include_secure_info: bool = False,
+    ) -> KNXProject:
+        """
+        Parse the KNX project.
+
+        Secure device credentials are omitted unless explicitly requested.
+        """
         _LOGGER.info(
             'Xknxproject version %s parsing "%s" with%s password...',
             __version__,
@@ -39,7 +47,10 @@ class XKNXProj:
         )
         _start = time.time()
         with extract(self.path, self.password) as knx_project_content:
-            project = XMLParser(knx_project_content).parse(self.language)
+            project = XMLParser(knx_project_content).parse(
+                language=self.language,
+                include_secure_info=include_secure_info,
+            )
 
         if combine:
             project = combine_project(project)

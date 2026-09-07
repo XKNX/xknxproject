@@ -18,12 +18,14 @@ from xknxproject.models import (
     ParameterInstanceRef,
     SpaceType,
     XMLArea,
+    XMLBusInterface,
     XMLFunction,
     XMLGroupAddress,
     XMLGroupAddressRef,
     XMLGroupRange,
     XMLLine,
     XMLProjectInformation,
+    XMLSecureInfo,
     XMLSpace,
 )
 from xknxproject.util import get_dpt_type, parse_dpt_types, parse_xml_flag
@@ -37,6 +39,7 @@ class ProjectLoader:
     def load(
         knx_proj_contents: KNXProjContents,
         knx_master_data: KNXMasterData,
+        include_secure_info: bool = False,
     ) -> tuple[
         list[XMLGroupAddress],
         list[XMLGroupRange],
@@ -78,7 +81,10 @@ class ProjectLoader:
                         ga_range_l1, project_info.group_address_style
                     )
                 )
-            topology_loader = _TopologyLoader(knx_proj_contents)
+            topology_loader = _TopologyLoader(
+                knx_proj_contents,
+                include_secure_info=include_secure_info,
+            )
             for topology_element in tree.findall(
                 "{*}Project/{*}Installations/{*}Installation/{*}Topology"
             ):
@@ -192,8 +198,13 @@ class _GroupAddressRangeLoader:
 class _TopologyLoader:
     """Load topology from KNX XML."""
 
-    def __init__(self, knx_proj_contents: KNXProjContents) -> None:
+    def __init__(
+        self,
+        knx_proj_contents: KNXProjContents,
+        include_secure_info: bool = False,
+    ) -> None:
         self.__knx_proj_contents = knx_proj_contents
+        self.__include_secure_info = include_secure_info
 
     def load(self, topology_element: ElementTree.Element) -> list[XMLArea]:
         """Load topology mappings."""
@@ -294,6 +305,36 @@ class _TopologyLoader:
                 value=param_instance_node.get("Value"),
             )
 
+        secure_info = None
+        if self.__include_secure_info:
+            security_element = device_element.find("{*}Security")
+            if security_element is not None:
+                secure_info = XMLSecureInfo(
+                    device_authentication_code=security_element.get(
+                        "DeviceAuthenticationCode", ""
+                    ),
+                    device_authentication_code_hash=security_element.get(
+                        "DeviceAuthenticationCodeHash", ""
+                    ),
+                    device_management_password=security_element.get(
+                        "DeviceManagementPassword", ""
+                    ),
+                    device_management_password_hash=security_element.get(
+                        "DeviceManagementPasswordHash", ""
+                    ),
+                    tool_key=security_element.get("ToolKey", ""),
+                    bus_interfaces=[
+                        XMLBusInterface(
+                            ref_id=bus_interface.get("RefId", ""),
+                            password=bus_interface.get("Password", ""),
+                            password_hash=bus_interface.get("PasswordHash", ""),
+                        )
+                        for bus_interface in device_element.findall(
+                            "{*}BusInterfaces/{*}BusInterface"
+                        )
+                    ],
+                )
+
         return DeviceInstance(
             identifier=device_element.get("Id", ""),
             address=int(address),
@@ -320,6 +361,7 @@ class _TopologyLoader:
             == "true",
             medium_config_loaded=device_element.get("MediumConfigLoaded") == "true",
             parameters_loaded=device_element.get("ParametersLoaded") == "true",
+            secure_info=secure_info,
         )
 
     @staticmethod
