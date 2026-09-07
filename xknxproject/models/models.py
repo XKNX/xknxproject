@@ -220,6 +220,7 @@ class DeviceInstance:
                 module_instances=self.module_instances,
                 application=application,
             )
+            com_instance.resolve_module_placeholders(self.module_instances)
 
         for channel in self.channels:
             channel.resolve_channel_attributes(
@@ -516,6 +517,43 @@ class ComObjectInstanceRef:
         # TODO: verify in xsd if ComObject could have Semantics containing dpas too
         if isinstance(com_object, ComObjectRef):
             self.dpas = com_object.semantics
+
+    def resolve_module_placeholders(
+        self,
+        module_instances: list[ModuleInstance],
+    ) -> None:
+        """Replace module placeholders with module instance argument values."""
+        if not (
+            self.ref_id.startswith("MD-")
+            and any(
+                value and "{{" in value
+                for value in (self.name, self.text, self.function_text)
+            )
+        ):
+            return
+
+        try:
+            module_instance = max(
+                (
+                    mi
+                    for mi in module_instances
+                    if self.ref_id.startswith(f"{mi.identifier}_")
+                ),
+                key=lambda mi: len(mi.identifier),
+            )
+        except ValueError:
+            module_instance_ref = self.ref_id.split("_O", maxsplit=1)[0]
+            raise UnexpectedDataError(
+                f"ModuleInstance '{module_instance_ref}' not found for "
+                f"ComObjectInstanceRef '{self.ref_id}' {self.text}"
+            ) from None
+
+        for argument in module_instance.arguments:
+            placeholder = "{{" + argument.name + "}}"
+            for attribute in ("name", "text", "function_text"):
+                value = getattr(self, attribute)
+                if value is not None:
+                    setattr(self, attribute, value.replace(placeholder, argument.value))
 
     def apply_module_base_number_argument(
         self,
