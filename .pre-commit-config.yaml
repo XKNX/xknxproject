@@ -9,7 +9,7 @@ repos:
         exclude_types: [csv, json]
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # Ruff version.
-    rev: 'v0.16.3'
+    rev: 'v0.16.7'
     hooks:
       - id: ruff-check
         # in CI it is directly run by tox to allow dependency upgrade checks
