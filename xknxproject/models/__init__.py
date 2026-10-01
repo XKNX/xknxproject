@@ -1,6 +1,15 @@
 """Xknxproj models."""
 
 # flake8: noqa
+from .application_program import (
+    ApplicationProgramDefinition,
+    ApplicationProgramIdentity,
+    ApplicationPrograms,
+    ChannelDefinition,
+    ModuleDefinition,
+    ObjectDefinition,
+    ProductInfo,
+)
 from .knxproject import (
     Area,
     Channel,
