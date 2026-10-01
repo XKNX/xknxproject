@@ -6,8 +6,8 @@ import io
 
 from xknxproject.loader import ApplicationProgramDefinitionLoader
 from xknxproject.loader.application_program_definition_loader import (
+    RawApplicationProgramIdentity,
     _Placement,
-    _RawIdentity,
 )
 from xknxproject.models import ChannelDefinition, ModuleDefinition, ObjectDefinition
 
@@ -19,7 +19,7 @@ APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 <ManufacturerData><Manufacturer RefId="M-0083">
 <ApplicationPrograms>
 <ApplicationProgram Id="{_APP}" ApplicationNumber="314" ApplicationVersion="50"
-  MaskVersion="MV-07B0" Name="AKD-0424V.02" Hash="abc="
+  MaskVersion="MV-07B0" Name="AKD-0424V.02" Hash="abc=" OriginalManufacturer="M-000A"
   Semantics="# Serialization-Format-Version=2, KIM-Version=(&lt;http://schema.knx.org/2020/ontology/v2&gt;, 92, 60), @prefix knx: &lt;http://x&gt;">
 <Static>
   <ComObjectTable>
@@ -170,7 +170,7 @@ APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 
 
 _Loaded = tuple[
-    _RawIdentity,
+    RawApplicationProgramIdentity,
     dict[str, ChannelDefinition],
     dict[str, ModuleDefinition],
     dict[str, ObjectDefinition],
@@ -194,6 +194,7 @@ def test_identity_attributes() -> None:
     assert identity.mask_version == "MV-07B0"
     assert identity.program_hash == "abc="
     assert identity.kim_version == "92.60"
+    assert identity.original_manufacturer == "M-000A"
 
 
 def test_channel_object_ids_deduplicated() -> None:

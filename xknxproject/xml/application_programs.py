@@ -35,9 +35,13 @@ def _group_devices_by_application(
 
 
 def _original_manufacturer_id(
-    application_id: str, devices: list[DeviceInstance]
+    application_id: str,
+    program_attribute: str | None,
+    devices: list[DeviceInstance],
 ) -> str | None:
-    """Original manufacturer from the hardware or the "-Oxxxx" id suffix."""
+    """Original manufacturer from the program, the hardware or the "-Oxxxx" id suffix."""
+    if program_attribute:
+        return program_attribute
     for device in devices:
         if device.original_manufacturer:
             return device.original_manufacturer
@@ -97,7 +101,7 @@ class ApplicationProgramParser:
                 manufacturer_id=application_id.split("_", maxsplit=1)[0],
                 manufacturer_name=devices[0].manufacturer_name,
                 original_manufacturer_id=_original_manufacturer_id(
-                    application_id, devices
+                    application_id, raw_identity.original_manufacturer, devices
                 ),
                 application_number=raw_identity.application_number,
                 application_version=raw_identity.application_version,

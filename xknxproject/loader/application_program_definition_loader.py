@@ -27,7 +27,7 @@ _KIM_VERSION_RE = re.compile(r"KIM-Version=\(<[^>]*>,\s*(\d+),\s*(\d+)\)")
 
 
 @dataclass
-class _RawIdentity:
+class RawApplicationProgramIdentity:
     """Identity attributes read from the ApplicationProgram root element."""
 
     application_id: str
@@ -37,6 +37,7 @@ class _RawIdentity:
     mask_version: str
     program_hash: str | None
     kim_version: str | None
+    original_manufacturer: str | None  # OEM programs: "M-000A"
 
 
 @dataclass
@@ -101,7 +102,7 @@ class ApplicationProgramDefinitionLoader:
         application_program_path: Path | IO[bytes],
         language_code: str | None,
     ) -> tuple[
-        _RawIdentity,
+        RawApplicationProgramIdentity,
         dict[str, ChannelDefinition],
         dict[str, ModuleDefinition],
         dict[str, ObjectDefinition],
@@ -122,7 +123,7 @@ class ApplicationProgramDefinitionLoader:
         application_xml: IO[bytes],
         language_code: str | None,
     ) -> tuple[
-        _RawIdentity,
+        RawApplicationProgramIdentity,
         dict[str, ChannelDefinition],
         dict[str, ModuleDefinition],
         dict[str, ObjectDefinition],
@@ -132,7 +133,7 @@ class ApplicationProgramDefinitionLoader:
         com_object_refs: dict[str, _ComObjectRef] = {}
         channels: dict[str, ChannelDefinition] = {}
         modules: dict[str, ModuleDefinition] = {}
-        identity: _RawIdentity | None = None
+        identity: RawApplicationProgramIdentity | None = None
         prefix = ""  # f"{application_id}_"
         # ancestry while walking <Dynamic>: open channel id and open module def ids.
         open_channel: str | None = None
@@ -167,7 +168,7 @@ class ApplicationProgramDefinitionLoader:
                 if elem.tag == ns_application_program:
                     application_id = elem.attrib["Id"]
                     prefix = f"{application_id}_"
-                    identity = _RawIdentity(
+                    identity = RawApplicationProgramIdentity(
                         application_id=application_id,
                         application_number=_int_or_none(elem.get("ApplicationNumber")),
                         application_version=_int_or_none(
@@ -179,6 +180,7 @@ class ApplicationProgramDefinitionLoader:
                         kim_version=ApplicationProgramDefinitionLoader._parse_kim_version(
                             elem.get("Semantics")
                         ),
+                        original_manufacturer=elem.get("OriginalManufacturer"),
                     )
                 elif elem.tag == ns_com_object:
                     com_objects[_rel(elem.attrib["Id"])] = _ComObject(

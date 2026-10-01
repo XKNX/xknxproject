@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+from types import SimpleNamespace
+from typing import cast
 
 import pytest
 
@@ -11,6 +13,7 @@ from xknxproject.models import (
     ApplicationProgramDefinition,
     ApplicationProgramIdentity,
     ChannelDefinition,
+    DeviceInstance,
     ModuleDefinition,
     ObjectDefinition,
     ProductInfo,
@@ -177,3 +180,23 @@ def test_modules_instantiated_in_channels_are_channel_members() -> None:
     # MD-4_SM-1 is instantiated in MD-4, which is instantiated in CH-1
     assert "MD-4_SM-1_O-3-0_R-1" in z70["channels"]["CH-1"]["object_ids"]
     assert z70["objects"]["MD-4_SM-1_O-3-0_R-1"]["channel_ids"] == ["CH-1"]
+
+
+def test_original_manufacturer_id_sources() -> None:
+    """The program attribute wins over the hardware attribute and the id suffix."""
+    from xknxproject.xml.application_programs import _original_manufacturer_id
+
+    def _devices(*original_manufacturers: str | None) -> list[DeviceInstance]:
+        return [
+            cast(DeviceInstance, SimpleNamespace(original_manufacturer=manufacturer))
+            for manufacturer in original_manufacturers
+        ]
+
+    oem_id = "M-0008_A-20E0-21-9997-O000A"
+    hardware = _devices(None, "M-00EF")
+    assert _original_manufacturer_id(oem_id, "M-0001", hardware) == "M-0001"
+    assert _original_manufacturer_id(oem_id, None, hardware) == "M-00EF"
+    assert _original_manufacturer_id(oem_id, None, _devices(None)) == "M-000A"
+    assert (
+        _original_manufacturer_id("M-0083_A-013A-32-DCC1", None, _devices(None)) is None
+    )
