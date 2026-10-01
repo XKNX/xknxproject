@@ -15,6 +15,7 @@ from xknxproject.models import (
     ObjectDefinition,
     ProductInfo,
 )
+from xknxproject.util import strip_module_instance
 
 from . import RESOURCES_PATH, STUBS_PATH
 
@@ -73,6 +74,45 @@ def test_application_program_stub_keys_match_typed_dicts(file_stem: str) -> None
             assert set(module) == set(ModuleDefinition.__annotations__)
         for obj in program["objects"].values():
             assert set(obj) == set(ObjectDefinition.__annotations__)
+
+
+@pytest.mark.parametrize(
+    ("file_stem", "password", "language"), APPLICATION_PROGRAM_FIXTURES
+)
+def test_instance_ids_resolve_to_definitions(
+    file_stem: str, password: str | None, language: str | None
+) -> None:
+    """Instance identifiers of `parse()` map to definition identifiers."""
+    knxproj = XKNXProj(
+        RESOURCES_PATH / f"{file_stem}.knxproj", password, language=language
+    )
+    project = knxproj.parse()
+    programs = knxproj.parse_application_programs()
+
+    checked_objects = 0
+    for co_id, com_object in project["communication_objects"].items():
+        if (app := com_object["device_application"]) is None:
+            continue
+        program = programs[app]
+        # ETS4 instance ids carry the application id as prefix
+        object_id = strip_module_instance(
+            co_id.split("/", 1)[1], search_id="O"
+        ).removeprefix(f"{app}_")
+        assert object_id in program["objects"], co_id
+        if (channel := com_object["channel"]) is not None:
+            channel_id = strip_module_instance(channel, search_id="CH")
+            assert channel_id in program["channels"], co_id
+            assert object_id in program["channels"][channel_id]["object_ids"], co_id
+        checked_objects += 1
+    assert checked_objects > 0
+
+    for device in project["devices"].values():
+        for device_channel_id in device["channels"]:
+            assert device["application"] is not None
+            assert (
+                strip_module_instance(device_channel_id, search_id="CH")
+                in programs[device["application"]]["channels"]
+            ), device_channel_id
 
 
 def test_devices_without_application_are_skipped() -> None:
