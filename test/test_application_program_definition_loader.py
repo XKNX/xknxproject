@@ -69,6 +69,24 @@ APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
       </Channel>
     </Dynamic>
   </ModuleDef>
+  <ModuleDef Id="{_APP}_MD-3" Name="Page">
+    <Static>
+      <ComObjectTable>
+        <ComObject Id="{_APP}_MD-3_O-3-1" Name="Page" Text="Page" Number="1"
+          FunctionText="Page" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled"
+          CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled"
+          ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+      </ComObjectTable>
+      <ComObjectRefs>
+        <ComObjectRef Id="{_APP}_MD-3_O-3-1_R-1" RefId="{_APP}_MD-3_O-3-1" />
+      </ComObjectRefs>
+    </Static>
+    <Dynamic>
+      <ParameterBlock Id="{_APP}_MD-3_PB-1" Name="Page settings">
+        <ComObjectRefRef RefId="{_APP}_MD-3_O-3-1_R-1" />
+      </ParameterBlock>
+    </Dynamic>
+  </ModuleDef>
 </ModuleDefs>
 <Dynamic>
   <ChannelIndependentBlock>
@@ -150,10 +168,19 @@ def test_channel_object_ids_deduplicated() -> None:
         "name": "ModuleDefChannel",
         "channel_ids": ["MD-2_CH-1"],
     }
-    assert independent == ["O-0_R-1"]
+    assert independent == ["MD-3_O-3-1_R-1", "O-0_R-1"]
     # the same object can be channel independent and referenced by a channel
     assert objects["O-0_R-1"]["channel_ids"] == ["CH-9"]
     assert objects["MD-2_O-2-3_R-1"]["channel_ids"] == ["MD-2_CH-1"]
+
+
+def test_refs_outside_channels_are_channel_independent() -> None:
+    """Refs outside any Channel are channel independent, e.g. in a Channel-less ModuleDef."""
+    _, _, modules, objects, independent = _load(None)
+    assert "O-0_R-1" in independent  # in a ChannelIndependentBlock
+    assert "MD-3_O-3-1_R-1" in independent  # in a ModuleDef without Channel
+    assert objects["MD-3_O-3-1_R-1"]["channel_ids"] == []
+    assert modules["MD-3"]["channel_ids"] == []
 
 
 def test_object_definition_merges_ref_over_com_object() -> None:

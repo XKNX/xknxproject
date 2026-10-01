@@ -121,11 +121,11 @@ class ApplicationProgramDefinitionLoader:
         channel_independent: list[str] = []
         identity: _RawIdentity | None = None
         prefix = ""  # f"{application_id}_"
-        # ancestry while walking <Dynamic>: open channel id, open module def id,
-        # whether we are inside a ChannelIndependentBlock
+        # ancestry while walking <Dynamic>: open channel id and open module def ids.
+        # A ComObjectRefRef outside any Channel is channel independent - whether it
+        # sits in a ChannelIndependentBlock or in a ModuleDef without Channel.
         open_channel: str | None = None
         module_stack: list[str] = []  # nested for SubModuleDefs
-        in_independent_block = False
         elem: ElementTree.Element
 
         tree_iterator = ElementTree.iterparse(application_xml, events=("start", "end"))
@@ -137,7 +137,6 @@ class ApplicationProgramDefinitionLoader:
         ns_com_object_ref_ref = f"{namespace}ComObjectRefRef"
         ns_channel = f"{namespace}Channel"
         ns_module_def = f"{namespace}ModuleDef"
-        ns_independent = f"{namespace}ChannelIndependentBlock"
         ns_languages = f"{namespace}Languages"
 
         def _rel(identifier: str) -> str:
@@ -224,14 +223,12 @@ class ApplicationProgramDefinitionLoader:
                     )
                     if open_module is not None:
                         modules[open_module]["channel_ids"].append(open_channel)
-                elif elem.tag == ns_independent:
-                    in_independent_block = True
                 elif elem.tag == ns_com_object_ref_ref:
                     ref = _rel(elem.attrib["RefId"])
                     if open_channel is not None:
                         if ref not in channels[open_channel]["object_ids"]:
                             channels[open_channel]["object_ids"].append(ref)
-                    elif in_independent_block and ref not in channel_independent:
+                    elif ref not in channel_independent:
                         channel_independent.append(ref)
                 elif elem.tag == ns_languages:
                     break
@@ -242,8 +239,6 @@ class ApplicationProgramDefinitionLoader:
                 open_channel = None
             elif elem.tag == ns_module_def:
                 module_stack.pop()
-            elif elem.tag == ns_independent:
-                in_independent_block = False
             elem.clear()
 
         if identity is None:
