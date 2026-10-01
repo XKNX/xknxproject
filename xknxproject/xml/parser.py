@@ -82,14 +82,18 @@ def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
     """Convert spaces to the final output format."""
     result: dict[str, Space] = {}
     for space in spaces:
-        if space.name in result:
+        key = space.name
+        if key in result:
+            key = f"{space.name} ({space.identifier})"
             _LOGGER.warning(
-                "Sibling spaces share the name %r: %s is replaced by %s in `locations`",
-                space.name,
+                "Sibling spaces %s and %s share the name %r: "
+                "the second is exported as %r in `locations`",
                 result[space.name]["identifier"],
                 space.identifier,
+                space.name,
+                key,
             )
-        result[space.name] = Space(
+        result[key] = Space(
             type=space.space_type.value,
             identifier=space.identifier,
             name=space.name,

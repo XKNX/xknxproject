@@ -29,7 +29,7 @@ def _space(
 
 
 def test_sibling_space_name_collision_warns(caplog: pytest.LogCaptureFixture) -> None:
-    """Two sibling spaces with the same name log a warning and the second one wins."""
+    """Two sibling spaces with the same name log a warning and both are kept."""
     spaces = [
         _space("P-1_BP-2", "Flur", ["1.1.1"], []),
         _space("P-1_BP-3", "Flur", ["1.1.2"], []),
@@ -37,10 +37,13 @@ def test_sibling_space_name_collision_warns(caplog: pytest.LogCaptureFixture) ->
     with caplog.at_level(logging.WARNING, logger="xknxproject.log"):
         result = _recursive_convert_spaces(spaces)
 
-    assert list(result) == ["Flur"]
-    assert result["Flur"]["identifier"] == "P-1_BP-3"
+    assert list(result) == ["Flur", "Flur (P-1_BP-3)"]
+    assert result["Flur"]["identifier"] == "P-1_BP-2"
+    assert result["Flur (P-1_BP-3)"]["identifier"] == "P-1_BP-3"
+    assert result["Flur (P-1_BP-3)"]["name"] == "Flur"
     assert "Flur" in caplog.text
     assert "P-1_BP-2" in caplog.text
+    assert "P-1_BP-3" in caplog.text
 
 
 def test_device_location_ids_use_innermost_space() -> None:
