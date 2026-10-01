@@ -3653,7 +3653,48 @@
         "number": "17",
         "functional_blocks": null,
         "module_definition_id": null,
-        "object_ids": []
+        "object_ids": [
+          "MD-1_O-2-16_R-1",
+          "MD-1_O-2-17_R-2",
+          "MD-1_O-2-18_R-3",
+          "MD-1_O-2-19_R-4",
+          "MD-1_O-2-17_R-5",
+          "MD-1_O-2-16_R-6",
+          "MD-1_O-2-7_R-12",
+          "MD-1_O-2-10_R-13",
+          "MD-1_O-2-13_R-14",
+          "MD-1_O-2-8_R-15",
+          "MD-1_O-2-14_R-40",
+          "MD-1_O-2-7_R-16",
+          "MD-1_O-2-13_R-17",
+          "MD-1_O-2-7_R-18",
+          "MD-1_O-2-13_R-19",
+          "MD-1_O-2-7_R-20",
+          "MD-1_O-2-13_R-21",
+          "MD-1_O-2-7_R-22",
+          "MD-1_O-2-8_R-23",
+          "MD-1_O-2-10_R-24",
+          "MD-1_O-2-11_R-25",
+          "MD-1_O-2-13_R-26",
+          "MD-1_O-2-14_R-27",
+          "MD-1_O-2-9_R-28",
+          "MD-1_O-2-12_R-29",
+          "MD-1_O-2-15_R-30",
+          "MD-1_O-2-0_R-7",
+          "MD-1_O-2-1_R-8",
+          "MD-1_O-2-2_R-9",
+          "MD-1_O-2-4_R-10",
+          "MD-1_O-2-5_R-11",
+          "MD-1_O-2-3_R-33",
+          "MD-1_O-2-3_R-34",
+          "MD-1_O-2-4_R-31",
+          "MD-1_O-2-5_R-32",
+          "MD-1_O-2-6_R-38",
+          "MD-1_O-2-6_R-39",
+          "MD-1_O-2-20_R-35",
+          "MD-1_O-2-21_R-36",
+          "MD-1_O-2-22_R-37"
+        ]
       },
       "CH-84": {
         "identifier": "CH-84",
@@ -3662,7 +3703,16 @@
         "number": "84",
         "functional_blocks": null,
         "module_definition_id": null,
-        "object_ids": []
+        "object_ids": [
+          "MD-3_O-2-0_R-1",
+          "MD-3_O-2-0_R-2",
+          "MD-3_O-2-0_R-3",
+          "MD-3_O-2-1_R-7",
+          "MD-3_O-2-2_R-8",
+          "MD-3_O-2-4_R-5",
+          "MD-3_O-2-3_R-4",
+          "MD-3_O-2-5_R-6"
+        ]
       }
     },
     "modules": {
@@ -6106,7 +6156,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-17_R-2": {
         "identifier": "MD-1_O-2-17_R-2",
@@ -6131,7 +6183,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-18_R-3": {
         "identifier": "MD-1_O-2-18_R-3",
@@ -6156,7 +6210,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-19_R-4": {
         "identifier": "MD-1_O-2-19_R-4",
@@ -6181,7 +6237,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-17_R-5": {
         "identifier": "MD-1_O-2-17_R-5",
@@ -6206,7 +6264,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-16_R-6": {
         "identifier": "MD-1_O-2-16_R-6",
@@ -6231,7 +6291,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-0_R-7": {
         "identifier": "MD-1_O-2-0_R-7",
@@ -6256,7 +6318,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-1_R-8": {
         "identifier": "MD-1_O-2-1_R-8",
@@ -6281,7 +6345,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-2_R-9": {
         "identifier": "MD-1_O-2-2_R-9",
@@ -6306,7 +6372,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-4_R-10": {
         "identifier": "MD-1_O-2-4_R-10",
@@ -6331,7 +6399,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-5_R-11": {
         "identifier": "MD-1_O-2-5_R-11",
@@ -6356,7 +6426,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-7_R-12": {
         "identifier": "MD-1_O-2-7_R-12",
@@ -6381,7 +6453,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-10_R-13": {
         "identifier": "MD-1_O-2-10_R-13",
@@ -6406,7 +6480,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-13_R-14": {
         "identifier": "MD-1_O-2-13_R-14",
@@ -6431,7 +6507,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-8_R-15": {
         "identifier": "MD-1_O-2-8_R-15",
@@ -6456,7 +6534,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-7_R-16": {
         "identifier": "MD-1_O-2-7_R-16",
@@ -6481,7 +6561,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-13_R-17": {
         "identifier": "MD-1_O-2-13_R-17",
@@ -6506,7 +6588,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-7_R-18": {
         "identifier": "MD-1_O-2-7_R-18",
@@ -6531,7 +6615,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-13_R-19": {
         "identifier": "MD-1_O-2-13_R-19",
@@ -6556,7 +6642,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-7_R-20": {
         "identifier": "MD-1_O-2-7_R-20",
@@ -6581,7 +6669,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-13_R-21": {
         "identifier": "MD-1_O-2-13_R-21",
@@ -6606,7 +6696,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-7_R-22": {
         "identifier": "MD-1_O-2-7_R-22",
@@ -6631,7 +6723,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-8_R-23": {
         "identifier": "MD-1_O-2-8_R-23",
@@ -6656,7 +6750,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-10_R-24": {
         "identifier": "MD-1_O-2-10_R-24",
@@ -6681,7 +6777,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-11_R-25": {
         "identifier": "MD-1_O-2-11_R-25",
@@ -6706,7 +6804,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-13_R-26": {
         "identifier": "MD-1_O-2-13_R-26",
@@ -6731,7 +6831,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-14_R-27": {
         "identifier": "MD-1_O-2-14_R-27",
@@ -6756,7 +6858,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-9_R-28": {
         "identifier": "MD-1_O-2-9_R-28",
@@ -6781,7 +6885,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-12_R-29": {
         "identifier": "MD-1_O-2-12_R-29",
@@ -6806,7 +6912,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-15_R-30": {
         "identifier": "MD-1_O-2-15_R-30",
@@ -6831,7 +6939,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-4_R-31": {
         "identifier": "MD-1_O-2-4_R-31",
@@ -6856,7 +6966,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-5_R-32": {
         "identifier": "MD-1_O-2-5_R-32",
@@ -6881,7 +6993,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-3_R-33": {
         "identifier": "MD-1_O-2-3_R-33",
@@ -6906,7 +7020,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-3_R-34": {
         "identifier": "MD-1_O-2-3_R-34",
@@ -6931,7 +7047,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-20_R-35": {
         "identifier": "MD-1_O-2-20_R-35",
@@ -6956,7 +7074,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-21_R-36": {
         "identifier": "MD-1_O-2-21_R-36",
@@ -6985,7 +7105,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-22_R-37": {
         "identifier": "MD-1_O-2-22_R-37",
@@ -7010,7 +7132,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-6_R-38": {
         "identifier": "MD-1_O-2-6_R-38",
@@ -7035,7 +7159,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-6_R-39": {
         "identifier": "MD-1_O-2-6_R-39",
@@ -7064,7 +7190,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-1_O-2-14_R-40": {
         "identifier": "MD-1_O-2-14_R-40",
@@ -7089,7 +7217,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-17"
+        ]
       },
       "MD-2_O-2-4_R-1": {
         "identifier": "MD-2_O-2-4_R-1",
@@ -8545,7 +8675,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-84"
+        ]
       },
       "MD-3_O-2-0_R-2": {
         "identifier": "MD-3_O-2-0_R-2",
@@ -8570,7 +8702,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-84"
+        ]
       },
       "MD-3_O-2-0_R-3": {
         "identifier": "MD-3_O-2-0_R-3",
@@ -8595,7 +8729,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-84"
+        ]
       },
       "MD-3_O-2-3_R-4": {
         "identifier": "MD-3_O-2-3_R-4",
@@ -8620,7 +8756,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-84"
+        ]
       },
       "MD-3_O-2-4_R-5": {
         "identifier": "MD-3_O-2-4_R-5",
@@ -8645,7 +8783,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-84"
+        ]
       },
       "MD-3_O-2-5_R-6": {
         "identifier": "MD-3_O-2-5_R-6",
@@ -8670,7 +8810,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-84"
+        ]
       },
       "MD-3_O-2-2_R-8": {
         "identifier": "MD-3_O-2-2_R-8",
@@ -8695,7 +8837,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-84"
+        ]
       },
       "MD-3_O-2-1_R-7": {
         "identifier": "MD-3_O-2-1_R-7",
@@ -8720,59 +8864,12 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-84"
+        ]
       }
     },
-    "channel_independent_object_ids": [
-      "MD-1_O-2-16_R-1",
-      "MD-1_O-2-17_R-2",
-      "MD-1_O-2-18_R-3",
-      "MD-1_O-2-19_R-4",
-      "MD-1_O-2-17_R-5",
-      "MD-1_O-2-16_R-6",
-      "MD-1_O-2-7_R-12",
-      "MD-1_O-2-10_R-13",
-      "MD-1_O-2-13_R-14",
-      "MD-1_O-2-8_R-15",
-      "MD-1_O-2-14_R-40",
-      "MD-1_O-2-7_R-16",
-      "MD-1_O-2-13_R-17",
-      "MD-1_O-2-7_R-18",
-      "MD-1_O-2-13_R-19",
-      "MD-1_O-2-7_R-20",
-      "MD-1_O-2-13_R-21",
-      "MD-1_O-2-7_R-22",
-      "MD-1_O-2-8_R-23",
-      "MD-1_O-2-10_R-24",
-      "MD-1_O-2-11_R-25",
-      "MD-1_O-2-13_R-26",
-      "MD-1_O-2-14_R-27",
-      "MD-1_O-2-9_R-28",
-      "MD-1_O-2-12_R-29",
-      "MD-1_O-2-15_R-30",
-      "MD-1_O-2-0_R-7",
-      "MD-1_O-2-1_R-8",
-      "MD-1_O-2-2_R-9",
-      "MD-1_O-2-4_R-10",
-      "MD-1_O-2-5_R-11",
-      "MD-1_O-2-3_R-33",
-      "MD-1_O-2-3_R-34",
-      "MD-1_O-2-4_R-31",
-      "MD-1_O-2-5_R-32",
-      "MD-1_O-2-6_R-38",
-      "MD-1_O-2-6_R-39",
-      "MD-1_O-2-20_R-35",
-      "MD-1_O-2-21_R-36",
-      "MD-1_O-2-22_R-37",
-      "MD-3_O-2-0_R-1",
-      "MD-3_O-2-0_R-2",
-      "MD-3_O-2-0_R-3",
-      "MD-3_O-2-1_R-7",
-      "MD-3_O-2-2_R-8",
-      "MD-3_O-2-4_R-5",
-      "MD-3_O-2-3_R-4",
-      "MD-3_O-2-5_R-6"
-    ],
+    "channel_independent_object_ids": [],
     "language_code": "de-DE",
     "xknxproject_version": "3.10.0"
   },
@@ -8932,7 +9029,32 @@
           "O-3_R-4",
           "O-4_R-5",
           "O-5_R-6",
-          "O-55_R-19"
+          "O-55_R-19",
+          "MD-4_SM-1_O-3-0_R-1",
+          "MD-4_SM-1_O-3-0_R-3",
+          "MD-4_SM-1_O-3-1_R-2",
+          "MD-4_SM-1_O-3-1_R-4",
+          "MD-5_O-2-8_R-17",
+          "MD-5_O-2-0_R-1",
+          "MD-5_O-2-0_R-2",
+          "MD-5_O-2-4_R-9",
+          "MD-5_O-2-4_R-10",
+          "MD-5_O-2-1_R-3",
+          "MD-5_O-2-1_R-4",
+          "MD-5_O-2-5_R-11",
+          "MD-5_O-2-5_R-12",
+          "MD-5_O-2-2_R-5",
+          "MD-5_O-2-2_R-6",
+          "MD-5_O-2-6_R-13",
+          "MD-5_O-2-6_R-14",
+          "MD-5_O-2-3_R-7",
+          "MD-5_O-2-3_R-8",
+          "MD-5_O-2-7_R-15",
+          "MD-5_O-2-7_R-16",
+          "MD-7_O-2-0_R-1",
+          "MD-7_O-2-0_R-3",
+          "MD-7_O-2-0_R-4",
+          "MD-7_O-2-0_R-2"
         ]
       },
       "CH-2": {
@@ -8954,7 +9076,164 @@
           "O-327_R-1057",
           "O-327_R-33",
           "O-328_R-31",
-          "O-328_R-32"
+          "O-328_R-32",
+          "MD-1_O-2-0_R-1",
+          "MD-1_O-2-1_R-2",
+          "MD-1_O-2-2_R-3",
+          "MD-1_O-2-3_R-4",
+          "MD-1_O-2-4_R-5",
+          "MD-1_O-2-5_R-6",
+          "MD-1_O-2-6_R-7",
+          "MD-1_O-2-7_R-8",
+          "MD-1_O-2-8_R-9",
+          "MD-1_O-2-9_R-10",
+          "MD-1_O-2-10_R-11",
+          "MD-1_O-2-11_R-12",
+          "MD-1_O-2-12_R-13",
+          "MD-1_O-2-13_R-14",
+          "MD-1_O-2-14_R-15",
+          "MD-1_O-2-15_R-16",
+          "MD-1_O-2-16_R-17",
+          "MD-1_O-2-17_R-18",
+          "MD-1_O-2-18_R-19",
+          "MD-1_O-2-19_R-20",
+          "MD-2_O-2-0_R-1",
+          "MD-2_O-2-0_R-2",
+          "MD-2_O-2-0_R-3",
+          "MD-2_O-2-0_R-4",
+          "MD-2_O-2-0_R-113",
+          "MD-2_O-2-0_R-5",
+          "MD-2_O-2-0_R-6",
+          "MD-2_O-2-0_R-114",
+          "MD-2_O-2-0_R-7",
+          "MD-2_O-2-0_R-8",
+          "MD-2_O-2-0_R-115",
+          "MD-2_O-2-0_R-9",
+          "MD-2_O-2-0_R-10",
+          "MD-2_O-2-0_R-11",
+          "MD-2_O-2-0_R-12",
+          "MD-2_O-2-0_R-13",
+          "MD-2_O-2-0_R-14",
+          "MD-2_O-2-0_R-112",
+          "MD-2_O-2-1_R-15",
+          "MD-2_O-2-1_R-16",
+          "MD-2_O-2-1_R-17",
+          "MD-2_O-2-1_R-18",
+          "MD-2_O-2-1_R-19",
+          "MD-2_O-2-1_R-20",
+          "MD-2_O-2-1_R-21",
+          "MD-2_O-2-2_R-22",
+          "MD-2_O-2-2_R-23",
+          "MD-2_O-2-2_R-24",
+          "MD-2_O-2-2_R-25",
+          "MD-2_O-2-0_R-26",
+          "MD-2_O-2-0_R-130",
+          "MD-2_O-2-1_R-27",
+          "MD-2_O-2-1_R-28",
+          "MD-2_O-2-1_R-29",
+          "MD-2_O-2-1_R-30",
+          "MD-2_O-2-1_R-31",
+          "MD-2_O-2-1_R-32",
+          "MD-2_O-2-1_R-33",
+          "MD-2_O-2-1_R-34",
+          "MD-2_O-2-1_R-35",
+          "MD-2_O-2-1_R-36",
+          "MD-2_O-2-0_R-37",
+          "MD-2_O-2-1_R-38",
+          "MD-2_O-2-1_R-39",
+          "MD-2_O-2-0_R-131",
+          "MD-2_O-2-0_R-132",
+          "MD-2_O-2-0_R-133",
+          "MD-2_O-2-0_R-134",
+          "MD-2_O-2-0_R-135",
+          "MD-2_O-2-0_R-136",
+          "MD-2_O-2-0_R-137",
+          "MD-2_O-2-1_R-40",
+          "MD-2_O-2-2_R-41",
+          "MD-2_O-2-1_R-42",
+          "MD-2_O-2-1_R-43",
+          "MD-2_O-2-2_R-44",
+          "MD-2_O-2-2_R-45",
+          "MD-2_O-2-2_R-46",
+          "MD-2_O-2-1_R-47",
+          "MD-2_O-2-1_R-48",
+          "MD-2_O-2-0_R-49",
+          "MD-2_O-2-3_R-116",
+          "MD-2_O-2-1_R-50",
+          "MD-2_O-2-2_R-51",
+          "MD-2_O-2-0_R-52",
+          "MD-2_O-2-3_R-117",
+          "MD-2_O-2-3_R-53",
+          "MD-2_O-2-0_R-54",
+          "MD-2_O-2-1_R-55",
+          "MD-2_O-2-1_R-56",
+          "MD-2_O-2-0_R-57",
+          "MD-2_O-2-1_R-58",
+          "MD-2_O-2-0_R-59",
+          "MD-2_O-2-2_R-60",
+          "MD-2_O-2-2_R-61",
+          "MD-2_O-2-1_R-62",
+          "MD-2_O-2-0_R-63",
+          "MD-2_O-2-1_R-64",
+          "MD-2_O-2-1_R-65",
+          "MD-2_O-2-1_R-66",
+          "MD-2_O-2-1_R-67",
+          "MD-2_O-2-1_R-68",
+          "MD-2_O-2-1_R-69",
+          "MD-2_O-2-1_R-70",
+          "MD-2_O-2-1_R-71",
+          "MD-2_O-2-1_R-72",
+          "MD-2_O-2-1_R-73",
+          "MD-2_O-2-1_R-74",
+          "MD-2_O-2-1_R-75",
+          "MD-2_O-2-1_R-76",
+          "MD-2_O-2-1_R-77",
+          "MD-2_O-2-1_R-78",
+          "MD-2_O-2-1_R-79",
+          "MD-2_O-2-1_R-80",
+          "MD-2_O-2-1_R-81",
+          "MD-2_O-2-1_R-82",
+          "MD-2_O-2-1_R-83",
+          "MD-2_O-2-1_R-84",
+          "MD-2_O-2-1_R-85",
+          "MD-2_O-2-1_R-86",
+          "MD-2_O-2-1_R-87",
+          "MD-2_O-2-1_R-88",
+          "MD-2_O-2-1_R-89",
+          "MD-2_O-2-1_R-90",
+          "MD-2_O-2-1_R-91",
+          "MD-2_O-2-1_R-92",
+          "MD-2_O-2-1_R-93",
+          "MD-2_O-2-0_R-94",
+          "MD-2_O-2-1_R-95",
+          "MD-2_O-2-0_R-96",
+          "MD-2_O-2-0_R-97",
+          "MD-2_O-2-2_R-98",
+          "MD-2_O-2-3_R-99",
+          "MD-2_O-2-0_R-100",
+          "MD-2_O-2-1_R-101",
+          "MD-2_O-2-0_R-127",
+          "MD-2_O-2-3_R-102",
+          "MD-2_O-2-0_R-103",
+          "MD-2_O-2-0_R-126",
+          "MD-2_O-2-1_R-129",
+          "MD-2_O-2-2_R-128",
+          "MD-2_O-2-4_R-104",
+          "MD-2_O-2-0_R-105",
+          "MD-2_O-2-0_R-106",
+          "MD-2_O-2-1_R-107",
+          "MD-2_O-2-1_R-109",
+          "MD-2_O-2-1_R-111",
+          "MD-2_O-2-3_R-108",
+          "MD-2_O-2-2_R-110",
+          "MD-2_O-2-0_R-119",
+          "MD-2_O-2-0_R-118",
+          "MD-2_O-2-1_R-120",
+          "MD-2_O-2-1_R-121",
+          "MD-2_O-2-1_R-125",
+          "MD-2_O-2-1_R-124",
+          "MD-2_O-2-0_R-123",
+          "MD-2_O-2-0_R-122"
         ]
       },
       "CH-5": {
@@ -26132,7 +26411,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-1_R-2": {
         "identifier": "MD-1_O-2-1_R-2",
@@ -26157,7 +26438,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-2_R-3": {
         "identifier": "MD-1_O-2-2_R-3",
@@ -26182,7 +26465,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-3_R-4": {
         "identifier": "MD-1_O-2-3_R-4",
@@ -26207,7 +26492,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-4_R-5": {
         "identifier": "MD-1_O-2-4_R-5",
@@ -26232,7 +26519,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-5_R-6": {
         "identifier": "MD-1_O-2-5_R-6",
@@ -26257,7 +26546,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-6_R-7": {
         "identifier": "MD-1_O-2-6_R-7",
@@ -26282,7 +26573,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-7_R-8": {
         "identifier": "MD-1_O-2-7_R-8",
@@ -26307,7 +26600,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-8_R-9": {
         "identifier": "MD-1_O-2-8_R-9",
@@ -26332,7 +26627,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-9_R-10": {
         "identifier": "MD-1_O-2-9_R-10",
@@ -26357,7 +26654,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-10_R-11": {
         "identifier": "MD-1_O-2-10_R-11",
@@ -26382,7 +26681,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-11_R-12": {
         "identifier": "MD-1_O-2-11_R-12",
@@ -26407,7 +26708,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-12_R-13": {
         "identifier": "MD-1_O-2-12_R-13",
@@ -26432,7 +26735,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-13_R-14": {
         "identifier": "MD-1_O-2-13_R-14",
@@ -26457,7 +26762,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-14_R-15": {
         "identifier": "MD-1_O-2-14_R-15",
@@ -26482,7 +26789,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-15_R-16": {
         "identifier": "MD-1_O-2-15_R-16",
@@ -26507,7 +26816,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-16_R-17": {
         "identifier": "MD-1_O-2-16_R-17",
@@ -26532,7 +26843,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-17_R-18": {
         "identifier": "MD-1_O-2-17_R-18",
@@ -26557,7 +26870,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-18_R-19": {
         "identifier": "MD-1_O-2-18_R-19",
@@ -26582,7 +26897,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-1_O-2-19_R-20": {
         "identifier": "MD-1_O-2-19_R-20",
@@ -26607,7 +26924,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-1": {
         "identifier": "MD-2_O-2-0_R-1",
@@ -26632,7 +26951,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-2": {
         "identifier": "MD-2_O-2-0_R-2",
@@ -26657,7 +26978,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-3": {
         "identifier": "MD-2_O-2-0_R-3",
@@ -26682,7 +27005,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-4": {
         "identifier": "MD-2_O-2-0_R-4",
@@ -26707,7 +27032,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-5": {
         "identifier": "MD-2_O-2-0_R-5",
@@ -26732,7 +27059,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-6": {
         "identifier": "MD-2_O-2-0_R-6",
@@ -26757,7 +27086,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-7": {
         "identifier": "MD-2_O-2-0_R-7",
@@ -26782,7 +27113,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-8": {
         "identifier": "MD-2_O-2-0_R-8",
@@ -26807,7 +27140,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-9": {
         "identifier": "MD-2_O-2-0_R-9",
@@ -26832,7 +27167,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-10": {
         "identifier": "MD-2_O-2-0_R-10",
@@ -26857,7 +27194,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-11": {
         "identifier": "MD-2_O-2-0_R-11",
@@ -26882,7 +27221,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-12": {
         "identifier": "MD-2_O-2-0_R-12",
@@ -26907,7 +27248,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-13": {
         "identifier": "MD-2_O-2-0_R-13",
@@ -26932,7 +27275,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-14": {
         "identifier": "MD-2_O-2-0_R-14",
@@ -26957,7 +27302,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-15": {
         "identifier": "MD-2_O-2-1_R-15",
@@ -26982,7 +27329,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-16": {
         "identifier": "MD-2_O-2-1_R-16",
@@ -27007,7 +27356,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-17": {
         "identifier": "MD-2_O-2-1_R-17",
@@ -27032,7 +27383,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-18": {
         "identifier": "MD-2_O-2-1_R-18",
@@ -27057,7 +27410,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-19": {
         "identifier": "MD-2_O-2-1_R-19",
@@ -27082,7 +27437,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-20": {
         "identifier": "MD-2_O-2-1_R-20",
@@ -27107,7 +27464,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-21": {
         "identifier": "MD-2_O-2-1_R-21",
@@ -27132,7 +27491,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-22": {
         "identifier": "MD-2_O-2-2_R-22",
@@ -27157,7 +27518,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-23": {
         "identifier": "MD-2_O-2-2_R-23",
@@ -27182,7 +27545,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-24": {
         "identifier": "MD-2_O-2-2_R-24",
@@ -27207,7 +27572,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-25": {
         "identifier": "MD-2_O-2-2_R-25",
@@ -27232,7 +27599,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-26": {
         "identifier": "MD-2_O-2-0_R-26",
@@ -27257,7 +27626,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-27": {
         "identifier": "MD-2_O-2-1_R-27",
@@ -27282,7 +27653,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-28": {
         "identifier": "MD-2_O-2-1_R-28",
@@ -27307,7 +27680,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-29": {
         "identifier": "MD-2_O-2-1_R-29",
@@ -27332,7 +27707,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-30": {
         "identifier": "MD-2_O-2-1_R-30",
@@ -27357,7 +27734,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-31": {
         "identifier": "MD-2_O-2-1_R-31",
@@ -27382,7 +27761,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-32": {
         "identifier": "MD-2_O-2-1_R-32",
@@ -27407,7 +27788,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-33": {
         "identifier": "MD-2_O-2-1_R-33",
@@ -27432,7 +27815,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-34": {
         "identifier": "MD-2_O-2-1_R-34",
@@ -27457,7 +27842,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-35": {
         "identifier": "MD-2_O-2-1_R-35",
@@ -27482,7 +27869,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-36": {
         "identifier": "MD-2_O-2-1_R-36",
@@ -27502,7 +27891,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-37": {
         "identifier": "MD-2_O-2-0_R-37",
@@ -27522,7 +27913,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-38": {
         "identifier": "MD-2_O-2-1_R-38",
@@ -27547,7 +27940,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-39": {
         "identifier": "MD-2_O-2-1_R-39",
@@ -27572,7 +27967,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-40": {
         "identifier": "MD-2_O-2-1_R-40",
@@ -27597,7 +27994,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-41": {
         "identifier": "MD-2_O-2-2_R-41",
@@ -27622,7 +28021,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-42": {
         "identifier": "MD-2_O-2-1_R-42",
@@ -27647,7 +28048,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-43": {
         "identifier": "MD-2_O-2-1_R-43",
@@ -27672,7 +28075,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-44": {
         "identifier": "MD-2_O-2-2_R-44",
@@ -27697,7 +28102,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-45": {
         "identifier": "MD-2_O-2-2_R-45",
@@ -27722,7 +28129,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-46": {
         "identifier": "MD-2_O-2-2_R-46",
@@ -27747,7 +28156,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-47": {
         "identifier": "MD-2_O-2-1_R-47",
@@ -27772,7 +28183,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-48": {
         "identifier": "MD-2_O-2-1_R-48",
@@ -27797,7 +28210,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-49": {
         "identifier": "MD-2_O-2-0_R-49",
@@ -27822,7 +28237,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-50": {
         "identifier": "MD-2_O-2-1_R-50",
@@ -27847,7 +28264,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-51": {
         "identifier": "MD-2_O-2-2_R-51",
@@ -27872,7 +28291,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-52": {
         "identifier": "MD-2_O-2-0_R-52",
@@ -27897,7 +28318,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-3_R-53": {
         "identifier": "MD-2_O-2-3_R-53",
@@ -27922,7 +28345,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-54": {
         "identifier": "MD-2_O-2-0_R-54",
@@ -27947,7 +28372,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-55": {
         "identifier": "MD-2_O-2-1_R-55",
@@ -27972,7 +28399,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-56": {
         "identifier": "MD-2_O-2-1_R-56",
@@ -27997,7 +28426,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-57": {
         "identifier": "MD-2_O-2-0_R-57",
@@ -28022,7 +28453,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-58": {
         "identifier": "MD-2_O-2-1_R-58",
@@ -28047,7 +28480,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-59": {
         "identifier": "MD-2_O-2-0_R-59",
@@ -28072,7 +28507,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-60": {
         "identifier": "MD-2_O-2-2_R-60",
@@ -28097,7 +28534,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-61": {
         "identifier": "MD-2_O-2-2_R-61",
@@ -28122,7 +28561,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-62": {
         "identifier": "MD-2_O-2-1_R-62",
@@ -28147,7 +28588,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-63": {
         "identifier": "MD-2_O-2-0_R-63",
@@ -28172,7 +28615,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-64": {
         "identifier": "MD-2_O-2-1_R-64",
@@ -28197,7 +28642,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-65": {
         "identifier": "MD-2_O-2-1_R-65",
@@ -28222,7 +28669,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-66": {
         "identifier": "MD-2_O-2-1_R-66",
@@ -28247,7 +28696,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-67": {
         "identifier": "MD-2_O-2-1_R-67",
@@ -28272,7 +28723,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-68": {
         "identifier": "MD-2_O-2-1_R-68",
@@ -28297,7 +28750,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-69": {
         "identifier": "MD-2_O-2-1_R-69",
@@ -28322,7 +28777,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-70": {
         "identifier": "MD-2_O-2-1_R-70",
@@ -28347,7 +28804,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-71": {
         "identifier": "MD-2_O-2-1_R-71",
@@ -28372,7 +28831,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-72": {
         "identifier": "MD-2_O-2-1_R-72",
@@ -28397,7 +28858,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-73": {
         "identifier": "MD-2_O-2-1_R-73",
@@ -28422,7 +28885,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-74": {
         "identifier": "MD-2_O-2-1_R-74",
@@ -28447,7 +28912,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-75": {
         "identifier": "MD-2_O-2-1_R-75",
@@ -28472,7 +28939,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-76": {
         "identifier": "MD-2_O-2-1_R-76",
@@ -28497,7 +28966,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-77": {
         "identifier": "MD-2_O-2-1_R-77",
@@ -28522,7 +28993,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-78": {
         "identifier": "MD-2_O-2-1_R-78",
@@ -28547,7 +29020,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-79": {
         "identifier": "MD-2_O-2-1_R-79",
@@ -28572,7 +29047,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-80": {
         "identifier": "MD-2_O-2-1_R-80",
@@ -28597,7 +29074,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-81": {
         "identifier": "MD-2_O-2-1_R-81",
@@ -28622,7 +29101,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-82": {
         "identifier": "MD-2_O-2-1_R-82",
@@ -28647,7 +29128,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-83": {
         "identifier": "MD-2_O-2-1_R-83",
@@ -28672,7 +29155,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-84": {
         "identifier": "MD-2_O-2-1_R-84",
@@ -28697,7 +29182,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-85": {
         "identifier": "MD-2_O-2-1_R-85",
@@ -28722,7 +29209,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-86": {
         "identifier": "MD-2_O-2-1_R-86",
@@ -28747,7 +29236,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-87": {
         "identifier": "MD-2_O-2-1_R-87",
@@ -28772,7 +29263,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-88": {
         "identifier": "MD-2_O-2-1_R-88",
@@ -28797,7 +29290,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-89": {
         "identifier": "MD-2_O-2-1_R-89",
@@ -28822,7 +29317,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-90": {
         "identifier": "MD-2_O-2-1_R-90",
@@ -28847,7 +29344,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-91": {
         "identifier": "MD-2_O-2-1_R-91",
@@ -28872,7 +29371,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-92": {
         "identifier": "MD-2_O-2-1_R-92",
@@ -28897,7 +29398,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-93": {
         "identifier": "MD-2_O-2-1_R-93",
@@ -28922,7 +29425,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-94": {
         "identifier": "MD-2_O-2-0_R-94",
@@ -28947,7 +29452,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-95": {
         "identifier": "MD-2_O-2-1_R-95",
@@ -28972,7 +29479,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-96": {
         "identifier": "MD-2_O-2-0_R-96",
@@ -28997,7 +29506,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-97": {
         "identifier": "MD-2_O-2-0_R-97",
@@ -29022,7 +29533,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-98": {
         "identifier": "MD-2_O-2-2_R-98",
@@ -29047,7 +29560,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-3_R-99": {
         "identifier": "MD-2_O-2-3_R-99",
@@ -29072,7 +29587,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-100": {
         "identifier": "MD-2_O-2-0_R-100",
@@ -29097,7 +29614,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-101": {
         "identifier": "MD-2_O-2-1_R-101",
@@ -29122,7 +29641,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-3_R-102": {
         "identifier": "MD-2_O-2-3_R-102",
@@ -29147,7 +29668,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-103": {
         "identifier": "MD-2_O-2-0_R-103",
@@ -29172,7 +29695,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-4_R-104": {
         "identifier": "MD-2_O-2-4_R-104",
@@ -29197,7 +29722,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-105": {
         "identifier": "MD-2_O-2-0_R-105",
@@ -29222,7 +29749,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-106": {
         "identifier": "MD-2_O-2-0_R-106",
@@ -29247,7 +29776,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-107": {
         "identifier": "MD-2_O-2-1_R-107",
@@ -29272,7 +29803,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-3_R-108": {
         "identifier": "MD-2_O-2-3_R-108",
@@ -29297,7 +29830,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-109": {
         "identifier": "MD-2_O-2-1_R-109",
@@ -29322,7 +29857,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-110": {
         "identifier": "MD-2_O-2-2_R-110",
@@ -29347,7 +29884,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-111": {
         "identifier": "MD-2_O-2-1_R-111",
@@ -29372,7 +29911,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-112": {
         "identifier": "MD-2_O-2-0_R-112",
@@ -29392,7 +29933,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-113": {
         "identifier": "MD-2_O-2-0_R-113",
@@ -29417,7 +29960,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-114": {
         "identifier": "MD-2_O-2-0_R-114",
@@ -29442,7 +29987,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-115": {
         "identifier": "MD-2_O-2-0_R-115",
@@ -29467,7 +30014,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-3_R-116": {
         "identifier": "MD-2_O-2-3_R-116",
@@ -29492,7 +30041,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-3_R-117": {
         "identifier": "MD-2_O-2-3_R-117",
@@ -29517,7 +30068,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-118": {
         "identifier": "MD-2_O-2-0_R-118",
@@ -29542,7 +30095,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-119": {
         "identifier": "MD-2_O-2-0_R-119",
@@ -29567,7 +30122,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-120": {
         "identifier": "MD-2_O-2-1_R-120",
@@ -29592,7 +30149,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-121": {
         "identifier": "MD-2_O-2-1_R-121",
@@ -29617,7 +30176,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-2_R-128": {
         "identifier": "MD-2_O-2-2_R-128",
@@ -29642,7 +30203,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-129": {
         "identifier": "MD-2_O-2-1_R-129",
@@ -29667,7 +30230,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-122": {
         "identifier": "MD-2_O-2-0_R-122",
@@ -29692,7 +30257,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-123": {
         "identifier": "MD-2_O-2-0_R-123",
@@ -29717,7 +30284,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-124": {
         "identifier": "MD-2_O-2-1_R-124",
@@ -29742,7 +30311,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-1_R-125": {
         "identifier": "MD-2_O-2-1_R-125",
@@ -29767,7 +30338,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-126": {
         "identifier": "MD-2_O-2-0_R-126",
@@ -29792,7 +30365,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-127": {
         "identifier": "MD-2_O-2-0_R-127",
@@ -29817,7 +30392,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-130": {
         "identifier": "MD-2_O-2-0_R-130",
@@ -29842,7 +30419,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-131": {
         "identifier": "MD-2_O-2-0_R-131",
@@ -29867,7 +30446,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-132": {
         "identifier": "MD-2_O-2-0_R-132",
@@ -29892,7 +30473,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-133": {
         "identifier": "MD-2_O-2-0_R-133",
@@ -29917,7 +30500,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-134": {
         "identifier": "MD-2_O-2-0_R-134",
@@ -29942,7 +30527,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-135": {
         "identifier": "MD-2_O-2-0_R-135",
@@ -29967,7 +30554,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-136": {
         "identifier": "MD-2_O-2-0_R-136",
@@ -29992,7 +30581,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-2_O-2-0_R-137": {
         "identifier": "MD-2_O-2-0_R-137",
@@ -30017,7 +30608,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-2"
+        ]
       },
       "MD-4_SM-1_O-3-0_R-1": {
         "identifier": "MD-4_SM-1_O-3-0_R-1",
@@ -30042,7 +30635,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-4_SM-1_O-3-1_R-2": {
         "identifier": "MD-4_SM-1_O-3-1_R-2",
@@ -30067,7 +30662,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-4_SM-1_O-3-0_R-3": {
         "identifier": "MD-4_SM-1_O-3-0_R-3",
@@ -30092,7 +30689,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-4_SM-1_O-3-1_R-4": {
         "identifier": "MD-4_SM-1_O-3-1_R-4",
@@ -30117,7 +30716,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-0_R-1": {
         "identifier": "MD-5_O-2-0_R-1",
@@ -30142,7 +30743,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-0_R-2": {
         "identifier": "MD-5_O-2-0_R-2",
@@ -30167,7 +30770,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-1_R-3": {
         "identifier": "MD-5_O-2-1_R-3",
@@ -30192,7 +30797,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-1_R-4": {
         "identifier": "MD-5_O-2-1_R-4",
@@ -30217,7 +30824,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-2_R-5": {
         "identifier": "MD-5_O-2-2_R-5",
@@ -30242,7 +30851,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-2_R-6": {
         "identifier": "MD-5_O-2-2_R-6",
@@ -30267,7 +30878,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-3_R-7": {
         "identifier": "MD-5_O-2-3_R-7",
@@ -30292,7 +30905,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-3_R-8": {
         "identifier": "MD-5_O-2-3_R-8",
@@ -30317,7 +30932,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-4_R-9": {
         "identifier": "MD-5_O-2-4_R-9",
@@ -30342,7 +30959,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-4_R-10": {
         "identifier": "MD-5_O-2-4_R-10",
@@ -30367,7 +30986,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-5_R-11": {
         "identifier": "MD-5_O-2-5_R-11",
@@ -30392,7 +31013,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-5_R-12": {
         "identifier": "MD-5_O-2-5_R-12",
@@ -30417,7 +31040,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-6_R-13": {
         "identifier": "MD-5_O-2-6_R-13",
@@ -30442,7 +31067,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-6_R-14": {
         "identifier": "MD-5_O-2-6_R-14",
@@ -30467,7 +31094,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-7_R-15": {
         "identifier": "MD-5_O-2-7_R-15",
@@ -30492,7 +31121,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-7_R-16": {
         "identifier": "MD-5_O-2-7_R-16",
@@ -30517,7 +31148,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-5_O-2-8_R-17": {
         "identifier": "MD-5_O-2-8_R-17",
@@ -30542,7 +31175,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-7_O-2-0_R-1": {
         "identifier": "MD-7_O-2-0_R-1",
@@ -30567,7 +31202,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-7_O-2-0_R-2": {
         "identifier": "MD-7_O-2-0_R-2",
@@ -30592,7 +31229,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-7_O-2-0_R-3": {
         "identifier": "MD-7_O-2-0_R-3",
@@ -30617,7 +31256,9 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       },
       "MD-7_O-2-0_R-4": {
         "identifier": "MD-7_O-2-0_R-4",
@@ -30642,193 +31283,12 @@
           "read_on_init": false
         },
         "dpas": null,
-        "channel_ids": []
+        "channel_ids": [
+          "CH-1"
+        ]
       }
     },
-    "channel_independent_object_ids": [
-      "MD-1_O-2-0_R-1",
-      "MD-1_O-2-1_R-2",
-      "MD-1_O-2-2_R-3",
-      "MD-1_O-2-3_R-4",
-      "MD-1_O-2-4_R-5",
-      "MD-1_O-2-5_R-6",
-      "MD-1_O-2-6_R-7",
-      "MD-1_O-2-7_R-8",
-      "MD-1_O-2-8_R-9",
-      "MD-1_O-2-9_R-10",
-      "MD-1_O-2-10_R-11",
-      "MD-1_O-2-11_R-12",
-      "MD-1_O-2-12_R-13",
-      "MD-1_O-2-13_R-14",
-      "MD-1_O-2-14_R-15",
-      "MD-1_O-2-15_R-16",
-      "MD-1_O-2-16_R-17",
-      "MD-1_O-2-17_R-18",
-      "MD-1_O-2-18_R-19",
-      "MD-1_O-2-19_R-20",
-      "MD-2_O-2-0_R-1",
-      "MD-2_O-2-0_R-2",
-      "MD-2_O-2-0_R-3",
-      "MD-2_O-2-0_R-4",
-      "MD-2_O-2-0_R-113",
-      "MD-2_O-2-0_R-5",
-      "MD-2_O-2-0_R-6",
-      "MD-2_O-2-0_R-114",
-      "MD-2_O-2-0_R-7",
-      "MD-2_O-2-0_R-8",
-      "MD-2_O-2-0_R-115",
-      "MD-2_O-2-0_R-9",
-      "MD-2_O-2-0_R-10",
-      "MD-2_O-2-0_R-11",
-      "MD-2_O-2-0_R-12",
-      "MD-2_O-2-0_R-13",
-      "MD-2_O-2-0_R-14",
-      "MD-2_O-2-0_R-112",
-      "MD-2_O-2-1_R-15",
-      "MD-2_O-2-1_R-16",
-      "MD-2_O-2-1_R-17",
-      "MD-2_O-2-1_R-18",
-      "MD-2_O-2-1_R-19",
-      "MD-2_O-2-1_R-20",
-      "MD-2_O-2-1_R-21",
-      "MD-2_O-2-2_R-22",
-      "MD-2_O-2-2_R-23",
-      "MD-2_O-2-2_R-24",
-      "MD-2_O-2-2_R-25",
-      "MD-2_O-2-0_R-26",
-      "MD-2_O-2-0_R-130",
-      "MD-2_O-2-1_R-27",
-      "MD-2_O-2-1_R-28",
-      "MD-2_O-2-1_R-29",
-      "MD-2_O-2-1_R-30",
-      "MD-2_O-2-1_R-31",
-      "MD-2_O-2-1_R-32",
-      "MD-2_O-2-1_R-33",
-      "MD-2_O-2-1_R-34",
-      "MD-2_O-2-1_R-35",
-      "MD-2_O-2-1_R-36",
-      "MD-2_O-2-0_R-37",
-      "MD-2_O-2-1_R-38",
-      "MD-2_O-2-1_R-39",
-      "MD-2_O-2-0_R-131",
-      "MD-2_O-2-0_R-132",
-      "MD-2_O-2-0_R-133",
-      "MD-2_O-2-0_R-134",
-      "MD-2_O-2-0_R-135",
-      "MD-2_O-2-0_R-136",
-      "MD-2_O-2-0_R-137",
-      "MD-2_O-2-1_R-40",
-      "MD-2_O-2-2_R-41",
-      "MD-2_O-2-1_R-42",
-      "MD-2_O-2-1_R-43",
-      "MD-2_O-2-2_R-44",
-      "MD-2_O-2-2_R-45",
-      "MD-2_O-2-2_R-46",
-      "MD-2_O-2-1_R-47",
-      "MD-2_O-2-1_R-48",
-      "MD-2_O-2-0_R-49",
-      "MD-2_O-2-3_R-116",
-      "MD-2_O-2-1_R-50",
-      "MD-2_O-2-2_R-51",
-      "MD-2_O-2-0_R-52",
-      "MD-2_O-2-3_R-117",
-      "MD-2_O-2-3_R-53",
-      "MD-2_O-2-0_R-54",
-      "MD-2_O-2-1_R-55",
-      "MD-2_O-2-1_R-56",
-      "MD-2_O-2-0_R-57",
-      "MD-2_O-2-1_R-58",
-      "MD-2_O-2-0_R-59",
-      "MD-2_O-2-2_R-60",
-      "MD-2_O-2-2_R-61",
-      "MD-2_O-2-1_R-62",
-      "MD-2_O-2-0_R-63",
-      "MD-2_O-2-1_R-64",
-      "MD-2_O-2-1_R-65",
-      "MD-2_O-2-1_R-66",
-      "MD-2_O-2-1_R-67",
-      "MD-2_O-2-1_R-68",
-      "MD-2_O-2-1_R-69",
-      "MD-2_O-2-1_R-70",
-      "MD-2_O-2-1_R-71",
-      "MD-2_O-2-1_R-72",
-      "MD-2_O-2-1_R-73",
-      "MD-2_O-2-1_R-74",
-      "MD-2_O-2-1_R-75",
-      "MD-2_O-2-1_R-76",
-      "MD-2_O-2-1_R-77",
-      "MD-2_O-2-1_R-78",
-      "MD-2_O-2-1_R-79",
-      "MD-2_O-2-1_R-80",
-      "MD-2_O-2-1_R-81",
-      "MD-2_O-2-1_R-82",
-      "MD-2_O-2-1_R-83",
-      "MD-2_O-2-1_R-84",
-      "MD-2_O-2-1_R-85",
-      "MD-2_O-2-1_R-86",
-      "MD-2_O-2-1_R-87",
-      "MD-2_O-2-1_R-88",
-      "MD-2_O-2-1_R-89",
-      "MD-2_O-2-1_R-90",
-      "MD-2_O-2-1_R-91",
-      "MD-2_O-2-1_R-92",
-      "MD-2_O-2-1_R-93",
-      "MD-2_O-2-0_R-94",
-      "MD-2_O-2-1_R-95",
-      "MD-2_O-2-0_R-96",
-      "MD-2_O-2-0_R-97",
-      "MD-2_O-2-2_R-98",
-      "MD-2_O-2-3_R-99",
-      "MD-2_O-2-0_R-100",
-      "MD-2_O-2-1_R-101",
-      "MD-2_O-2-0_R-127",
-      "MD-2_O-2-3_R-102",
-      "MD-2_O-2-0_R-103",
-      "MD-2_O-2-0_R-126",
-      "MD-2_O-2-1_R-129",
-      "MD-2_O-2-2_R-128",
-      "MD-2_O-2-4_R-104",
-      "MD-2_O-2-0_R-105",
-      "MD-2_O-2-0_R-106",
-      "MD-2_O-2-1_R-107",
-      "MD-2_O-2-1_R-109",
-      "MD-2_O-2-1_R-111",
-      "MD-2_O-2-3_R-108",
-      "MD-2_O-2-2_R-110",
-      "MD-2_O-2-0_R-119",
-      "MD-2_O-2-0_R-118",
-      "MD-2_O-2-1_R-120",
-      "MD-2_O-2-1_R-121",
-      "MD-2_O-2-1_R-125",
-      "MD-2_O-2-1_R-124",
-      "MD-2_O-2-0_R-123",
-      "MD-2_O-2-0_R-122",
-      "MD-4_SM-1_O-3-0_R-1",
-      "MD-4_SM-1_O-3-0_R-3",
-      "MD-4_SM-1_O-3-1_R-2",
-      "MD-4_SM-1_O-3-1_R-4",
-      "MD-5_O-2-8_R-17",
-      "MD-5_O-2-0_R-1",
-      "MD-5_O-2-0_R-2",
-      "MD-5_O-2-4_R-9",
-      "MD-5_O-2-4_R-10",
-      "MD-5_O-2-1_R-3",
-      "MD-5_O-2-1_R-4",
-      "MD-5_O-2-5_R-11",
-      "MD-5_O-2-5_R-12",
-      "MD-5_O-2-2_R-5",
-      "MD-5_O-2-2_R-6",
-      "MD-5_O-2-6_R-13",
-      "MD-5_O-2-6_R-14",
-      "MD-5_O-2-3_R-7",
-      "MD-5_O-2-3_R-8",
-      "MD-5_O-2-7_R-15",
-      "MD-5_O-2-7_R-16",
-      "MD-7_O-2-0_R-1",
-      "MD-7_O-2-0_R-3",
-      "MD-7_O-2-0_R-4",
-      "MD-7_O-2-0_R-2"
-    ],
+    "channel_independent_object_ids": [],
     "language_code": "de-DE",
     "xknxproject_version": "3.10.0"
   }

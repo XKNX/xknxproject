@@ -122,3 +122,18 @@ def test_smart_linking_semantics_and_unlinked_objects() -> None:
     assert program["objects"]["O-0_R-1"]["dpas"] == ["417.52"]
     # the project links only a few objects - the definition carries all of them
     assert len(program["objects"]) > 30
+
+
+def test_modules_instantiated_in_channels_are_channel_members() -> None:
+    """Objects of a module instantiated inside a channel belong to that channel."""
+    programs = XKNXProj(
+        RESOURCES_PATH / "module-definition-test.knxproj", language="De"
+    ).parse_application_programs()
+    dali = programs["M-0083_A-0153-10-297A-O00EF"]
+    assert dali["channels"]["CH-17"]["object_ids"]
+    assert dali["channels"]["CH-84"]["object_ids"]
+    assert dali["channel_independent_object_ids"] == []
+    z70 = programs["M-0071_A-5531-37-FDF4"]
+    # MD-4_SM-1 is instantiated in MD-4, which is instantiated in CH-1
+    assert "MD-4_SM-1_O-3-0_R-1" in z70["channels"]["CH-1"]["object_ids"]
+    assert z70["objects"]["MD-4_SM-1_O-3-0_R-1"]["channel_ids"] == ["CH-1"]

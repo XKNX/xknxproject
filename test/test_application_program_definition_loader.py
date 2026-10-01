@@ -5,7 +5,10 @@ from __future__ import annotations
 import io
 
 from xknxproject.loader import ApplicationProgramDefinitionLoader
-from xknxproject.loader.application_program_definition_loader import _RawIdentity
+from xknxproject.loader.application_program_definition_loader import (
+    _Placement,
+    _RawIdentity,
+)
 from xknxproject.models import ChannelDefinition, ModuleDefinition, ObjectDefinition
 
 _NS = "http://knx.org/xml/project/20"
@@ -81,9 +84,48 @@ APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
         <ComObjectRef Id="{_APP}_MD-3_O-3-1_R-1" RefId="{_APP}_MD-3_O-3-1" />
       </ComObjectRefs>
     </Static>
+    <SubModuleDefs>
+      <ModuleDef Id="{_APP}_MD-3_SM-1" Name="Sub">
+        <Static>
+          <ComObjectTable>
+            <ComObject Id="{_APP}_MD-3_SM-1_O-4-1" Name="Sub" Text="Sub" Number="4"
+              FunctionText="Sub" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled"
+              CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled"
+              ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+          </ComObjectTable>
+          <ComObjectRefs>
+            <ComObjectRef Id="{_APP}_MD-3_SM-1_O-4-1_R-1" RefId="{_APP}_MD-3_SM-1_O-4-1" />
+          </ComObjectRefs>
+        </Static>
+        <Dynamic>
+          <ParameterBlock Id="{_APP}_MD-3_SM-1_PB-1" Name="Sub settings">
+            <ComObjectRefRef RefId="{_APP}_MD-3_SM-1_O-4-1_R-1" />
+          </ParameterBlock>
+        </Dynamic>
+      </ModuleDef>
+    </SubModuleDefs>
     <Dynamic>
       <ParameterBlock Id="{_APP}_MD-3_PB-1" Name="Page settings">
         <ComObjectRefRef RefId="{_APP}_MD-3_O-3-1_R-1" />
+      </ParameterBlock>
+      <Module Id="{_APP}_MD-3_M-1_SM-1_M-1" RefId="{_APP}_MD-3_SM-1" />
+    </Dynamic>
+  </ModuleDef>
+  <ModuleDef Id="{_APP}_MD-9" Name="Unused">
+    <Static>
+      <ComObjectTable>
+        <ComObject Id="{_APP}_MD-9_O-9-1" Name="Unused" Text="Unused" Number="9"
+          FunctionText="Unused" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled"
+          CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled"
+          ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+      </ComObjectTable>
+      <ComObjectRefs>
+        <ComObjectRef Id="{_APP}_MD-9_O-9-1_R-1" RefId="{_APP}_MD-9_O-9-1" />
+      </ComObjectRefs>
+    </Static>
+    <Dynamic>
+      <ParameterBlock Id="{_APP}_MD-9_PB-1" Name="Unused settings">
+        <ComObjectRefRef RefId="{_APP}_MD-9_O-9-1_R-1" />
       </ParameterBlock>
     </Dynamic>
   </ModuleDef>
@@ -100,6 +142,9 @@ APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
     </ParameterBlock>
   </Channel>
   <Module Id="{_APP}_MD-2_M-1" RefId="{_APP}_MD-2" />
+  <Channel Id="{_APP}_CH-5" Name="Pages" Text="Pages" Number="5">
+    <Module Id="{_APP}_MD-3_M-1" RefId="{_APP}_MD-3" />
+  </Channel>
 </Dynamic>
 <Languages>
   <Language Identifier="de-DE">
@@ -168,19 +213,54 @@ def test_channel_object_ids_deduplicated() -> None:
         "name": "ModuleDefChannel",
         "channel_ids": ["MD-2_CH-1"],
     }
-    assert independent == ["MD-3_O-3-1_R-1", "O-0_R-1"]
+    assert independent == ["MD-9_O-9-1_R-1", "O-0_R-1"]
     # the same object can be channel independent and referenced by a channel
     assert objects["O-0_R-1"]["channel_ids"] == ["CH-9"]
     assert objects["MD-2_O-2-3_R-1"]["channel_ids"] == ["MD-2_CH-1"]
 
 
 def test_refs_outside_channels_are_channel_independent() -> None:
-    """Refs outside any Channel are channel independent, e.g. in a Channel-less ModuleDef."""
-    _, _, modules, objects, independent = _load(None)
+    """
+    Refs outside any Channel are channel independent.
+
+    That is a ChannelIndependentBlock or a Channel-less ModuleDef that is never
+    instantiated inside a Channel.
+    """
+    _, channels, modules, objects, independent = _load(None)
     assert "O-0_R-1" in independent  # in a ChannelIndependentBlock
-    assert "MD-3_O-3-1_R-1" in independent  # in a ModuleDef without Channel
-    assert objects["MD-3_O-3-1_R-1"]["channel_ids"] == []
+    assert "MD-9_O-9-1_R-1" in independent  # in a ModuleDef never instantiated
+    assert objects["MD-9_O-9-1_R-1"]["channel_ids"] == []
+    assert all(
+        "MD-9_O-9-1_R-1" not in channel["object_ids"] for channel in channels.values()
+    )
+    assert modules["MD-9"]["channel_ids"] == []
+
+
+def test_module_instantiated_in_channel_inherits_channel() -> None:
+    """Refs of a Channel-less ModuleDef belong to the Channel instantiating it."""
+    _, channels, modules, objects, independent = _load(None)
+    assert channels["CH-5"]["module_definition_id"] is None
+    assert channels["CH-5"]["object_ids"] == [
+        "MD-3_O-3-1_R-1",
+        "MD-3_SM-1_O-4-1_R-1",
+    ]
+    assert objects["MD-3_O-3-1_R-1"]["channel_ids"] == ["CH-5"]
+    assert "MD-3_O-3-1_R-1" not in independent
+    # channel_ids of a module only lists channels defined inside the module
     assert modules["MD-3"]["channel_ids"] == []
+
+
+def test_sub_module_inherits_channel_transitively() -> None:
+    """A sub-module instantiated in a module inherits the channels placing that module."""
+    _, channels, modules, objects, independent = _load(None)
+    assert modules["MD-3_SM-1"] == {
+        "identifier": "MD-3_SM-1",
+        "name": "Sub",
+        "channel_ids": [],
+    }
+    assert "MD-3_SM-1_O-4-1_R-1" in channels["CH-5"]["object_ids"]
+    assert objects["MD-3_SM-1_O-4-1_R-1"]["channel_ids"] == ["CH-5"]
+    assert "MD-3_SM-1_O-4-1_R-1" not in independent
 
 
 def test_object_definition_merges_ref_over_com_object() -> None:
@@ -220,3 +300,48 @@ def test_translation_missing_language_keeps_defaults() -> None:
     _, channels, _, objects, _ = _load("fr-FR")
     assert objects["MD-2_O-2-1_R-1"]["text"] == "Switch"
     assert channels["MD-2_CH-1"]["text"] == "Channel {{ChNo}}: {{0}}"
+
+
+def test_cyclic_module_instantiation_terminates() -> None:
+    """Modules instantiating each other do not recurse forever."""
+    channels = {
+        "CH-1": ChannelDefinition(
+            identifier="CH-1",
+            name="",
+            text=None,
+            number="1",
+            functional_blocks=None,
+            module_definition_id=None,
+            object_ids=[],
+        )
+    }
+    independent = ApplicationProgramDefinitionLoader._place_module_refs(
+        channels=channels,
+        module_ids=["MD-1", "MD-2", "MD-3", "MD-4"],
+        module_refs={
+            "MD-1": ["MD-1_O-1_R-1"],
+            "MD-2": ["MD-2_O-2_R-1"],
+            "MD-3": ["MD-3_O-3_R-1"],
+            "MD-4": ["MD-4_O-4_R-1"],
+        },
+        module_placements={
+            # MD-1 in CH-1, MD-2 in MD-1 and MD-1 in MD-2
+            "MD-1": [
+                _Placement(channel_id="CH-1", module_id=None),
+                _Placement(channel_id=None, module_id="MD-2"),
+            ],
+            "MD-2": [_Placement(channel_id=None, module_id="MD-1")],
+            # MD-3 and MD-4 only instantiate each other
+            "MD-3": [_Placement(channel_id=None, module_id="MD-4")],
+            "MD-4": [_Placement(channel_id=None, module_id="MD-3")],
+        },
+        independent_candidates=[
+            ("MD-1", "MD-1_O-1_R-1"),
+            ("MD-2", "MD-2_O-2_R-1"),
+            ("MD-3", "MD-3_O-3_R-1"),
+            ("MD-4", "MD-4_O-4_R-1"),
+        ],
+    )
+    assert channels["CH-1"]["object_ids"] == ["MD-1_O-1_R-1", "MD-2_O-2_R-1"]
+    # modules only reachable through a cycle are treated as not instantiated
+    assert independent == ["MD-3_O-3_R-1", "MD-4_O-4_R-1"]
