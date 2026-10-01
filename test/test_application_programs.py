@@ -73,3 +73,52 @@ def test_application_program_stub_keys_match_typed_dicts(file_stem: str) -> None
             assert set(module) == set(ModuleDefinition.__annotations__)
         for obj in program["objects"].values():
             assert set(obj) == set(ObjectDefinition.__annotations__)
+
+
+def test_devices_without_application_are_skipped() -> None:
+    """Devices whose application program can not be resolved are ignored."""
+    from xknxproject.xml.application_programs import _group_devices_by_application
+
+    class _Device:
+        def __init__(self, application_program_ref: str | None, xml: str) -> None:
+            self.application_program_ref = application_program_ref
+            self._xml = xml
+
+        def application_program_xml(self) -> str:
+            return self._xml
+
+    devices = [
+        _Device("M-0001_A-0001-01-0001", "M-0001/M-0001_A-0001-01-0001.xml"),
+        _Device(None, "None/None.xml"),
+        _Device("M-0001_A-0001-01-0001", "M-0001/M-0001_A-0001-01-0001.xml"),
+    ]
+    grouped = _group_devices_by_application(devices)  # type: ignore[arg-type]
+    assert list(grouped) == ["M-0001/M-0001_A-0001-01-0001.xml"]
+    assert len(grouped["M-0001/M-0001_A-0001-01-0001.xml"]) == 2
+
+
+def test_oem_identity_from_fixture() -> None:
+    """OEM programs carry the original manufacturer from the id suffix."""
+    programs = XKNXProj(
+        RESOURCES_PATH / "xknx_test_project.knxproj", "test"
+    ).parse_application_programs()
+    identity = programs["M-0008_A-20E0-21-9997-O000A"]["identity"]
+    assert identity["manufacturer_id"] == "M-0008"
+    assert identity["original_manufacturer_id"] == "M-000A"
+    assert identity["application_number"] == 8416
+    assert identity["application_version"] == 33
+    assert identity["products"], "products using the program are listed"
+    assert identity["products"][0]["hardware_id"].startswith("M-0008_H-")
+
+
+def test_smart_linking_semantics_and_unlinked_objects() -> None:
+    """KIM tags are exported and objects without project links are included."""
+    programs = XKNXProj(
+        RESOURCES_PATH / "smart_linking.knxproj", "test", language="de-DE"
+    ).parse_application_programs()
+    program = programs["M-00E1_A-2036-40-865C"]
+    assert program["identity"]["kim_version"] == "109.77"
+    assert program["channels"]["CH-1"]["functional_blocks"] == ["417"]
+    assert program["objects"]["O-0_R-1"]["dpas"] == ["417.52"]
+    # the project links only a few objects - the definition carries all of them
+    assert len(program["objects"]) > 30

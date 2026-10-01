@@ -48,3 +48,22 @@ The resulting `KNXProject` is a typed dictionary and can be used just like a dic
 You can find an example file (exported JSON) in our test suite under https://github.com/XKNX/xknxproject/tree/main/test/resources/stubs
 
 The full type definition can be found here: https://github.com/XKNX/xknxproject/blob/main/xknxproject/models/knxproject.py
+
+### Application program definitions
+
+`parse_application_programs()` returns the full definition of every application
+program used by a device of the project: all channel and module definitions and
+all communication objects, including those the project does not link to a group
+address. Identifiers are relative to the application program id with module
+instance parts removed (`MD-2_CH-1`, `MD-2_O-2-35_R-65`), so they match the
+instance identifiers of the project output after stripping the module instance.
+
+```python
+programs = knxproj.parse_application_programs()
+program = programs["M-0083_A-013A-32-DCC1"]
+program["identity"]["application_version"]  # 50
+program["channels"]["MD-2_CH-1"]["object_ids"]  # ["MD-2_O-2-35_R-65", ...]
+```
+
+The type definition is in `xknxproject/models/application_program.py`; example
+output is in `test/resources/stubs/application_programs/`.

@@ -8,8 +8,8 @@ import time
 
 from xknxproject.__version__ import __version__
 from xknxproject.combination import combine_project
-from xknxproject.models import KNXProject
-from xknxproject.xml import XMLParser
+from xknxproject.models import ApplicationPrograms, KNXProject
+from xknxproject.xml import ApplicationProgramParser, XMLParser
 from xknxproject.zip.extractor import extract
 
 _LOGGER = logging.getLogger("xknxproject.log")
@@ -52,3 +52,29 @@ class XKNXProj:
             len(project["communication_objects"]),
         )
         return project
+
+    def parse_application_programs(self) -> ApplicationPrograms:
+        """
+        Parse the full definitions of all application programs of the project.
+
+        This is a separate pass over the project file. Identifiers of channels,
+        modules and objects are relative to the application program id, with module
+        instance parts removed - the same form `strip_module_instance` produces for
+        project instances.
+        """
+        _LOGGER.info(
+            'Xknxproject version %s parsing application programs of "%s"...',
+            __version__,
+            self.path,
+        )
+        _start = time.time()
+        with extract(self.path, self.password) as knx_project_content:
+            programs = ApplicationProgramParser(knx_project_content).parse(
+                self.language
+            )
+        _LOGGER.info(
+            "Parsed %s application programs in %s seconds",
+            len(programs),
+            time.time() - _start,
+        )
+        return programs

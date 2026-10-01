@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+from test.test_application_programs import APPLICATION_PROGRAM_FIXTURES
 from test.test_knxproj import PROJECT_FIXTURES
 from xknxproject import XKNXProj
 
@@ -22,3 +23,18 @@ for file_name, password, language in PROJECT_FIXTURES:
         mode="w", encoding="utf8"
     ) as f:
         json.dump(project, f, indent=2, ensure_ascii=False)
+
+Path("test/resources/stubs/application_programs").mkdir(exist_ok=True)
+for file_name, password, language in APPLICATION_PROGRAM_FIXTURES:
+    print(f"Parsing application programs of {file_name}.knxproj")
+    knxproj = XKNXProj(
+        path=f"test/resources/{file_name}.knxproj",
+        password=password,
+        language=language,
+    )
+    programs = knxproj.parse_application_programs()
+
+    with Path(f"test/resources/stubs/application_programs/{file_name}.json").open(
+        mode="w", encoding="utf8"
+    ) as f:
+        json.dump(programs, f, indent=2, ensure_ascii=False)

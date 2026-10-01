@@ -162,15 +162,18 @@ class XMLParser:
 
         self.project_info: XMLProjectInformation
         self.functions: list[XMLFunction] = []
+        self.products: dict[str, Product] = {}
+        self.hardware_application_map: HardwareToPrograms = {}
 
     def parse(self, language: str | None = None) -> KNXProject:
         """Parse ETS project."""
-        self._load(language=language)
+        self.load_project(language=language)
+        self.load_application_programs()
         self._sort()
         return self._transform()
 
-    def _load(self, language: str | None) -> None:
-        """Load XML files."""
+    def load_project(self, language: str | None) -> None:
+        """Load knx_master, project and hardware files and resolve device products."""
         (
             knx_master_data,
             self.language_code,
@@ -192,8 +195,6 @@ class XMLParser:
             knx_master_data=knx_master_data,
         )
 
-        products_dict: dict[str, Product] = {}
-        hardware_application_map: HardwareToPrograms = {}
         for _products, _hardware_programs in [
             HardwareLoader.load(
                 hardware_file=hardware_file,
@@ -203,8 +204,8 @@ class XMLParser:
                 project_contents=self.knx_proj_contents
             )
         ]:
-            products_dict.update(_products)
-            hardware_application_map.update(_hardware_programs)
+            self.products.update(_products)
+            self.hardware_application_map.update(_hardware_programs)
 
         for device in self.devices:
             device.manufacturer_name = knx_master_data.manufacturer_names.get(
@@ -212,7 +213,7 @@ class XMLParser:
             )
 
             try:
-                product = products_dict[device.product_ref]
+                product = self.products[device.product_ref]
             except KeyError:
                 _LOGGER.warning(
                     "Could not find hardware product for device %s from %s with product_ref %s",
@@ -228,7 +229,7 @@ class XMLParser:
             device.original_manufacturer = product.original_manufacturer
 
             try:
-                application_program_ref = hardware_application_map[
+                application_program_ref = self.hardware_application_map[
                     device.hardware_program_ref
                 ]
             except KeyError:
@@ -250,7 +251,8 @@ class XMLParser:
                 # need to complete ref_id before parsing application program
                 module_instance.complete_arguments_ref_id(application_program_ref)
 
-        # only parse each application program file once and only extract used infos
+    def load_application_programs(self) -> None:
+        """Parse each used application program once and merge the used parts into devices."""
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(
                 devices=self.devices,
