@@ -911,6 +911,7 @@ class Product:
     text: str
     order_number: str
     hardware_name: str = ""
+    hardware_id: str = ""
 
 
 HardwareToPrograms = dict[str, str]
