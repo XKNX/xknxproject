@@ -43,7 +43,9 @@ class ChannelDefinition(TypedDict):
     number: str
     functional_blocks: list[str] | None
     module_definition_id: str | None  # "MD-2" when defined inside a ModuleDef
-    object_ids: list[str]  # ObjectDefinition identifiers in order of first appearance
+    # ObjectDefinition identifiers in order of first appearance, followed by those
+    # of the modules instantiated inside the channel (also through sub-modules)
+    object_ids: list[str]
 
 
 class ModuleDefinition(TypedDict):
@@ -51,7 +53,7 @@ class ModuleDefinition(TypedDict):
 
     identifier: str  # "MD-2" or "MD-4_SM-1"
     name: str
-    channel_ids: list[str]
+    channel_ids: list[str]  # channels defined inside the module, not its placements
 
 
 class ObjectDefinition(TypedDict):
@@ -67,9 +69,8 @@ class ObjectDefinition(TypedDict):
     dpts: list[DPTType]
     flags: Flags
     dpas: list[str] | None
-    channel_ids: list[
-        str
-    ]  # channels referencing this object; [] when channel independent
+    # channels referencing this object, directly or through module instantiation
+    channel_ids: list[str]
 
 
 class ApplicationProgramDefinition(TypedDict):

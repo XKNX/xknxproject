@@ -57,6 +57,10 @@ all communication objects, including those the project does not link to a group
 address. Identifiers are relative to the application program id with module
 instance parts removed (`MD-2_CH-1`, `MD-2_O-2-35_R-65`), so they match the
 instance identifiers of the project output after stripping the module instance.
+Channel membership in a definition is structural: an object belongs to every
+channel whose dynamic tree references it, including through module
+instantiation; the `channel` of an instance from `parse()` is authoritative for
+that instance.
 
 ```python
 programs = knxproj.parse_application_programs()
