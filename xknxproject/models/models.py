@@ -186,6 +186,7 @@ class DeviceInstance:
         )
         self.product_name: str = ""  # translatable name for specific product
         self.hardware_name: str = ""  # untranslatable name from hardware.xml
+        self.hardware_id: str = ""  # Hardware Id from hardware.xml
         self.order_number: str = ""
         self.manufacturer_name: str = ""
 

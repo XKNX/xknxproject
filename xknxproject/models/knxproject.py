@@ -62,6 +62,10 @@ class Device(TypedDict):
     individual_address: str
     application: str | None
     project_uid: int | None
+    product_id: str
+    hardware_id: str
+    hardware_program_id: str
+    location_id: str | None
     communication_object_ids: list[str]
     channels: dict[str, Channel]  # id: Channel
     serial_number: str

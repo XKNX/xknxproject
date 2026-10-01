@@ -843,6 +843,10 @@
       "individual_address": "1.1.1",
       "application": "M-0083_A-013A-32-DCC1",
       "project_uid": 12,
+      "product_id": "M-0083_H-358-1_P-AKH.2D0800.2E03",
+      "hardware_id": "M-0083_H-358-1",
+      "hardware_program_id": "M-0083_H-358-1_HP-013A-32-DCC1",
+      "location_id": null,
       "communication_object_ids": [
         "1.1.1/O-334_R-21",
         "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1",
@@ -919,6 +923,10 @@
       "individual_address": "1.1.2",
       "application": "M-0083_A-013A-32-DCC1",
       "project_uid": 13,
+      "product_id": "M-0083_H-358-1_P-AKH.2D0800.2E03",
+      "hardware_id": "M-0083_H-358-1",
+      "hardware_program_id": "M-0083_H-358-1_HP-013A-32-DCC1",
+      "location_id": null,
       "communication_object_ids": [
         "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3",
         "1.1.2/MD-2_M-1_MI-1_O-2-19_R-6",
@@ -1016,6 +1024,10 @@
       "individual_address": "1.1.3",
       "application": "M-0083_A-0153-10-297A-O00EF",
       "project_uid": 26,
+      "product_id": "M-0083_H-191-1-O00EF_P-SCN.2DDA641P.2E04S",
+      "hardware_id": "M-0083_H-191-1-O00EF",
+      "hardware_program_id": "M-0083_H-191-1-O00EF_HP-0153-10-297A-O00EF",
+      "location_id": null,
       "communication_object_ids": [
         "1.1.3/O-24_R-966",
         "1.1.3/MD-2_M-3_MI-2_O-2-1_R-11",
@@ -1043,6 +1055,10 @@
       "individual_address": "1.1.4",
       "application": "M-0071_A-5531-37-FDF4",
       "project_uid": 40,
+      "product_id": "M-0071_H-ZVIZ70V2-1_P-ZVIZ70V2",
+      "hardware_id": "M-0071_H-ZVIZ70V2-1",
+      "hardware_program_id": "M-0071_H-ZVIZ70V2-1_HP-5531-37-FDF4",
+      "location_id": null,
       "communication_object_ids": [
         "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-0_R-1",
         "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-1_R-2",

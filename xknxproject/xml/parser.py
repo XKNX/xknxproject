@@ -80,8 +80,16 @@ def _convert_functions(function: XMLFunction) -> Function:
 
 def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
     """Convert spaces to the final output format."""
-    return {
-        space.name: Space(
+    result: dict[str, Space] = {}
+    for space in spaces:
+        if space.name in result:
+            _LOGGER.warning(
+                "Sibling spaces share the name %r: %s is replaced by %s in `locations`",
+                space.name,
+                result[space.name]["identifier"],
+                space.identifier,
+            )
+        result[space.name] = Space(
             type=space.space_type.value,
             identifier=space.identifier,
             name=space.name,
@@ -94,8 +102,21 @@ def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
             spaces=_recursive_convert_spaces(space.spaces),
             functions=space.functions,
         )
-        for space in spaces
-    }
+    return result
+
+
+def _device_location_ids(spaces: list[XMLSpace]) -> dict[str, str]:
+    """Map individual addresses to the identifier of the space listing the device."""
+    result: dict[str, str] = {}
+    for space in spaces:
+        for individual_address in space.devices:
+            result.setdefault(individual_address, space.identifier)
+        result |= {
+            address: identifier
+            for address, identifier in _device_location_ids(space.spaces).items()
+            if address not in result
+        }
+    return result
 
 
 def _recursive_convert_group_range(
@@ -201,6 +222,7 @@ class XMLParser:
             device.product_name = product.text
             device.hardware_name = product.hardware_name
             device.order_number = product.order_number
+            device.hardware_id = product.hardware_id
 
             try:
                 application_program_ref = hardware_application_map[
@@ -284,6 +306,7 @@ class XMLParser:
 
         communication_objects: dict[str, CommunicationObject] = {}
         devices_dict: dict[str, Device] = {}
+        device_location_ids = _device_location_ids(self.spaces)
         for device in self.devices:
             device_com_objects: list[str] = []
             for com_object in device.com_object_instance_refs:
@@ -346,6 +369,10 @@ class XMLParser:
                 individual_address=device.individual_address,
                 application=device.application_program_ref,
                 project_uid=device.project_uid,
+                product_id=device.product_ref,
+                hardware_id=device.hardware_id,
+                hardware_program_id=device.hardware_program_ref,
+                location_id=device_location_ids.get(device.individual_address),
                 communication_object_ids=device_com_objects,
                 channels=channels,
                 serial_number=device.serial_number,
