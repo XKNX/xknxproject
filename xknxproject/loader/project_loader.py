@@ -156,6 +156,7 @@ class _GroupAddressLoader:
             data_secure_key=group_address_element.get("Key"),
             comment=group_address_element.get("Comment", ""),
             style=group_address_style,
+            unfiltered=group_address_element.get("Unfiltered", "false") == "true",
         )
 
 
@@ -184,6 +185,7 @@ class _GroupAddressRangeLoader:
                 group_ranges=group_ranges,
                 comment=elem.get("Comment", ""),
                 style=group_address_style,
+                unfiltered=elem.get("Unfiltered", "false") == "true",
             )
 
         return create_xml_group_range(group_range_element)
@@ -226,7 +228,24 @@ class _TopologyLoader:
             medium_type = segment.get("MediumTypeRefId", "")
         else:
             medium_type = line_element.get("MediumTypeRefId", "")
-        line: XMLLine = XMLLine(address, description, name, medium_type, [], area)
+        # A coupler's manually added pass-through group addresses live on the segment (newer
+        # schemas, which nest a Segment under the line) or directly on the line (older schemas) as
+        # <AdditionalGroupAddresses><GroupAddress Address="..."/>.
+        container = segment if segment is not None else line_element
+        additional_group_addresses = [
+            int(addr)
+            for e in container.findall("{*}AdditionalGroupAddresses/{*}GroupAddress")
+            if (addr := e.get("Address")) is not None
+        ]
+        line: XMLLine = XMLLine(
+            address,
+            description,
+            name,
+            medium_type,
+            [],
+            area,
+            additional_group_addresses,
+        )
 
         for device_element in line_element.findall(".//{*}DeviceInstance"):
             if device := self._create_device(device_element, line):

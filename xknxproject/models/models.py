@@ -32,6 +32,7 @@ class XMLGroupAddress:
         data_secure_key: str | None,
         comment: str,
         style: GroupAddressStyle,
+        unfiltered: bool = False,
     ) -> None:
         """Initialize a group address."""
         self.name = name
@@ -43,6 +44,9 @@ class XMLGroupAddress:
         self.data_secure_key = data_secure_key  # Key as base64 encoded string or None
         self.comment = comment
         self.style = style
+        # The knxproj "Unfiltered" attribute: a group address (or its range) so marked is passed
+        # through line/backbone couplers unconditionally, independent of the crossing-link check.
+        self.unfiltered = unfiltered
         self.address = XMLGroupAddress.str_address(self.raw_address, self.style)
 
     @staticmethod
@@ -78,6 +82,8 @@ class XMLGroupRange:
     group_ranges: list[XMLGroupRange]
     comment: str
     style: GroupAddressStyle
+    # A whole range marked "route regardless": couplers pass every address in it unconditionally.
+    unfiltered: bool = False
 
     def str_address(self) -> str:
         """Generate a string representation for the range."""
@@ -117,6 +123,9 @@ class XMLLine:
     medium_type: str
     devices: list[DeviceInstance]
     area: XMLArea
+    # Raw group-address values manually added to a coupler on this line/segment as unconditional
+    # pass-through entries (the knxproj <Segment><AdditionalGroupAddresses><GroupAddress Address/>).
+    additional_group_addresses: list[int] = field(default_factory=list)
 
 
 class DeviceInstance:
@@ -187,6 +196,33 @@ class DeviceInstance:
         self.product_name: str = ""  # translatable name for specific product
         self.hardware_name: str = ""  # untranslatable name from hardware.xml
         self.order_number: str = ""
+        # hardware.xml identity + capability attributes (set during product merge)
+        self.hardware_serial_number: str = ""
+        self.version_number: int | None = None
+        self.bus_current: float | None = None  # mA
+        self.width_in_millimeter: float | None = None
+        self.has_individual_address: bool = False
+        self.has_application_program: bool = False
+        self.has_application_program2: bool = False
+        self.is_coupler: bool = False
+        self.is_power_supply: bool = False
+        self.is_choke: bool = False
+        self.is_power_line_repeater: bool = False
+        self.is_power_line_signal_filter: bool = False
+        self.is_cable: bool = False
+        self.is_ip_enabled: bool = False
+        self.is_rf_retransmitter: bool = False
+        self.is_accessory: bool = False
+        self.is_rail_mounted: bool = False
+        self.tp256: bool = False
+        self.no_download_without_plugin: bool = False
+        self.original_manufacturer: str = ""
+        self.visible_description: str = ""
+        self.default_language: str = ""
+        self.hash: str = ""
+        self.non_reg_relevant_data_version: int | None = None
+        self.internal_description: str = ""
+        self.attributes: dict[str, str] = {}
         self.manufacturer_name: str = ""
 
     def add_additional_address(self, address: str) -> None:
@@ -911,6 +947,34 @@ class Product:
     text: str
     order_number: str
     hardware_name: str = ""
+    # Product-level attributes (hardware.xml <Product>)
+    is_rail_mounted: bool = False
+    width_in_millimeter: float | None = None
+    visible_description: str = ""
+    default_language: str = ""
+    hash: str = ""
+    non_reg_relevant_data_version: int | None = None
+    internal_description: str = ""
+    attributes: dict[str, str] = field(default_factory=dict)  # <Attributes> Name->Value
+    # Hardware-level attributes (hardware.xml <Hardware>), copied onto every product of the hardware
+    hardware_serial_number: str = ""
+    version_number: int | None = None
+    bus_current: float | None = None  # mA
+    has_individual_address: bool = False
+    has_application_program: bool = False
+    has_application_program2: bool = False
+    is_coupler: bool = False  # device carries a coupler group-address filter table
+    is_power_supply: bool = False
+    is_choke: bool = False
+    is_power_line_repeater: bool = False
+    is_power_line_signal_filter: bool = False
+    is_cable: bool = False
+    is_ip_enabled: bool = False
+    is_rf_retransmitter: bool = False
+    is_accessory: bool = False
+    tp256: bool = False  # BCU memory model marker
+    original_manufacturer: str = ""
+    no_download_without_plugin: bool = False
 
 
 HardwareToPrograms = dict[str, str]
