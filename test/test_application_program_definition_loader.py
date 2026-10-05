@@ -7,6 +7,7 @@ import logging
 
 import pytest
 
+from xknxproject.exceptions import UnexpectedDataError
 from xknxproject.loader import (
     ApplicationProgramDefinitionLoader,
     LoadedApplicationProgram,
@@ -53,7 +54,7 @@ APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
         <ComObjectRef Id="{_APP}_MD-2_O-2-1_R-2" RefId="{_APP}_MD-2_O-2-1"
           Text="Switch inverted" DatapointType="DPST-1-2" />
         <ComObjectRef Id="{_APP}_MD-2_O-2-3_R-1" RefId="{_APP}_MD-2_O-2-3"
-          Semantics="knx:dpa.417.51" />
+          Text="Status feedback" Semantics="knx:dpa.417.51" />
       </ComObjectRefs>
     </Static>
     <Dynamic>
@@ -148,6 +149,8 @@ APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
     <Module Id="{_APP}_MD-3_M-1" RefId="{_APP}_MD-3" />
   </Channel>
 </Dynamic>
+</ApplicationProgram>
+</ApplicationPrograms>
 <Languages>
   <Language Identifier="de-DE">
     <TranslationUnit RefId="{_APP}">
@@ -158,6 +161,10 @@ APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
         <Translation AttributeName="Text" Text="Schalten" />
         <Translation AttributeName="FunctionText" Text="Ein/Aus" />
       </TranslationElement>
+      <TranslationElement RefId="{_APP}_MD-2_O-2-3">
+        <Translation AttributeName="Text" Text="Rückmeldung" />
+        <Translation AttributeName="FunctionText" Text="" />
+      </TranslationElement>
       <TranslationElement RefId="{_APP}_MD-2_O-2-1_R-2">
         <Translation AttributeName="Text" Text="Schalten invertiert" />
       </TranslationElement>
@@ -167,8 +174,6 @@ APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
     </TranslationUnit>
   </Language>
 </Languages>
-</ApplicationProgram>
-</ApplicationPrograms>
 </Manufacturer></ManufacturerData>
 </KNX>
 """
@@ -242,6 +247,45 @@ def test_identity_attributes() -> None:
     assert loaded.identity.program_hash == "abc="
     assert loaded.identity.kim_version == "92.60"
     assert loaded.identity.original_manufacturer == "M-000A"
+
+
+@pytest.mark.parametrize(
+    ("semantics", "expected"),
+    [
+        (
+            "# Serialization-Format-Version=2, "
+            "KIM-Version=(<http://schema.knx.org/2020/ontology/v2>, 109, 77), @prefix",
+            "109.77",
+        ),
+        (None, None),
+        ("", None),
+        ("# Serialization-Format-Version=2", None),
+        ("KIM-Version=(<http://schema.knx.org/2020/ontology/v2>, 92)", None),
+    ],
+)
+def test_parse_kim_version(semantics: str | None, expected: str | None) -> None:
+    """The KIM version is read from the header, None without a valid one."""
+    assert ApplicationProgramDefinitionLoader._parse_kim_version(semantics) == expected
+
+
+def test_identity_without_optional_attributes() -> None:
+    """Missing or non-integer optional attributes of the root element become None."""
+    application_xml = _program_xml(module_defs="", dynamic="").replace(
+        'Name="Test"', 'Name="Test" ApplicationVersion="1.0"'
+    )
+    identity = _load_xml(application_xml).identity
+    assert identity.application_number is None
+    assert identity.application_version is None
+    assert identity.program_hash is None
+    assert identity.kim_version is None
+    assert identity.original_manufacturer is None
+    assert identity.mask_version == ""
+
+
+def test_missing_application_program_raises() -> None:
+    """An XML without ApplicationProgram element is unexpected data."""
+    with pytest.raises(UnexpectedDataError):
+        _load_xml(f'<KNX xmlns="{_NS}"><ManufacturerData /></KNX>')
 
 
 def test_channel_object_ids_deduplicated() -> None:
@@ -347,6 +391,21 @@ def test_translations_applied() -> None:
     assert loaded.channels["MD-2_CH-1"]["text"] == "Kanal {{ChNo}}: {{0}}"
 
 
+def test_translation_precedence() -> None:
+    """
+    A ref's own Text wins over the translated ComObject Text.
+
+    A ref without own Text inherits the translated ComObject Text; an empty
+    translation keeps the default text.
+    """
+    loaded = _load("de-DE")
+    # MD-2_O-2-3 is translated, its ref has an own, untranslated Text
+    assert loaded.objects["MD-2_O-2-3_R-1"]["text"] == "Status feedback"
+    assert loaded.objects["MD-2_O-2-3_R-1"]["function_text"] == "On/Off"
+    # MD-2_O-2-1_R-1 has no own Text
+    assert loaded.objects["MD-2_O-2-1_R-1"]["text"] == "Schalten"
+
+
 def test_translation_missing_language_keeps_defaults() -> None:
     """An unknown language leaves the default texts untouched."""
     loaded = _load("fr-FR")
@@ -450,3 +509,66 @@ def test_unresolved_refs_are_dropped_with_one_warning(
             "ComObjectRef or ComObject: O-2_R-1, O-9_R-9",
         )
     ]
+
+
+def test_module_placed_in_and_outside_channels_is_in_both_lists() -> None:
+    """Refs of a module instantiated at top level and in a channel are in both lists."""
+    loaded = _load_xml(
+        _program_xml(
+            module_defs=_module_def(1),
+            dynamic=f"""
+            <Module Id="{_APP}_MD-1_M-1" RefId="{_APP}_MD-1" />
+            <Channel Id="{_APP}_CH-1" Name="Channel" Number="1">
+              <Module Id="{_APP}_MD-1_M-2" RefId="{_APP}_MD-1" />
+            </Channel>
+            """,
+        )
+    )
+    assert loaded.channel_independent_object_ids == ["MD-1_O-1-1_R-1"]
+    assert loaded.channels["CH-1"]["object_ids"] == ["MD-1_O-1-1_R-1"]
+    assert loaded.objects["MD-1_O-1-1_R-1"]["channel_ids"] == ["CH-1"]
+
+
+def test_modules_in_repeat_belong_to_the_enclosing_channel() -> None:
+    """A Module inside a Repeat, also inside a module, belongs to the enclosing channel."""
+    repeat_in_module = f"""
+      <Repeat Id="{_APP}_MD-2_X-1" Name="" ParameterRefId="{_APP}_MD-2_P-1_R-1">
+        <Module Id="{_APP}_MD-1_M-1" RefId="{_APP}_MD-1" />
+      </Repeat>"""
+    loaded = _load_xml(
+        _program_xml(
+            module_defs=_module_def(1) + _module_def(2, dynamic=repeat_in_module),
+            dynamic=f"""
+            <Channel Id="{_APP}_CH-1" Name="Channel" Number="1">
+              <Repeat Id="{_APP}_X-1" Name="" ParameterRefId="{_APP}_P-1_R-1">
+                <Module Id="{_APP}_MD-2_M-1" RefId="{_APP}_MD-2" />
+              </Repeat>
+            </Channel>
+            """,
+        )
+    )
+    assert loaded.channels["CH-1"]["object_ids"] == [
+        "MD-2_O-2-1_R-1",
+        "MD-1_O-1-1_R-1",
+    ]
+    assert loaded.channel_independent_object_ids == []
+
+
+def test_channel_independent_block_in_module_follows_the_module() -> None:
+    """A ChannelIndependentBlock inside a ModuleDef is not treated specially."""
+    channel_independent_block = f"""
+      <ChannelIndependentBlock>
+        <ComObjectRefRef RefId="{_APP}_MD-1_O-1-1_R-1" />
+      </ChannelIndependentBlock>"""
+    loaded = _load_xml(
+        _program_xml(
+            module_defs=_module_def(1, dynamic=channel_independent_block),
+            dynamic=f"""
+            <Channel Id="{_APP}_CH-1" Name="Channel" Number="1">
+              <Module Id="{_APP}_MD-1_M-1" RefId="{_APP}_MD-1" />
+            </Channel>
+            """,
+        )
+    )
+    assert loaded.channels["CH-1"]["object_ids"] == ["MD-1_O-1-1_R-1"]
+    assert loaded.channel_independent_object_ids == []

@@ -166,7 +166,7 @@ def _resolve(
 def test_instance_ids_resolve_to_definitions(
     file_stem: str, password: str | None, language: str | None
 ) -> None:
-    """Instance identifiers of `parse()` map to definition identifiers."""
+    """Instance ids of `parse()` map to definitions, and `object_channel_id()` to the instance channel."""
     knxproj = XKNXProj(
         RESOURCES_PATH / f"{file_stem}.knxproj", password, language=language
     )
@@ -175,13 +175,16 @@ def test_instance_ids_resolve_to_definitions(
 
     checked_objects = 0
     for co_id, com_object in project["communication_objects"].items():
-        if (app := com_object["device_application"]) is None:
+        if (application := com_object["device_application"]) is None:
             continue
-        program = programs[app]
-        object_id = _resolve(program, co_id, app, "O")
-        if (channel := com_object["channel"]) is not None:
-            channel_id = _resolve(program, channel, app, "CH")
-            assert object_id in program["channels"][channel_id]["object_ids"], co_id
+        program = programs[application]
+        object_definition = program["objects"][
+            _resolve(program, co_id, application, "O")
+        ]
+        if (instance_channel := com_object["channel"]) is not None:
+            assert object_channel_id(program, object_definition) == _resolve(
+                program, instance_channel, application, "CH"
+            ), co_id
         checked_objects += 1
     assert checked_objects > 0
 
@@ -192,6 +195,37 @@ def test_instance_ids_resolve_to_definitions(
         assert application is not None
         for device_channel_id in device["channels"]:
             _resolve(programs[application], device_channel_id, application, "CH")
+
+    for application, definition_ids in linked_object_definitions(project).items():
+        assert definition_ids <= set(programs[application]["objects"])
+
+
+@pytest.mark.parametrize(
+    ("file_stem", "language"),
+    [
+        ("testprojekt-ets6-functions", "De"),
+        ("ets6_two_level", "de-DE"),
+        ("ets6_free", "de-DE"),
+    ],
+)
+def test_project_without_application_programs(file_stem: str, language: str) -> None:
+    """A project without devices using an application program has no definitions."""
+    result = XKNXProj(
+        RESOURCES_PATH / f"{file_stem}.knxproj", language=language
+    ).parse_application_programs()
+    assert result["application_programs"] == {}
+    assert result["info"]["language_code"] == "de-DE"
+
+
+def test_language_code_is_the_requested_language() -> None:
+    """`language_code` is the project language, also for programs not translated to it."""
+    result = XKNXProj(
+        RESOURCES_PATH / "test_project-ets4.knxproj", "test", language="de-DE"
+    ).parse_application_programs()
+    assert result["info"]["language_code"] == "de-DE"
+    # this program ships en-US texts only
+    program = result["application_programs"]["M-0083_A-0013-11-A9D6"]
+    assert program["identity"]["name"] == "Switching, Staircase 20f"
 
 
 def test_devices_without_application_are_skipped() -> None:
@@ -298,37 +332,6 @@ def test_original_manufacturer_id_suffix(
         assert canonical == application_id
     else:
         assert canonical.startswith(f"{expected}_A-")
-
-
-def test_project_instances_resolve_to_definitions() -> None:
-    """Instances of a parsed project resolve to keys of the program definitions."""
-    knxproj = XKNXProj(RESOURCES_PATH / "module-definition-test.knxproj", language="De")
-    project = knxproj.parse()
-    programs = knxproj.parse_application_programs()["application_programs"]
-    resolved = 0
-    with_channel = 0
-    for device in project["devices"].values():
-        application = device["application"]
-        if application is None:
-            continue
-        program = programs[application]
-        for object_id in device["communication_object_ids"]:
-            definition_id = _resolve(program, object_id, application, "O")
-            object_definition = program["objects"][definition_id]
-            channel_id = object_channel_id(program, object_definition)
-            if channel_id is not None:
-                assert (
-                    object_definition["identifier"]
-                    in program["channels"][channel_id]["object_ids"]
-                )
-                with_channel += 1
-            resolved += 1
-    assert resolved
-    assert with_channel
-    linked = linked_object_definitions(project)
-    assert linked
-    for application, definition_ids in linked.items():
-        assert definition_ids <= set(programs[application]["objects"])
 
 
 @pytest.mark.parametrize(
