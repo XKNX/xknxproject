@@ -105,5 +105,7 @@ For a single instance, `instance_definition_id(instance_id, application_id, "O")
 returns the key in `definition["objects"]`; use `"CH"` for the key in
 `definition["channels"]`.
 
-The type definition is in `xknxproject/models/application_program.py`; example
-output is in `test/resources/stubs/application_programs/`.
+The type definition is in `xknxproject/models/application_program.py`. The
+stubs in `test/resources/stubs/application_programs/` hold complete example
+output for selected programs and a digest (identity, counts and checksum) for
+every program of the test projects.

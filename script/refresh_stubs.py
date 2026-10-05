@@ -3,6 +3,10 @@
 import json
 from pathlib import Path
 
+from test.application_program_stubs import (
+    SELECTED_APPLICATION_PROGRAMS,
+    application_program_stub,
+)
 from test.test_application_programs import APPLICATION_PROGRAM_FIXTURES
 from test.test_knxproj import PROJECT_FIXTURES
 from xknxproject import XKNXProj
@@ -37,4 +41,11 @@ for file_name, password, language in APPLICATION_PROGRAM_FIXTURES:
     with Path(f"test/resources/stubs/application_programs/{file_name}.json").open(
         mode="w", encoding="utf8"
     ) as f:
-        json.dump(programs, f, indent=2, ensure_ascii=False)
+        json.dump(
+            application_program_stub(
+                programs, SELECTED_APPLICATION_PROGRAMS.get(file_name, ())
+            ),
+            f,
+            indent=2,
+            ensure_ascii=False,
+        )

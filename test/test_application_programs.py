@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import copy
 import json
 from types import SimpleNamespace
-from typing import cast
+from typing import Any, cast
 
 import pytest
 
@@ -30,6 +31,11 @@ from xknxproject.xml.application_programs import (
 )
 
 from . import RESOURCES_PATH, STUBS_PATH
+from .application_program_stubs import (
+    SELECTED_APPLICATION_PROGRAMS,
+    application_program_stub,
+    program_digest,
+)
 
 # imported by the refresh_stubs helper script - therefore a constant
 APPLICATION_PROGRAM_FIXTURES = [
@@ -40,6 +46,14 @@ APPLICATION_PROGRAM_FIXTURES = [
 ]
 
 APPLICATION_PROGRAM_STUBS_PATH = STUBS_PATH / "application_programs"
+
+
+def _load_stub(file_stem: str) -> dict[str, Any]:
+    """Load the application program stub of a fixture project."""
+    with (APPLICATION_PROGRAM_STUBS_PATH / f"{file_stem}.json").open(
+        encoding="utf-8"
+    ) as stub_file:
+        return cast(dict[str, Any], json.load(stub_file))
 
 
 @pytest.mark.parametrize(
@@ -53,14 +67,12 @@ def test_parse_application_programs(
         RESOURCES_PATH / f"{file_stem}.knxproj", password, language=language
     )
     programs = knxproj.parse_application_programs()
-    with (APPLICATION_PROGRAM_STUBS_PATH / f"{file_stem}.json").open(
-        encoding="utf-8"
-    ) as stub_file:
-        stub = json.load(stub_file)
-    for program in (*stub.values(), *programs.values()):
-        version = program.pop("xknxproject_version")
-        assert len(version.split(".")) == 3
-    assert programs == stub
+    for program in programs.values():
+        assert len(program["xknxproject_version"].split(".")) == 3
+    stub = application_program_stub(
+        programs, SELECTED_APPLICATION_PROGRAMS.get(file_stem, ())
+    )
+    assert stub == _load_stub(file_stem)
 
 
 @pytest.mark.parametrize(
@@ -68,13 +80,33 @@ def test_parse_application_programs(
 )
 def test_application_program_stub_keys_match_typed_dicts(file_stem: str) -> None:
     """Stub items carry exactly the keys their TypedDicts declare."""
-    with (APPLICATION_PROGRAM_STUBS_PATH / f"{file_stem}.json").open(
-        encoding="utf-8"
-    ) as stub_file:
-        stub = json.load(stub_file)
-    assert stub, "stub must contain at least one application program"
-    for program in stub.values():
-        assert set(program) == set(ApplicationProgramDefinition.__annotations__)
+    stub = _load_stub(file_stem)
+    digests = stub["digests"]
+    assert digests, "stub must contain at least one application program"
+    # complete definitions exist for the selected programs only
+    assert set(stub["programs"]) == set(
+        SELECTED_APPLICATION_PROGRAMS.get(file_stem, ())
+    )
+    assert set(stub["programs"]) <= set(digests)
+    definition_keys = set(ApplicationProgramDefinition.__annotations__) - {
+        "xknxproject_version"
+    }
+    for digest in digests.values():
+        assert set(digest) == {
+            "identity",
+            "channels",
+            "modules",
+            "objects",
+            "channel_independent_objects",
+            "sha256",
+        }
+        assert set(digest["identity"]) == set(
+            ApplicationProgramIdentity.__annotations__
+        )
+        for product in digest["identity"]["products"]:
+            assert set(product) == set(ProductInfo.__annotations__)
+    for program in stub["programs"].values():
+        assert set(program) == definition_keys
         assert set(program["identity"]) == set(
             ApplicationProgramIdentity.__annotations__
         )
@@ -86,6 +118,31 @@ def test_application_program_stub_keys_match_typed_dicts(file_stem: str) -> None
             assert set(module) == set(ModuleDefinition.__annotations__)
         for obj in program["objects"].values():
             assert set(obj) == set(ObjectDefinition.__annotations__)
+
+
+def test_digest_detects_changes() -> None:
+    """The digest follows the content, not the key order or the version."""
+    programs = XKNXProj(
+        RESOURCES_PATH / "module-definition-test.knxproj", language="De"
+    ).parse_application_programs()
+    program = programs["M-0083_A-013A-32-DCC1"]
+    digest = program_digest(program)
+    assert digest["objects"] == len(program["objects"])
+    assert len(digest["sha256"]) == 64
+
+    changed = copy.deepcopy(program)
+    next(iter(changed["objects"].values()))["text"] += " changed"
+    assert program_digest(changed)["sha256"] != digest["sha256"]
+
+    reordered = cast(
+        ApplicationProgramDefinition, dict(reversed(list(program.items())))
+    )
+    reordered["objects"] = dict(reversed(list(program["objects"].items())))
+    assert program_digest(reordered) == digest
+
+    other_version = copy.deepcopy(program)
+    other_version["xknxproject_version"] = "0.0.0"
+    assert program_digest(other_version) == digest
 
 
 def _resolve(
