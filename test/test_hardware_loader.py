@@ -22,7 +22,7 @@ HARDWARE_XML = f"""
 """
 
 
-def test_parse_hardware_element_identity() -> None:
+def test_parse_hardware_element_tags_products_with_hardware() -> None:
     """Hardware id and name are attached to each product."""
     node = ElementTree.fromstring(HARDWARE_XML)
     products, hardware_programs = HardwareLoader.parse_hardware_element(node)
