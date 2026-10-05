@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import io
+import logging
+
+import pytest
 
 from xknxproject.loader import (
     ApplicationProgramDefinitionLoader,
@@ -402,3 +405,44 @@ def test_module_refs_follow_document_order_of_the_channel() -> None:
         "MD-1_O-1-1_R-1",
     ]
     assert loaded.objects["MD-1_O-1-1_R-1"]["channel_ids"] == ["CH-0", "CH-1"]
+
+
+def test_unresolved_refs_are_dropped_with_one_warning(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Refs without ComObjectRef or ComObject are left out of every id list."""
+    loaded = _load_xml(
+        _program_xml(
+            static=f"""
+            <ComObjectTable>
+              <ComObject Id="{_APP}_O-1" Name="Valid" Text="Valid" Number="1" />
+            </ComObjectTable>
+            <ComObjectRefs>
+              <ComObjectRef Id="{_APP}_O-1_R-1" RefId="{_APP}_O-1" />
+              <ComObjectRef Id="{_APP}_O-2_R-1" RefId="{_APP}_O-2" />
+            </ComObjectRefs>
+            """,
+            module_defs=_module_def(1),
+            dynamic=f"""
+            <ComObjectRefRef RefId="{_APP}_O-1_R-1" />
+            <ComObjectRefRef RefId="{_APP}_O-2_R-1" />
+            <ComObjectRefRef RefId="{_APP}_O-9_R-9" />
+            <Channel Id="{_APP}_CH-1" Name="Channel" Number="1">
+              <ComObjectRefRef RefId="{_APP}_O-9_R-9" />
+              <ComObjectRefRef RefId="{_APP}_O-1_R-1" />
+              <ComObjectRefRef RefId="{_APP}_O-2_R-1" />
+              <Module Id="{_APP}_MD-1_M-1" RefId="{_APP}_MD-1" />
+            </Channel>
+            """,
+        )
+    )
+    assert loaded.channels["CH-1"]["object_ids"] == ["O-1_R-1", "MD-1_O-1-1_R-1"]
+    assert loaded.channel_independent_object_ids == ["O-1_R-1"]
+    assert set(loaded.objects) == {"O-1_R-1", "MD-1_O-1-1_R-1"}
+    assert [(record.levelno, record.getMessage()) for record in caplog.records] == [
+        (
+            logging.WARNING,
+            f"Application program {_APP}: ignoring object references without "
+            "ComObjectRef or ComObject: O-2_R-1, O-9_R-9",
+        )
+    ]

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+import logging
 import re
 from typing import IO, Any
 from xml.etree import ElementTree
@@ -22,6 +23,8 @@ from xknxproject.util import (
     parse_semantics_functional_blocks,
     parse_xml_flag,
 )
+
+_LOGGER = logging.getLogger("xknxproject.log")
 
 _KIM_VERSION_RE = re.compile(r"KIM-Version=\(<[^>]*>,\s*(\d+),\s*(\d+)\)")
 
@@ -302,8 +305,25 @@ class ApplicationProgramDefinitionLoader:
         objects = ApplicationProgramDefinitionLoader._merge_objects(
             com_objects, com_object_refs, channel_refs
         )
+        # invalid catalog data: a ComObjectRefRef without ComObjectRef or a
+        # ComObjectRef without ComObject. Every listed id must be a key of `objects`.
+        unresolved = {
+            ref for refs in channel_refs.values() for ref in refs if ref not in objects
+        }
+        unresolved.update(ref for ref in channel_independent if ref not in objects)
+        unresolved.update(ref for ref in com_object_refs if ref not in objects)
+        if unresolved:
+            _LOGGER.warning(
+                "Application program %s: ignoring object references without "
+                "ComObjectRef or ComObject: %s",
+                identity.application_id,
+                ", ".join(sorted(unresolved)),
+            )
+            channel_independent = [
+                ref for ref in channel_independent if ref not in unresolved
+            ]
         for channel_id, refs in channel_refs.items():
-            channels[channel_id]["object_ids"] = list(refs)
+            channels[channel_id]["object_ids"] = [ref for ref in refs if ref in objects]
         return LoadedApplicationProgram(
             identity=identity,
             channels=channels,
