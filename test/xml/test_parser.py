@@ -4,14 +4,22 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
+from unittest.mock import Mock
 
 import pytest
 
-from xknxproject.models import SpaceType, XMLSpace
+from xknxproject.loader import (
+    ApplicationProgramLoader,
+    HardwareLoader,
+    KNXMasterLoader,
+    ProjectLoader,
+)
+from xknxproject.models import Product, SpaceType, XMLSpace
 from xknxproject.xml.parser import XMLParser, _recursive_convert_spaces
-from xknxproject.zip import extract
+from xknxproject.zip import KNXProjContents, extract
 
 from .. import RESOURCES_PATH
+from ..conftest import build_devices
 
 xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
 xknx_test_project_module_defs = RESOURCES_PATH / "module-definition-test.knxproj"
@@ -140,6 +148,7 @@ def test_parse_project_with_module_defs() -> None:
 def _space(
     identifier: str, name: str, devices: list[str], spaces: list[XMLSpace]
 ) -> XMLSpace:
+    """Build a room space listing the given devices and child spaces."""
     return XMLSpace(
         identifier=identifier,
         name=name,
@@ -156,7 +165,7 @@ def _space(
 
 
 def test_sibling_space_name_collision_warns(caplog: pytest.LogCaptureFixture) -> None:
-    """Same-named siblings are all kept, later ones keyed "<name> (<identifier>)"."""
+    """Later same-named siblings are keyed "<name> (<identifier>)" with a warning."""
     spaces = [
         _space("P-1_BP-2", "Flur", ["1.1.1"], []),
         _space(
@@ -243,3 +252,43 @@ def test_sibling_named_like_a_disambiguated_key_is_kept(
     assert {key: space["identifier"] for key, space in result.items()} == (
         expected_keys
     )
+
+
+def test_load_sets_hardware_id_of_resolved_products(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A device gets the Hardware Id of its product, "" if the product is unknown."""
+    devices = build_devices(("P-1_DI-1", 1), ("P-1_DI-2", 2))
+    # product found, but its hardware2program is not: the hardware id is still set
+    devices[0].product_ref = "M-0083_H-1_P-1"
+    devices[0].hardware_program_ref = "M-0083_H-1_HP-unknown"
+    devices[1].product_ref = "M-0083_H-2_P-unknown"
+    product = Product(
+        identifier="M-0083_H-1_P-1",
+        text="Schaltaktor",
+        order_number="4711",
+        hardware_name="Schaltaktor 8fach",
+        hardware_id="M-0083_H-1",
+    )
+    monkeypatch.setattr(KNXMasterLoader, "load", lambda **_: (Mock(), None))
+    monkeypatch.setattr(
+        ProjectLoader,
+        "load",
+        lambda **_: ([], [], [], devices, [], Mock(), []),
+    )
+    monkeypatch.setattr(HardwareLoader, "get_hardware_files", lambda **_: [Mock()])
+    monkeypatch.setattr(
+        HardwareLoader, "load", lambda **_: ({product.identifier: product}, {})
+    )
+    monkeypatch.setattr(
+        ApplicationProgramLoader,
+        "get_application_program_files_for_devices",
+        lambda **_: {},
+    )
+
+    project_contents = Mock(spec=KNXProjContents, root_path=Path("project"))
+    XMLParser(project_contents)._load(language=None)
+
+    assert devices[0].hardware_id == "M-0083_H-1"
+    assert devices[0].application_program_ref is None
+    assert devices[1].hardware_id == ""

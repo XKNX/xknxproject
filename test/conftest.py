@@ -2,7 +2,7 @@
 
 import json
 
-from xknxproject.models import KNXProject
+from xknxproject.models import DeviceInstance, KNXProject, XMLArea, XMLLine
 
 from . import STUBS_PATH
 
@@ -26,3 +26,31 @@ def assert_stub(to_be_verified: KNXProject, stub_name: str) -> None:
 
         for key in to_be_verified:
             assert key in stub, f"`{key}` key of generated object missing in stub"
+
+
+def build_devices(*instances: tuple[str, int]) -> list[DeviceInstance]:
+    """Build devices on line 1.1 from (device instance Id, device address) pairs."""
+    area = XMLArea(address=1, name="", description=None, lines=[])
+    line = XMLLine(
+        address=1, description=None, name="", medium_type="MT-0", devices=[], area=area
+    )
+    return [
+        DeviceInstance(
+            identifier=identifier,
+            address=address,
+            project_uid=None,
+            name="",
+            description="",
+            last_modified=None,
+            product_ref="",
+            hardware_program_ref="",
+            line=line,
+            manufacturer="M-0083",
+            additional_addresses=[],
+            channels=[],
+            com_object_instance_refs=[],
+            module_instances=[],
+            parameter_instance_refs={},
+        )
+        for identifier, address in instances
+    ]
