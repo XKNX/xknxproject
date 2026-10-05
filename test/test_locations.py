@@ -46,8 +46,8 @@ def test_sibling_space_name_collision_warns(caplog: pytest.LogCaptureFixture) ->
     assert "P-1_BP-3" in caplog.text
 
 
-def test_device_location_ids_use_innermost_space() -> None:
-    """A device is assigned to the identifier of the space listing it."""
+def test_device_location_ids_use_the_listing_space() -> None:
+    """Outer and nested devices map to the identifier of the space listing them."""
     spaces = [
         _space(
             "P-1_BP-1",
