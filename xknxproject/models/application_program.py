@@ -30,7 +30,8 @@ class ApplicationProgramIdentity(TypedDict):
     name: str
     mask_version: str  # "MV-07B0"
     program_hash: str | None  # Hash attribute (base64)
-    kim_version: str | None  # "92.60" parsed from the Semantics header, else None
+    # "92.60" from the KIM header of the program's Semantics attribute, else None
+    kim_version: str | None
     products: list[ProductInfo]  # products of this project using the program
 
 
