@@ -69,5 +69,33 @@ program["identity"]["application_version"]  # 50
 program["channels"]["MD-2_CH-1"]["object_ids"]  # ["MD-2_O-2-35_R-65", ...]
 ```
 
+The helpers in `xknxproject.util` connect the project output to these definitions:
+
+* `instance_definition_id()` turns the identifier of a channel or communication object instance from `parse()` into the key of the definition (`channels` or `objects`).
+* `object_channel_id()` returns the channel an object definition belongs to. For an object listed by several channels, a channel of the module that defines the object is preferred.
+* `canonical_application_id()` returns the same id for rebranded (OEM) copies of one application program.
+* `linked_object_definitions()` returns the object definitions the devices of a project link to group addresses, by application program id.
+
+```python
+from xknxproject.util import (
+    canonical_application_id,
+    instance_definition_id,
+    linked_object_definitions,
+    object_channel_id,
+)
+
+project = knxproj.parse()
+programs = knxproj.parse_application_programs()
+for application_id, object_ids in linked_object_definitions(project).items():
+    definition = programs[application_id]
+    canonical_id = canonical_application_id(
+        application_id, definition["identity"]["original_manufacturer_id"]
+    )
+    for object_id in object_ids:
+        channel_id = object_channel_id(definition, definition["objects"][object_id])
+```
+
+For a single instance, `instance_definition_id(instance_id, application_id, "O")` returns the key in `definition["objects"]`; use `"CH"` for the key in `definition["channels"]`.
+
 The type definition is in `xknxproject/models/application_program.py`; example
 output is in `test/resources/stubs/application_programs/`.
