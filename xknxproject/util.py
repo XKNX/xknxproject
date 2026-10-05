@@ -199,3 +199,35 @@ def text_parameter_insert_module_instance(
         return f"{_application_ref}_{_module_ref}_{_parameter_ref}"
 
     return text_parameter_ref_id
+
+
+# "M-0008_A-20E0-21-9997-O000A": manufacturer, program part, optional original manufacturer
+_APPLICATION_ID_RE = re.compile(
+    r"^(?P<manufacturer>M-[0-9A-Fa-f]{4})_A-(?P<program>.+?)(?:-[Oo](?P<oem>[0-9A-Fa-f]{4}))?$"
+)
+
+
+def canonical_application_id(
+    application_id: str, original_manufacturer_id: str | None
+) -> str:
+    """
+    Return the id of an application program independent of rebranding.
+
+    Programs of OEM products carry the id of the selling manufacturer and the
+    original manufacturer as "-Oxxxx" suffix. The canonical id names the
+    original manufacturer and drops the suffix, so rebranded copies of one
+    program share it. Ids not following the pattern are returned unchanged.
+
+    Examples
+    --------
+    "M-0008_A-20E0-21-9997-O000A" -> "M-000A_A-20E0-21-9997"
+    "M-0083_A-013A-32-DCC1" -> "M-0083_A-013A-32-DCC1"
+
+    """
+    match = _APPLICATION_ID_RE.match(application_id)
+    if match is None:
+        return application_id
+    manufacturer = original_manufacturer_id or (
+        f"M-{match['oem']}" if match["oem"] else match["manufacturer"]
+    )
+    return f"{manufacturer.upper()}_A-{match['program']}"

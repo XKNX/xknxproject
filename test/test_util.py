@@ -183,3 +183,24 @@ def test_semantics_functional_blocks(
 def test_semantics_dpas(semantics: str | None, expected: list[str] | None) -> None:
     """Test semantics dpas."""
     assert util.parse_semantics_dpas(semantics) == expected
+
+
+@pytest.mark.parametrize(
+    ("application_id", "original_manufacturer_id", "expected"),
+    [
+        ("M-0083_A-013A-32-DCC1", None, "M-0083_A-013A-32-DCC1"),
+        ("M-0008_A-20E0-21-9997-O000A", None, "M-000A_A-20E0-21-9997"),
+        ("M-0008_A-20E0-21-9997-o000a", None, "M-000A_A-20E0-21-9997"),
+        ("M-0008_A-20E0-21-9997-O000A", "M-0002", "M-0002_A-20E0-21-9997"),
+        ("M-0008_A-20E0-21-9997", "m-000a", "M-000A_A-20E0-21-9997"),
+        ("not-an-application-id", None, "not-an-application-id"),
+    ],
+)
+def test_canonical_application_id(
+    application_id: str, original_manufacturer_id: str | None, expected: str
+) -> None:
+    """Test the application id independent of rebranding."""
+    assert (
+        util.canonical_application_id(application_id, original_manufacturer_id)
+        == expected
+    )
