@@ -187,6 +187,7 @@ class DeviceInstance:
         self.product_name: str = ""  # translatable name for specific product
         self.hardware_name: str = ""  # untranslatable name from hardware.xml
         self.hardware_id: str = ""  # "Id" of the product's Hardware element
+        self.original_manufacturer: str | None = None  # OEM: original manufacturer id
         self.space_id: str | None = None  # "Id" of the first space listing the device
         self.order_number: str = ""
         self.manufacturer_name: str = ""
@@ -914,6 +915,7 @@ class Product:
     order_number: str  # "OrderNumber"
     hardware_name: str = ""  # "Name" of the parent Hardware element (untranslated)
     hardware_id: str = ""  # "Id" of the parent Hardware element
+    original_manufacturer: str | None = None
 
 
 HardwareToPrograms = dict[str, str]

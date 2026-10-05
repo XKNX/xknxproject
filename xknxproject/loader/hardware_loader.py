@@ -63,10 +63,12 @@ class HardwareLoader:
 
         hardware_name: str = hardware_node.get("Name", "")
         hardware_id: str = hardware_node.get("Id", "")
+        original_manufacturer: str | None = hardware_node.get("OriginalManufacturer")
         for product_node in hardware_node.findall("{*}Products/{*}Product"):
             _product = HardwareLoader.parse_product_element(product_node)
             _product.hardware_name = hardware_name
             _product.hardware_id = hardware_id
+            _product.original_manufacturer = original_manufacturer
             product_dict[_product.identifier] = _product
 
         for product_node in hardware_node.findall(

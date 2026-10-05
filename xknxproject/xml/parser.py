@@ -225,6 +225,7 @@ class XMLParser:
             device.hardware_name = product.hardware_name
             device.order_number = product.order_number
             device.hardware_id = product.hardware_id
+            device.original_manufacturer = product.original_manufacturer
 
             try:
                 application_program_ref = hardware_application_map[
