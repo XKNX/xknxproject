@@ -112,20 +112,6 @@ def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
     return result
 
 
-def _device_space_ids(spaces: list[XMLSpace]) -> dict[str, str]:
-    """Map individual addresses to the identifier of the space listing the device."""
-    result: dict[str, str] = {}
-    for space in spaces:
-        for individual_address in space.devices:
-            result.setdefault(individual_address, space.identifier)
-        result |= {
-            address: identifier
-            for address, identifier in _device_space_ids(space.spaces).items()
-            if address not in result
-        }
-    return result
-
-
 def _recursive_convert_group_range(
     group_ranges: list[XMLGroupRange],
     group_address_style: GroupAddressStyle,
@@ -313,7 +299,6 @@ class XMLParser:
 
         communication_objects: dict[str, CommunicationObject] = {}
         devices_dict: dict[str, Device] = {}
-        device_space_ids = _device_space_ids(self.spaces)
         for device in self.devices:
             device_com_objects: list[str] = []
             for com_object in device.com_object_instance_refs:
@@ -379,7 +364,7 @@ class XMLParser:
                 product_id=device.product_ref,
                 hardware_id=device.hardware_id,
                 hardware_program_id=device.hardware_program_ref,
-                space_id=device_space_ids.get(device.individual_address),
+                space_id=device.space_id,
                 communication_object_ids=device_com_objects,
                 channels=channels,
                 serial_number=device.serial_number,

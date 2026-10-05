@@ -8,11 +8,7 @@ from pathlib import Path
 import pytest
 
 from xknxproject.models import SpaceType, XMLSpace
-from xknxproject.xml.parser import (
-    XMLParser,
-    _device_space_ids,
-    _recursive_convert_spaces,
-)
+from xknxproject.xml.parser import XMLParser, _recursive_convert_spaces
 from xknxproject.zip import extract
 
 from .. import RESOURCES_PATH
@@ -247,20 +243,3 @@ def test_sibling_named_like_a_disambiguated_key_is_kept(
     assert {key: space["identifier"] for key, space in result.items()} == (
         expected_keys
     )
-
-
-def test_device_space_ids_use_the_listing_space() -> None:
-    """Outer and nested devices map to the identifier of the space listing them."""
-    spaces = [
-        _space(
-            "P-1_BP-1",
-            "Haus",
-            ["1.1.9"],
-            [_space("P-1_BP-2", "Küche", ["1.1.1", "1.1.2"], [])],
-        )
-    ]
-    assert _device_space_ids(spaces) == {
-        "1.1.9": "P-1_BP-1",
-        "1.1.1": "P-1_BP-2",
-        "1.1.2": "P-1_BP-2",
-    }

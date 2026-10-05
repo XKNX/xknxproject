@@ -417,8 +417,10 @@ class _LocationLoader:
         self._element_name = (
             "BuildingPart" if knx_proj_contents.is_ets4_project() else "Space"
         )
-        self.devices: dict[str, str] = {
-            device.identifier: device.individual_address for device in devices
+        # keyed by the device instance Id, which DeviceInstanceRef refers to; an
+        # individual address is not unique in a project with an address conflict
+        self.devices: dict[str, DeviceInstance] = {
+            device.identifier: device for device in devices
         }
 
     def load(
@@ -458,8 +460,12 @@ class _LocationLoader:
                 # recursively call parse space since this can be nested for an unbound time in the XSD
                 space.spaces.append(self.parse_space(sub_node, functions))
             elif sub_node.tag.endswith("DeviceInstanceRef"):
-                if individual_address := self.devices.get(sub_node.get("RefId", "")):
-                    space.devices.append(individual_address)
+                if device := self.devices.get(sub_node.get("RefId", "")):
+                    space.devices.append(device.individual_address)
+                    # ETS lists a device in one space; should it be listed in more,
+                    # the first listing in project file order wins
+                    if device.space_id is None:
+                        device.space_id = space.identifier
             elif sub_node.tag.endswith("Function"):
                 function = self.parse_functions(sub_node)
                 function.space_id = space.identifier
