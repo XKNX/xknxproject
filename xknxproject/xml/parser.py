@@ -99,7 +99,7 @@ def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
                 key = f"{key} ({space.identifier})"
             _LOGGER.warning(
                 "Sibling space %s already uses the key %r: "
-                "space %s is exported as %r in `locations`",
+                "space %s is exported under the key %r",
                 result[space.name]["identifier"],
                 space.name,
                 space.identifier,

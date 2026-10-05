@@ -64,8 +64,9 @@ class Device(TypedDict):
     project_uid: int | None
     product_id: str  # "ProductRefId" of the DeviceInstance ("" if absent)
     # "Id" of the Hardware element (manufacturer Hardware.xml) the product belongs to;
-    # "" when the product is not found in the project. Note: `hardware_name` holds the
-    # product text, not the "Name" of this Hardware element.
+    # "" when the product is not found in the project or the Hardware element has no
+    # "Id". Note: `hardware_name` holds the product text, not the "Name" of this
+    # Hardware element.
     hardware_id: str
     # "Hardware2ProgramRefId" of the DeviceInstance ("" if absent)
     hardware_program_id: str

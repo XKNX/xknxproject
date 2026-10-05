@@ -190,9 +190,9 @@ def test_sibling_space_name_collision_warns(caplog: pytest.LogCaptureFixture) ->
     assert [record.levelno for record in caplog.records] == [logging.WARNING] * 2
     assert caplog.messages == [
         "Sibling space P-1_BP-2 already uses the key 'Flur': "
-        "space P-1_BP-3 is exported as 'Flur (P-1_BP-3)' in `locations`",
+        "space P-1_BP-3 is exported under the key 'Flur (P-1_BP-3)'",
         "Sibling space P-1_BP-2 already uses the key 'Flur': "
-        "space P-1_BP-5 is exported as 'Flur (P-1_BP-5)' in `locations`",
+        "space P-1_BP-5 is exported under the key 'Flur (P-1_BP-5)'",
     ]
 
 
