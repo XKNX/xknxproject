@@ -82,7 +82,8 @@ class ApplicationProgramParser:
     def parse(self, language: str | None = None) -> ApplicationPrograms:
         """Parse every application program used by a device of the project."""
         project_parser = XMLParser(self.knx_proj_contents)
-        project_parser.load_project(language=language)
+        # same package: the load step of XMLParser is internal, not public API
+        project_parser._load_project(language=language)  # noqa: SLF001  # pylint: disable=protected-access
 
         result: ApplicationPrograms = {}
         for xml_file, devices in _group_devices_by_application(

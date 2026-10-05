@@ -167,12 +167,12 @@ class XMLParser:
 
     def parse(self, language: str | None = None) -> KNXProject:
         """Parse ETS project."""
-        self.load_project(language=language)
-        self.load_application_programs()
+        self._load_project(language=language)
+        self._merge_application_programs()
         self._sort()
         return self._transform()
 
-    def load_project(self, language: str | None) -> None:
+    def _load_project(self, language: str | None) -> None:
         """Load knx_master, project and hardware files and resolve device products."""
         (
             knx_master_data,
@@ -251,7 +251,7 @@ class XMLParser:
                 # need to complete ref_id before parsing application program
                 module_instance.complete_arguments_ref_id(application_program_ref)
 
-    def load_application_programs(self) -> None:
+    def _merge_application_programs(self) -> None:
         """Parse each used application program once and merge the used parts into devices."""
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(
@@ -272,7 +272,7 @@ class XMLParser:
             try:
                 _application = applications[device.application_program_xml()]
             except KeyError:
-                # device has no application program - logging was already done above
+                # device has no application program - logged in _load_project
                 continue
             device.merge_application_program_info(_application)
 

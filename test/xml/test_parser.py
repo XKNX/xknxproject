@@ -9,7 +9,6 @@ from unittest.mock import Mock
 import pytest
 
 from xknxproject.loader import (
-    ApplicationProgramLoader,
     HardwareLoader,
     KNXMasterLoader,
     ProjectLoader,
@@ -280,14 +279,9 @@ def test_load_sets_hardware_id_of_resolved_products(
     monkeypatch.setattr(
         HardwareLoader, "load", lambda **_: ({product.identifier: product}, {})
     )
-    monkeypatch.setattr(
-        ApplicationProgramLoader,
-        "get_application_program_files_for_devices",
-        lambda **_: {},
-    )
 
     project_contents = Mock(spec=KNXProjContents, root_path=Path("project"))
-    XMLParser(project_contents)._load(language=None)
+    XMLParser(project_contents)._load_project(language=None)
 
     assert devices[0].hardware_id == "M-0083_H-1"
     assert devices[0].application_program_ref is None
