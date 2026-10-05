@@ -1246,7 +1246,7 @@
       "product_id": "M-00C5_H-KNX.20IP.20Router.20752.20secure-256_P-KNX.20IP.20Router.20752.20secure",
       "hardware_id": "M-00C5_H-KNX.20IP.20Router.20752.20secure-256",
       "hardware_program_id": "M-00C5_H-KNX.20IP.20Router.20752.20secure-256_HP-0717-11-0D5A",
-      "location_id": "P-04FF-0_BP-6",
+      "space_id": "P-04FF-0_BP-6",
       "communication_object_ids": [],
       "channels": {},
       "serial_number": "",
@@ -1269,7 +1269,7 @@
       "product_id": "M-00E1_H-2036.2D10-1_P-79236.2DSEC",
       "hardware_id": "M-00E1_H-2036.2D10-1",
       "hardware_program_id": "M-00E1_H-2036.2D10-1_HP-2036-40-865C",
-      "location_id": "P-04FF-0_BP-6",
+      "space_id": "P-04FF-0_BP-6",
       "communication_object_ids": [
         "1.0.1/O-0_R-1",
         "1.0.1/O-9_R-85",
@@ -1335,7 +1335,7 @@
       "product_id": "M-0064_H-SpaceLogic.20KNX.20Switch.20Secure-1_P-MTN6705.2D0008S",
       "hardware_id": "M-0064_H-SpaceLogic.20KNX.20Switch.20Secure-1",
       "hardware_program_id": "M-0064_H-SpaceLogic.20KNX.20Switch.20Secure-1_HP-5810-12-2E9D",
-      "location_id": "P-04FF-0_BP-6",
+      "space_id": "P-04FF-0_BP-6",
       "communication_object_ids": [
         "1.0.2/O-55_R-43",
         "1.0.2/O-60_R-50",
@@ -1462,7 +1462,7 @@
       "product_id": "M-007C_H-ISTPRFMK01-1_P-3.2D0002.2D005",
       "hardware_id": "M-007C_H-ISTPRFMK01-1",
       "hardware_program_id": "M-007C_H-ISTPRFMK01-1_HP-001C-14-E802",
-      "location_id": "P-04FF-0_BP-4",
+      "space_id": "P-04FF-0_BP-4",
       "communication_object_ids": [],
       "channels": {},
       "serial_number": "",
@@ -1485,7 +1485,7 @@
       "product_id": "M-0083_H-265-1_P-RF.2DHVA1DLB.2E01S",
       "hardware_id": "M-0083_H-265-1",
       "hardware_program_id": "M-0083_H-265-1_HP-00F3-10-1728",
-      "location_id": "P-04FF-0_BP-4",
+      "space_id": "P-04FF-0_BP-4",
       "communication_object_ids": [
         "1.1.1/O-4_R-7",
         "1.1.1/O-2_R-11",
@@ -1534,7 +1534,7 @@
       "product_id": "M-0083_H-248-1_P-RF.2DAKD260CC.2E02S",
       "hardware_id": "M-0083_H-248-1",
       "hardware_program_id": "M-0083_H-248-1_HP-00ED-10-33FD",
-      "location_id": "P-04FF-0_BP-5",
+      "space_id": "P-04FF-0_BP-5",
       "communication_object_ids": [],
       "channels": {
         "CH-2": {

@@ -194,7 +194,7 @@
       "product_id": "M-0083_H-19-1_P-AKS.2D2016.2E02",
       "hardware_id": "M-0083_H-19-1",
       "hardware_program_id": "M-0083_H-19-1_HP-0013-11-A9D6",
-      "location_id": "P-0600-0_BP-4",
+      "space_id": "P-0600-0_BP-4",
       "communication_object_ids": [
         "0.0.1/M-0083_A-0013-11-A9D6_O-0_R-10000",
         "0.0.1/M-0083_A-0013-11-A9D6_O-5_R-10005",
@@ -221,7 +221,7 @@
       "product_id": "M-0002_H-2CDG.20110.20125.20R0011-1_P-2CDG.20110.20125.20R0011",
       "hardware_id": "M-0002_H-2CDG.20110.20125.20R0011-1",
       "hardware_program_id": "M-0002_H-2CDG.20110.20125.20R0011-1_HP-A061-14-BE27",
-      "location_id": "P-0600-0_BP-2",
+      "space_id": "P-0600-0_BP-2",
       "communication_object_ids": [
         "0.0.2/M-0002_A-A061-14-BE27_O-10_R-485",
         "0.0.2/M-0002_A-A061-14-BE27_O-71_R-1506"

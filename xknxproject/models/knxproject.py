@@ -69,7 +69,7 @@ class Device(TypedDict):
     hardware_program_id: str
     # identifier of the space listing the device (`Space.identifier`), None when
     # the device is in no space
-    location_id: str | None
+    space_id: str | None
     communication_object_ids: list[str]
     channels: dict[str, Channel]  # id: Channel
     serial_number: str

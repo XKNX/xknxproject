@@ -7,7 +7,7 @@ import logging
 import pytest
 
 from xknxproject.models import SpaceType, XMLSpace
-from xknxproject.xml.parser import _device_location_ids, _recursive_convert_spaces
+from xknxproject.xml.parser import _device_space_ids, _recursive_convert_spaces
 
 
 def _space(
@@ -46,7 +46,7 @@ def test_sibling_space_name_collision_warns(caplog: pytest.LogCaptureFixture) ->
     assert "P-1_BP-3" in caplog.text
 
 
-def test_device_location_ids_use_the_listing_space() -> None:
+def test_device_space_ids_use_the_listing_space() -> None:
     """Outer and nested devices map to the identifier of the space listing them."""
     spaces = [
         _space(
@@ -56,7 +56,7 @@ def test_device_location_ids_use_the_listing_space() -> None:
             [_space("P-1_BP-2", "Küche", ["1.1.1", "1.1.2"], [])],
         )
     ]
-    assert _device_location_ids(spaces) == {
+    assert _device_space_ids(spaces) == {
         "1.1.9": "P-1_BP-1",
         "1.1.1": "P-1_BP-2",
         "1.1.2": "P-1_BP-2",
