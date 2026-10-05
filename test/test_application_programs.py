@@ -4,13 +4,21 @@ from __future__ import annotations
 
 import copy
 import json
+import logging
 from types import SimpleNamespace
-from typing import Any, Literal, cast
+from typing import IO, Any, Literal, cast
+from xml.etree import ElementTree
+import zipfile
 
 import pytest
 
 from xknxproject import XKNXProj
-from xknxproject.loader import ApplicationProgramLoader
+from xknxproject.exceptions import UnexpectedDataError
+from xknxproject.loader import (
+    ApplicationProgramDefinitionLoader,
+    ApplicationProgramLoader,
+    LoadedApplicationProgram,
+)
 from xknxproject.models import (
     ApplicationProgramDefinition,
     ApplicationProgramIdentity,
@@ -321,3 +329,43 @@ def test_project_instances_resolve_to_definitions() -> None:
     assert linked
     for application, definition_ids in linked.items():
         assert definition_ids <= set(programs[application]["objects"])
+
+
+@pytest.mark.parametrize(
+    "error",
+    [
+        UnexpectedDataError("ApplicationProgram element not found"),
+        ElementTree.ParseError("not well-formed"),
+        KeyError("Id"),
+        FileNotFoundError("M-0002/M-0002_A-A066-14-550B.xml"),
+    ],
+)
+def test_unreadable_program_is_skipped(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture, error: Exception
+) -> None:
+    """A program that can not be read is skipped with a warning, the others are parsed."""
+    broken_file = "M-0002/M-0002_A-A066-14-550B.xml"
+    load = ApplicationProgramDefinitionLoader.load
+
+    def _load(
+        application_program_path: zipfile.Path | IO[bytes], language_code: str | None
+    ) -> LoadedApplicationProgram:
+        if str(application_program_path).endswith(broken_file):
+            raise error
+        return load(application_program_path, language_code)
+
+    monkeypatch.setattr(ApplicationProgramDefinitionLoader, "load", _load)
+    programs = XKNXProj(
+        RESOURCES_PATH / "xknx_test_project.knxproj", "test"
+    ).parse_application_programs()["application_programs"]
+
+    assert list(programs) == [
+        "M-0083_A-0139-22-F35B-O0072",
+        "M-0002_A-A01B-14-1B7C",
+        "M-0008_A-20E0-21-9997-O000A",
+    ]
+    assert [
+        (record.levelno, record.getMessage())
+        for record in caplog.records
+        if record.levelno >= logging.WARNING
+    ] == [(logging.WARNING, f"Skipping application program {broken_file}: {error!r}")]

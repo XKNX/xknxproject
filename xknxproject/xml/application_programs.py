@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import logging
+from xml.etree import ElementTree
 
 from xknxproject.__version__ import __version__
+from xknxproject.exceptions import XknxProjectException
 from xknxproject.loader import (
     ApplicationProgramDefinitionLoader,
     ApplicationProgramLoader,
@@ -74,17 +76,31 @@ class ApplicationProgramParser:
         # same package: the load step of XMLParser is internal, not public API
         project_parser._load_project(language=language)  # noqa: SLF001  # pylint: disable=protected-access
 
-        definitions: dict[str, ApplicationProgramDefinition] = {}
-        for (
-            xml_file,
-            devices,
-        ) in ApplicationProgramLoader.get_application_program_files_for_devices(
-            devices=project_parser.devices
-        ).items():
-            loaded = ApplicationProgramDefinitionLoader.load(
-                application_program_path=self.knx_proj_contents.root_path / xml_file,
-                language_code=project_parser.language_code,
+        program_files = (
+            ApplicationProgramLoader.get_application_program_files_for_devices(
+                devices=project_parser.devices
             )
+        )
+        definitions: dict[str, ApplicationProgramDefinition] = {}
+        for xml_file, devices in program_files.items():
+            try:
+                loaded = ApplicationProgramDefinitionLoader.load(
+                    application_program_path=self.knx_proj_contents.root_path
+                    / xml_file,
+                    language_code=project_parser.language_code,
+                )
+            # the definitions are independent: one unreadable program (missing
+            # file, malformed XML, missing or invalid attribute) must not hide
+            # the others
+            except (
+                XknxProjectException,
+                ElementTree.ParseError,
+                OSError,
+                KeyError,
+                ValueError,
+            ) as err:
+                _LOGGER.warning("Skipping application program %s: %r", xml_file, err)
+                continue
             raw_identity = loaded.identity
             application_id = raw_identity.application_id
             identity = ApplicationProgramIdentity(
