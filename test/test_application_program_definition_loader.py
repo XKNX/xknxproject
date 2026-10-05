@@ -151,6 +151,9 @@ APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 <Languages>
   <Language Identifier="de-DE">
     <TranslationUnit RefId="{_APP}">
+      <TranslationElement RefId="{_APP}">
+        <Translation AttributeName="Name" Text="AKD-0424V.02 Dimmaktor" />
+      </TranslationElement>
       <TranslationElement RefId="{_APP}_MD-2_O-2-1">
         <Translation AttributeName="Text" Text="Schalten" />
         <Translation AttributeName="FunctionText" Text="Ein/Aus" />
@@ -335,8 +338,9 @@ def test_object_definition_merges_ref_over_com_object() -> None:
 
 
 def test_translations_applied() -> None:
-    """Texts of objects, refs and channels are translated."""
+    """Texts of objects, refs and channels and the program name are translated."""
     loaded = _load("de-DE")
+    assert loaded.identity.name == "AKD-0424V.02 Dimmaktor"
     assert loaded.objects["MD-2_O-2-1_R-1"]["text"] == "Schalten"
     assert loaded.objects["MD-2_O-2-1_R-1"]["function_text"] == "Ein/Aus"
     assert loaded.objects["MD-2_O-2-1_R-2"]["text"] == "Schalten invertiert"

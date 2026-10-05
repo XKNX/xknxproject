@@ -296,7 +296,7 @@ class ApplicationProgramDefinitionLoader:
                 tree_iterator=tree_iterator,
                 namespace=namespace,
                 language_code=language_code,
-                prefix=prefix,
+                identity=identity,
                 com_objects=com_objects,
                 com_object_refs=com_object_refs,
                 channels=channels,
@@ -414,7 +414,7 @@ class ApplicationProgramDefinitionLoader:
         tree_iterator: Iterator[tuple[str, Any]],
         namespace: str,
         language_code: str,
-        prefix: str,
+        identity: RawApplicationProgramIdentity,
         com_objects: dict[str, _ComObject],
         com_object_refs: dict[str, _ComObjectRef],
         channels: dict[str, ChannelDefinition],
@@ -423,6 +423,7 @@ class ApplicationProgramDefinitionLoader:
         ns_language = f"{namespace}Language"
         ns_translation_element = f"{namespace}TranslationElement"
         ns_translation = f"{namespace}Translation"
+        prefix = f"{identity.application_id}_"
         in_language = False
         ref_id: str | None = None
         elem: ElementTree.Element
@@ -442,7 +443,10 @@ class ApplicationProgramDefinitionLoader:
                 text = elem.get("Text")
                 if not text:
                     continue
-                if (com_object := com_objects.get(ref_id)) is not None:
+                if ref_id == identity.application_id:
+                    if attribute == "Name":
+                        identity.name = text
+                elif (com_object := com_objects.get(ref_id)) is not None:
                     if attribute == "Text":
                         com_object.text = text
                     elif attribute == "FunctionText":

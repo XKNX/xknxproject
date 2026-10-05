@@ -41,7 +41,7 @@
         "original_manufacturer_id": null,
         "application_number": 41057,
         "application_version": 20,
-        "name": "Blind/Shutter4f 230VTravelDetect. M/1.4",
+        "name": "Jalousie/Rollladen 4f 230V Fahrzeiterm. M/1.4",
         "mask_version": "MV-0701",
         "program_hash": "vrKPJTmJavAm4IfHghkyJw==",
         "kim_version": null,
@@ -60,7 +60,7 @@
       "modules": 0,
       "objects": 303,
       "channel_independent_objects": 0,
-      "sha256": "b1c15f4793bfe83f2838084917bd6924e2f81740f8e5127fca14bde16bd74dd0"
+      "sha256": "50eb681adbf00b5ba44ce701a7d2d3bdb1f70edb7f1e4b5f6b16ef911e724592"
     }
   }
 }

@@ -11,7 +11,7 @@
         "original_manufacturer_id": null,
         "application_number": 314,
         "application_version": 50,
-        "name": "Heating actuator 8-fold",
+        "name": "Heizungsaktor 8-fach",
         "mask_version": "MV-07B0",
         "program_hash": "3IvmmbjiJhWQEi90ri0CwQ==",
         "kim_version": null,
@@ -3462,7 +3462,7 @@
         "original_manufacturer_id": null,
         "application_number": 314,
         "application_version": 50,
-        "name": "Heating actuator 8-fold",
+        "name": "Heizungsaktor 8-fach",
         "mask_version": "MV-07B0",
         "program_hash": "3IvmmbjiJhWQEi90ri0CwQ==",
         "kim_version": null,
@@ -3481,7 +3481,7 @@
       "modules": 1,
       "objects": 121,
       "channel_independent_objects": 29,
-      "sha256": "f4c09a33c9300eea085e484cbec683defd9ce8cbddb3737407db4cf88b4efdac"
+      "sha256": "4bdca22446871d186e7a86d8c1ea012ff708b23f782ed6395de0bea8de352c76"
     },
     "M-0083_A-0153-10-297A-O00EF": {
       "identity": {
