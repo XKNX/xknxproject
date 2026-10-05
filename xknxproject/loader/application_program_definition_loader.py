@@ -1,4 +1,34 @@
-"""Load the full definition of an application program."""
+"""
+Load the complete definition of one application program XML.
+
+Unlike `ApplicationProgramLoader`, which reads only the parts of an application
+program that devices of the project use, this loader reads every ComObject,
+ComObjectRef, Channel and ModuleDef of the program in one `iterparse` pass.
+
+Identifiers are returned relative to the application program id
+("M-0083_A-013A-32-DCC1_MD-2_CH-1" -> "MD-2_CH-1"). Definitions are not
+instantiated, so module definition parts ("MD-2", "MD-4_SM-1") stay and module
+instance parts ("_M-1_MI-1") never occur.
+
+Channel membership is structural, independent of parameter values:
+
+* a ComObjectRefRef inside a Channel belongs to that Channel, in every
+  `choose`/`when` branch;
+* a ComObjectRefRef inside a ModuleDef but outside a Channel of that ModuleDef
+  belongs to every Channel in which the module is instantiated by a `<Module>`
+  element, directly or through the modules instantiating it (also inside
+  `<Repeat>`);
+* every other ComObjectRefRef is channel independent: those outside any
+  ModuleDef and Channel (ChannelIndependentBlock or top level) and those of
+  modules instantiated outside any Channel or never instantiated.
+
+A module instantiated both inside and outside Channels contributes its refs to
+both. A ChannelIndependentBlock inside a ModuleDef is not treated specially;
+its refs follow the placement of the module (no known catalog has refs there).
+
+Every id listed in a Channel or as channel independent is a key of the
+objects: refs without ComObjectRef or ComObject are dropped with a warning.
+"""
 
 from __future__ import annotations
 
@@ -27,52 +57,68 @@ from xknxproject.util import (
 
 _LOGGER = logging.getLogger("xknxproject.log")
 
+# KIM header in the root Semantics attribute:
+# "... KIM-Version=(<ontology uri>, 92, 60), ..." -> "92.60"
 _KIM_VERSION_RE = re.compile(r"KIM-Version=\(<[^>]*>,\s*(\d+),\s*(\d+)\)")
 
 
 @dataclass
 class RawApplicationProgramIdentity:
-    """Identity attributes read from the ApplicationProgram root element."""
+    """
+    Identity attributes of the ApplicationProgram element.
 
-    application_id: str
-    application_number: int | None
-    application_version: int | None
-    name: str
-    mask_version: str
-    program_hash: str | None
-    kim_version: str | None
-    original_manufacturer: str | None  # OEM programs: "M-000A"
+    Only what the application program XML provides; `ApplicationProgramParser`
+    adds the manufacturer and the products of the project.
+    """
+
+    application_id: str  # "Id" - "M-0083_A-013A-32-DCC1"
+    application_number: int | None  # "ApplicationNumber" - None if missing or invalid
+    application_version: int | None  # "ApplicationVersion" - None if missing or invalid
+    name: str  # "Name" - translated to the requested language
+    mask_version: str  # "MaskVersion" - "MV-07B0"
+    program_hash: str | None  # "Hash" - base64
+    kim_version: str | None  # "92.60" from the KIM header of "Semantics", else None
+    original_manufacturer: str | None  # "OriginalManufacturer" - OEM programs: "M-000A"
 
 
 @dataclass
 class LoadedApplicationProgram:
-    """Result of `ApplicationProgramDefinitionLoader.load()`."""
+    """
+    Result of `ApplicationProgramDefinitionLoader.load()`.
+
+    Dictionaries are keyed by identifier relative to the application program id.
+    """
 
     identity: RawApplicationProgramIdentity
     channels: dict[str, ChannelDefinition]
     modules: dict[str, ModuleDefinition]
     objects: dict[str, ObjectDefinition]
-    channel_independent_object_ids: list[str]
+    channel_independent_object_ids: list[str]  # document order
 
 
 @dataclass
 class _ComObject:
-    """ComObject attributes."""
+    """ComObject of a ComObjectTable, the base of one or more ComObjectRefs."""
 
-    name: str
-    text: str
-    number: int
-    function_text: str
-    object_size: str
-    flags: Flags
-    datapoint_types: list[DPTType]
+    name: str  # "Name"
+    text: str  # "Text" - translated
+    number: int  # "Number" - inside a ModuleDef relative to the module base number
+    function_text: str  # "FunctionText" - translated
+    object_size: str  # "ObjectSize" - "1 Bit"
+    flags: Flags  # missing flag attributes are False, as in ApplicationProgramLoader
+    datapoint_types: list[DPTType]  # "DatapointType" - knx:IDREFS
 
 
 @dataclass
 class _ComObjectRef:
-    """ComObjectRef attributes - None means "inherit from ComObject"."""
+    """
+    ComObjectRef overriding attributes of the ComObject it references.
 
-    ref_id: str
+    None, or an empty list of datapoint types, means the attribute is not set on
+    the ref and is inherited from the ComObject.
+    """
+
+    ref_id: str  # "RefId" - ComObject id relative to the application program
     name: str | None
     text: str | None
     function_text: str | None
@@ -84,12 +130,19 @@ class _ComObjectRef:
     update_flag: bool | None
     read_on_init_flag: bool | None
     datapoint_types: list[DPTType]
-    dpas: list[str] | None
+    dpas: list[str] | None  # from "Semantics" - DPAs are read from refs only
 
 
 @dataclass(frozen=True)
 class _Placement:
-    """Place of a <Module> instantiation: a channel, a module definition or top level."""
+    """
+    Parent of one `<Module>` instantiation.
+
+    channel_id is set when the Module element is inside a Channel. Otherwise
+    module_id is the ModuleDef whose Dynamic section contains the Module element;
+    both are None for a Module outside any Channel and ModuleDef (top level or in
+    a ChannelIndependentBlock).
+    """
 
     channel_id: str | None
     module_id: str | None
@@ -101,7 +154,7 @@ def _inherit(ref_value: bool | None, base_value: bool) -> bool:
 
 
 def _int_or_none(value: str | None) -> int | None:
-    """Parse an optional integer attribute."""
+    """Parse an optional integer attribute; return None if it is missing or invalid."""
     try:
         return int(value) if value is not None else None
     except ValueError:
@@ -109,14 +162,29 @@ def _int_or_none(value: str | None) -> int | None:
 
 
 class ApplicationProgramDefinitionLoader:
-    """Load channels, modules and all objects of an application program."""
+    """
+    Load channels, modules and all objects of one application program.
+
+    See the module docstring for identifiers and channel membership.
+    """
 
     @staticmethod
     def load(
         application_program_path: Path | IO[bytes],
         language_code: str | None,
     ) -> LoadedApplicationProgram:
-        """Load the definition. Identifiers are returned relative to the application id."""
+        """
+        Load the definition of an application program XML.
+
+        application_program_path: application program XML in the extracted project
+            archive, or an open binary stream
+        language_code: language of translated texts, e.g. "de-DE"; None keeps the
+            texts of the program's default language
+
+        Return the identity, the channel, module and object definitions and the
+        channel independent object identifiers. Raise UnexpectedDataError if the
+        XML has no ApplicationProgram element.
+        """
         if isinstance(application_program_path, Path):
             with application_program_path.open(mode="rb") as application_xml:
                 return ApplicationProgramDefinitionLoader._load(
@@ -131,19 +199,28 @@ class ApplicationProgramDefinitionLoader:
         application_xml: IO[bytes],
         language_code: str | None,
     ) -> LoadedApplicationProgram:
+        """
+        Walk the XML once with start and end events and build the definition.
+
+        Start events read attributes; end events close the Channel and ModuleDef
+        ancestry and clear elements to bound memory. The walk stops at
+        <Languages>; `_apply_translations` continues the same iterator.
+        """
         com_objects: dict[str, _ComObject] = {}
         com_object_refs: dict[str, _ComObjectRef] = {}
         channels: dict[str, ChannelDefinition] = {}
         modules: dict[str, ModuleDefinition] = {}
         identity: RawApplicationProgramIdentity | None = None
-        prefix = ""  # f"{application_id}_"
-        # ancestry while walking <Dynamic>: open channel id and open module def ids.
+        # "<application id>_": XML ids are absolute, output ids relative; set at
+        # the ApplicationProgram start
+        prefix = ""
+        # ancestry of the current element: the open Channel and the open ModuleDefs
+        # (innermost last; SubModuleDefs nest inside their ModuleDef)
         open_channel: str | None = None
-        module_stack: list[str] = []  # nested for SubModuleDefs
-        # A ComObjectRefRef outside any Channel and any ModuleDef is channel
-        # independent. One inside a ModuleDef without open Channel belongs to the
-        # place where the module is instantiated - resolved after the main pass.
-        # Candidates are kept in document order: (module id or None, ref id).
+        module_stack: list[str] = []
+        # refs outside any Channel, in document order, with the ModuleDef containing
+        # them (None outside ModuleDefs); which of them are channel independent is
+        # known only after all <Module> placements are read, see _place_module_refs
         independent_candidates: list[tuple[str | None, str]] = []
         # ordered sets (dict keys): de-duplicate in linear time, keep document order
         channel_refs: dict[str, dict[str, None]] = {}
@@ -154,6 +231,7 @@ class ApplicationProgramDefinitionLoader:
 
         tree_iterator = ElementTree.iterparse(application_xml, events=("start", "end"))
         _, elem = next(tree_iterator)
+        # the namespace differs per schema version (project/11 ETS 4 ... project/23 ETS 6)
         namespace = elem.tag.split("KNX", maxsplit=1)[0]
         ns_application_program = f"{namespace}ApplicationProgram"
         ns_com_object = f"{namespace}ComObject"
@@ -165,8 +243,10 @@ class ApplicationProgramDefinitionLoader:
         ns_languages = f"{namespace}Languages"
 
         def _rel(identifier: str) -> str:
+            """Return an id relative to the application program ("<application id>_" removed)."""
             return identifier.removeprefix(prefix)
 
+        # start events: attributes are complete; end events: close ancestry and clear
         for event, elem in tree_iterator:
             if event == "start":
                 if elem.tag == ns_application_program:
@@ -255,6 +335,10 @@ class ApplicationProgramDefinitionLoader:
                     if open_channel is not None:
                         channel_refs[open_channel][ref] = None
                     elif module_stack:
+                        # inside a ModuleDef but outside its Channels: the channels are
+                        # known only after all <Module> placements are read.
+                        # De-duplicated per module here; candidates outside modules
+                        # are de-duplicated in _place_module_refs
                         refs = module_refs.setdefault(module_stack[-1], {})
                         if ref not in refs:
                             refs[ref] = None
@@ -262,6 +346,9 @@ class ApplicationProgramDefinitionLoader:
                     else:
                         independent_candidates.append((None, ref))
                 elif elem.tag == ns_module:
+                    # inside a Channel the Channel is the parent; otherwise the
+                    # enclosing ModuleDef, whose placements are inherited later.
+                    # <Repeat> parents do not change membership.
                     module_placements.append(
                         (
                             _rel(elem.attrib["RefId"]),
@@ -276,10 +363,10 @@ class ApplicationProgramDefinitionLoader:
                         )
                     )
                 elif elem.tag == ns_languages:
+                    # translations follow; _apply_translations continues this iterator
                     break
                 continue
 
-            # end events: close ancestry and free memory
             if elem.tag == ns_channel:
                 open_channel = None
             elif elem.tag == ns_module_def:
@@ -312,7 +399,8 @@ class ApplicationProgramDefinitionLoader:
             com_objects, com_object_refs, channel_refs
         )
         # invalid catalog data: a ComObjectRefRef without ComObjectRef or a
-        # ComObjectRef without ComObject. Every listed id must be a key of `objects`.
+        # ComObjectRef without ComObject. Every listed id must be a key of
+        # `objects`, so these are logged and left out instead of exported.
         unresolved = {
             ref for refs in channel_refs.values() for ref in refs if ref not in objects
         }
@@ -347,13 +435,28 @@ class ApplicationProgramDefinitionLoader:
         independent_candidates: list[tuple[str | None, str]],
     ) -> list[str]:
         """
-        Add module refs to the channels instantiating their module.
+        Add refs of module definitions to the channels instantiating the modules.
+
+        channel_refs: Channel id -> refs inside the Channel in document order; the
+            refs of the modules instantiated in the Channel are appended
+        module_ids: ids of all ModuleDefs including SubModuleDefs, in document order
+        module_refs: ModuleDef id -> refs in its Dynamic section outside its own
+            Channels, in document order
+        module_placements: (ModuleDef id, parent) of every `<Module>`
+            instantiation, in document order
+        independent_candidates: refs outside any Channel in document order, with
+            the ModuleDef containing them (None outside ModuleDefs)
 
         A module instantiated inside another module inherits every placement of
-        that module, recursively. Refs are added in instantiation tree order: the
-        refs of a module, then those of its sub-modules. Return the channel
-        independent refs: refs outside any module and refs of modules instantiated
-        outside any channel or never instantiated.
+        that module, recursively. The modules of a Channel are processed in the
+        order of its `<Module>` elements and each adds its own refs, then those of
+        its sub-modules. Modules reachable only through cyclic instantiation are
+        treated as never instantiated.
+
+        Return the channel independent refs in document order: refs outside any
+        ModuleDef and refs of modules instantiated outside any Channel or never
+        instantiated. A ref is both channel independent and a channel member when
+        its module is instantiated both ways.
         """
         channel_modules: dict[str, dict[str, None]] = {}
         child_modules: dict[str, dict[str, None]] = {}
@@ -367,12 +470,13 @@ class ApplicationProgramDefinitionLoader:
                 child_modules.setdefault(placement.module_id, {})[module_id] = None
             else:
                 root_modules.append(module_id)
+        # never instantiated modules: their refs are channel independent
         root_modules.extend(
             module_id for module_id in module_ids if module_id not in placed_modules
         )
 
         def _reach(module_id: str, reached: set[str]) -> list[str]:
-            """Return a module and its sub-modules not reached yet, in tree order."""
+            """Return a module and its sub-modules not in `reached` yet, depth first; add them to `reached`."""
             if module_id in reached:  # also guards cyclic instantiation
                 return []
             reached.add(module_id)
@@ -383,6 +487,8 @@ class ApplicationProgramDefinitionLoader:
 
         in_channel: set[str] = set()
         for channel_id, placed_module_ids in channel_modules.items():
+            # one reached set per channel: a module instantiated twice in a channel
+            # adds its refs once
             reached: set[str] = set()
             for placed_module_id in placed_module_ids:
                 for module_id in _reach(placed_module_id, reached):
@@ -408,7 +514,15 @@ class ApplicationProgramDefinitionLoader:
 
     @staticmethod
     def _parse_kim_version(semantics: str | None) -> str | None:
-        """Parse "92.60" from the KIM header of the root Semantics attribute."""
+        """
+        Return the KIM version from the root Semantics attribute, None without one.
+
+        Examples
+        --------
+        "# Serialization-Format-Version=2, KIM-Version=(<http://schema.knx.org/2020/ontology/v2>, 92, 60), ..." -> "92.60"
+        None -> None
+
+        """
         if not semantics:
             return None
         if (match := _KIM_VERSION_RE.search(semantics)) is None:
@@ -425,7 +539,15 @@ class ApplicationProgramDefinitionLoader:
         com_object_refs: dict[str, _ComObjectRef],
         channels: dict[str, ChannelDefinition],
     ) -> None:
-        """Apply Text and FunctionText translations of the requested language."""
+        """
+        Apply the translations of one language in place.
+
+        Continue `tree_iterator` after the <Languages> start event and stop at the
+        end of the requested <Language>. Name is applied to the identity, Text and
+        FunctionText to ComObjects and ComObjectRefs, Text to Channels.
+        Translations are applied before refs are merged with their ComObjects, so
+        a ref's own Text still overrides the translated ComObject Text.
+        """
         ns_language = f"{namespace}Language"
         ns_translation_element = f"{namespace}TranslationElement"
         ns_translation = f"{namespace}Translation"
@@ -443,10 +565,12 @@ class ApplicationProgramDefinitionLoader:
             if elem.tag == ns_language:
                 in_language = elem.get("Identifier") == language_code
             elif in_language and elem.tag == ns_translation_element:
+                # the program's own element keeps its absolute id: nothing to remove
                 ref_id = elem.get("RefId", "").removeprefix(prefix)
             elif in_language and ref_id is not None and elem.tag == ns_translation:
                 attribute = elem.get("AttributeName")
                 text = elem.get("Text")
+                # an empty translation must not erase the default text
                 if not text:
                     continue
                 if ref_id == identity.application_id:
@@ -472,7 +596,15 @@ class ApplicationProgramDefinitionLoader:
         com_object_refs: dict[str, _ComObjectRef],
         channel_refs: dict[str, dict[str, None]],
     ) -> dict[str, ObjectDefinition]:
-        """Merge every ComObjectRef with its ComObject into an ObjectDefinition."""
+        """
+        Merge every ComObjectRef with its ComObject into an ObjectDefinition.
+
+        Attributes set on the ref win; unset ones (None, or no DatapointType) are
+        taken from the ComObject. `number` is the ComObject number without a module
+        base number, DPAs come from the ref only, and `channel_ids` lists the
+        channels whose refs contain the ref. Refs whose ComObject is missing are
+        skipped; `_load` logs them.
+        """
         channel_ids_by_object: dict[str, list[str]] = {}
         for channel_id, refs in channel_refs.items():
             for object_id in refs:
@@ -499,6 +631,7 @@ class ApplicationProgramDefinitionLoader:
                     if ref.object_size is not None
                     else com_object.object_size
                 ),
+                # an empty DatapointType on the ref inherits the ComObject's
                 dpts=ref.datapoint_types or com_object.datapoint_types,
                 flags=Flags(
                     read=_inherit(ref.read_flag, com_object.flags["read"]),
@@ -512,6 +645,8 @@ class ApplicationProgramDefinitionLoader:
                         ref.read_on_init_flag, com_object.flags["read_on_init"]
                     ),
                 ),
+                # DPAs (Semantics) are read from ComObjectRefs only, as in
+                # ApplicationProgramLoader
                 dpas=ref.dpas,
                 channel_ids=channel_ids_by_object.get(ref_id, []),
             )

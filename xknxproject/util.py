@@ -206,9 +206,9 @@ def text_parameter_insert_module_instance(
     return text_parameter_ref_id
 
 
-# "M-0008_A-20E0-21-9997-O000A": manufacturer, program part, optional original manufacturer.
-# The "-O" suffix is matched case-insensitively and only with 4 hex digits; otherwise it
-# stays part of the program part. Shared with the application program parser.
+# "M-0008_A-20E0-21-9997-O000A": manufacturer, program part and optional original
+# manufacturer suffix. A manufacturer id has exactly 4 hex digits, so only "-O" plus
+# 4 hex digits (any case) is a suffix; anything else stays part of the program.
 _APPLICATION_ID_RE = re.compile(
     r"^(?P<manufacturer>M-[0-9A-Fa-f]{4})_A-(?P<program>.+?)(?:-[Oo](?P<oem>[0-9A-Fa-f]{4}))?$"
 )
@@ -218,7 +218,9 @@ def application_id_original_manufacturer(application_id: str) -> str | None:
     """
     Return the original manufacturer of the "-Oxxxx" suffix of an application id.
 
-    Return None if the id has no such suffix.
+    OEM application programs carry the id of the selling manufacturer and the
+    original manufacturer as suffix. The result is upper case; None if the id
+    has no such suffix.
 
     Examples
     --------
@@ -238,15 +240,22 @@ def canonical_application_id(
     """
     Return the id of an application program independent of rebranding.
 
-    Programs of OEM products carry the id of the selling manufacturer and the
-    original manufacturer as "-Oxxxx" suffix. The canonical id names the
-    original manufacturer and drops the suffix, so rebranded copies of one
-    program share it. Ids not following the pattern are returned unchanged.
+    application_id: application program id, e.g. "M-0008_A-20E0-21-9997-O000A"
+    original_manufacturer_id: original manufacturer if known, e.g.
+        `ApplicationProgramIdentity["original_manufacturer_id"]`; it takes
+        precedence over the "-Oxxxx" suffix
+
+    OEM programs carry the id of the selling manufacturer and the original
+    manufacturer as "-Oxxxx" suffix. The canonical id names the original
+    manufacturer (upper case) and drops the suffix, so rebranded copies of one
+    program share it. Ids not following the "M-xxxx_A-..." pattern are returned
+    unchanged.
 
     Examples
     --------
-    "M-0008_A-20E0-21-9997-O000A" -> "M-000A_A-20E0-21-9997"
-    "M-0083_A-013A-32-DCC1" -> "M-0083_A-013A-32-DCC1"
+    "M-0008_A-20E0-21-9997-O000A", None -> "M-000A_A-20E0-21-9997"
+    "M-0008_A-20E0-21-9997", "M-000A" -> "M-000A_A-20E0-21-9997"
+    "M-0083_A-013A-32-DCC1", None -> "M-0083_A-013A-32-DCC1"
 
     """
     match = _APPLICATION_ID_RE.match(application_id)
@@ -264,23 +273,25 @@ def instance_definition_id(
     instance_id: str, application_id: str, search_id: Literal["CH", "O"]
 ) -> str:
     """
-    Return the definition id of a channel or object instance of a project.
+    Return the definition id of a channel or communication object instance.
 
     instance_id: id of a channel or communication object instance as `parse()`
         returns it, with or without the device address ("1.1.1/...")
     application_id: id of the application program of the device
-    search_id: "CH" for channels, "O" for objects
+    search_id: "CH" for channels, "O" for communication objects
 
-    The module instance parts are removed (see `strip_module_instance`) and so
-    is the application id older projects prefix the id with; the result is a
-    key of `channels` or `objects` of the program's definition.
+    The device address, the application id prefix of ETS 4 projects and the
+    module instance parts are removed. The result is a key of `channels` or
+    `objects` of the application program definition.
 
     Examples
     --------
-    "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1" -> "MD-2_O-2-1_R-1"
-    "M-0083_A-013A-32-DCC1_O-1_R-1" -> "O-1_R-1"
+    "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1", "O" -> "MD-2_O-2-1_R-1"
+    "MD-2_M-1_MI-1_CH-1", "CH" -> "MD-2_CH-1"
+    "M-0083_A-013A-32-DCC1_O-1_R-1", "O" -> "O-1_R-1"
 
     """
+    # communication object ids of parse() carry the device address: "1.1.1/O-1_R-1"
     instance_part = instance_id.split("/", maxsplit=1)[-1]
     # the module part of `strip_module_instance` is only recognized at the start
     instance_part = instance_part.removeprefix(f"{application_id}_")
@@ -288,13 +299,13 @@ def instance_definition_id(
 
 
 def _object_module(object_definition: ObjectDefinition) -> str | None:
-    """Return the module an object is defined in, None outside modules."""
+    """Return the ModuleDef defining an object ("MD-2", "MD-4_SM-1"), None outside modules."""
     identifier = object_definition["identifier"]
     return identifier.split("_O-", maxsplit=1)[0] if "_O-" in identifier else None
 
 
 def _in_module(object_module: str, module: str) -> bool:
-    """Check if an object module is a module or one of its submodules."""
+    """Return True if object_module is module or one of its sub-modules."""
     return object_module == module or object_module.startswith(f"{module}_SM-")
 
 
@@ -304,11 +315,16 @@ def object_channel_id(
     """
     Return the channel an object definition belongs to, None without one.
 
-    An object listed by several channels - a module instantiated in a channel -
-    belongs to the channel whose `module_definition_id` equals the module of
-    the object or is the module whose submodule (`<module>_SM-...`) defines the
-    object; an object outside modules belongs to a channel outside modules.
-    Without such a channel the first listed channel that exists is returned.
+    definition: application program definition containing the object
+    object_definition: object definition from `definition["objects"]`
+
+    For an instance from `parse()`, prefer its `channel`; this helper answers
+    the question for a definition alone. An object listed by several channels
+    (`channel_ids`) belongs to the first of them that is defined in the module
+    of the object (or in a module whose sub-module defines it); an object
+    outside modules to the first of them outside modules. Otherwise the first
+    listed channel is returned. Channel ids missing from
+    `definition["channels"]` are ignored.
     """
     object_module = _object_module(object_definition)
     channels = [
@@ -329,10 +345,13 @@ def object_channel_id(
 
 def linked_object_definitions(project: KNXProject) -> dict[str, set[str]]:
     """
-    Return the object definitions devices link to group addresses, by program.
+    Return the object definitions that devices link to group addresses.
 
-    Keys are application program ids; programs whose devices link no object
-    are left out.
+    project: output of `XKNXProj.parse()`
+
+    Return application program id -> ids of linked object definitions (keys of
+    `definition["objects"]`). Devices without application program are skipped;
+    programs without linked objects are left out.
     """
     objects = project["communication_objects"]
     linked: dict[str, set[str]] = {}

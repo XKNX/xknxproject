@@ -55,12 +55,18 @@ class XKNXProj:
 
     def parse_application_programs(self) -> ApplicationPrograms:
         """
-        Parse the full definitions of all application programs of the project.
+        Parse the full definitions of all application programs used in the project.
 
-        This is a separate pass over the project file. Identifiers of channels,
-        modules and objects are relative to the application program id, with module
-        instance parts removed - the same form `strip_module_instance` produces for
-        project instances.
+        This is a separate pass over the project file: the archive is extracted and
+        the project is loaded again. Texts are translated to the language passed to
+        `XKNXProj`. Return an `info` block and the definitions keyed by application
+        program id, the same id as `Device["application"]` of `parse()`. An
+        application program that can not be read is skipped with a warning.
+
+        Identifiers of channels, modules and objects are relative to the
+        application program id without module instance parts;
+        `xknxproject.util.instance_definition_id()` maps instance ids of `parse()`
+        to them.
         """
         _LOGGER.info(
             'Xknxproject version %s parsing application programs of "%s"...',

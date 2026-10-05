@@ -257,6 +257,7 @@ def test_instance_definition_id(
 
 
 def _channel(identifier: str, module: str | None) -> dict[str, Any]:
+    """Return a minimal ChannelDefinition for `object_channel_id` tests."""
     return {
         "identifier": identifier,
         "name": identifier,

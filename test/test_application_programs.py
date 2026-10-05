@@ -229,14 +229,18 @@ def test_language_code_is_the_requested_language() -> None:
 
 
 def test_devices_without_application_are_skipped() -> None:
-    """Devices whose application program can not be resolved are ignored."""
+    """Devices without (or with an empty) application program ref are not grouped."""
 
     class _Device:
+        """Stand-in for DeviceInstance with the attributes grouping reads."""
+
         def __init__(self, application_program_ref: str | None, xml: str) -> None:
+            """Initialize with the program ref and the XML path."""
             self.application_program_ref = application_program_ref
             self._xml = xml
 
         def application_program_xml(self) -> str:
+            """Return the application program XML path."""
             return self._xml
 
     devices = [
@@ -298,6 +302,7 @@ def test_original_manufacturer_id_sources() -> None:
     """The program attribute wins over the id suffix, the id suffix over the hardware."""
 
     def _devices(*original_manufacturers: str | None) -> list[DeviceInstance]:
+        """Return DeviceInstance stand-ins with the given hardware original manufacturers."""
         return [
             cast(DeviceInstance, SimpleNamespace(original_manufacturer=manufacturer))
             for manufacturer in original_manufacturers
@@ -353,6 +358,7 @@ def test_unreadable_program_is_skipped(
     def _load(
         application_program_path: zipfile.Path | IO[bytes], language_code: str | None
     ) -> LoadedApplicationProgram:
+        """Raise the error for the broken file, load the others."""
         if str(application_program_path).endswith(broken_file):
             raise error
         return load(application_program_path, language_code)

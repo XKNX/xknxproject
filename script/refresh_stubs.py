@@ -28,6 +28,8 @@ for file_name, password, language in PROJECT_FIXTURES:
     ) as f:
         json.dump(project, f, indent=2, ensure_ascii=False)
 
+# application program definitions: info, complete definitions of selected
+# programs and digests of all (see test/application_program_stubs.py)
 Path("test/resources/stubs/application_programs").mkdir(exist_ok=True)
 for file_name, password, language in APPLICATION_PROGRAM_FIXTURES:
     print(f"Parsing application programs of {file_name}.knxproj")

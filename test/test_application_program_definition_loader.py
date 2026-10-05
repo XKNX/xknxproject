@@ -14,9 +14,15 @@ from xknxproject.loader import (
 )
 from xknxproject.loader.application_program_definition_loader import _Placement
 
+# ETS 5.7 project schema namespace; the loader takes it from the root element
 _NS = "http://knx.org/xml/project/20"
 _APP = "M-0083_A-013A-32-DCC1"
 
+# Hand-written program covering: a channel inside a ModuleDef with refs repeated
+# in choose/when branches, a Channel-less module (with a sub-module) instantiated
+# in a channel, a module never instantiated, a ref that is channel independent and
+# in a channel, ref attribute overrides and translations (Languages under
+# Manufacturer, as in real files). "{{{{" in this f-string renders as "{{" in the XML.
 APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 <KNX xmlns="{_NS}" CreatedBy="ETS5" ToolVersion="5.7">
 <ManufacturerData><Manufacturer RefId="M-0083">

@@ -1,4 +1,11 @@
-"""Parse the full definitions of the application programs used in a project."""
+"""
+Parse the full definitions of the application programs used in a project.
+
+The project, hardware and device data are loaded with `XMLParser` to find the
+application program of each device and the products using it. Each
+application program XML is then read once, completely, with
+`ApplicationProgramDefinitionLoader`.
+"""
 
 from __future__ import annotations
 
@@ -32,7 +39,15 @@ def _original_manufacturer_id(
     program_attribute: str | None,
     devices: list[DeviceInstance],
 ) -> str | None:
-    """Original manufacturer from the program, the "-Oxxxx" id suffix or the hardware."""
+    """
+    Return the original manufacturer of an OEM application program, else None.
+
+    Sources in order of precedence: the OriginalManufacturer attribute of the
+    ApplicationProgram, the "-Oxxxx" suffix of the application id (same rule as
+    `canonical_application_id`), and the OriginalManufacturer attribute of the
+    Hardware of a device using the program. The program sources describe the
+    program itself, the hardware only the device. Upper case like the suffix.
+    """
     candidates = (
         program_attribute,
         application_id_original_manufacturer(application_id),
@@ -44,7 +59,7 @@ def _original_manufacturer_id(
 def _products(
     devices: list[DeviceInstance], products: dict[str, Product]
 ) -> list[ProductInfo]:
-    """Products of the project using an application program, unique by product id."""
+    """Return the products of the project using an application program, once per product id, in device order."""
     result: dict[str, ProductInfo] = {}
     for device in devices:
         if device.product_ref in result:
@@ -64,14 +79,30 @@ def _products(
 
 
 class ApplicationProgramParser:
-    """Parse application program definitions of a project."""
+    """
+    Parse the application program definitions of a project.
+
+    Independent of `XMLParser.parse()`: the project data is loaded again and each
+    application program used by a device is read completely.
+    """
 
     def __init__(self, knx_proj_contents: KNXProjContents) -> None:
         """Initialize the parser."""
         self.knx_proj_contents = knx_proj_contents
 
     def parse(self, language: str | None = None) -> ApplicationPrograms:
-        """Parse every application program used by a device of the project."""
+        """
+        Parse every application program used by a device of the project.
+
+        language: language as for `XMLParser.parse()`, e.g. "de-DE"; resolved
+            against the languages of the project
+
+        Return the `info` block and the definitions keyed by application program
+        id. Devices whose
+        application program can not be resolved are skipped (logged while
+        loading the project); an application program that can not be read is
+        skipped with a warning.
+        """
         project_parser = XMLParser(self.knx_proj_contents)
         # same package: the load step of XMLParser is internal, not public API
         project_parser._load_project(language=language)  # noqa: SLF001  # pylint: disable=protected-access
@@ -83,15 +114,15 @@ class ApplicationProgramParser:
         )
         definitions: dict[str, ApplicationProgramDefinition] = {}
         for xml_file, devices in program_files.items():
+            # the definitions are independent: one unreadable program (missing
+            # file, malformed XML, missing or invalid attribute) must not hide
+            # the others
             try:
                 loaded = ApplicationProgramDefinitionLoader.load(
                     application_program_path=self.knx_proj_contents.root_path
                     / xml_file,
                     language_code=project_parser.language_code,
                 )
-            # the definitions are independent: one unreadable program (missing
-            # file, malformed XML, missing or invalid attribute) must not hide
-            # the others
             except (
                 XknxProjectException,
                 ElementTree.ParseError,
@@ -105,7 +136,9 @@ class ApplicationProgramParser:
             application_id = raw_identity.application_id
             identity = ApplicationProgramIdentity(
                 application_id=application_id,
+                # manufacturer part of the id: the selling manufacturer for OEM programs
                 manufacturer_id=application_id.split("_", maxsplit=1)[0],
+                # all devices of one program XML share its manufacturer folder
                 manufacturer_name=devices[0].manufacturer_name,
                 original_manufacturer_id=_original_manufacturer_id(
                     application_id, raw_identity.original_manufacturer, devices

@@ -162,7 +162,10 @@ class XMLParser:
 
         self.project_info: XMLProjectInformation
         self.functions: list[XMLFunction] = []
-        self.products: dict[str, Product] = {}
+        self.products: dict[
+            str, Product
+        ] = {}  # product id -> Product of all Hardware.xml
+        # Hardware2Program id -> application program id
         self.hardware_application_map: HardwareToPrograms = {}
 
     def parse(self, language: str | None = None) -> KNXProject:
@@ -173,7 +176,12 @@ class XMLParser:
         return self._transform()
 
     def _load_project(self, language: str | None) -> None:
-        """Load knx_master, project and hardware files and resolve device products."""
+        """
+        Load project, hardware and device data without reading application programs.
+
+        Resolve the product and application program of each device and complete the
+        ref ids of its com object instances and module instance arguments.
+        """
         (
             knx_master_data,
             self.language_code,
@@ -252,7 +260,7 @@ class XMLParser:
                 module_instance.complete_arguments_ref_id(application_program_ref)
 
     def _merge_application_programs(self) -> None:
-        """Parse each used application program once and merge the used parts into devices."""
+        """Read the used parts of each application program once and merge them into the devices using it."""
         application_programs = (
             ApplicationProgramLoader.get_application_program_files_for_devices(
                 devices=self.devices,

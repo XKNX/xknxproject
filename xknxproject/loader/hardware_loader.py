@@ -54,8 +54,9 @@ class HardwareLoader:
         """
         Parse one `Hardware` element into its products and hardware2program map.
 
-        Every product is tagged with the `Id` and `Name` of the `Hardware` element
-        it belongs to (`Product.hardware_id`, `Product.hardware_name`). The map
+        Every product is tagged with the `Id`, `Name` and `OriginalManufacturer`
+        of the `Hardware` element it belongs to (`Product.hardware_id`,
+        `Product.hardware_name`, `Product.original_manufacturer`). The map
         links each `Hardware2Program` Id to the Id of its application program.
         """
         product_dict: dict[str, Product] = {}
