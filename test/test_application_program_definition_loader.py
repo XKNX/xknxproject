@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import io
 
-from xknxproject.loader import ApplicationProgramDefinitionLoader
-from xknxproject.loader.application_program_definition_loader import (
-    RawApplicationProgramIdentity,
-    _Placement,
+from xknxproject.loader import (
+    ApplicationProgramDefinitionLoader,
+    LoadedApplicationProgram,
 )
-from xknxproject.models import ChannelDefinition, ModuleDefinition, ObjectDefinition
+from xknxproject.loader.application_program_definition_loader import _Placement
+from xknxproject.models import ChannelDefinition
 
 _NS = "http://knx.org/xml/project/20"
 _APP = "M-0083_A-013A-32-DCC1"
@@ -169,16 +169,7 @@ APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 """
 
 
-_Loaded = tuple[
-    RawApplicationProgramIdentity,
-    dict[str, ChannelDefinition],
-    dict[str, ModuleDefinition],
-    dict[str, ObjectDefinition],
-    list[str],
-]
-
-
-def _load(language_code: str | None) -> _Loaded:
+def _load(language_code: str | None) -> LoadedApplicationProgram:
     return ApplicationProgramDefinitionLoader.load(
         io.BytesIO(APPLICATION_XML.encode("utf-8")), language_code=language_code
     )
@@ -186,38 +177,38 @@ def _load(language_code: str | None) -> _Loaded:
 
 def test_identity_attributes() -> None:
     """Root attributes and the KIM header are parsed."""
-    identity, _, _, _, _ = _load(None)
-    assert identity.application_id == _APP
-    assert identity.application_number == 314
-    assert identity.application_version == 50
-    assert identity.name == "AKD-0424V.02"
-    assert identity.mask_version == "MV-07B0"
-    assert identity.program_hash == "abc="
-    assert identity.kim_version == "92.60"
-    assert identity.original_manufacturer == "M-000A"
+    loaded = _load(None)
+    assert loaded.identity.application_id == _APP
+    assert loaded.identity.application_number == 314
+    assert loaded.identity.application_version == 50
+    assert loaded.identity.name == "AKD-0424V.02"
+    assert loaded.identity.mask_version == "MV-07B0"
+    assert loaded.identity.program_hash == "abc="
+    assert loaded.identity.kim_version == "92.60"
+    assert loaded.identity.original_manufacturer == "M-000A"
 
 
 def test_channel_object_ids_deduplicated() -> None:
     """Objects referenced in several `when` branches appear once, in first-seen order."""
-    _, channels, modules, objects, independent = _load(None)
-    assert channels["MD-2_CH-1"]["object_ids"] == [
+    loaded = _load(None)
+    assert loaded.channels["MD-2_CH-1"]["object_ids"] == [
         "MD-2_O-2-1_R-1",
         "MD-2_O-2-3_R-1",
         "MD-2_O-2-1_R-2",
     ]
-    assert channels["MD-2_CH-1"]["module_definition_id"] == "MD-2"
-    assert channels["MD-2_CH-1"]["functional_blocks"] == ["417"]
-    assert channels["MD-2_CH-1"]["text"] == "Channel {{ChNo}}: {{0}}"
-    assert channels["CH-9"]["module_definition_id"] is None
-    assert modules["MD-2"] == {
+    assert loaded.channels["MD-2_CH-1"]["module_definition_id"] == "MD-2"
+    assert loaded.channels["MD-2_CH-1"]["functional_blocks"] == ["417"]
+    assert loaded.channels["MD-2_CH-1"]["text"] == "Channel {{ChNo}}: {{0}}"
+    assert loaded.channels["CH-9"]["module_definition_id"] is None
+    assert loaded.modules["MD-2"] == {
         "identifier": "MD-2",
         "name": "ModuleDefChannel",
         "channel_ids": ["MD-2_CH-1"],
     }
-    assert independent == ["MD-9_O-9-1_R-1", "O-0_R-1"]
+    assert loaded.channel_independent_object_ids == ["MD-9_O-9-1_R-1", "O-0_R-1"]
     # the same object can be channel independent and referenced by a channel
-    assert objects["O-0_R-1"]["channel_ids"] == ["CH-9"]
-    assert objects["MD-2_O-2-3_R-1"]["channel_ids"] == ["MD-2_CH-1"]
+    assert loaded.objects["O-0_R-1"]["channel_ids"] == ["CH-9"]
+    assert loaded.objects["MD-2_O-2-3_R-1"]["channel_ids"] == ["MD-2_CH-1"]
 
 
 def test_refs_outside_channels_are_channel_independent() -> None:
@@ -227,47 +218,50 @@ def test_refs_outside_channels_are_channel_independent() -> None:
     That is a ChannelIndependentBlock or a Channel-less ModuleDef that is never
     instantiated inside a Channel.
     """
-    _, channels, modules, objects, independent = _load(None)
-    assert "O-0_R-1" in independent  # in a ChannelIndependentBlock
-    assert "MD-9_O-9-1_R-1" in independent  # in a ModuleDef never instantiated
-    assert objects["MD-9_O-9-1_R-1"]["channel_ids"] == []
+    loaded = _load(None)
+    # in a ChannelIndependentBlock
+    assert "O-0_R-1" in loaded.channel_independent_object_ids
+    # in a ModuleDef never instantiated
+    assert "MD-9_O-9-1_R-1" in loaded.channel_independent_object_ids
+    assert loaded.objects["MD-9_O-9-1_R-1"]["channel_ids"] == []
     assert all(
-        "MD-9_O-9-1_R-1" not in channel["object_ids"] for channel in channels.values()
+        "MD-9_O-9-1_R-1" not in channel["object_ids"]
+        for channel in loaded.channels.values()
     )
-    assert modules["MD-9"]["channel_ids"] == []
+    assert loaded.modules["MD-9"]["channel_ids"] == []
 
 
 def test_module_instantiated_in_channel_inherits_channel() -> None:
     """Refs of a Channel-less ModuleDef belong to the Channel instantiating it."""
-    _, channels, modules, objects, independent = _load(None)
-    assert channels["CH-5"]["module_definition_id"] is None
-    assert channels["CH-5"]["object_ids"] == [
+    loaded = _load(None)
+    assert loaded.channels["CH-5"]["module_definition_id"] is None
+    assert loaded.channels["CH-5"]["object_ids"] == [
         "MD-3_O-3-1_R-1",
         "MD-3_SM-1_O-4-1_R-1",
     ]
-    assert objects["MD-3_O-3-1_R-1"]["channel_ids"] == ["CH-5"]
-    assert "MD-3_O-3-1_R-1" not in independent
+    assert loaded.objects["MD-3_O-3-1_R-1"]["channel_ids"] == ["CH-5"]
+    assert "MD-3_O-3-1_R-1" not in loaded.channel_independent_object_ids
     # channel_ids of a module only lists channels defined inside the module
-    assert modules["MD-3"]["channel_ids"] == []
+    assert loaded.modules["MD-3"]["channel_ids"] == []
 
 
 def test_sub_module_inherits_channel_transitively() -> None:
     """A sub-module instantiated in a module inherits the channels placing that module."""
-    _, channels, modules, objects, independent = _load(None)
-    assert modules["MD-3_SM-1"] == {
+    loaded = _load(None)
+    assert loaded.modules["MD-3_SM-1"] == {
         "identifier": "MD-3_SM-1",
         "name": "Sub",
         "channel_ids": [],
     }
-    assert "MD-3_SM-1_O-4-1_R-1" in channels["CH-5"]["object_ids"]
-    assert objects["MD-3_SM-1_O-4-1_R-1"]["channel_ids"] == ["CH-5"]
-    assert "MD-3_SM-1_O-4-1_R-1" not in independent
+    assert "MD-3_SM-1_O-4-1_R-1" in loaded.channels["CH-5"]["object_ids"]
+    assert loaded.objects["MD-3_SM-1_O-4-1_R-1"]["channel_ids"] == ["CH-5"]
+    assert "MD-3_SM-1_O-4-1_R-1" not in loaded.channel_independent_object_ids
 
 
 def test_object_definition_merges_ref_over_com_object() -> None:
     """ComObjectRef attributes override ComObject attributes."""
-    _, _, _, objects, _ = _load(None)
-    plain = objects["MD-2_O-2-1_R-1"]
+    loaded = _load(None)
+    plain = loaded.objects["MD-2_O-2-1_R-1"]
     assert plain["com_object_id"] == "MD-2_O-2-1"
     assert plain["number"] == 1
     assert plain["text"] == "Switch"
@@ -281,7 +275,7 @@ def test_object_definition_merges_ref_over_com_object() -> None:
         "read_on_init": False,
     }
     assert plain["dpas"] == ["417.52"]
-    inverted = objects["MD-2_O-2-1_R-2"]
+    inverted = loaded.objects["MD-2_O-2-1_R-2"]
     assert inverted["text"] == "Switch inverted"
     assert inverted["dpts"] == [{"main": 1, "sub": 2}]
     assert inverted["dpas"] is None
@@ -289,18 +283,18 @@ def test_object_definition_merges_ref_over_com_object() -> None:
 
 def test_translations_applied() -> None:
     """Texts of objects, refs and channels are translated."""
-    _, channels, _, objects, _ = _load("de-DE")
-    assert objects["MD-2_O-2-1_R-1"]["text"] == "Schalten"
-    assert objects["MD-2_O-2-1_R-1"]["function_text"] == "Ein/Aus"
-    assert objects["MD-2_O-2-1_R-2"]["text"] == "Schalten invertiert"
-    assert channels["MD-2_CH-1"]["text"] == "Kanal {{ChNo}}: {{0}}"
+    loaded = _load("de-DE")
+    assert loaded.objects["MD-2_O-2-1_R-1"]["text"] == "Schalten"
+    assert loaded.objects["MD-2_O-2-1_R-1"]["function_text"] == "Ein/Aus"
+    assert loaded.objects["MD-2_O-2-1_R-2"]["text"] == "Schalten invertiert"
+    assert loaded.channels["MD-2_CH-1"]["text"] == "Kanal {{ChNo}}: {{0}}"
 
 
 def test_translation_missing_language_keeps_defaults() -> None:
     """An unknown language leaves the default texts untouched."""
-    _, channels, _, objects, _ = _load("fr-FR")
-    assert objects["MD-2_O-2-1_R-1"]["text"] == "Switch"
-    assert channels["MD-2_CH-1"]["text"] == "Channel {{ChNo}}: {{0}}"
+    loaded = _load("fr-FR")
+    assert loaded.objects["MD-2_O-2-1_R-1"]["text"] == "Switch"
+    assert loaded.channels["MD-2_CH-1"]["text"] == "Channel {{ChNo}}: {{0}}"
 
 
 def test_cyclic_module_instantiation_terminates() -> None:

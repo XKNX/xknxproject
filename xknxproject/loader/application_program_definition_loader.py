@@ -41,6 +41,17 @@ class RawApplicationProgramIdentity:
 
 
 @dataclass
+class LoadedApplicationProgram:
+    """Result of `ApplicationProgramDefinitionLoader.load()`."""
+
+    identity: RawApplicationProgramIdentity
+    channels: dict[str, ChannelDefinition]
+    modules: dict[str, ModuleDefinition]
+    objects: dict[str, ObjectDefinition]
+    channel_independent_object_ids: list[str]
+
+
+@dataclass
 class _ComObject:
     """ComObject attributes."""
 
@@ -101,13 +112,7 @@ class ApplicationProgramDefinitionLoader:
     def load(
         application_program_path: Path | IO[bytes],
         language_code: str | None,
-    ) -> tuple[
-        RawApplicationProgramIdentity,
-        dict[str, ChannelDefinition],
-        dict[str, ModuleDefinition],
-        dict[str, ObjectDefinition],
-        list[str],
-    ]:
+    ) -> LoadedApplicationProgram:
         """Load the definition. Identifiers are returned relative to the application id."""
         if isinstance(application_program_path, Path):
             with application_program_path.open(mode="rb") as application_xml:
@@ -122,13 +127,7 @@ class ApplicationProgramDefinitionLoader:
     def _load(
         application_xml: IO[bytes],
         language_code: str | None,
-    ) -> tuple[
-        RawApplicationProgramIdentity,
-        dict[str, ChannelDefinition],
-        dict[str, ModuleDefinition],
-        dict[str, ObjectDefinition],
-        list[str],
-    ]:
+    ) -> LoadedApplicationProgram:
         com_objects: dict[str, _ComObject] = {}
         com_object_refs: dict[str, _ComObjectRef] = {}
         channels: dict[str, ChannelDefinition] = {}
@@ -303,7 +302,13 @@ class ApplicationProgramDefinitionLoader:
         objects = ApplicationProgramDefinitionLoader._merge_objects(
             com_objects, com_object_refs, channels
         )
-        return identity, channels, modules, objects, channel_independent
+        return LoadedApplicationProgram(
+            identity=identity,
+            channels=channels,
+            modules=modules,
+            objects=objects,
+            channel_independent_object_ids=channel_independent,
+        )
 
     @staticmethod
     def _place_module_refs(

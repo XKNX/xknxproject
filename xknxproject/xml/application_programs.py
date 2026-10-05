@@ -89,13 +89,11 @@ class ApplicationProgramParser:
         for xml_file, devices in _group_devices_by_application(
             project_parser.devices
         ).items():
-            raw_identity, channels, modules, objects, independent = (
-                ApplicationProgramDefinitionLoader.load(
-                    application_program_path=self.knx_proj_contents.root_path
-                    / xml_file,
-                    language_code=project_parser.language_code,
-                )
+            loaded = ApplicationProgramDefinitionLoader.load(
+                application_program_path=self.knx_proj_contents.root_path / xml_file,
+                language_code=project_parser.language_code,
             )
+            raw_identity = loaded.identity
             application_id = raw_identity.application_id
             identity = ApplicationProgramIdentity(
                 application_id=application_id,
@@ -114,17 +112,17 @@ class ApplicationProgramParser:
             )
             result[application_id] = ApplicationProgramDefinition(
                 identity=identity,
-                channels=channels,
-                modules=modules,
-                objects=objects,
-                channel_independent_object_ids=independent,
+                channels=loaded.channels,
+                modules=loaded.modules,
+                objects=loaded.objects,
+                channel_independent_object_ids=loaded.channel_independent_object_ids,
                 language_code=project_parser.language_code,
                 xknxproject_version=__version__,
             )
             _LOGGER.debug(
                 "Parsed application program %s: %s channels, %s objects",
                 application_id,
-                len(channels),
-                len(objects),
+                len(loaded.channels),
+                len(loaded.objects),
             )
         return result
