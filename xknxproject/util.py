@@ -286,9 +286,9 @@ def instance_definition_id(
 
     Examples
     --------
-    "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1", "O" -> "MD-2_O-2-1_R-1"
-    "MD-2_M-1_MI-1_CH-1", "CH" -> "MD-2_CH-1"
-    "M-0083_A-013A-32-DCC1_O-1_R-1", "O" -> "O-1_R-1"
+    "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1", "M-0083_A-013A-32-DCC1", "O" -> "MD-2_O-2-1_R-1"
+    "MD-2_M-1_MI-1_CH-1", "M-0083_A-013A-32-DCC1", "CH" -> "MD-2_CH-1"
+    "M-0083_A-0013-11-A9D6_O-5_R-10005", "M-0083_A-0013-11-A9D6", "O" -> "O-5_R-10005"
 
     """
     # communication object ids of parse() carry the device address: "1.1.1/O-1_R-1"

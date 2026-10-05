@@ -98,10 +98,9 @@ class ApplicationProgramParser:
             against the languages of the project
 
         Return the `info` block and the definitions keyed by application program
-        id. Devices whose
-        application program can not be resolved are skipped (logged while
-        loading the project); an application program that can not be read is
-        skipped with a warning.
+        id. Devices whose application program can not be resolved are skipped
+        (logged while loading the project); an application program that can not
+        be read is skipped with a warning.
         """
         project_parser = XMLParser(self.knx_proj_contents)
         # same package: the load step of XMLParser is internal, not public API

@@ -107,7 +107,9 @@ class ApplicationProgramDefinition(TypedDict):
     channels: dict[str, ChannelDefinition]  # key: ChannelDefinition identifier
     modules: dict[str, ModuleDefinition]  # key: ModuleDefinition identifier
     objects: dict[str, ObjectDefinition]  # key: ObjectDefinition identifier
-    # ObjectDefinition identifiers outside any channel, in document order
+    # ObjectDefinition identifiers referenced outside any channel, in document
+    # order; an id is also listed by a channel when its module is instantiated
+    # both inside and outside channels
     channel_independent_object_ids: list[str]
 
 
@@ -122,7 +124,7 @@ class ApplicationProgramsInfo(TypedDict):
 
 
 class ApplicationPrograms(TypedDict):
-    """Application program definitions of a project, `XKNXProj.parse_application_programs()`."""
+    """Result of `XKNXProj.parse_application_programs()`."""
 
     info: ApplicationProgramsInfo
     # key: application program id, the same as `Device["application"]` of `parse()`

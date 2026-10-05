@@ -162,9 +162,8 @@ class XMLParser:
 
         self.project_info: XMLProjectInformation
         self.functions: list[XMLFunction] = []
-        self.products: dict[
-            str, Product
-        ] = {}  # product id -> Product of all Hardware.xml
+        # product id -> Product of all Hardware.xml
+        self.products: dict[str, Product] = {}
         # Hardware2Program id -> application program id
         self.hardware_application_map: HardwareToPrograms = {}
 
