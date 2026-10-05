@@ -23,9 +23,11 @@ from xknxproject.util import (
     instance_definition_id,
     linked_object_definitions,
     object_channel_id,
-    strip_module_instance,
 )
-from xknxproject.xml.application_programs import _original_manufacturer_id
+from xknxproject.xml.application_programs import (
+    _group_devices_by_application,
+    _original_manufacturer_id,
+)
 
 from . import RESOURCES_PATH, STUBS_PATH
 
@@ -86,6 +88,19 @@ def test_application_program_stub_keys_match_typed_dicts(file_stem: str) -> None
             assert set(obj) == set(ObjectDefinition.__annotations__)
 
 
+def _resolve(
+    program: ApplicationProgramDefinition,
+    instance_id: str,
+    application_id: str,
+    search_id: str,
+) -> str:
+    """Resolve an instance id of `parse()` to a key of the program definition."""
+    definition_id = instance_definition_id(instance_id, application_id, search_id)
+    definitions = program["objects"] if search_id == "O" else program["channels"]
+    assert definition_id in definitions, instance_id
+    return definition_id
+
+
 @pytest.mark.parametrize(
     ("file_stem", "password", "language"), APPLICATION_PROGRAM_FIXTURES
 )
@@ -104,30 +119,24 @@ def test_instance_ids_resolve_to_definitions(
         if (app := com_object["device_application"]) is None:
             continue
         program = programs[app]
-        # ETS4 instance ids carry the application id as prefix
-        object_id = strip_module_instance(
-            co_id.split("/", 1)[1], search_id="O"
-        ).removeprefix(f"{app}_")
-        assert object_id in program["objects"], co_id
+        object_id = _resolve(program, co_id, app, "O")
         if (channel := com_object["channel"]) is not None:
-            channel_id = strip_module_instance(channel, search_id="CH")
-            assert channel_id in program["channels"], co_id
+            channel_id = _resolve(program, channel, app, "CH")
             assert object_id in program["channels"][channel_id]["object_ids"], co_id
         checked_objects += 1
     assert checked_objects > 0
 
     for device in project["devices"].values():
+        if not device["channels"]:
+            continue
+        application = device["application"]
+        assert application is not None
         for device_channel_id in device["channels"]:
-            assert device["application"] is not None
-            assert (
-                strip_module_instance(device_channel_id, search_id="CH")
-                in programs[device["application"]]["channels"]
-            ), device_channel_id
+            _resolve(programs[application], device_channel_id, application, "CH")
 
 
 def test_devices_without_application_are_skipped() -> None:
     """Devices whose application program can not be resolved are ignored."""
-    from xknxproject.xml.application_programs import _group_devices_by_application
 
     class _Device:
         def __init__(self, application_program_ref: str | None, xml: str) -> None:
@@ -243,8 +252,7 @@ def test_project_instances_resolve_to_definitions() -> None:
             continue
         program = programs[application]
         for object_id in device["communication_object_ids"]:
-            definition_id = instance_definition_id(object_id, application, "O")
-            assert definition_id in program["objects"], object_id
+            definition_id = _resolve(program, object_id, application, "O")
             object_definition = program["objects"][definition_id]
             channel_id = object_channel_id(program, object_definition)
             if channel_id is not None:
