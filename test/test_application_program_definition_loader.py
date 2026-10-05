@@ -561,14 +561,37 @@ def test_modules_in_repeat_belong_to_the_enclosing_channel() -> None:
 
 
 def test_channel_independent_block_in_module_follows_the_module() -> None:
-    """A ChannelIndependentBlock inside a ModuleDef is not treated specially."""
-    channel_independent_block = f"""
-      <ChannelIndependentBlock>
-        <ComObjectRefRef RefId="{_APP}_MD-1_O-1-1_R-1" />
-      </ChannelIndependentBlock>"""
+    """
+    A ChannelIndependentBlock inside a ModuleDef is not treated specially.
+
+    Its refs follow the placement of the module like the other refs of the
+    module, so a ref listed only inside the block joins the placing Channel.
+    """
+    module_id = f"{_APP}_MD-1"
+    module_def = f"""
+<ModuleDef Id="{module_id}" Name="Module 1">
+  <Static>
+    <ComObjectTable>
+      <ComObject Id="{module_id}_O-1-1" Name="Object" Text="Object" Number="1"
+        ObjectSize="1 Bit" />
+      <ComObject Id="{module_id}_O-1-2" Name="Block object" Text="Block object"
+        Number="2" ObjectSize="1 Bit" />
+    </ComObjectTable>
+    <ComObjectRefs>
+      <ComObjectRef Id="{module_id}_O-1-1_R-1" RefId="{module_id}_O-1-1" />
+      <ComObjectRef Id="{module_id}_O-1-2_R-1" RefId="{module_id}_O-1-2" />
+    </ComObjectRefs>
+  </Static>
+  <Dynamic>
+    <ComObjectRefRef RefId="{module_id}_O-1-1_R-1" />
+    <ChannelIndependentBlock>
+      <ComObjectRefRef RefId="{module_id}_O-1-2_R-1" />
+    </ChannelIndependentBlock>
+  </Dynamic>
+</ModuleDef>"""
     loaded = _load_xml(
         _program_xml(
-            module_defs=_module_def(1, dynamic=channel_independent_block),
+            module_defs=module_def,
             dynamic=f"""
             <Channel Id="{_APP}_CH-1" Name="Channel" Number="1">
               <Module Id="{_APP}_MD-1_M-1" RefId="{_APP}_MD-1" />
@@ -576,5 +599,10 @@ def test_channel_independent_block_in_module_follows_the_module() -> None:
             """,
         )
     )
-    assert loaded.channels["CH-1"]["object_ids"] == ["MD-1_O-1-1_R-1"]
+    # MD-1_O-1-2_R-1 is referenced only inside the ChannelIndependentBlock
+    assert loaded.channels["CH-1"]["object_ids"] == [
+        "MD-1_O-1-1_R-1",
+        "MD-1_O-1-2_R-1",
+    ]
+    assert loaded.objects["MD-1_O-1-2_R-1"]["channel_ids"] == ["CH-1"]
     assert loaded.channel_independent_object_ids == []
