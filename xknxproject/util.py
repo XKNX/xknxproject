@@ -214,6 +214,24 @@ _APPLICATION_ID_RE = re.compile(
 )
 
 
+def application_id_original_manufacturer(application_id: str) -> str | None:
+    """
+    Return the original manufacturer of the "-Oxxxx" suffix of an application id.
+
+    Return None if the id has no such suffix.
+
+    Examples
+    --------
+    "M-0008_A-20E0-21-9997-O000A" -> "M-000A"
+    "M-0083_A-013A-32-DCC1" -> None
+
+    """
+    match = _APPLICATION_ID_RE.match(application_id)
+    if match is None or not match["oem"]:
+        return None
+    return f"M-{match['oem'].upper()}"
+
+
 def canonical_application_id(
     application_id: str, original_manufacturer_id: str | None
 ) -> str:
@@ -234,8 +252,10 @@ def canonical_application_id(
     match = _APPLICATION_ID_RE.match(application_id)
     if match is None:
         return application_id
-    manufacturer = original_manufacturer_id or (
-        f"M-{match['oem']}" if match["oem"] else match["manufacturer"]
+    manufacturer = (
+        original_manufacturer_id
+        or application_id_original_manufacturer(application_id)
+        or match["manufacturer"]
     )
     return f"{manufacturer.upper()}_A-{match['program']}"
 

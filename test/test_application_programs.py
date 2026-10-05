@@ -252,7 +252,7 @@ def test_modules_instantiated_in_channels_are_channel_members() -> None:
 
 
 def test_original_manufacturer_id_sources() -> None:
-    """The program attribute wins over the hardware attribute and the id suffix."""
+    """The program attribute wins over the id suffix, the id suffix over the hardware."""
 
     def _devices(*original_manufacturers: str | None) -> list[DeviceInstance]:
         return [
@@ -261,13 +261,12 @@ def test_original_manufacturer_id_sources() -> None:
         ]
 
     oem_id = "M-0008_A-20E0-21-9997-O000A"
-    hardware = _devices(None, "M-00EF")
-    assert _original_manufacturer_id(oem_id, "M-0001", hardware) == "M-0001"
-    assert _original_manufacturer_id(oem_id, None, hardware) == "M-00EF"
-    assert _original_manufacturer_id(oem_id, None, _devices(None)) == "M-000A"
-    assert (
-        _original_manufacturer_id("M-0083_A-013A-32-DCC1", None, _devices(None)) is None
-    )
+    plain_id = "M-0008_A-20E0-21-9997"
+    hardware = _devices(None, "m-00ef")
+    assert _original_manufacturer_id(oem_id, "m-0001", hardware) == "M-0001"
+    assert _original_manufacturer_id(oem_id, None, hardware) == "M-000A"
+    assert _original_manufacturer_id(plain_id, None, hardware) == "M-00EF"
+    assert _original_manufacturer_id(plain_id, None, _devices(None)) is None
 
 
 @pytest.mark.parametrize(

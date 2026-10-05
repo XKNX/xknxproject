@@ -15,7 +15,7 @@ from xknxproject.models import (
     Product,
     ProductInfo,
 )
-from xknxproject.util import _APPLICATION_ID_RE
+from xknxproject.util import application_id_original_manufacturer
 from xknxproject.xml.parser import XMLParser
 from xknxproject.zip.extractor import KNXProjContents
 
@@ -39,16 +39,13 @@ def _original_manufacturer_id(
     program_attribute: str | None,
     devices: list[DeviceInstance],
 ) -> str | None:
-    """Original manufacturer from the program, the hardware or the "-Oxxxx" id suffix."""
-    if program_attribute:
-        return program_attribute
-    for device in devices:
-        if device.original_manufacturer:
-            return device.original_manufacturer
-    # same suffix rule as `canonical_application_id`
-    if (match := _APPLICATION_ID_RE.match(application_id)) is not None and match["oem"]:
-        return f"M-{match['oem'].upper()}"
-    return None
+    """Original manufacturer from the program, the "-Oxxxx" id suffix or the hardware."""
+    candidates = (
+        program_attribute,
+        application_id_original_manufacturer(application_id),
+        *(device.original_manufacturer for device in devices),
+    )
+    return next((candidate.upper() for candidate in candidates if candidate), None)
 
 
 def _products(

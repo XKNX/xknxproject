@@ -186,6 +186,23 @@ def test_semantics_dpas(semantics: str | None, expected: list[str] | None) -> No
 
 
 @pytest.mark.parametrize(
+    ("application_id", "expected"),
+    [
+        ("M-0008_A-20E0-21-9997-O000A", "M-000A"),
+        ("M-0008_A-20E0-21-9997-o00ef", "M-00EF"),
+        ("M-0008_A-20E0-21-9997-OXYZW", None),
+        ("M-0083_A-013A-32-DCC1", None),
+        ("not-an-application-id", None),
+    ],
+)
+def test_application_id_original_manufacturer(
+    application_id: str, expected: str | None
+) -> None:
+    """Test the original manufacturer of the application id suffix."""
+    assert util.application_id_original_manufacturer(application_id) == expected
+
+
+@pytest.mark.parametrize(
     ("application_id", "original_manufacturer_id", "expected"),
     [
         ("M-0083_A-013A-32-DCC1", None, "M-0083_A-013A-32-DCC1"),
