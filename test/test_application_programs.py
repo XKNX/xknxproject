@@ -18,7 +18,12 @@ from xknxproject.models import (
     ObjectDefinition,
     ProductInfo,
 )
-from xknxproject.util import strip_module_instance
+from xknxproject.util import (
+    instance_definition_id,
+    linked_object_definitions,
+    object_channel_id,
+    strip_module_instance,
+)
 
 from . import RESOURCES_PATH, STUBS_PATH
 
@@ -200,3 +205,27 @@ def test_original_manufacturer_id_sources() -> None:
     assert (
         _original_manufacturer_id("M-0083_A-013A-32-DCC1", None, _devices(None)) is None
     )
+
+
+def test_project_instances_resolve_to_definitions() -> None:
+    """Instances of a parsed project resolve to keys of the program definitions."""
+    knxproj = XKNXProj(RESOURCES_PATH / "module-definition-test.knxproj", language="De")
+    project = knxproj.parse()
+    programs = knxproj.parse_application_programs()
+    resolved = 0
+    for device in project["devices"].values():
+        application = device["application"]
+        if application is None:
+            continue
+        program = programs[application]
+        for object_id in device["communication_object_ids"]:
+            definition_id = instance_definition_id(object_id, application, "O")
+            assert definition_id in program["objects"], object_id
+            channel_id = object_channel_id(program, program["objects"][definition_id])
+            assert channel_id is None or channel_id in program["channels"]
+            resolved += 1
+    assert resolved
+    linked = linked_object_definitions(project)
+    assert linked
+    for application, definition_ids in linked.items():
+        assert definition_ids <= set(programs[application]["objects"])

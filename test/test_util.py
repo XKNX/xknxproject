@@ -204,3 +204,102 @@ def test_canonical_application_id(
         util.canonical_application_id(application_id, original_manufacturer_id)
         == expected
     )
+
+
+@pytest.mark.parametrize(
+    ("instance_id", "search_id", "expected"),
+    [
+        ("O-334_R-21", "O", "O-334_R-21"),
+        ("1.1.1/O-334_R-21", "O", "O-334_R-21"),
+        ("1.1.1/MD-2_M-1_MI-1_O-2-1_R-1", "O", "MD-2_O-2-1_R-1"),
+        (
+            "MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-1_R-2",
+            "O",
+            "MD-4_SM-1_O-3-1_R-2",
+        ),
+        ("M-0083_A-013A-32-DCC1_O-1_R-1", "O", "O-1_R-1"),
+        ("MD-2_M-1_MI-1_CH-1", "CH", "MD-2_CH-1"),
+        ("CH-9", "CH", "CH-9"),
+    ],
+)
+def test_instance_definition_id(
+    instance_id: str, search_id: str, expected: str
+) -> None:
+    """Test instance ids of a project resolve to definition ids of the program."""
+    assert (
+        util.instance_definition_id(instance_id, "M-0083_A-013A-32-DCC1", search_id)
+        == expected
+    )
+
+
+def _channel(identifier: str, module: str | None) -> dict[str, Any]:
+    return {
+        "identifier": identifier,
+        "name": identifier,
+        "text": None,
+        "number": identifier.rsplit("-", maxsplit=1)[1],
+        "functional_blocks": None,
+        "module_definition_id": module,
+        "object_ids": [],
+    }
+
+
+@pytest.mark.parametrize(
+    ("object_id", "channel_ids", "expected"),
+    [
+        ("O-1_R-1", ["CH-1", "MD-2_CH-1"], "CH-1"),
+        ("MD-2_O-2-1_R-1", ["CH-1", "MD-2_CH-1"], "MD-2_CH-1"),
+        ("MD-2_SM-1_O-3-1_R-2", ["CH-1", "MD-2_CH-1"], "MD-2_CH-1"),
+        ("MD-3_O-1-1_R-1", ["CH-1", "MD-2_CH-1"], "CH-1"),
+        ("O-1_R-1", ["CH-404"], None),
+        ("O-1_R-1", [], None),
+    ],
+)
+def test_object_channel_id(
+    object_id: str, channel_ids: list[str], expected: str | None
+) -> None:
+    """Test the channel an object definition belongs to."""
+    definition: dict[str, Any] = {
+        "channels": {
+            "CH-1": _channel("CH-1", None),
+            "MD-2_CH-1": _channel("MD-2_CH-1", "MD-2"),
+        }
+    }
+    object_definition: dict[str, Any] = {
+        "identifier": object_id,
+        "channel_ids": channel_ids,
+    }
+    assert util.object_channel_id(definition, object_definition) == expected  # type: ignore[arg-type]
+
+
+def test_linked_object_definitions() -> None:
+    """Test linked object definitions are collected per application program."""
+    project: dict[str, Any] = {
+        "devices": {
+            "1.1.1": {
+                "application": "M-0083_A-1",
+                "communication_object_ids": [
+                    "1.1.1/O-1_R-1",
+                    "1.1.1/O-2_R-2",
+                    "1.1.1/O-9_R-9",
+                ],
+            },
+            "1.1.2": {
+                "application": "M-0083_A-1",
+                "communication_object_ids": ["1.1.2/MD-2_M-1_MI-1_O-2-1_R-1"],
+            },
+            "1.1.3": {
+                "application": None,
+                "communication_object_ids": ["1.1.3/O-1_R-1"],
+            },
+        },
+        "communication_objects": {
+            "1.1.1/O-1_R-1": {"group_address_links": ["1/1/1"]},
+            "1.1.1/O-2_R-2": {"group_address_links": []},
+            "1.1.2/MD-2_M-1_MI-1_O-2-1_R-1": {"group_address_links": ["1/1/2"]},
+            "1.1.3/O-1_R-1": {"group_address_links": ["1/1/3"]},
+        },
+    }
+    assert util.linked_object_definitions(project) == {  # type: ignore[arg-type]
+        "M-0083_A-1": {"O-1_R-1", "MD-2_O-2-1_R-1"}
+    }

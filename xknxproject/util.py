@@ -11,7 +11,12 @@ from xknxproject.exceptions import UnexpectedDataError
 from xknxproject.models import DPTType
 
 if TYPE_CHECKING:
-    from xknxproject.models import ParameterInstanceRef
+    from xknxproject.models import (
+        ApplicationProgramDefinition,
+        KNXProject,
+        ObjectDefinition,
+        ParameterInstanceRef,
+    )
 
 _LOGGER = logging.getLogger("xknxproject.log")
 
@@ -231,3 +236,88 @@ def canonical_application_id(
         f"M-{match['oem']}" if match["oem"] else match["manufacturer"]
     )
     return f"{manufacturer.upper()}_A-{match['program']}"
+
+
+def instance_definition_id(
+    instance_id: str, application_id: str, search_id: str
+) -> str:
+    """
+    Return the definition id of a channel or object instance of a project.
+
+    instance_id: id of a channel or communication object instance as `parse()`
+        returns it, with or without the device address ("1.1.1/...")
+    application_id: id of the application program of the device
+    search_id: "CH" for channels, "O" for objects
+
+    The module instance parts are removed (see `strip_module_instance`) and so
+    is the application id older projects prefix the id with; the result is a
+    key of `channels` or `objects` of the program's definition.
+
+    Examples
+    --------
+    "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1" -> "MD-2_O-2-1_R-1"
+    "M-0083_A-013A-32-DCC1_O-1_R-1" -> "O-1_R-1"
+
+    """
+    instance_part = instance_id.split("/", maxsplit=1)[-1]
+    stripped = strip_module_instance(instance_part, search_id=search_id)
+    return stripped.removeprefix(f"{application_id}_")
+
+
+def _object_module(object_definition: ObjectDefinition) -> str | None:
+    """Return the module an object is defined in, None outside modules."""
+    identifier = object_definition["identifier"]
+    return identifier.split("_O-", maxsplit=1)[0] if "_O-" in identifier else None
+
+
+def _in_module(object_module: str, module: str) -> bool:
+    """Check if an object module is a module or one of its submodules."""
+    return object_module == module or object_module.startswith(f"{module}_SM-")
+
+
+def object_channel_id(
+    definition: ApplicationProgramDefinition, object_definition: ObjectDefinition
+) -> str | None:
+    """
+    Return the channel an object definition belongs to, None without one.
+
+    An object listed by several channels - a module instantiated in a channel -
+    belongs to the channel of its own module or parent module; an object
+    outside modules to a channel outside modules; otherwise the first one.
+    """
+    object_module = _object_module(object_definition)
+    channels = [
+        (channel_id, channel)
+        for channel_id in object_definition["channel_ids"]
+        if (channel := definition["channels"].get(channel_id)) is not None
+    ]
+    for channel_id, channel in channels:
+        module = channel["module_definition_id"]
+        if (
+            module is None
+            if object_module is None
+            else module is not None and _in_module(object_module, module)
+        ):
+            return channel_id
+    return channels[0][0] if channels else None
+
+
+def linked_object_definitions(project: KNXProject) -> dict[str, set[str]]:
+    """
+    Return the object definitions devices link to group addresses, by program.
+
+    Keys are application program ids; programs whose devices link no object
+    are left out.
+    """
+    objects = project["communication_objects"]
+    linked: dict[str, set[str]] = {}
+    for device in project["devices"].values():
+        if (application_id := device["application"]) is None:
+            continue
+        for object_id in device["communication_object_ids"]:
+            com_object = objects.get(object_id)
+            if com_object is not None and com_object["group_address_links"]:
+                linked.setdefault(application_id, set()).add(
+                    instance_definition_id(object_id, application_id, "O")
+                )
+    return linked
