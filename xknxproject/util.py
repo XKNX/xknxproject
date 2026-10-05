@@ -282,8 +282,10 @@ def object_channel_id(
     Return the channel an object definition belongs to, None without one.
 
     An object listed by several channels - a module instantiated in a channel -
-    belongs to the channel of its own module or parent module; an object
-    outside modules to a channel outside modules; otherwise the first one.
+    belongs to the channel whose `module_definition_id` equals the module of
+    the object or is the module whose submodule (`<module>_SM-...`) defines the
+    object; an object outside modules belongs to a channel outside modules.
+    Without such a channel the first listed channel that exists is returned.
     """
     object_module = _object_module(object_definition)
     channels = [

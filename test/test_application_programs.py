@@ -213,6 +213,7 @@ def test_project_instances_resolve_to_definitions() -> None:
     project = knxproj.parse()
     programs = knxproj.parse_application_programs()
     resolved = 0
+    with_channel = 0
     for device in project["devices"].values():
         application = device["application"]
         if application is None:
@@ -221,10 +222,17 @@ def test_project_instances_resolve_to_definitions() -> None:
         for object_id in device["communication_object_ids"]:
             definition_id = instance_definition_id(object_id, application, "O")
             assert definition_id in program["objects"], object_id
-            channel_id = object_channel_id(program, program["objects"][definition_id])
-            assert channel_id is None or channel_id in program["channels"]
+            object_definition = program["objects"][definition_id]
+            channel_id = object_channel_id(program, object_definition)
+            if channel_id is not None:
+                assert (
+                    object_definition["identifier"]
+                    in program["channels"][channel_id]["object_ids"]
+                )
+                with_channel += 1
             resolved += 1
     assert resolved
+    assert with_channel
     linked = linked_object_definitions(project)
     assert linked
     for application, definition_ids in linked.items():
