@@ -52,7 +52,7 @@ class ModuleInstanceInfos(TypedDict):
 
 
 class Device(TypedDict):
-    """Devices dictionary."""
+    """Device dictionary, keyed by individual address in `KNXProject["devices"]`."""
 
     name: str
     hardware_name: str
@@ -62,13 +62,16 @@ class Device(TypedDict):
     individual_address: str
     application: str | None
     project_uid: int | None
-    # raw refs from the project file; hardware_id is "" when the product could not
-    # be resolved
-    product_id: str
+    product_id: str  # "ProductRefId" of the DeviceInstance ("" if absent)
+    # "Id" of the Hardware element (manufacturer Hardware.xml) the product belongs to;
+    # "" when the product is not found in the project. Note: `hardware_name` holds the
+    # product text, not the "Name" of this Hardware element.
     hardware_id: str
+    # "Hardware2ProgramRefId" of the DeviceInstance ("" if absent)
     hardware_program_id: str
-    # identifier of the space listing the device (`Space.identifier`), None when
-    # the device is in no space
+    # `identifier` of the space in `locations` listing the device - the space it was
+    # placed in, not one of its ancestors (the first in project file order if several
+    # list it); None when no space lists it. Same meaning as `Function.space_id`.
     space_id: str | None
     communication_object_ids: list[str]
     channels: dict[str, Channel]  # id: Channel

@@ -435,7 +435,13 @@ class _LocationLoader:
     def parse_space(
         self, node: ElementTree.Element, functions: list[XMLFunction]
     ) -> XMLSpace:
-        """Parse a space from the document."""
+        """
+        Parse a space and its nested spaces from the document.
+
+        Every device the space lists gets the space's `Id` as `space_id`, unless an
+        earlier space in project file order already listed it. Functions of the
+        space get it as `space_id` too and are appended to `functions`.
+        """
         usage_id = node.get("Usage")
         usage_text = (
             self.knx_master_data.get_space_usage_name(usage_id) if usage_id else ""

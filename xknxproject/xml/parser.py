@@ -79,7 +79,16 @@ def _convert_functions(function: XMLFunction) -> Function:
 
 
 def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
-    """Convert spaces to the final output format."""
+    """
+    Convert spaces to the final output format, keyed by space name.
+
+    ETS allows sibling spaces to share a name. A space whose name is already the
+    key of an earlier sibling is keyed "<name> (<identifier>)" instead, with
+    " (<identifier>)" appended again while that key is taken too, so that no space
+    is lost; a warning is logged. The first space with a name in project file
+    order thus keeps the plain name as key, and the `name` field of each space
+    always holds the name from ETS.
+    """
     result: dict[str, Space] = {}
     for space in spaces:
         key = space.name
