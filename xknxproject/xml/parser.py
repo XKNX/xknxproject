@@ -84,13 +84,16 @@ def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
     for space in spaces:
         key = space.name
         if key in result:
+            # space identifiers are unique within a project, so they disambiguate
             key = f"{space.name} ({space.identifier})"
+            while key in result:  # a sibling may literally be named like this key
+                key = f"{key} ({space.identifier})"
             _LOGGER.warning(
-                "Sibling spaces %s and %s share the name %r: "
-                "the second is exported as %r in `locations`",
+                "Sibling space %s already uses the key %r: "
+                "space %s is exported as %r in `locations`",
                 result[space.name]["identifier"],
-                space.identifier,
                 space.name,
+                space.identifier,
                 key,
             )
         result[key] = Space(

@@ -160,21 +160,93 @@ def _space(
 
 
 def test_sibling_space_name_collision_warns(caplog: pytest.LogCaptureFixture) -> None:
-    """Two sibling spaces with the same name log a warning and both are kept."""
+    """Same-named siblings are all kept, later ones keyed "<name> (<identifier>)"."""
     spaces = [
         _space("P-1_BP-2", "Flur", ["1.1.1"], []),
-        _space("P-1_BP-3", "Flur", ["1.1.2"], []),
+        _space(
+            "P-1_BP-3",
+            "Flur",
+            ["1.1.2"],
+            [_space("P-1_BP-4", "Abstellraum", ["1.1.3"], [])],
+        ),
+        _space("P-1_BP-5", "Flur", [], []),
     ]
     with caplog.at_level(logging.WARNING, logger="xknxproject.log"):
         result = _recursive_convert_spaces(spaces)
 
-    assert list(result) == ["Flur", "Flur (P-1_BP-3)"]
+    assert list(result) == ["Flur", "Flur (P-1_BP-3)", "Flur (P-1_BP-5)"]
     assert result["Flur"]["identifier"] == "P-1_BP-2"
-    assert result["Flur (P-1_BP-3)"]["identifier"] == "P-1_BP-3"
-    assert result["Flur (P-1_BP-3)"]["name"] == "Flur"
-    assert "Flur" in caplog.text
-    assert "P-1_BP-2" in caplog.text
-    assert "P-1_BP-3" in caplog.text
+    renamed = result["Flur (P-1_BP-3)"]
+    assert renamed["identifier"] == "P-1_BP-3"
+    assert renamed["name"] == "Flur"
+    assert renamed["devices"] == ["1.1.2"]
+    assert renamed["spaces"]["Abstellraum"]["devices"] == ["1.1.3"]
+    assert result["Flur (P-1_BP-5)"]["identifier"] == "P-1_BP-5"
+    assert [record.levelno for record in caplog.records] == [logging.WARNING] * 2
+    assert caplog.messages == [
+        "Sibling space P-1_BP-2 already uses the key 'Flur': "
+        "space P-1_BP-3 is exported as 'Flur (P-1_BP-3)' in `locations`",
+        "Sibling space P-1_BP-2 already uses the key 'Flur': "
+        "space P-1_BP-5 is exported as 'Flur (P-1_BP-5)' in `locations`",
+    ]
+
+
+def test_same_space_name_under_different_parents_is_kept(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Spaces sharing a name under different parents keep the plain name as key."""
+    spaces = [
+        _space("P-1_BP-1", "EG", [], [_space("P-1_BP-2", "Flur", [], [])]),
+        _space("P-1_BP-3", "OG", [], [_space("P-1_BP-4", "Flur", [], [])]),
+    ]
+    with caplog.at_level(logging.WARNING, logger="xknxproject.log"):
+        result = _recursive_convert_spaces(spaces)
+
+    assert list(result["EG"]["spaces"]) == ["Flur"]
+    assert list(result["OG"]["spaces"]) == ["Flur"]
+    assert result["EG"]["spaces"]["Flur"]["identifier"] == "P-1_BP-2"
+    assert result["OG"]["spaces"]["Flur"]["identifier"] == "P-1_BP-4"
+    assert not caplog.records
+
+
+@pytest.mark.parametrize(
+    ("spaces", "expected_keys"),
+    [
+        (  # the literal name is taken first, the disambiguated key collides with it
+            [
+                _space("P-1_BP-9", "Flur (P-1_BP-3)", [], []),
+                _space("P-1_BP-2", "Flur", [], []),
+                _space("P-1_BP-3", "Flur", [], []),
+            ],
+            {
+                "Flur (P-1_BP-3)": "P-1_BP-9",
+                "Flur": "P-1_BP-2",
+                "Flur (P-1_BP-3) (P-1_BP-3)": "P-1_BP-3",
+            },
+        ),
+        (  # the disambiguated key is taken first, the literal name collides with it
+            [
+                _space("P-1_BP-2", "Flur", [], []),
+                _space("P-1_BP-3", "Flur", [], []),
+                _space("P-1_BP-9", "Flur (P-1_BP-3)", [], []),
+            ],
+            {
+                "Flur": "P-1_BP-2",
+                "Flur (P-1_BP-3)": "P-1_BP-3",
+                "Flur (P-1_BP-3) (P-1_BP-9)": "P-1_BP-9",
+            },
+        ),
+    ],
+)
+def test_sibling_named_like_a_disambiguated_key_is_kept(
+    spaces: list[XMLSpace], expected_keys: dict[str, str]
+) -> None:
+    """A sibling literally named "<name> (<identifier>)" never displaces a space."""
+    result = _recursive_convert_spaces(spaces)
+
+    assert {key: space["identifier"] for key, space in result.items()} == (
+        expected_keys
+    )
 
 
 def test_device_space_ids_use_the_listing_space() -> None:
