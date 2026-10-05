@@ -5,6 +5,7 @@ from .application_program import (
     ApplicationProgramDefinition,
     ApplicationProgramIdentity,
     ApplicationPrograms,
+    ApplicationProgramsInfo,
     ChannelDefinition,
     ModuleDefinition,
     ObjectDefinition,

@@ -13,6 +13,7 @@ from xknxproject import XKNXProj
 from xknxproject.models import (
     ApplicationProgramDefinition,
     ApplicationProgramIdentity,
+    ApplicationProgramsInfo,
     ChannelDefinition,
     DeviceInstance,
     ModuleDefinition,
@@ -66,11 +67,10 @@ def test_parse_application_programs(
     knxproj = XKNXProj(
         RESOURCES_PATH / f"{file_stem}.knxproj", password, language=language
     )
-    programs = knxproj.parse_application_programs()
-    for program in programs.values():
-        assert len(program["xknxproject_version"].split(".")) == 3
+    result = knxproj.parse_application_programs()
+    assert len(result["info"]["xknxproject_version"].split(".")) == 3
     stub = application_program_stub(
-        programs, SELECTED_APPLICATION_PROGRAMS.get(file_stem, ())
+        result, SELECTED_APPLICATION_PROGRAMS.get(file_stem, ())
     )
     assert stub == _load_stub(file_stem)
 
@@ -88,7 +88,7 @@ def test_application_program_stub_keys_match_typed_dicts(file_stem: str) -> None
         SELECTED_APPLICATION_PROGRAMS.get(file_stem, ())
     )
     assert set(stub["programs"]) <= set(digests)
-    definition_keys = set(ApplicationProgramDefinition.__annotations__) - {
+    assert set(stub["info"]) == set(ApplicationProgramsInfo.__annotations__) - {
         "xknxproject_version"
     }
     for digest in digests.values():
@@ -106,7 +106,7 @@ def test_application_program_stub_keys_match_typed_dicts(file_stem: str) -> None
         for product in digest["identity"]["products"]:
             assert set(product) == set(ProductInfo.__annotations__)
     for program in stub["programs"].values():
-        assert set(program) == definition_keys
+        assert set(program) == set(ApplicationProgramDefinition.__annotations__)
         assert set(program["identity"]) == set(
             ApplicationProgramIdentity.__annotations__
         )
@@ -121,10 +121,10 @@ def test_application_program_stub_keys_match_typed_dicts(file_stem: str) -> None
 
 
 def test_digest_detects_changes() -> None:
-    """The digest follows the content, not the key order or the version."""
+    """The digest follows the content, not the key order."""
     programs = XKNXProj(
         RESOURCES_PATH / "module-definition-test.knxproj", language="De"
-    ).parse_application_programs()
+    ).parse_application_programs()["application_programs"]
     program = programs["M-0083_A-013A-32-DCC1"]
     digest = program_digest(program)
     assert digest["objects"] == len(program["objects"])
@@ -139,10 +139,6 @@ def test_digest_detects_changes() -> None:
     )
     reordered["objects"] = dict(reversed(list(program["objects"].items())))
     assert program_digest(reordered) == digest
-
-    other_version = copy.deepcopy(program)
-    other_version["xknxproject_version"] = "0.0.0"
-    assert program_digest(other_version) == digest
 
 
 def _resolve(
@@ -169,7 +165,7 @@ def test_instance_ids_resolve_to_definitions(
         RESOURCES_PATH / f"{file_stem}.knxproj", password, language=language
     )
     project = knxproj.parse()
-    programs = knxproj.parse_application_programs()
+    programs = knxproj.parse_application_programs()["application_programs"]
 
     checked_objects = 0
     for co_id, com_object in project["communication_objects"].items():
@@ -217,7 +213,7 @@ def test_oem_identity_from_fixture() -> None:
     """OEM programs carry the original manufacturer from the id suffix."""
     programs = XKNXProj(
         RESOURCES_PATH / "xknx_test_project.knxproj", "test"
-    ).parse_application_programs()
+    ).parse_application_programs()["application_programs"]
     identity = programs["M-0008_A-20E0-21-9997-O000A"]["identity"]
     assert identity["manufacturer_id"] == "M-0008"
     assert identity["original_manufacturer_id"] == "M-000A"
@@ -231,7 +227,7 @@ def test_smart_linking_semantics_and_unlinked_objects() -> None:
     """KIM tags are exported and objects without project links are included."""
     programs = XKNXProj(
         RESOURCES_PATH / "smart_linking.knxproj", "test", language="de-DE"
-    ).parse_application_programs()
+    ).parse_application_programs()["application_programs"]
     program = programs["M-00E1_A-2036-40-865C"]
     assert program["identity"]["kim_version"] == "109.77"
     assert program["channels"]["CH-1"]["functional_blocks"] == ["417"]
@@ -244,7 +240,7 @@ def test_modules_instantiated_in_channels_are_channel_members() -> None:
     """Objects of a module instantiated inside a channel belong to that channel."""
     programs = XKNXProj(
         RESOURCES_PATH / "module-definition-test.knxproj", language="De"
-    ).parse_application_programs()
+    ).parse_application_programs()["application_programs"]
     dali = programs["M-0083_A-0153-10-297A-O00EF"]
     assert dali["channels"]["CH-17"]["object_ids"]
     assert dali["channels"]["CH-84"]["object_ids"]
@@ -300,7 +296,7 @@ def test_project_instances_resolve_to_definitions() -> None:
     """Instances of a parsed project resolve to keys of the program definitions."""
     knxproj = XKNXProj(RESOURCES_PATH / "module-definition-test.knxproj", language="De")
     project = knxproj.parse()
-    programs = knxproj.parse_application_programs()
+    programs = knxproj.parse_application_programs()["application_programs"]
     resolved = 0
     with_channel = 0
     for device in project["devices"].values():

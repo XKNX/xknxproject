@@ -74,7 +74,7 @@ class XKNXProj:
             )
         _LOGGER.info(
             "Parsed %s application programs in %s seconds",
-            len(programs),
+            len(programs["application_programs"]),
             time.time() - _start,
         )
         return programs

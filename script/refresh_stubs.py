@@ -36,14 +36,14 @@ for file_name, password, language in APPLICATION_PROGRAM_FIXTURES:
         password=password,
         language=language,
     )
-    programs = knxproj.parse_application_programs()
+    application_programs = knxproj.parse_application_programs()
 
     with Path(f"test/resources/stubs/application_programs/{file_name}.json").open(
         mode="w", encoding="utf8"
     ) as f:
         json.dump(
             application_program_stub(
-                programs, SELECTED_APPLICATION_PROGRAMS.get(file_name, ())
+                application_programs, SELECTED_APPLICATION_PROGRAMS.get(file_name, ())
             ),
             f,
             indent=2,

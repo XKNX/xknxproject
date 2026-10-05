@@ -1,4 +1,7 @@
 {
+  "info": {
+    "language_code": "de-DE"
+  },
   "programs": {},
   "digests": {
     "M-0083_A-0013-11-A9D6": {
@@ -28,7 +31,7 @@
       "modules": 0,
       "objects": 244,
       "channel_independent_objects": 0,
-      "sha256": "1983bee9c6540538b499301b2b540a14cae926ffd5f7e283741cb77e81c76ff1"
+      "sha256": "a5db949aa940a2aac5d82340d70c265da6f657683269169a0d80e587ed78b4fa"
     },
     "M-0002_A-A061-14-BE27": {
       "identity": {
@@ -57,7 +60,7 @@
       "modules": 0,
       "objects": 303,
       "channel_independent_objects": 0,
-      "sha256": "9a326a81fac7b25a215f264eda4bc3924db0cfa74fbd546be9074ae2403d089c"
+      "sha256": "b1c15f4793bfe83f2838084917bd6924e2f81740f8e5127fca14bde16bd74dd0"
     }
   }
 }

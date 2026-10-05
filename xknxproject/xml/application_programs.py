@@ -10,6 +10,7 @@ from xknxproject.models import (
     ApplicationProgramDefinition,
     ApplicationProgramIdentity,
     ApplicationPrograms,
+    ApplicationProgramsInfo,
     DeviceInstance,
     Product,
     ProductInfo,
@@ -85,7 +86,7 @@ class ApplicationProgramParser:
         # same package: the load step of XMLParser is internal, not public API
         project_parser._load_project(language=language)  # noqa: SLF001  # pylint: disable=protected-access
 
-        result: ApplicationPrograms = {}
+        definitions: dict[str, ApplicationProgramDefinition] = {}
         for xml_file, devices in _group_devices_by_application(
             project_parser.devices
         ).items():
@@ -110,14 +111,12 @@ class ApplicationProgramParser:
                 kim_version=raw_identity.kim_version,
                 products=_products(devices, project_parser.products),
             )
-            result[application_id] = ApplicationProgramDefinition(
+            definitions[application_id] = ApplicationProgramDefinition(
                 identity=identity,
                 channels=loaded.channels,
                 modules=loaded.modules,
                 objects=loaded.objects,
                 channel_independent_object_ids=loaded.channel_independent_object_ids,
-                language_code=project_parser.language_code,
-                xknxproject_version=__version__,
             )
             _LOGGER.debug(
                 "Parsed application program %s: %s channels, %s objects",
@@ -125,4 +124,10 @@ class ApplicationProgramParser:
                 len(loaded.channels),
                 len(loaded.objects),
             )
-        return result
+        return ApplicationPrograms(
+            info=ApplicationProgramsInfo(
+                language_code=project_parser.language_code,
+                xknxproject_version=__version__,
+            ),
+            application_programs=definitions,
+        )

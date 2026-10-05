@@ -1,4 +1,7 @@
 {
+  "info": {
+    "language_code": "de-DE"
+  },
   "programs": {
     "M-0083_A-013A-32-DCC1": {
       "identity": {
@@ -3447,8 +3450,7 @@
         "O-326_R-16",
         "O-325_R-14",
         "O-325_R-15"
-      ],
-      "language_code": "de-DE"
+      ]
     }
   },
   "digests": {
@@ -3479,7 +3481,7 @@
       "modules": 1,
       "objects": 121,
       "channel_independent_objects": 29,
-      "sha256": "ba7324af6226bfd919b32eee4a46e9885e113f7a2f2ae8cc6de641a64d1833b3"
+      "sha256": "f4c09a33c9300eea085e484cbec683defd9ce8cbddb3737407db4cf88b4efdac"
     },
     "M-0083_A-0153-10-297A-O00EF": {
       "identity": {
@@ -3508,7 +3510,7 @@
       "modules": 3,
       "objects": 190,
       "channel_independent_objects": 0,
-      "sha256": "a389d8f32fa15a724dcbfe41af863d2e51d9e292cb8f3b28e645693da0e95bfb"
+      "sha256": "5552efe971afb2fc717831f369bfa22203886c77c48a448ed567d11aa3098c12"
     },
     "M-0071_A-5531-37-FDF4": {
       "identity": {
@@ -3537,7 +3539,7 @@
       "modules": 8,
       "objects": 802,
       "channel_independent_objects": 0,
-      "sha256": "7235420aa3724d8bb84e439856c9c776be05b0556708c237050528bd5e8f2abf"
+      "sha256": "40618c809326def6c8cbdf540786f0e0f065d9745103a57b5346e1925803afc7"
     }
   }
 }

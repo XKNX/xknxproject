@@ -1,4 +1,7 @@
 {
+  "info": {
+    "language_code": "de-DE"
+  },
   "programs": {
     "M-0083_A-00ED-10-33FD": {
       "identity": {
@@ -2577,8 +2580,7 @@
         "O-77_R-13",
         "O-85_R-14",
         "O-85_R-61"
-      ],
-      "language_code": "de-DE"
+      ]
     }
   },
   "digests": {
@@ -2609,7 +2611,7 @@
       "modules": 0,
       "objects": 0,
       "channel_independent_objects": 0,
-      "sha256": "c4ac6e6f12858b482023288e245db065dee42282fbb5a47cd20e7beaec87d8f8"
+      "sha256": "7453ecbb0c0a8767a83c15cc3cea190a567c77df804e2d6d9963c1d8ae031f01"
     },
     "M-00E1_A-2036-40-865C": {
       "identity": {
@@ -2638,7 +2640,7 @@
       "modules": 0,
       "objects": 57,
       "channel_independent_objects": 0,
-      "sha256": "809ac77c98e430d683b848159cec5be8ea82ee25cdabeee6e46ed543a03b30b9"
+      "sha256": "6fc16adcd2f466bcbd3a3de7ade57cff0bfb4787ce6f4c4675ee3ec692da3bce"
     },
     "M-0064_A-5810-12-2E9D": {
       "identity": {
@@ -2667,7 +2669,7 @@
       "modules": 0,
       "objects": 822,
       "channel_independent_objects": 42,
-      "sha256": "5dad37913c08743d6b124a691ef111c0d5fc537214230c0748b5c4afbb4a4e7d"
+      "sha256": "02dddb2fdaa97f052d82bf2d7369b417063a32d451e6720b28fe459768666524"
     },
     "M-0083_A-00F3-10-1728": {
       "identity": {
@@ -2696,7 +2698,7 @@
       "modules": 0,
       "objects": 13,
       "channel_independent_objects": 2,
-      "sha256": "5b86d949b11b4fd0bbf8528c6634cf891491d62cfdf0603f4c965b7afddabe92"
+      "sha256": "132e221f058053c4cb49b6ab1dbb4aa985bc0953779c5889342e5d07645b954f"
     },
     "M-0083_A-00ED-10-33FD": {
       "identity": {
@@ -2725,7 +2727,7 @@
       "modules": 1,
       "objects": 89,
       "channel_independent_objects": 15,
-      "sha256": "dab0c02c7f6217e77a4deaf2eb188ea67996ad8864a17c95a2d528e5a1320366"
+      "sha256": "4f6ff13243ea4b98966b7abc92b7701fd18a0adaa1696bf269b191961d2c7210"
     },
     "M-007C_A-001C-14-E802": {
       "identity": {
@@ -2754,7 +2756,7 @@
       "modules": 1,
       "objects": 0,
       "channel_independent_objects": 0,
-      "sha256": "fab818339696d9b211fd08fbaa26a2a8de9fc4e36c6f66ffed7350e368277ef8"
+      "sha256": "b11d74c22b7119c22378a10bb671c07eaea83e527e51a50d2097b86decb35d57"
     }
   }
 }

@@ -51,8 +51,9 @@ The full type definition can be found here: https://github.com/XKNX/xknxproject/
 
 ### Application program definitions
 
-`parse_application_programs()` returns the full definition of every application
-program used by a device of the project: all channel and module definitions and
+`parse_application_programs()` returns an `info` block (`language_code`,
+`xknxproject_version`) and, in `application_programs`, the full definition of
+every application program used by a device of the project: all channel and module definitions and
 all communication objects, including those the project does not link to a group
 address. Identifiers are relative to the application program id with module
 instance parts removed (`MD-2_CH-1`, `MD-2_O-2-35_R-65`), so they match the
@@ -63,7 +64,7 @@ instantiation; the `channel` of an instance from `parse()` is authoritative for
 that instance.
 
 ```python
-programs = knxproj.parse_application_programs()
+programs = knxproj.parse_application_programs()["application_programs"]
 program = programs["M-0083_A-013A-32-DCC1"]
 program["identity"]["application_version"]  # 50
 program["channels"]["MD-2_CH-1"]["object_ids"]  # ["MD-2_O-2-35_R-65", ...]
@@ -91,7 +92,7 @@ from xknxproject.util import (
 )
 
 project = knxproj.parse()
-programs = knxproj.parse_application_programs()
+programs = knxproj.parse_application_programs()["application_programs"]
 for application_id, object_ids in linked_object_definitions(project).items():
     definition = programs[application_id]
     canonical_id = canonical_application_id(

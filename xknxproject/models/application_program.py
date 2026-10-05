@@ -82,8 +82,17 @@ class ApplicationProgramDefinition(TypedDict):
     modules: dict[str, ModuleDefinition]
     objects: dict[str, ObjectDefinition]
     channel_independent_object_ids: list[str]
+
+
+class ApplicationProgramsInfo(TypedDict):
+    """Information about the application program definitions of a project."""
+
     language_code: str | None
     xknxproject_version: str
 
 
-ApplicationPrograms = dict[str, ApplicationProgramDefinition]  # key: application_id
+class ApplicationPrograms(TypedDict):
+    """Application program definitions of a project."""
+
+    info: ApplicationProgramsInfo
+    application_programs: dict[str, ApplicationProgramDefinition]
