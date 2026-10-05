@@ -5,7 +5,10 @@ from __future__ import annotations
 import logging
 
 from xknxproject.__version__ import __version__
-from xknxproject.loader import ApplicationProgramDefinitionLoader
+from xknxproject.loader import (
+    ApplicationProgramDefinitionLoader,
+    ApplicationProgramLoader,
+)
 from xknxproject.models import (
     ApplicationProgramDefinition,
     ApplicationProgramIdentity,
@@ -20,18 +23,6 @@ from xknxproject.xml.parser import XMLParser
 from xknxproject.zip.extractor import KNXProjContents
 
 _LOGGER = logging.getLogger("xknxproject.log")
-
-
-def _group_devices_by_application(
-    devices: list[DeviceInstance],
-) -> dict[str, list[DeviceInstance]]:
-    """Group devices by application program xml file, skipping unresolved ones."""
-    result: dict[str, list[DeviceInstance]] = {}
-    for device in devices:
-        if device.application_program_ref is None:
-            continue
-        result.setdefault(device.application_program_xml(), []).append(device)
-    return result
 
 
 def _original_manufacturer_id(
@@ -84,8 +75,11 @@ class ApplicationProgramParser:
         project_parser._load_project(language=language)  # noqa: SLF001  # pylint: disable=protected-access
 
         definitions: dict[str, ApplicationProgramDefinition] = {}
-        for xml_file, devices in _group_devices_by_application(
-            project_parser.devices
+        for (
+            xml_file,
+            devices,
+        ) in ApplicationProgramLoader.get_application_program_files_for_devices(
+            devices=project_parser.devices
         ).items():
             loaded = ApplicationProgramDefinitionLoader.load(
                 application_program_path=self.knx_proj_contents.root_path / xml_file,

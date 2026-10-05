@@ -10,6 +10,7 @@ from typing import Any, Literal, cast
 import pytest
 
 from xknxproject import XKNXProj
+from xknxproject.loader import ApplicationProgramLoader
 from xknxproject.models import (
     ApplicationProgramDefinition,
     ApplicationProgramIdentity,
@@ -26,10 +27,7 @@ from xknxproject.util import (
     linked_object_definitions,
     object_channel_id,
 )
-from xknxproject.xml.application_programs import (
-    _group_devices_by_application,
-    _original_manufacturer_id,
-)
+from xknxproject.xml.application_programs import _original_manufacturer_id
 
 from . import RESOURCES_PATH, STUBS_PATH
 from .application_program_stubs import (
@@ -202,9 +200,12 @@ def test_devices_without_application_are_skipped() -> None:
     devices = [
         _Device("M-0001_A-0001-01-0001", "M-0001/M-0001_A-0001-01-0001.xml"),
         _Device(None, "None/None.xml"),
+        _Device("", "M-0001/.xml"),
         _Device("M-0001_A-0001-01-0001", "M-0001/M-0001_A-0001-01-0001.xml"),
     ]
-    grouped = _group_devices_by_application(devices)  # type: ignore[arg-type]
+    grouped = ApplicationProgramLoader.get_application_program_files_for_devices(
+        devices  # type: ignore[arg-type]
+    )
     assert list(grouped) == ["M-0001/M-0001_A-0001-01-0001.xml"]
     assert len(grouped["M-0001/M-0001_A-0001-01-0001.xml"]) == 2
 

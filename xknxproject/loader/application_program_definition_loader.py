@@ -10,6 +10,7 @@ from typing import IO, Any
 from xml.etree import ElementTree
 from zipfile import Path
 
+from xknxproject.exceptions import UnexpectedDataError
 from xknxproject.models import (
     ChannelDefinition,
     DPTType,
@@ -92,6 +93,11 @@ class _Placement:
 
     channel_id: str | None
     module_id: str | None
+
+
+def _inherit(ref_value: bool | None, base_value: bool) -> bool:
+    """Return the flag of the ComObjectRef if set, else the flag of the ComObject."""
+    return base_value if ref_value is None else ref_value
 
 
 def _int_or_none(value: str | None) -> int | None:
@@ -281,7 +287,7 @@ class ApplicationProgramDefinitionLoader:
             elem.clear()
 
         if identity is None:
-            raise ValueError("ApplicationProgram root element not found")
+            raise UnexpectedDataError("ApplicationProgram element not found")
 
         channel_independent = ApplicationProgramDefinitionLoader._place_module_refs(
             channel_refs=channel_refs,
@@ -477,10 +483,6 @@ class ApplicationProgramDefinitionLoader:
             com_object = com_objects.get(ref.ref_id)
             if com_object is None:
                 continue
-
-            def _flag(ref_value: bool | None, base_value: bool) -> bool:
-                return base_value if ref_value is None else ref_value
-
             objects[ref_id] = ObjectDefinition(
                 identifier=ref_id,
                 com_object_id=ref.ref_id,
@@ -499,14 +501,14 @@ class ApplicationProgramDefinitionLoader:
                 ),
                 dpts=ref.datapoint_types or com_object.datapoint_types,
                 flags=Flags(
-                    read=_flag(ref.read_flag, com_object.flags["read"]),
-                    write=_flag(ref.write_flag, com_object.flags["write"]),
-                    communication=_flag(
+                    read=_inherit(ref.read_flag, com_object.flags["read"]),
+                    write=_inherit(ref.write_flag, com_object.flags["write"]),
+                    communication=_inherit(
                         ref.communication_flag, com_object.flags["communication"]
                     ),
-                    transmit=_flag(ref.transmit_flag, com_object.flags["transmit"]),
-                    update=_flag(ref.update_flag, com_object.flags["update"]),
-                    read_on_init=_flag(
+                    transmit=_inherit(ref.transmit_flag, com_object.flags["transmit"]),
+                    update=_inherit(ref.update_flag, com_object.flags["update"]),
+                    read_on_init=_inherit(
                         ref.read_on_init_flag, com_object.flags["read_on_init"]
                     ),
                 ),
