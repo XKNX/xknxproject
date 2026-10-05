@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-import re
 
 from xknxproject.__version__ import __version__
 from xknxproject.loader import ApplicationProgramDefinitionLoader
@@ -15,11 +14,11 @@ from xknxproject.models import (
     Product,
     ProductInfo,
 )
+from xknxproject.util import _APPLICATION_ID_RE
 from xknxproject.xml.parser import XMLParser
 from xknxproject.zip.extractor import KNXProjContents
 
 _LOGGER = logging.getLogger("xknxproject.log")
-_OEM_SUFFIX_RE = re.compile(r"-O([0-9A-Fa-f]{4})$")
 
 
 def _group_devices_by_application(
@@ -45,8 +44,9 @@ def _original_manufacturer_id(
     for device in devices:
         if device.original_manufacturer:
             return device.original_manufacturer
-    if (match := _OEM_SUFFIX_RE.search(application_id)) is not None:
-        return f"M-{match.group(1).upper()}"
+    # same suffix rule as `canonical_application_id`
+    if (match := _APPLICATION_ID_RE.match(application_id)) is not None and match["oem"]:
+        return f"M-{match['oem'].upper()}"
     return None
 
 

@@ -206,7 +206,9 @@ def text_parameter_insert_module_instance(
     return text_parameter_ref_id
 
 
-# "M-0008_A-20E0-21-9997-O000A": manufacturer, program part, optional original manufacturer
+# "M-0008_A-20E0-21-9997-O000A": manufacturer, program part, optional original manufacturer.
+# The "-O" suffix is matched case-insensitively and only with 4 hex digits; otherwise it
+# stays part of the program part. Shared with the application program parser.
 _APPLICATION_ID_RE = re.compile(
     r"^(?P<manufacturer>M-[0-9A-Fa-f]{4})_A-(?P<program>.+?)(?:-[Oo](?P<oem>[0-9A-Fa-f]{4}))?$"
 )

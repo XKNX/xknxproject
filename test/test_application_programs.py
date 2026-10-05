@@ -19,11 +19,13 @@ from xknxproject.models import (
     ProductInfo,
 )
 from xknxproject.util import (
+    canonical_application_id,
     instance_definition_id,
     linked_object_definitions,
     object_channel_id,
     strip_module_instance,
 )
+from xknxproject.xml.application_programs import _original_manufacturer_id
 
 from . import RESOURCES_PATH, STUBS_PATH
 
@@ -189,7 +191,6 @@ def test_modules_instantiated_in_channels_are_channel_members() -> None:
 
 def test_original_manufacturer_id_sources() -> None:
     """The program attribute wins over the hardware attribute and the id suffix."""
-    from xknxproject.xml.application_programs import _original_manufacturer_id
 
     def _devices(*original_manufacturers: str | None) -> list[DeviceInstance]:
         return [
@@ -205,6 +206,28 @@ def test_original_manufacturer_id_sources() -> None:
     assert (
         _original_manufacturer_id("M-0083_A-013A-32-DCC1", None, _devices(None)) is None
     )
+
+
+@pytest.mark.parametrize(
+    ("application_id", "expected"),
+    [
+        ("M-0008_A-20E0-21-9997-O000A", "M-000A"),
+        ("M-0008_A-20E0-21-9997-o000a", "M-000A"),
+        # not 4 hex digits - part of the program, no original manufacturer
+        ("M-0008_A-20E0-21-9997-OXYZW", None),
+        ("M-0083_A-013A-32-DCC1", None),
+    ],
+)
+def test_original_manufacturer_id_suffix(
+    application_id: str, expected: str | None
+) -> None:
+    """The id suffix follows the same rule as `canonical_application_id`."""
+    assert _original_manufacturer_id(application_id, None, []) == expected
+    canonical = canonical_application_id(application_id, None)
+    if expected is None:
+        assert canonical == application_id
+    else:
+        assert canonical.startswith(f"{expected}_A-")
 
 
 def test_project_instances_resolve_to_definitions() -> None:

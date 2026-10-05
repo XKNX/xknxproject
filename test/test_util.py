@@ -193,6 +193,8 @@ def test_semantics_dpas(semantics: str | None, expected: list[str] | None) -> No
         ("M-0008_A-20E0-21-9997-o000a", None, "M-000A_A-20E0-21-9997"),
         ("M-0008_A-20E0-21-9997-O000A", "M-0002", "M-0002_A-20E0-21-9997"),
         ("M-0008_A-20E0-21-9997", "m-000a", "M-000A_A-20E0-21-9997"),
+        # a suffix that is not "-O" with 4 hex digits stays part of the program
+        ("M-0008_A-20E0-21-9997-OXYZW", None, "M-0008_A-20E0-21-9997-OXYZW"),
         ("not-an-application-id", None, "not-an-application-id"),
     ],
 )
