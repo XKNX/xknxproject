@@ -9,7 +9,6 @@ from xknxproject.loader import (
     LoadedApplicationProgram,
 )
 from xknxproject.loader.application_program_definition_loader import _Placement
-from xknxproject.models import ChannelDefinition
 
 _NS = "http://knx.org/xml/project/20"
 _APP = "M-0083_A-013A-32-DCC1"
@@ -170,9 +169,60 @@ APPLICATION_XML = f"""<?xml version="1.0" encoding="utf-8"?>
 
 
 def _load(language_code: str | None) -> LoadedApplicationProgram:
+    """Load APPLICATION_XML in the given language."""
+    return _load_xml(APPLICATION_XML, language_code)
+
+
+def _load_xml(
+    application_xml: str, language_code: str | None = None
+) -> LoadedApplicationProgram:
+    """Load an application program XML given as string."""
     return ApplicationProgramDefinitionLoader.load(
-        io.BytesIO(APPLICATION_XML.encode("utf-8")), language_code=language_code
+        io.BytesIO(application_xml.encode("utf-8")), language_code=language_code
     )
+
+
+def _program_xml(module_defs: str, dynamic: str, static: str = "") -> str:
+    """Return a minimal application program XML with the given sections."""
+    return f"""<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns="{_NS}">
+<ManufacturerData><Manufacturer RefId="M-0083">
+<ApplicationPrograms>
+<ApplicationProgram Id="{_APP}" Name="Test">
+<Static>{static}</Static>
+<ModuleDefs>{module_defs}</ModuleDefs>
+<Dynamic>{dynamic}</Dynamic>
+</ApplicationProgram>
+</ApplicationPrograms>
+</Manufacturer></ManufacturerData>
+</KNX>
+"""
+
+
+def _module_def(number: int, dynamic: str = "") -> str:
+    """
+    Return the ModuleDef "MD-<number>" with one object referenced in its Dynamic.
+
+    The object definition is "MD-<number>_O-<number>-1_R-1"; `dynamic` is
+    appended to the Dynamic section of the module.
+    """
+    module_id = f"{_APP}_MD-{number}"
+    com_object_id = f"{module_id}_O-{number}-1"
+    return f"""
+<ModuleDef Id="{module_id}" Name="Module {number}">
+  <Static>
+    <ComObjectTable>
+      <ComObject Id="{com_object_id}" Name="Object" Text="Object" Number="1"
+        ObjectSize="1 Bit" />
+    </ComObjectTable>
+    <ComObjectRefs>
+      <ComObjectRef Id="{com_object_id}_R-1" RefId="{com_object_id}" />
+    </ComObjectRefs>
+  </Static>
+  <Dynamic>
+    <ComObjectRefRef RefId="{com_object_id}_R-1" />{dynamic}
+  </Dynamic>
+</ModuleDef>"""
 
 
 def test_identity_attributes() -> None:
@@ -299,37 +349,25 @@ def test_translation_missing_language_keeps_defaults() -> None:
 
 def test_cyclic_module_instantiation_terminates() -> None:
     """Modules instantiating each other do not recurse forever."""
-    channels = {
-        "CH-1": ChannelDefinition(
-            identifier="CH-1",
-            name="",
-            text=None,
-            number="1",
-            functional_blocks=None,
-            module_definition_id=None,
-            object_ids=[],
-        )
-    }
+    channel_refs: dict[str, dict[str, None]] = {"CH-1": {}}
     independent = ApplicationProgramDefinitionLoader._place_module_refs(
-        channels=channels,
+        channel_refs=channel_refs,
         module_ids=["MD-1", "MD-2", "MD-3", "MD-4"],
         module_refs={
-            "MD-1": ["MD-1_O-1_R-1"],
-            "MD-2": ["MD-2_O-2_R-1"],
-            "MD-3": ["MD-3_O-3_R-1"],
-            "MD-4": ["MD-4_O-4_R-1"],
+            "MD-1": {"MD-1_O-1_R-1": None},
+            "MD-2": {"MD-2_O-2_R-1": None},
+            "MD-3": {"MD-3_O-3_R-1": None},
+            "MD-4": {"MD-4_O-4_R-1": None},
         },
-        module_placements={
+        module_placements=[
             # MD-1 in CH-1, MD-2 in MD-1 and MD-1 in MD-2
-            "MD-1": [
-                _Placement(channel_id="CH-1", module_id=None),
-                _Placement(channel_id=None, module_id="MD-2"),
-            ],
-            "MD-2": [_Placement(channel_id=None, module_id="MD-1")],
+            ("MD-1", _Placement(channel_id="CH-1", module_id=None)),
+            ("MD-2", _Placement(channel_id=None, module_id="MD-1")),
+            ("MD-1", _Placement(channel_id=None, module_id="MD-2")),
             # MD-3 and MD-4 only instantiate each other
-            "MD-3": [_Placement(channel_id=None, module_id="MD-4")],
-            "MD-4": [_Placement(channel_id=None, module_id="MD-3")],
-        },
+            ("MD-3", _Placement(channel_id=None, module_id="MD-4")),
+            ("MD-4", _Placement(channel_id=None, module_id="MD-3")),
+        ],
         independent_candidates=[
             ("MD-1", "MD-1_O-1_R-1"),
             ("MD-2", "MD-2_O-2_R-1"),
@@ -337,6 +375,30 @@ def test_cyclic_module_instantiation_terminates() -> None:
             ("MD-4", "MD-4_O-4_R-1"),
         ],
     )
-    assert channels["CH-1"]["object_ids"] == ["MD-1_O-1_R-1", "MD-2_O-2_R-1"]
+    assert list(channel_refs["CH-1"]) == ["MD-1_O-1_R-1", "MD-2_O-2_R-1"]
     # modules only reachable through a cycle are treated as not instantiated
     assert independent == ["MD-3_O-3_R-1", "MD-4_O-4_R-1"]
+
+
+def test_module_refs_follow_document_order_of_the_channel() -> None:
+    """Modules of a channel add their refs in the order of the channel's Module elements."""
+    loaded = _load_xml(
+        _program_xml(
+            module_defs=_module_def(1) + _module_def(2),
+            dynamic=f"""
+            <Channel Id="{_APP}_CH-0" Name="First" Number="0">
+              <Module Id="{_APP}_MD-1_M-1" RefId="{_APP}_MD-1" />
+            </Channel>
+            <Channel Id="{_APP}_CH-1" Name="Second" Number="1">
+              <Module Id="{_APP}_MD-2_M-1" RefId="{_APP}_MD-2" />
+              <Module Id="{_APP}_MD-1_M-2" RefId="{_APP}_MD-1" />
+            </Channel>
+            """,
+        )
+    )
+    assert loaded.channels["CH-0"]["object_ids"] == ["MD-1_O-1-1_R-1"]
+    assert loaded.channels["CH-1"]["object_ids"] == [
+        "MD-2_O-2-1_R-1",
+        "MD-1_O-1-1_R-1",
+    ]
+    assert loaded.objects["MD-1_O-1-1_R-1"]["channel_ids"] == ["CH-0", "CH-1"]

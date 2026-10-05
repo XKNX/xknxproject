@@ -91,12 +91,6 @@ class _Placement:
     module_id: str | None
 
 
-def _append_unique(items: list[str], item: str) -> None:
-    """Append an item unless it is already present, keeping first-seen order."""
-    if item not in items:
-        items.append(item)
-
-
 def _int_or_none(value: str | None) -> int | None:
     """Parse an optional integer attribute."""
     try:
@@ -142,9 +136,11 @@ class ApplicationProgramDefinitionLoader:
         # place where the module is instantiated - resolved after the main pass.
         # Candidates are kept in document order: (module id or None, ref id).
         independent_candidates: list[tuple[str | None, str]] = []
-        module_refs: dict[str, list[str]] = {}
-        # module def id -> places of its <Module> instantiations
-        module_placements: dict[str, list[_Placement]] = {}
+        # ordered sets (dict keys): de-duplicate in linear time, keep document order
+        channel_refs: dict[str, dict[str, None]] = {}
+        module_refs: dict[str, dict[str, None]] = {}
+        # (module def id, parent) of every <Module> instantiation in document order
+        module_placements: list[tuple[str, _Placement]] = []
         elem: ElementTree.Element
 
         tree_iterator = ElementTree.iterparse(application_xml, events=("start", "end"))
@@ -242,27 +238,31 @@ class ApplicationProgramDefinitionLoader:
                         module_definition_id=open_module,
                         object_ids=[],
                     )
+                    channel_refs[open_channel] = {}
                     if open_module is not None:
                         modules[open_module]["channel_ids"].append(open_channel)
                 elif elem.tag == ns_com_object_ref_ref:
                     ref = _rel(elem.attrib["RefId"])
                     if open_channel is not None:
-                        _append_unique(channels[open_channel]["object_ids"], ref)
+                        channel_refs[open_channel][ref] = None
                     elif module_stack:
-                        refs = module_refs.setdefault(module_stack[-1], [])
+                        refs = module_refs.setdefault(module_stack[-1], {})
                         if ref not in refs:
-                            refs.append(ref)
+                            refs[ref] = None
                             independent_candidates.append((module_stack[-1], ref))
                     else:
                         independent_candidates.append((None, ref))
                 elif elem.tag == ns_module:
-                    module_placements.setdefault(_rel(elem.attrib["RefId"]), []).append(
-                        _Placement(
-                            channel_id=open_channel,
-                            module_id=(
-                                module_stack[-1]
-                                if open_channel is None and module_stack
-                                else None
+                    module_placements.append(
+                        (
+                            _rel(elem.attrib["RefId"]),
+                            _Placement(
+                                channel_id=open_channel,
+                                module_id=(
+                                    module_stack[-1]
+                                    if open_channel is None and module_stack
+                                    else None
+                                ),
                             ),
                         )
                     )
@@ -281,7 +281,7 @@ class ApplicationProgramDefinitionLoader:
             raise ValueError("ApplicationProgram root element not found")
 
         channel_independent = ApplicationProgramDefinitionLoader._place_module_refs(
-            channels=channels,
+            channel_refs=channel_refs,
             module_ids=list(modules),
             module_refs=module_refs,
             module_placements=module_placements,
@@ -300,8 +300,10 @@ class ApplicationProgramDefinitionLoader:
             )
 
         objects = ApplicationProgramDefinitionLoader._merge_objects(
-            com_objects, com_object_refs, channels
+            com_objects, com_object_refs, channel_refs
         )
+        for channel_id, refs in channel_refs.items():
+            channels[channel_id]["object_ids"] = list(refs)
         return LoadedApplicationProgram(
             identity=identity,
             channels=channels,
@@ -312,10 +314,10 @@ class ApplicationProgramDefinitionLoader:
 
     @staticmethod
     def _place_module_refs(
-        channels: dict[str, ChannelDefinition],
+        channel_refs: dict[str, dict[str, None]],
         module_ids: list[str],
-        module_refs: dict[str, list[str]],
-        module_placements: dict[str, list[_Placement]],
+        module_refs: dict[str, dict[str, None]],
+        module_placements: list[tuple[str, _Placement]],
         independent_candidates: list[tuple[str | None, str]],
     ) -> list[str]:
         """
@@ -327,23 +329,21 @@ class ApplicationProgramDefinitionLoader:
         independent refs: refs outside any module and refs of modules instantiated
         outside any channel or never instantiated.
         """
-        channel_modules: dict[str, list[str]] = {}
-        child_modules: dict[str, list[str]] = {}
-        root_modules: list[str] = [
-            module_id for module_id in module_ids if module_id not in module_placements
-        ]
-        for module_id, placements in module_placements.items():
-            for placement in placements:
-                if placement.channel_id is not None:
-                    _append_unique(
-                        channel_modules.setdefault(placement.channel_id, []), module_id
-                    )
-                elif placement.module_id is not None:
-                    _append_unique(
-                        child_modules.setdefault(placement.module_id, []), module_id
-                    )
-                else:
-                    _append_unique(root_modules, module_id)
+        channel_modules: dict[str, dict[str, None]] = {}
+        child_modules: dict[str, dict[str, None]] = {}
+        placed_modules: set[str] = set()
+        root_modules: list[str] = []
+        for module_id, placement in module_placements:
+            placed_modules.add(module_id)
+            if placement.channel_id is not None:
+                channel_modules.setdefault(placement.channel_id, {})[module_id] = None
+            elif placement.module_id is not None:
+                child_modules.setdefault(placement.module_id, {})[module_id] = None
+            else:
+                root_modules.append(module_id)
+        root_modules.extend(
+            module_id for module_id in module_ids if module_id not in placed_modules
+        )
 
         def _reach(module_id: str, reached: set[str]) -> list[str]:
             """Return a module and its sub-modules not reached yet, in tree order."""
@@ -351,7 +351,7 @@ class ApplicationProgramDefinitionLoader:
                 return []
             reached.add(module_id)
             result = [module_id]
-            for child_id in child_modules.get(module_id, []):
+            for child_id in child_modules.get(module_id, {}):
                 result.extend(_reach(child_id, reached))
             return result
 
@@ -360,15 +360,16 @@ class ApplicationProgramDefinitionLoader:
             reached: set[str] = set()
             for placed_module_id in placed_module_ids:
                 for module_id in _reach(placed_module_id, reached):
-                    for ref in module_refs.get(module_id, []):
-                        _append_unique(channels[channel_id]["object_ids"], ref)
+                    channel_refs[channel_id].update(
+                        dict.fromkeys(module_refs.get(module_id, {}))
+                    )
             in_channel |= reached
 
         independent_modules: set[str] = set()
         for module_id in root_modules:
             _reach(module_id, independent_modules)
 
-        channel_independent: list[str] = []
+        channel_independent: dict[str, None] = {}
         for candidate_module_id, ref in independent_candidates:
             if (
                 candidate_module_id is None
@@ -376,8 +377,8 @@ class ApplicationProgramDefinitionLoader:
                 # only reachable through cyclic instantiation - treat as not placed
                 or candidate_module_id not in in_channel
             ):
-                _append_unique(channel_independent, ref)
-        return channel_independent
+                channel_independent[ref] = None
+        return list(channel_independent)
 
     @staticmethod
     def _parse_kim_version(semantics: str | None) -> str | None:
@@ -439,12 +440,12 @@ class ApplicationProgramDefinitionLoader:
     def _merge_objects(
         com_objects: dict[str, _ComObject],
         com_object_refs: dict[str, _ComObjectRef],
-        channels: dict[str, ChannelDefinition],
+        channel_refs: dict[str, dict[str, None]],
     ) -> dict[str, ObjectDefinition]:
         """Merge every ComObjectRef with its ComObject into an ObjectDefinition."""
         channel_ids_by_object: dict[str, list[str]] = {}
-        for channel_id, channel in channels.items():
-            for object_id in channel["object_ids"]:
+        for channel_id, refs in channel_refs.items():
+            for object_id in refs:
                 channel_ids_by_object.setdefault(object_id, []).append(channel_id)
 
         objects: dict[str, ObjectDefinition] = {}
