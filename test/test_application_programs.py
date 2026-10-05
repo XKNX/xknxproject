@@ -5,7 +5,7 @@ from __future__ import annotations
 import copy
 import json
 from types import SimpleNamespace
-from typing import Any, cast
+from typing import Any, Literal, cast
 
 import pytest
 
@@ -145,7 +145,7 @@ def _resolve(
     program: ApplicationProgramDefinition,
     instance_id: str,
     application_id: str,
-    search_id: str,
+    search_id: Literal["CH", "O"],
 ) -> str:
     """Resolve an instance id of `parse()` to a key of the program definition."""
     definition_id = instance_definition_id(instance_id, application_id, search_id)

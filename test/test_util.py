@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
 import pytest
 
@@ -237,12 +237,17 @@ def test_canonical_application_id(
             "MD-4_SM-1_O-3-1_R-2",
         ),
         ("M-0083_A-013A-32-DCC1_O-1_R-1", "O", "O-1_R-1"),
+        (
+            "1.1.1/M-0083_A-013A-32-DCC1_MD-1_M-1_MI-1_O-3-1_R-1",
+            "O",
+            "MD-1_O-3-1_R-1",
+        ),
         ("MD-2_M-1_MI-1_CH-1", "CH", "MD-2_CH-1"),
         ("CH-9", "CH", "CH-9"),
     ],
 )
 def test_instance_definition_id(
-    instance_id: str, search_id: str, expected: str
+    instance_id: str, search_id: Literal["CH", "O"], expected: str
 ) -> None:
     """Test instance ids of a project resolve to definition ids of the program."""
     assert (

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import TYPE_CHECKING, overload
+from typing import TYPE_CHECKING, Literal, overload
 
 from xknxproject.const import MAIN_AND_SUB_DPT, MAIN_DPT
 from xknxproject.exceptions import UnexpectedDataError
@@ -261,7 +261,7 @@ def canonical_application_id(
 
 
 def instance_definition_id(
-    instance_id: str, application_id: str, search_id: str
+    instance_id: str, application_id: str, search_id: Literal["CH", "O"]
 ) -> str:
     """
     Return the definition id of a channel or object instance of a project.
@@ -282,8 +282,9 @@ def instance_definition_id(
 
     """
     instance_part = instance_id.split("/", maxsplit=1)[-1]
-    stripped = strip_module_instance(instance_part, search_id=search_id)
-    return stripped.removeprefix(f"{application_id}_")
+    # the module part of `strip_module_instance` is only recognized at the start
+    instance_part = instance_part.removeprefix(f"{application_id}_")
+    return strip_module_instance(instance_part, search_id=search_id)
 
 
 def _object_module(object_definition: ObjectDefinition) -> str | None:
