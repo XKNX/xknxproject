@@ -345,13 +345,15 @@ def object_channel_id(
 
 def linked_object_definitions(project: KNXProject) -> dict[str, set[str]]:
     """
-    Return the object definitions that devices link to group addresses.
+    Return the definition ids of objects that devices link to group addresses.
 
     project: output of `XKNXProj.parse()`
 
-    Return application program id -> ids of linked object definitions (keys of
-    `definition["objects"]`). Devices without application program are skipped;
-    programs without linked objects are left out.
+    Return application program id -> ids derived from linked project objects.
+    This does not check that the program or object exists in the definition
+    result: unreadable programs and unresolved catalog references can be omitted
+    there. Devices without application program are skipped; programs without
+    linked objects are left out.
     """
     objects = project["communication_objects"]
     linked: dict[str, set[str]] = {}

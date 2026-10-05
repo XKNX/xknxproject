@@ -61,7 +61,9 @@ pass over the project file, separate from `parse()`; texts follow the
 The result has an `info` block (`language_code`, `xknxproject_version`) and the
 definitions in `application_programs`, keyed by application program id - the
 same id as `device["application"]` of `parse()`. An application program that
-can not be read is skipped with a warning.
+can not be read is skipped with a warning, including malformed XML and ZIP
+member checksum or decompression errors. Errors in the project data or the
+archive itself still abort the call.
 
 Identifiers are relative to the application program id with module instance
 parts removed (`MD-2_CH-1`, `MD-2_O-2-35_R-65`). `instance_definition_id()`
@@ -98,8 +100,10 @@ definitions:
 * `canonical_application_id()` returns the same id for rebranded (OEM) copies of
   one application program; `application_id_original_manufacturer()` reads the
   original manufacturer from the `-Oxxxx` suffix of an application id.
-* `linked_object_definitions()` returns the object definitions the devices of a
-  project link to group addresses, by application program id.
+* `linked_object_definitions()` returns the definition ids the devices of a
+  project link to group addresses, by application program id. It derives ids
+  from the project without checking the definitions. Programs or objects may
+  be absent from the definition result, so check both lookups:
 
 ```python
 from xknxproject.util import (
@@ -111,12 +115,17 @@ from xknxproject.util import (
 project = knxproj.parse()
 programs = knxproj.parse_application_programs()["application_programs"]
 for application_id, object_ids in linked_object_definitions(project).items():
-    definition = programs[application_id]
+    definition = programs.get(application_id)
+    if definition is None:
+        continue
     canonical_id = canonical_application_id(
         application_id, definition["identity"]["original_manufacturer_id"]
     )
     for object_id in sorted(object_ids):
-        channel_id = object_channel_id(definition, definition["objects"][object_id])
+        object_definition = definition["objects"].get(object_id)
+        if object_definition is None:
+            continue
+        channel_id = object_channel_id(definition, object_definition)
         print(canonical_id, object_id, channel_id)
 ```
 

@@ -203,8 +203,9 @@ class ApplicationProgramDefinitionLoader:
         Walk the XML once with start and end events and build the definition.
 
         Start events read attributes; end events close the Channel and ModuleDef
-        ancestry and clear elements to bound memory. The walk stops at
-        <Languages>; `_apply_translations` continues the same iterator.
+        ancestry and clear elements to bound memory. At <Languages>, translation
+        processing continues the same iterator. Its remaining events are then
+        consumed to validate the XML and ZIP member through EOF.
         """
         com_objects: dict[str, _ComObject] = {}
         com_object_refs: dict[str, _ComObjectRef] = {}
@@ -394,6 +395,12 @@ class ApplicationProgramDefinitionLoader:
                 com_object_refs=com_object_refs,
                 channels=channels,
             )
+
+        # Reading through EOF detects a malformed tail and ZIP member CRC errors,
+        # also when no translation was requested or its Language ended early.
+        for event, elem in tree_iterator:
+            if event == "end":
+                elem.clear()
 
         objects = ApplicationProgramDefinitionLoader._merge_objects(
             com_objects, com_object_refs, channel_refs

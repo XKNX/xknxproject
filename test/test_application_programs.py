@@ -5,6 +5,9 @@ from __future__ import annotations
 import copy
 import json
 import logging
+from pathlib import Path
+import re
+import struct
 from types import SimpleNamespace
 from typing import IO, Any, Literal, cast
 from xml.etree import ElementTree
@@ -13,7 +16,7 @@ import zipfile
 import pytest
 
 from xknxproject import XKNXProj
-from xknxproject.exceptions import UnexpectedDataError
+from xknxproject.exceptions import InvalidProjectArchive, UnexpectedDataError
 from xknxproject.loader import (
     ApplicationProgramDefinitionLoader,
     ApplicationProgramLoader,
@@ -43,6 +46,7 @@ from .application_program_stubs import (
     application_program_stub,
     program_digest,
 )
+from .conftest import break_crc, copy_project_with_member
 
 # imported by the refresh_stubs helper script - therefore a constant
 APPLICATION_PROGRAM_FIXTURES = [
@@ -53,6 +57,130 @@ APPLICATION_PROGRAM_FIXTURES = [
 ]
 
 APPLICATION_PROGRAM_STUBS_PATH = STUBS_PATH / "application_programs"
+
+
+@pytest.mark.parametrize("missing", ["program", "object"])
+def test_readme_example_handles_missing_definitions(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], missing: str
+) -> None:
+    """The documented join skips missing definitions and still prints healthy objects."""
+    source = RESOURCES_PATH / "xknx_test_project.knxproj"
+    application_id = "M-0002_A-A066-14-550B"
+    member = f"M-0002/{application_id}.xml"
+    with zipfile.ZipFile(source) as archive:
+        tree = ElementTree.fromstring(archive.read(member))
+    if missing == "program":
+        application = tree.find(".//{*}ApplicationProgram")
+        assert application is not None
+        del application.attrib["Id"]
+    else:
+        refs = tree.find(".//{*}ComObjectRefs")
+        assert refs is not None
+        ref = refs.find(f'{{*}}ComObjectRef[@Id="{application_id}_O-40_R-1433"]')
+        assert ref is not None
+        refs.remove(ref)
+    modified = copy_project_with_member(
+        source, tmp_path / "missing.knxproj", member, ElementTree.tostring(tree)
+    )
+    readme = (RESOURCES_PATH.parent.parent / "README.md").read_text(encoding="utf-8")
+    example = next(
+        block
+        for block in re.findall(r"```python\n(.*?)```", readme, re.DOTALL)
+        if "linked_object_definitions" in block
+    )
+    exec(example, {"knxproj": XKNXProj(modified, "test")})
+    output = capsys.readouterr().out
+    assert "M-000A_A-20E0-21-9997" in output
+    assert f"{application_id} O-40_R-1433" not in output
+    if missing == "program":
+        assert application_id not in output
+
+
+@pytest.mark.parametrize("language", [None, "de-DE"])
+@pytest.mark.parametrize("damage", ["crc", "deflate"])
+def test_damaged_catalog_member_is_skipped(
+    tmp_path: Path,
+    caplog: pytest.LogCaptureFixture,
+    language: str | None,
+    damage: str,
+) -> None:
+    """An actual ZIP member read failure leaves the five other programs available."""
+    source = RESOURCES_PATH / "smart_linking.knxproj"
+    application_id = "M-0083_A-00ED-10-33FD"
+    member = f"M-0083/{application_id}.xml"
+    if damage == "crc":
+        modified = break_crc(source, member, tmp_path / "damaged.knxproj")
+    else:
+        with zipfile.ZipFile(source) as archive:
+            content = archive.read(member)
+        modified = copy_project_with_member(
+            source,
+            tmp_path / "damaged.knxproj",
+            member,
+            content,
+            compression=zipfile.ZIP_DEFLATED,
+        )
+        with zipfile.ZipFile(modified) as archive:
+            info = archive.getinfo(member)
+        with modified.open("r+b") as stream:
+            stream.seek(info.header_offset)
+            header = stream.read(30)
+            name_len, extra_len = struct.unpack_from("<HH", header, 26)
+            stream.seek(info.header_offset + 30 + name_len + extra_len)
+            stream.write(b"\x07")  # BFINAL=1 and reserved DEFLATE BTYPE=3
+    programs = XKNXProj(modified, "test", language).parse_application_programs()[
+        "application_programs"
+    ]
+    assert set(programs) == {
+        "M-00C5_A-0717-11-0D5A",
+        "M-00E1_A-2036-40-865C",
+        "M-0064_A-5810-12-2E9D",
+        "M-0083_A-00F3-10-1728",
+        "M-007C_A-001C-14-E802",
+    }
+    warnings = [
+        record for record in caplog.records if record.levelno >= logging.WARNING
+    ]
+    assert len(warnings) == 1
+    assert warnings[0].levelno == logging.WARNING
+    assert f"Skipping application program {member}:" in warnings[0].getMessage()
+    assert ("BadZipFile" if damage == "crc" else "error(") in warnings[0].getMessage()
+
+
+@pytest.mark.parametrize("language", [None, "de-DE"])
+def test_truncated_catalog_member_is_skipped(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture, language: str | None
+) -> None:
+    """A truncated translation tail drops only the affected program."""
+    source = RESOURCES_PATH / "module-definition-test.knxproj"
+    member = "M-0083/M-0083_A-013A-32-DCC1.xml"
+    with zipfile.ZipFile(source) as archive:
+        content = archive.read(member)
+    cut = content.index(b"</Language>") + len(b"</Language>")
+    modified = copy_project_with_member(
+        source, tmp_path / "truncated.knxproj", member, content[:cut]
+    )
+    programs = XKNXProj(modified, language=language).parse_application_programs()[
+        "application_programs"
+    ]
+    assert set(programs) == {"M-0071_A-5531-37-FDF4", "M-0083_A-0153-10-297A-O00EF"}
+    assert any(
+        record.levelno == logging.WARNING
+        and f"Skipping application program {member}:" in record.getMessage()
+        and "ParseError" in record.getMessage()
+        for record in caplog.records
+    )
+
+
+def test_damaged_project_data_is_not_skipped(tmp_path: Path) -> None:
+    """The tolerant catalog loader does not hide corruption of the project itself."""
+    modified = break_crc(
+        RESOURCES_PATH / "xknx_test_project_no_password.knxproj",
+        "P-01D2/0.xml",
+        tmp_path / "damaged-project.knxproj",
+    )
+    with pytest.raises(InvalidProjectArchive):
+        XKNXProj(modified).parse_application_programs()
 
 
 def _load_stub(file_stem: str) -> dict[str, Any]:

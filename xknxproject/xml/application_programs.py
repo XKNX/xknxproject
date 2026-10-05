@@ -11,6 +11,8 @@ from __future__ import annotations
 
 import logging
 from xml.etree import ElementTree
+from zipfile import BadZipFile
+import zlib
 
 from xknxproject.__version__ import __version__
 from xknxproject.exceptions import XknxProjectException
@@ -128,6 +130,8 @@ class ApplicationProgramParser:
                 OSError,
                 KeyError,
                 ValueError,
+                BadZipFile,
+                zlib.error,
             ) as err:
                 _LOGGER.warning("Skipping application program %s: %r", xml_file, err)
                 continue

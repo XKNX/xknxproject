@@ -11,6 +11,7 @@ from xknxproject.zip import extract
 from xknxproject.zip.extractor import _generate_ets6_zip_password
 
 from .. import RESOURCES_PATH
+from ..conftest import break_crc
 
 xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
 xknx_test_project_ets5 = RESOURCES_PATH / "xknx_test_project_no_password.knxproj"
@@ -130,23 +131,6 @@ def test_damaged_protected_project_file(tmp_path: Path) -> None:
                 proj_0.read()
 
 
-def _break_crc(source: Path, entry_name: str, target: Path) -> Path:
-    """Write a copy of `source` with one entry's stored CRC-32 replaced."""
-    raw = bytearray(source.read_bytes())
-    name = entry_name.encode()
-    position = 0
-    while (position := raw.find(b"PK\x01\x02", position)) != -1:
-        name_len = struct.unpack("<H", raw[position + 28 : position + 30])[0]
-        if raw[position + 46 : position + 46 + name_len] == name:
-            raw[position + 16 : position + 20] = b"\x00\x00\x00\x00"
-            break
-        position += 4
-    else:  # pragma: no cover - guards against a silently useless test
-        raise AssertionError(f"{entry_name} not found in central directory")
-    target.write_bytes(raw)
-    return target
-
-
 def test_no_zip_file(tmp_path: Path) -> None:
     """Test reading a file that is not a ZIP archive."""
     not_a_project = tmp_path / "not_a_project.knxproj"
@@ -158,7 +142,7 @@ def test_no_zip_file(tmp_path: Path) -> None:
 
 def test_project_file_failing_checksum(tmp_path: Path) -> None:
     """Test reading a project whose contents don't match their checksum."""
-    damaged = _break_crc(
+    damaged = break_crc(
         xknx_test_project_ets5, "P-01D2/0.xml", tmp_path / "damaged.knxproj"
     )
     with raises(InvalidProjectArchive):

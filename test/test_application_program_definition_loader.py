@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import logging
+from xml.etree import ElementTree
 
 import pytest
 
@@ -292,6 +293,30 @@ def test_missing_application_program_raises() -> None:
     """An XML without ApplicationProgram element is unexpected data."""
     with pytest.raises(UnexpectedDataError):
         _load_xml(f'<KNX xmlns="{_NS}"><ManufacturerData /></KNX>')
+
+
+@pytest.mark.parametrize("language_code", [None, "de-DE", "fr-FR"])
+@pytest.mark.parametrize("cut_after", ["<Languages>", "</Language>"])
+def test_truncated_xml_after_definitions_raises(
+    language_code: str | None, cut_after: str
+) -> None:
+    """A complete definition or selected translation does not hide a truncated XML tail."""
+    cut = APPLICATION_XML.index(cut_after) + len(cut_after)
+    with pytest.raises(ElementTree.ParseError):
+        _load_xml(APPLICATION_XML[:cut], language_code)
+
+
+@pytest.mark.parametrize("language_code", [None, "de-DE", "fr-FR"])
+def test_malformed_xml_after_selected_language_raises(
+    language_code: str | None,
+) -> None:
+    """Syntax errors after a selected language must invalidate the program too."""
+    application_xml = APPLICATION_XML.replace(
+        "</Languages>",
+        f'<!--{"x" * 20_000}--><Language Identifier="en-US"><broken></Language></Languages>',
+    )
+    with pytest.raises(ElementTree.ParseError):
+        _load_xml(application_xml, language_code)
 
 
 def test_channel_object_ids_deduplicated() -> None:

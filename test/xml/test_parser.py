@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import copy
 import logging
 from pathlib import Path
 from unittest.mock import Mock
+from xml.etree import ElementTree
+import zipfile
 
 import pytest
 
+from xknxproject import XKNXProj
 from xknxproject.loader import (
     HardwareLoader,
     KNXMasterLoader,
@@ -18,7 +22,7 @@ from xknxproject.xml.parser import XMLParser, _recursive_convert_spaces
 from xknxproject.zip import KNXProjContents, extract
 
 from .. import RESOURCES_PATH
-from ..conftest import build_devices
+from ..conftest import build_devices, copy_project_with_member
 
 xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
 xknx_test_project_module_defs = RESOURCES_PATH / "module-definition-test.knxproj"
@@ -142,6 +146,77 @@ def test_parse_project_with_module_defs() -> None:
     assert len(parser.areas[1].lines[1].devices) == 4
 
     assert len(parser.devices) == 4
+
+
+@pytest.mark.parametrize(
+    ("filename", "container_tag", "space_tag"),
+    [
+        ("test_project-ets4-no_password.knxproj", "Buildings", "BuildingPart"),
+        ("xknx_test_project_no_password.knxproj", "Locations", "Space"),
+    ],
+)
+def test_space_id_survives_address_and_sibling_name_conflicts(
+    tmp_path: Path, filename: str, container_tag: str, space_tag: str
+) -> None:
+    """The surviving device keeps its first nested space through name collisions and export."""
+    source = RESOURCES_PATH / filename
+    with zipfile.ZipFile(source) as archive:
+        member = next(name for name in archive.namelist() if name.endswith("/0.xml"))
+        tree = ElementTree.fromstring(archive.read(member))
+    installation = tree.find(".//{*}Installation")
+    assert installation is not None
+    topology = installation.find("{*}Topology")
+    assert topology is not None
+    original = topology.find(".//{*}DeviceInstance[@Address]")
+    assert original is not None
+    parent = next(node for node in topology.iter() if original in node)
+    survivor = copy.deepcopy(original)
+    survivor.set("Id", "P-REVIEW_DI-900")
+    survivor.set("Name", "Survivor")
+    parent.append(survivor)
+    old_locations = installation.find(f"{{*}}{container_tag}")
+    if old_locations is not None:
+        installation.remove(old_locations)
+    namespace = tree.tag.split("}", maxsplit=1)[0].removeprefix("{")
+    installation.append(
+        ElementTree.fromstring(
+            f"""
+            <{container_tag} xmlns="{namespace}">
+              <{space_tag} Id="P-REVIEW_BP-1" Name="Haus" Type="Building">
+                <{space_tag} Id="P-REVIEW_BP-2" Name="Flur" Type="Room">
+                  <DeviceInstanceRef RefId="{original.attrib["Id"]}" />
+                  <{space_tag} Id="P-REVIEW_BP-4" Name="Nische" Type="Room">
+                    <DeviceInstanceRef RefId="P-REVIEW_DI-900" />
+                  </{space_tag}>
+                </{space_tag}>
+                <{space_tag} Id="P-REVIEW_BP-3" Name="Flur" Type="Room">
+                  <DeviceInstanceRef RefId="P-REVIEW_DI-900" />
+                </{space_tag}>
+                <{space_tag} Id="P-REVIEW_BP-5" Name="Flur (P-REVIEW_BP-3)" Type="Room" />
+                <DeviceInstanceRef RefId="P-REVIEW_DI-900" />
+              </{space_tag}>
+            </{container_tag}>
+            """
+        )
+    )
+    modified = copy_project_with_member(
+        source, tmp_path / "space-conflicts.knxproj", member, ElementTree.tostring(tree)
+    )
+    project = XKNXProj(modified, language="de-DE").parse()
+    device = next(
+        device for device in project["devices"].values() if device["name"] == "Survivor"
+    )
+    assert device["space_id"] == "P-REVIEW_BP-4"
+    rooms = project["locations"]["Haus"]["spaces"]
+    assert len(rooms) == 3
+    assert rooms["Flur"]["identifier"] == "P-REVIEW_BP-2"
+    assert rooms["Flur (P-REVIEW_BP-3)"]["identifier"] == "P-REVIEW_BP-3"
+    assert (
+        rooms["Flur (P-REVIEW_BP-3) (P-REVIEW_BP-5)"]["identifier"] == "P-REVIEW_BP-5"
+    )
+    nested = rooms["Flur"]["spaces"]["Nische"]
+    assert nested["identifier"] == device["space_id"]
+    assert device["individual_address"] in nested["devices"]
 
 
 def _space(
