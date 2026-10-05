@@ -128,7 +128,7 @@ class ApplicationProgramParser:
                 XknxProjectException,
                 ElementTree.ParseError,
                 OSError,
-                KeyError,
+                LookupError,
                 ValueError,
                 BadZipFile,
                 zlib.error,

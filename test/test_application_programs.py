@@ -97,19 +97,27 @@ def test_readme_example_handles_missing_definitions(
 
 
 @pytest.mark.parametrize("language", [None, "de-DE"])
-@pytest.mark.parametrize("damage", ["crc", "deflate"])
+@pytest.mark.parametrize("damage", ["crc", "deflate", "encoding"])
 def test_damaged_catalog_member_is_skipped(
     tmp_path: Path,
     caplog: pytest.LogCaptureFixture,
     language: str | None,
     damage: str,
 ) -> None:
-    """An actual ZIP member read failure leaves the five other programs available."""
+    """An unreadable catalog member leaves the five other programs available."""
     source = RESOURCES_PATH / "smart_linking.knxproj"
     application_id = "M-0083_A-00ED-10-33FD"
     member = f"M-0083/{application_id}.xml"
     if damage == "crc":
         modified = break_crc(source, member, tmp_path / "damaged.knxproj")
+    elif damage == "encoding":
+        with zipfile.ZipFile(source) as archive:
+            content = archive.read(member)
+        changed = content.replace(b'encoding="utf-8"', b'encoding="not-an-encoding"', 1)
+        assert changed != content
+        modified = copy_project_with_member(
+            source, tmp_path / "damaged.knxproj", member, changed
+        )
     else:
         with zipfile.ZipFile(source) as archive:
             content = archive.read(member)
@@ -144,7 +152,12 @@ def test_damaged_catalog_member_is_skipped(
     assert len(warnings) == 1
     assert warnings[0].levelno == logging.WARNING
     assert f"Skipping application program {member}:" in warnings[0].getMessage()
-    assert ("BadZipFile" if damage == "crc" else "error(") in warnings[0].getMessage()
+    expected_error = {
+        "crc": "BadZipFile",
+        "deflate": "error(",
+        "encoding": "LookupError",
+    }
+    assert expected_error[damage] in warnings[0].getMessage()
 
 
 @pytest.mark.parametrize("language", [None, "de-DE"])
