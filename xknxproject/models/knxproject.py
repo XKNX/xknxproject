@@ -40,6 +40,19 @@ class CommunicationObject(TypedDict):
     group_address_links: list[str]
     flags: Flags
     dpas: list[str] | None
+    # the parameter filling "{{0}}" of the text; objects of a device sharing it
+    # share that text. None when the ComObjectRef has no text parameter.
+    text_parameter: TextParameter | None
+
+
+class TextParameter(TypedDict):
+    """The text parameter of a communication object."""
+
+    # parameter instance id without the application program id, in the style of
+    # `CommunicationObject.channel`: "P-1_R-1", "MD-1_M-1_MI-3_P-27_R-27"
+    identifier: str
+    # value set in the project; None when the project keeps the default text
+    value: str | None
 
 
 class ModuleInstanceInfos(TypedDict):

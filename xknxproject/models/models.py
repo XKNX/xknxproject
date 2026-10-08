@@ -446,6 +446,9 @@ class ComObjectInstanceRef:
     number: int | None = None  # required in ComObject
     # assigned when module arguments are applied
     module: ModuleInstanceInfos | None = None
+    # the parameter instance filling "{{0}}" of the text: from the TextParameterRefId
+    # of the ComObjectRef, with a value of None when the project keeps the default
+    text_parameter: ParameterInstanceRef | None = None
 
     def resolve_com_object_ref_id(
         self, application_program_ref: str, knx_proj_contents: KNXProjContents
@@ -503,6 +506,14 @@ class ComObjectInstanceRef:
                 self.com_object_ref_id,
             )
             return
+        if (
+            parameter_ref_id := com_object_ref.text_parameter_instance_ref_id(
+                self.ref_id
+            )
+        ) is not None:
+            self.text_parameter = parameters.get(
+                parameter_ref_id
+            ) or ParameterInstanceRef(ref_id=parameter_ref_id, value=None)
         self._merge_from_parent_object(com_object_ref, parameters, module_arguments)
 
         com_object = application.com_objects.get(com_object_ref.ref_id)

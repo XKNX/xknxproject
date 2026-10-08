@@ -20,6 +20,7 @@ from xknxproject.models.knxproject import (
     GroupRange,
     ProjectInfo,
     Space,
+    TextParameter,
 )
 
 from . import RESOURCES_PATH, STUBS_PATH
@@ -83,6 +84,9 @@ def test_stub_keys_match_typed_dicts(file_stem: str) -> None:
             assert set(item) == set(model.__annotations__), (
                 f"`{section}` item does not match `{model.__name__}`"
             )
+    for com_object in stub["communication_objects"].values():
+        if (text_parameter := com_object["text_parameter"]) is not None:
+            assert set(text_parameter) == set(TextParameter.__annotations__)
 
 
 def _iter_items(section: dict, nested_key: str | None) -> Iterator[dict]:
@@ -199,3 +203,57 @@ def test_module_arguments_in_texts(tmp_path: Path) -> None:
     channels = project["devices"]["1.1.1"]["channels"]
     assert channels["MD-2_M-1_MI-1_CH-1"]["name"] == "Kanal A: Wohnzimmer"
     assert channels["MD-2_M-2_MI-1_CH-1"]["name"] == "Kanal B: Kanal B"
+    assert objects["1.1.1/MD-2_M-1_MI-1_O-2-1_R-1"]["text_parameter"] == {
+        "identifier": "MD-2_M-1_MI-1_P-1_R-1",
+        "value": "Wohnzimmer",
+    }
+    assert objects["1.1.1/MD-2_M-2_MI-1_O-2-1_R-1"]["text_parameter"] == {
+        "identifier": "MD-2_M-2_MI-1_P-1_R-1",
+        "value": None,
+    }
+    # named for an instance text of the project as well
+    assert objects["1.1.1/MD-2_M-1_MI-1_O-2-2_R-3"]["text_parameter"] == {
+        "identifier": "MD-2_M-1_MI-1_P-1_R-1",
+        "value": "Wohnzimmer",
+    }
+    assert objects["1.1.1/O-334_R-21"]["text_parameter"] is None
+
+
+def test_text_parameters_of_a_program_without_channels(tmp_path: Path) -> None:
+    """Objects sharing a text parameter carry the same parameter id."""
+    source = RESOURCES_PATH / "xknx_test_project.knxproj"
+    application_id = "M-0002_A-A066-14-550B"
+    program = f"M-0002/{application_id}.xml"
+    with zipfile.ZipFile(source) as archive:
+        application = archive.read(program)
+    for ref, parameter in (
+        ("O-40_R-1433", "P-901_R-901"),
+        ("O-41_R-1434", "P-901_R-901"),
+        ("O-70_R-1505", "P-902_R-902"),
+        ("O-71_R-1506", "P-902_R-902"),
+    ):
+        application = _replace_once(
+            application,
+            f'<ComObjectRef Id="{application_id}_{ref}"'.encode(),
+            f'<ComObjectRef Id="{application_id}_{ref}" '
+            f'TextParameterRefId="{application_id}_{parameter}"'.encode(),
+        )
+    modified = copy_project_with_member(
+        source, tmp_path / "channel_less.knxproj", program, application
+    )
+    project = XKNXProj(modified, "test").parse()
+    assert project["devices"]["1.1.5"]["channels"] == {}
+    parameters = {
+        object_id: com_object["text_parameter"]
+        for object_id, com_object in project["communication_objects"].items()
+        if com_object["device_address"] == "1.1.5"
+    }
+    assert parameters == {
+        "1.1.5/O-40_R-1433": {"identifier": "P-901_R-901", "value": None},
+        "1.1.5/O-41_R-1434": {"identifier": "P-901_R-901", "value": None},
+        "1.1.5/O-70_R-1505": {"identifier": "P-902_R-902", "value": None},
+        "1.1.5/O-71_R-1506": {"identifier": "P-902_R-902", "value": None},
+        "1.1.5/O-100_R-1577": None,
+        "1.1.5/O-101_R-1578": None,
+        "1.1.5/O-4_R-1417": None,
+    }
