@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 import logging
 import re
 from typing import TYPE_CHECKING, overload
@@ -127,10 +128,38 @@ def text_parameter_template_replace(
 
     # Applications TextParameterRef points to 0.xml ParameterInstanceRef of DeviceInstance
 
+    # A default may hold a module argument placeholder "{{0:Button {{ChNo}}}}" when
+    # the argument has no literal value (see `module_argument_replace`).
     parameter_value = parameter.value if parameter is not None else None
     return re.sub(
-        r"{{0(?::?)(.*?)}}",
+        r"{{0(?::?)((?:{{[^{}]*}}|.)*?)}}",
         lambda matchobj: parameter_value or matchobj.group(1),
+        text,
+    )
+
+
+def module_argument_replace(text: str, arguments: Mapping[str, str]) -> str:
+    """
+    Replace module argument placeholders "{{name}}" in text with their values.
+
+    text: text of a channel or communication object of a module instance
+    arguments: argument values by argument name
+
+    Placeholders of other arguments stay, as does the text parameter
+    placeholder "{{0}}" / "{{0:default}}" - only an argument inside its
+    default is replaced. Replace module arguments before the text parameter.
+
+    Examples
+    --------
+    "PB{{ChNo}}: {{0:Buttons {{ChNo}}}}", {"ChNo": "1"} -> "PB1: {{0:Buttons 1}}"
+    "Channel {{ChNo}}", {} -> "Channel {{ChNo}}"
+
+    """
+    if "{{" not in text:
+        return text
+    return re.sub(
+        r"{{([^{}:]+)}}",
+        lambda matchobj: arguments.get(matchobj.group(1), matchobj.group(0)),
         text,
     )
 

@@ -206,6 +206,40 @@ class DeviceInstance:
         for _module_instance in self.module_instances:
             yield from _module_instance.arguments
 
+    def module_arguments(
+        self, instance_ref_id: str, application: ApplicationProgram
+    ) -> dict[str, str]:
+        """
+        Return the module argument values of an instance of the device by name.
+
+        instance_ref_id: ref id of a com object instance or channel node,
+            eg. "MD-1_M-1_MI-1_O-2-1_R-1" or "MD-1_M-1_MI-1_CH-1"
+
+        The arguments of every module instance containing the instance apply,
+        the base module first and its sub-modules overriding it. An argument
+        whose value the application computes - from an allocator or a base
+        value - has no literal value: its placeholder stays in texts.
+        """
+        if not instance_ref_id.startswith("MD-"):
+            return {}
+        values: dict[str, str | None] = {}
+        for module_instance in sorted(
+            (
+                module_instance
+                for module_instance in self.module_instances
+                if instance_ref_id.startswith(f"{module_instance.identifier}_")
+            ),
+            key=lambda module_instance: len(module_instance.identifier),
+        ):
+            for argument in module_instance.arguments:
+                numeric_arg = application.numeric_args.get(argument.ref_id)
+                computed = numeric_arg is not None and (
+                    numeric_arg.allocator_ref_id is not None
+                    or numeric_arg.base_value is not None
+                )
+                values[argument.name] = None if computed else argument.value
+        return {name: value for name, value in values.items() if value is not None}
+
     def merge_application_program_info(self, application: ApplicationProgram) -> None:
         """Merge items with their parent objects from the application program."""
         for argument in self.module_instance_arguments():
@@ -216,7 +250,9 @@ class DeviceInstance:
 
         for com_instance in self.com_object_instance_refs:
             com_instance.merge_application_program_info(
-                application, self.parameter_instance_refs
+                application,
+                self.parameter_instance_refs,
+                self.module_arguments(com_instance.ref_id, application),
             )
             com_instance.apply_module_base_number_argument(
                 module_instances=self.module_instances,
@@ -224,10 +260,13 @@ class DeviceInstance:
             )
 
         for channel in self.channels:
+            module_arguments = self.module_arguments(channel.ref_id, application)
             channel.resolve_channel_attributes(
-                device_instance=self, application=application
+                device_instance=self,
+                application=application,
+                module_arguments=module_arguments,
             )
-            channel.resolve_channel_module_placeholders(device_instance=self)
+            channel.resolve_channel_module_placeholders(module_arguments)
 
     def __str__(self) -> str:
         """Return string representation."""
@@ -254,12 +293,14 @@ class ChannelNode:
         self,
         device_instance: DeviceInstance,
         application: ApplicationProgram,
+        module_arguments: dict[str, str],
     ) -> None:
         """
         Resolve the channel attributes from device instance infos.
 
         Replace TextParameter values in channel names with the
-        actual values of the parameter instances.
+        actual values of the parameter instances - after the module
+        arguments, which a text parameter default may contain.
         """
 
         application_channel_id = util.strip_module_instance(self.ref_id, search_id="CH")
@@ -299,7 +340,10 @@ class ChannelNode:
 
                 self.name = (
                     util.text_parameter_template_replace(
-                        application_channel.text, parameter
+                        util.module_argument_replace(
+                            application_channel.text, module_arguments
+                        ),
+                        parameter,
                     )
                     or application_channel.name
                 )
@@ -310,30 +354,10 @@ class ChannelNode:
         self.functional_blocks = application_channel.semantics
 
     def resolve_channel_module_placeholders(
-        self,
-        device_instance: DeviceInstance,
+        self, module_arguments: dict[str, str]
     ) -> None:
-        """Replace module placeholders in channel names with module instance argument values."""
-        if not (
-            self.ref_id.startswith("MD-")  # only applicable if modules used
-            and "{{" in self.name  # placeholders are denoted "{{name}}"
-        ):
-            return
-
-        module_instance_ref = self.ref_id.split("_CH", maxsplit=1)[0]
-        try:
-            module_instance = next(
-                mi
-                for mi in device_instance.module_instances
-                if mi.identifier == module_instance_ref
-            )
-        except StopIteration:
-            raise UnexpectedDataError(
-                f"ModuleInstance '{module_instance_ref}' not found for "
-                f"ChannelNode '{self.ref_id}' {self.name} of {device_instance}"
-            ) from None
-        for argument in module_instance.arguments:
-            self.name = self.name.replace(f"{{{{{argument.name}}}}}", argument.value)
+        """Replace module placeholders in the channel name with module instance argument values."""
+        self.name = util.module_argument_replace(self.name, module_arguments)
 
 
 @dataclass
@@ -442,8 +466,24 @@ class ComObjectInstanceRef:
         self,
         application: ApplicationProgram,
         parameters: dict[str, ParameterInstanceRef],
+        module_arguments: dict[str, str],
     ) -> None:
-        """Fill missing information with information parsed from the application program."""
+        """
+        Fill missing information with information parsed from the application program.
+
+        module_arguments: values of the module arguments the texts may hold
+            (`DeviceInstance.module_arguments`), replaced in name, text and
+            function text - also in those of the project, also when the
+            application program does not resolve the instance.
+        """
+        if self.name is not None:
+            self.name = util.module_argument_replace(self.name, module_arguments)
+        if self.text is not None:
+            self.text = util.module_argument_replace(self.text, module_arguments)
+        if self.function_text is not None:
+            self.function_text = util.module_argument_replace(
+                self.function_text, module_arguments
+            )
         if self.com_object_ref_id is None:
             _LOGGER.warning(
                 "ComObjectInstanceRef %s has no ComObjectRefId",
@@ -463,7 +503,7 @@ class ComObjectInstanceRef:
                 self.com_object_ref_id,
             )
             return
-        self._merge_from_parent_object(com_object_ref, parameters=parameters)
+        self._merge_from_parent_object(com_object_ref, parameters, module_arguments)
 
         com_object = application.com_objects.get(com_object_ref.ref_id)
         if com_object is None:
@@ -472,30 +512,40 @@ class ComObjectInstanceRef:
                 self.com_object_ref_id,
                 com_object_ref.ref_id,
             )
-            return
-        self._merge_from_parent_object(com_object, parameters=parameters)
+        else:
+            self._merge_from_parent_object(com_object, parameters, module_arguments)
 
     def _merge_from_parent_object(
         self,
         com_object: ComObject | ComObjectRef,
         parameters: dict[str, ParameterInstanceRef],
+        module_arguments: dict[str, str],
     ) -> None:
         """Fill missing information with information parsed from the application program."""
-        if self.name is None:
-            self.name = com_object.name
+        if self.name is None and com_object.name is not None:
+            self.name = util.module_argument_replace(com_object.name, module_arguments)
         if self.text is None:
-            if isinstance(com_object, ComObjectRef):
-                self.text = (
-                    com_object.com_object_ref_text_with_paramter(
-                        com_object_instance_ref_id=self.ref_id,
-                        instance_parameters=parameters,
-                    )
-                    or com_object.text
+            # the text parameter template replaces module arguments itself
+            text = (
+                com_object.com_object_ref_text_with_paramter(
+                    com_object_instance_ref_id=self.ref_id,
+                    instance_parameters=parameters,
+                    module_arguments=module_arguments,
                 )
-            else:
-                self.text = com_object.text
-        if self.function_text is None:
-            self.function_text = com_object.function_text
+                if isinstance(com_object, ComObjectRef)
+                else None
+            )
+            if not text:
+                text = (
+                    util.module_argument_replace(com_object.text, module_arguments)
+                    if com_object.text is not None
+                    else None
+                )
+            self.text = text
+        if self.function_text is None and com_object.function_text is not None:
+            self.function_text = util.module_argument_replace(
+                com_object.function_text, module_arguments
+            )
         if self.object_size is None:
             self.object_size = com_object.object_size
         if self.read_flag is None:
@@ -802,32 +852,41 @@ class ComObjectRef:
     text_parameter_ref_id: str | None  #  type="knx:IDREF" use="optional"
     semantics: list[str] | None  # "Semantics" - optional
 
+    def text_parameter_instance_ref_id(
+        self, com_object_instance_ref_id: str
+    ) -> str | None:
+        """Return the id of the parameter instance filling "{{0}}" of an instance's text."""
+        if not self.text_parameter_ref_id:
+            return None
+        return util.text_parameter_insert_module_instance(
+            instance_ref=com_object_instance_ref_id,
+            instance_next_id="O",
+            text_parameter_ref_id=self.text_parameter_ref_id,
+        )
+
     def com_object_ref_text_with_paramter(
         self,
         com_object_instance_ref_id: str,
         instance_parameters: dict[str, ParameterInstanceRef],
+        module_arguments: dict[str, str],
     ) -> str | None:
-        """Return the text with parameter if available."""
-        if self.text and self.text_parameter_ref_id:
-            parameter_instance_ref = util.text_parameter_insert_module_instance(
-                instance_ref=com_object_instance_ref_id,
-                instance_next_id="O",
-                text_parameter_ref_id=self.text_parameter_ref_id,
+        """Return the text with module arguments and text parameter replaced, if it has a parameter."""
+        parameter_instance_ref = self.text_parameter_instance_ref_id(
+            com_object_instance_ref_id
+        )
+        if not self.text or parameter_instance_ref is None:
+            return None
+        parameter = instance_parameters.get(parameter_instance_ref)
+        if parameter is None:
+            _LOGGER.debug(
+                "ParameterInstanceRef %s for ComObjectRef %s not found.",
+                parameter_instance_ref,
+                self.identifier,
             )
-            try:
-                parameter = instance_parameters[parameter_instance_ref]
-            except KeyError:
-                _LOGGER.debug(
-                    "ParameterInstanceRef %s for ComObjectRef %s not found.",
-                    parameter_instance_ref,
-                    self.identifier,
-                )
-                parameter = None
-            return util.text_parameter_template_replace(
-                self.text or "",
-                parameter=parameter,
-            )
-        return None
+        return util.text_parameter_template_replace(
+            util.module_argument_replace(self.text, module_arguments),
+            parameter=parameter,
+        )
 
 
 @dataclass
