@@ -57,6 +57,32 @@ class Device(TypedDict):
     name: str
     hardware_name: str
     order_number: str
+    hardware_serial_number: str
+    version_number: int | None
+    bus_current: float | None
+    width_in_millimeter: float | None
+    has_individual_address: bool
+    has_application_program: bool
+    is_coupler: bool
+    is_power_supply: bool
+    is_choke: bool
+    is_power_line_repeater: bool
+    is_power_line_signal_filter: bool
+    is_cable: bool
+    is_ip_enabled: bool
+    is_rf_retransmitter: bool
+    is_accessory: bool
+    is_rail_mounted: bool
+    has_application_program2: bool
+    tp256: bool
+    no_download_without_plugin: bool
+    original_manufacturer: str
+    visible_description: str
+    default_language: str
+    hash: str
+    non_reg_relevant_data_version: int | None
+    internal_description: str
+    attributes: dict[str, str]
     description: str
     manufacturer_name: str
     individual_address: str
@@ -89,6 +115,7 @@ class Line(TypedDict):
     medium_type: str
     description: str | None
     devices: list[str]
+    additional_group_addresses: list[str]
 
 
 class Area(TypedDict):
@@ -109,6 +136,7 @@ class GroupAddress(TypedDict):
     project_uid: int | None
     dpt: DPTType | None
     data_secure: bool
+    unfiltered: bool
     communication_object_ids: list[str]
     description: str
     comment: str
@@ -121,6 +149,7 @@ class GroupRange(TypedDict):
     address_start: int
     address_end: int
     comment: str
+    unfiltered: bool
     group_addresses: list[str]
     group_ranges: dict[str, GroupRange]
 

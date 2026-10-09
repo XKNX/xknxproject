@@ -21,7 +21,8 @@
           "name": "",
           "description": null,
           "devices": [],
-          "medium_type": "Twisted Pair (TP)"
+          "medium_type": "Twisted Pair (TP)",
+          "additional_group_addresses": []
         }
       }
     },
@@ -33,19 +34,22 @@
           "name": "",
           "description": null,
           "devices": [],
-          "medium_type": "Twisted Pair (TP)"
+          "medium_type": "Twisted Pair (TP)",
+          "additional_group_addresses": []
         },
         "1": {
           "name": "1st floor",
           "description": null,
           "devices": [],
-          "medium_type": "Twisted Pair (TP)"
+          "medium_type": "Twisted Pair (TP)",
+          "additional_group_addresses": []
         },
         "2": {
           "name": "2nd floor",
           "description": null,
           "devices": [],
-          "medium_type": "Twisted Pair (TP)"
+          "medium_type": "Twisted Pair (TP)",
+          "additional_group_addresses": []
         }
       }
     }
@@ -60,6 +64,7 @@
       "project_uid": 6,
       "dpt": null,
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [],
       "description": "",
       "comment": ""
@@ -72,6 +77,7 @@
       "project_uid": 8,
       "dpt": null,
       "data_secure": false,
+      "unfiltered": false,
       "communication_object_ids": [],
       "description": "",
       "comment": ""
@@ -86,6 +92,7 @@
         "0/1"
       ],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {}
     },
     "1": {
@@ -96,6 +103,7 @@
         "1/1"
       ],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {}
     },
     "2": {
@@ -104,6 +112,7 @@
       "address_end": 6143,
       "group_addresses": [],
       "comment": "",
+      "unfiltered": false,
       "group_ranges": {}
     }
   },
