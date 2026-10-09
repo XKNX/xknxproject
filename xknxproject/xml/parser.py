@@ -59,7 +59,8 @@ def _text_parameter(
         return None
     return TextParameter(
         identifier=parameter.ref_id.removeprefix(f"{application_program_ref}_"),
-        value=parameter.value,
+        # an empty value shows the default text, like no value at all
+        value=parameter.value or None,
     )
 
 
