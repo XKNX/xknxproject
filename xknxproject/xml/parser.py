@@ -33,9 +33,11 @@ from xknxproject.models import (
     HardwareToPrograms,
     KNXProject,
     Line,
+    ParameterInstanceRef,
     Product,
     ProjectInfo,
     Space,
+    TextParameter,
     XMLArea,
     XMLFunction,
     XMLGroupAddress,
@@ -47,6 +49,19 @@ from xknxproject.models import (
 from xknxproject.zip.extractor import KNXProjContents
 
 _LOGGER = logging.getLogger("xknxproject.log")
+
+
+def _text_parameter(
+    parameter: ParameterInstanceRef | None, application_program_ref: str | None
+) -> TextParameter | None:
+    """Convert the text parameter of an object to the final output format."""
+    if parameter is None:
+        return None
+    return TextParameter(
+        identifier=parameter.ref_id.removeprefix(f"{application_program_ref}_"),
+        # an empty value shows the default text, like no value at all
+        value=parameter.value or None,
+    )
 
 
 def _convert_group_address_ref(
@@ -353,6 +368,9 @@ class XMLParser:
                     ),
                     group_address_links=group_address_links,
                     dpas=com_object.dpas,
+                    text_parameter=_text_parameter(
+                        com_object.text_parameter, device.application_program_ref
+                    ),
                 )
                 device_com_objects.append(com_object_key)
 

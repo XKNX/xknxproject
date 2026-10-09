@@ -16,6 +16,7 @@ from .knxproject import (
     Line,
     ProjectInfo,
     Space,
+    TextParameter,
 )
 from .models import (
     ApplicationProgram,

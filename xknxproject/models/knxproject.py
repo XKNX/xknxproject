@@ -40,6 +40,21 @@ class CommunicationObject(TypedDict):
     group_address_links: list[str]
     flags: Flags
     dpas: list[str] | None
+    # the parameter filling "{{0}}" of the text. A hint for grouping, not a
+    # channel: a channel may use several parameters, and a parameter may serve
+    # objects of several functions. None when the ComObjectRef has no text parameter.
+    text_parameter: TextParameter | None
+
+
+class TextParameter(TypedDict):
+    """The text parameter of a communication object."""
+
+    # parameter instance id without the application program id, in the style of
+    # `CommunicationObject.channel`: "P-1_R-1", "MD-1_M-1_MI-3_P-27_R-27"
+    identifier: str
+    # value set in the project; None when the project keeps the default of the
+    # program (also for an empty value), whose label is not exported
+    value: str | None
 
 
 class ModuleInstanceInfos(TypedDict):
