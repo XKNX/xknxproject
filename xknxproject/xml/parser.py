@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections import Counter
 import html
 import logging
 from operator import attrgetter
@@ -83,18 +84,25 @@ def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
     Convert spaces to the final output format, keyed by space name.
 
     ETS allows sibling spaces to share a name. A space whose name is already the
-    key of an earlier sibling is keyed "<name> (<identifier>)" instead, with
-    " (<identifier>)" appended again while that key is taken too, so that no space
-    is lost; a warning is logged. The first space with a name in project file
-    order thus keeps the plain name as key, and the `name` field of each space
-    always holds the name from ETS.
+    key of an earlier sibling is keyed "<name> (<number>)" instead, with the ETS
+    number of the space, if it is set and no other sibling of that name has the
+    same number - otherwise "<name> (<identifier>)". " (<identifier>)" is appended
+    again while that key is taken too, so that no space is lost; a warning is
+    logged. The first space with a name in project file order thus keeps the
+    plain name as key, and the `name` field of each space always holds the name
+    from ETS.
     """
+    # a number shared by siblings of the same name does not tell them apart
+    numbers = Counter((space.name, space.number) for space in spaces if space.number)
     result: dict[str, Space] = {}
     for space in spaces:
         key = space.name
         if key in result:
-            # space identifiers are unique within a project, so they disambiguate
-            key = f"{space.name} ({space.identifier})"
+            if space.number and numbers[(space.name, space.number)] == 1:
+                key = f"{space.name} ({space.number})"
+            else:
+                # space identifiers are unique within a project, so they disambiguate
+                key = f"{space.name} ({space.identifier})"
             while key in result:  # a sibling may literally be named like this key
                 key = f"{key} ({space.identifier})"
             _LOGGER.warning(

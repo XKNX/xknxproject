@@ -146,7 +146,11 @@ def test_parse_project_with_module_defs() -> None:
 
 
 def _space(
-    identifier: str, name: str, devices: list[str], spaces: list[XMLSpace]
+    identifier: str,
+    name: str,
+    devices: list[str],
+    spaces: list[XMLSpace],
+    number: str = "",
 ) -> XMLSpace:
     """Build a room space listing the given devices and child spaces."""
     return XMLSpace(
@@ -155,7 +159,7 @@ def _space(
         space_type=SpaceType.ROOM,
         usage_id=None,
         usage_text="",
-        number="",
+        number=number,
         description="",
         project_uid=None,
         spaces=spaces,
@@ -212,6 +216,60 @@ def test_same_space_name_under_different_parents_is_kept(
     assert result["EG"]["spaces"]["Flur"]["identifier"] == "P-1_BP-2"
     assert result["OG"]["spaces"]["Flur"]["identifier"] == "P-1_BP-4"
     assert not caplog.records
+
+
+@pytest.mark.parametrize(
+    ("spaces", "expected_keys"),
+    [
+        (  # later siblings are keyed by their number, or their identifier without one
+            [
+                _space("P-1_BP-2", "Flur", [], [], number="1.01"),
+                _space("P-1_BP-3", "Flur", [], [], number="1.02"),
+                _space("P-1_BP-4", "Flur", [], []),
+            ],
+            {
+                "Flur": "P-1_BP-2",
+                "Flur (1.02)": "P-1_BP-3",
+                "Flur (P-1_BP-4)": "P-1_BP-4",
+            },
+        ),
+        (  # a number shared with another sibling of the name does not disambiguate
+            [
+                _space("P-1_BP-2", "Flur", [], [], number="1.02"),
+                _space("P-1_BP-3", "Flur", [], [], number="1.02"),
+                _space("P-1_BP-4", "Flur", [], [], number="1.03"),
+                _space("P-1_BP-5", "Bad", [], [], number="1.03"),
+            ],
+            {
+                "Flur": "P-1_BP-2",
+                "Flur (P-1_BP-3)": "P-1_BP-3",
+                "Flur (1.03)": "P-1_BP-4",
+                "Bad": "P-1_BP-5",
+            },
+        ),
+        (  # a sibling literally named like the number key keeps it
+            [
+                _space("P-1_BP-9", "Flur (1.02)", [], []),
+                _space("P-1_BP-2", "Flur", [], []),
+                _space("P-1_BP-3", "Flur", [], [], number="1.02"),
+            ],
+            {
+                "Flur (1.02)": "P-1_BP-9",
+                "Flur": "P-1_BP-2",
+                "Flur (1.02) (P-1_BP-3)": "P-1_BP-3",
+            },
+        ),
+    ],
+)
+def test_sibling_space_keyed_by_number(
+    spaces: list[XMLSpace], expected_keys: dict[str, str]
+) -> None:
+    """A later same-named sibling is keyed by its ETS number when that is unique."""
+    result = _recursive_convert_spaces(spaces)
+
+    assert {key: space["identifier"] for key, space in result.items()} == (
+        expected_keys
+    )
 
 
 @pytest.mark.parametrize(
