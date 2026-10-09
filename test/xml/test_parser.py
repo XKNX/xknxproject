@@ -2,14 +2,24 @@
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
+from unittest.mock import Mock
 
 import pytest
 
-from xknxproject.xml.parser import XMLParser
-from xknxproject.zip import extract
+from xknxproject.loader import (
+    ApplicationProgramLoader,
+    HardwareLoader,
+    KNXMasterLoader,
+    ProjectLoader,
+)
+from xknxproject.models import Product, SpaceType, XMLSpace
+from xknxproject.xml.parser import XMLParser, _recursive_convert_spaces
+from xknxproject.zip import KNXProjContents, extract
 
 from .. import RESOURCES_PATH
+from ..conftest import build_devices
 
 xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
 xknx_test_project_module_defs = RESOURCES_PATH / "module-definition-test.knxproj"
@@ -133,3 +143,210 @@ def test_parse_project_with_module_defs() -> None:
     assert len(parser.areas[1].lines[1].devices) == 4
 
     assert len(parser.devices) == 4
+
+
+def _space(
+    identifier: str,
+    name: str,
+    devices: list[str],
+    spaces: list[XMLSpace],
+    number: str = "",
+) -> XMLSpace:
+    """Build a room space listing the given devices and child spaces."""
+    return XMLSpace(
+        identifier=identifier,
+        name=name,
+        space_type=SpaceType.ROOM,
+        usage_id=None,
+        usage_text="",
+        number=number,
+        description="",
+        project_uid=None,
+        spaces=spaces,
+        devices=devices,
+        functions=[],
+    )
+
+
+def test_sibling_space_name_collision_warns(caplog: pytest.LogCaptureFixture) -> None:
+    """Later same-named siblings are keyed "<name> (<identifier>)" with a warning."""
+    spaces = [
+        _space("P-1_BP-2", "Flur", ["1.1.1"], []),
+        _space(
+            "P-1_BP-3",
+            "Flur",
+            ["1.1.2"],
+            [_space("P-1_BP-4", "Abstellraum", ["1.1.3"], [])],
+        ),
+        _space("P-1_BP-5", "Flur", [], []),
+    ]
+    with caplog.at_level(logging.WARNING, logger="xknxproject.log"):
+        result = _recursive_convert_spaces(spaces)
+
+    assert list(result) == ["Flur", "Flur (P-1_BP-3)", "Flur (P-1_BP-5)"]
+    assert result["Flur"]["identifier"] == "P-1_BP-2"
+    renamed = result["Flur (P-1_BP-3)"]
+    assert renamed["identifier"] == "P-1_BP-3"
+    assert renamed["name"] == "Flur"
+    assert renamed["devices"] == ["1.1.2"]
+    assert renamed["spaces"]["Abstellraum"]["devices"] == ["1.1.3"]
+    assert result["Flur (P-1_BP-5)"]["identifier"] == "P-1_BP-5"
+    assert [record.levelno for record in caplog.records] == [logging.WARNING] * 2
+    assert caplog.messages == [
+        "Sibling space P-1_BP-2 already uses the key 'Flur': "
+        "space P-1_BP-3 is exported under the key 'Flur (P-1_BP-3)'",
+        "Sibling space P-1_BP-2 already uses the key 'Flur': "
+        "space P-1_BP-5 is exported under the key 'Flur (P-1_BP-5)'",
+    ]
+
+
+def test_same_space_name_under_different_parents_is_kept(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Spaces sharing a name under different parents keep the plain name as key."""
+    spaces = [
+        _space("P-1_BP-1", "EG", [], [_space("P-1_BP-2", "Flur", [], [])]),
+        _space("P-1_BP-3", "OG", [], [_space("P-1_BP-4", "Flur", [], [])]),
+    ]
+    with caplog.at_level(logging.WARNING, logger="xknxproject.log"):
+        result = _recursive_convert_spaces(spaces)
+
+    assert list(result["EG"]["spaces"]) == ["Flur"]
+    assert list(result["OG"]["spaces"]) == ["Flur"]
+    assert result["EG"]["spaces"]["Flur"]["identifier"] == "P-1_BP-2"
+    assert result["OG"]["spaces"]["Flur"]["identifier"] == "P-1_BP-4"
+    assert not caplog.records
+
+
+@pytest.mark.parametrize(
+    ("spaces", "expected_keys"),
+    [
+        (  # later siblings are keyed by their number, or their identifier without one
+            [
+                _space("P-1_BP-2", "Flur", [], [], number="1.01"),
+                _space("P-1_BP-3", "Flur", [], [], number="1.02"),
+                _space("P-1_BP-4", "Flur", [], []),
+            ],
+            {
+                "Flur": "P-1_BP-2",
+                "Flur (1.02)": "P-1_BP-3",
+                "Flur (P-1_BP-4)": "P-1_BP-4",
+            },
+        ),
+        (  # a number shared with another sibling of the name does not disambiguate
+            [
+                _space("P-1_BP-2", "Flur", [], [], number="1.02"),
+                _space("P-1_BP-3", "Flur", [], [], number="1.02"),
+                _space("P-1_BP-4", "Flur", [], [], number="1.03"),
+                _space("P-1_BP-5", "Bad", [], [], number="1.03"),
+            ],
+            {
+                "Flur": "P-1_BP-2",
+                "Flur (P-1_BP-3)": "P-1_BP-3",
+                "Flur (1.03)": "P-1_BP-4",
+                "Bad": "P-1_BP-5",
+            },
+        ),
+        (  # a sibling literally named like the number key keeps it
+            [
+                _space("P-1_BP-9", "Flur (1.02)", [], []),
+                _space("P-1_BP-2", "Flur", [], []),
+                _space("P-1_BP-3", "Flur", [], [], number="1.02"),
+            ],
+            {
+                "Flur (1.02)": "P-1_BP-9",
+                "Flur": "P-1_BP-2",
+                "Flur (1.02) (P-1_BP-3)": "P-1_BP-3",
+            },
+        ),
+    ],
+)
+def test_sibling_space_keyed_by_number(
+    spaces: list[XMLSpace], expected_keys: dict[str, str]
+) -> None:
+    """A later same-named sibling is keyed by its ETS number when that is unique."""
+    result = _recursive_convert_spaces(spaces)
+
+    assert {key: space["identifier"] for key, space in result.items()} == (
+        expected_keys
+    )
+
+
+@pytest.mark.parametrize(
+    ("spaces", "expected_keys"),
+    [
+        (  # the literal name is taken first, the disambiguated key collides with it
+            [
+                _space("P-1_BP-9", "Flur (P-1_BP-3)", [], []),
+                _space("P-1_BP-2", "Flur", [], []),
+                _space("P-1_BP-3", "Flur", [], []),
+            ],
+            {
+                "Flur (P-1_BP-3)": "P-1_BP-9",
+                "Flur": "P-1_BP-2",
+                "Flur (P-1_BP-3) (P-1_BP-3)": "P-1_BP-3",
+            },
+        ),
+        (  # the disambiguated key is taken first, the literal name collides with it
+            [
+                _space("P-1_BP-2", "Flur", [], []),
+                _space("P-1_BP-3", "Flur", [], []),
+                _space("P-1_BP-9", "Flur (P-1_BP-3)", [], []),
+            ],
+            {
+                "Flur": "P-1_BP-2",
+                "Flur (P-1_BP-3)": "P-1_BP-3",
+                "Flur (P-1_BP-3) (P-1_BP-9)": "P-1_BP-9",
+            },
+        ),
+    ],
+)
+def test_sibling_named_like_a_disambiguated_key_is_kept(
+    spaces: list[XMLSpace], expected_keys: dict[str, str]
+) -> None:
+    """A sibling literally named "<name> (<identifier>)" never displaces a space."""
+    result = _recursive_convert_spaces(spaces)
+
+    assert {key: space["identifier"] for key, space in result.items()} == (
+        expected_keys
+    )
+
+
+def test_load_sets_hardware_id_of_resolved_products(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A device gets the Hardware Id of its product, "" if the product is unknown."""
+    devices = build_devices(("P-1_DI-1", 1), ("P-1_DI-2", 2))
+    # product found, but its hardware2program is not: the hardware id is still set
+    devices[0].product_ref = "M-0083_H-1_P-1"
+    devices[0].hardware_program_ref = "M-0083_H-1_HP-unknown"
+    devices[1].product_ref = "M-0083_H-2_P-unknown"
+    product = Product(
+        identifier="M-0083_H-1_P-1",
+        text="Schaltaktor",
+        order_number="4711",
+        hardware_name="Schaltaktor 8fach",
+        hardware_id="M-0083_H-1",
+    )
+    monkeypatch.setattr(KNXMasterLoader, "load", lambda **_: (Mock(), None))
+    monkeypatch.setattr(
+        ProjectLoader,
+        "load",
+        lambda **_: ([], [], [], devices, [], Mock(), []),
+    )
+    monkeypatch.setattr(HardwareLoader, "get_hardware_files", lambda **_: [Mock()])
+    monkeypatch.setattr(
+        HardwareLoader, "load", lambda **_: ({product.identifier: product}, {})
+    )
+    monkeypatch.setattr(
+        ApplicationProgramLoader,
+        "get_application_program_files_for_devices",
+        lambda **_: {},
+    )
+
+    project_contents = Mock(spec=KNXProjContents, root_path=Path("project"))
+    XMLParser(project_contents)._load(language=None)
+
+    assert devices[0].hardware_id == "M-0083_H-1"
+    assert devices[0].application_program_ref is None
+    assert devices[1].hardware_id == ""

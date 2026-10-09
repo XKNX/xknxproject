@@ -51,14 +51,22 @@ class HardwareLoader:
     def parse_hardware_element(
         hardware_node: ElementTree.Element,
     ) -> tuple[dict[str, Product], HardwareToPrograms]:
-        """Parse hardware mapping."""
+        """
+        Parse one `Hardware` element into its products and hardware2program map.
+
+        Every product is tagged with the `Id` and `Name` of the `Hardware` element
+        it belongs to (`Product.hardware_id`, `Product.hardware_name`). The map
+        links each `Hardware2Program` Id to the Id of its application program.
+        """
         product_dict: dict[str, Product] = {}
         hardware_programs: HardwareToPrograms = {}
 
         hardware_name: str = hardware_node.get("Name", "")
+        hardware_id: str = hardware_node.get("Id", "")
         for product_node in hardware_node.findall("{*}Products/{*}Product"):
             _product = HardwareLoader.parse_product_element(product_node)
             _product.hardware_name = hardware_name
+            _product.hardware_id = hardware_id
             product_dict[_product.identifier] = _product
 
         for product_node in hardware_node.findall(

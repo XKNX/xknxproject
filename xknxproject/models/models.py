@@ -186,6 +186,8 @@ class DeviceInstance:
         )
         self.product_name: str = ""  # translatable name for specific product
         self.hardware_name: str = ""  # untranslatable name from hardware.xml
+        self.hardware_id: str = ""  # "Id" of the product's Hardware element
+        self.space_id: str | None = None  # "Id" of the first space listing the device
         self.order_number: str = ""
         self.manufacturer_name: str = ""
 
@@ -905,12 +907,13 @@ class XMLGroupAddressRef:
 
 @dataclass
 class Product:
-    """Model a Product instance."""
+    """Model a Product of a manufacturer's Hardware.xml."""
 
-    identifier: str
-    text: str
-    order_number: str
-    hardware_name: str = ""
+    identifier: str  # "Id", e.g. M-0083_H-136-5-O0072_P-SCN.2DIP100.2E03
+    text: str  # "Text", translated if the project language has a translation
+    order_number: str  # "OrderNumber"
+    hardware_name: str = ""  # "Name" of the parent Hardware element (untranslated)
+    hardware_id: str = ""  # "Id" of the parent Hardware element
 
 
 HardwareToPrograms = dict[str, str]
