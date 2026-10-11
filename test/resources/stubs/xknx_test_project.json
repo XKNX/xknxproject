@@ -713,6 +713,7 @@
       "space_id": null,
       "communication_object_ids": [],
       "channels": {},
+      "group_object_tree": [],
       "serial_number": "AIN6QBMW",
       "last_download": null,
       "individual_address_loaded": false,
@@ -744,6 +745,7 @@
         "1.1.5/O-4_R-1417"
       ],
       "channels": {},
+      "group_object_tree": [],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,
@@ -772,6 +774,7 @@
         "1.1.6/O-18_R-7994"
       ],
       "channels": {},
+      "group_object_tree": [],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,
@@ -935,6 +938,29 @@
           "functional_blocks": null
         }
       },
+      "group_object_tree": [
+        {
+          "type": "Channel",
+          "identifier": "MD-2_M-20_MI-1_CH-81",
+          "name": "Raumtemperaturregler 1 (name in application)",
+          "communication_object_ids": [
+            "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3",
+            "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17",
+            "1.1.7/MD-2_M-20_MI-1_O-5-10_R-18",
+            "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45"
+          ],
+          "nodes": []
+        },
+        {
+          "type": "Channel",
+          "identifier": "MD-2_M-4_MI-1_CH-81",
+          "name": "channel name in properties",
+          "communication_object_ids": [
+            "1.1.7/MD-2_M-4_MI-1_O-7-1_R-45"
+          ],
+          "nodes": []
+        }
+      ],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,

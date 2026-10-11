@@ -11,6 +11,7 @@ from xknxproject.models import (
     ChannelNode,
     ComObjectInstanceRef,
     DeviceInstance,
+    FolderNode,
     GroupAddressStyle,
     KNXMasterData,
     ModuleInstance,
@@ -269,20 +270,10 @@ class _TopologyLoader:
             if (module_instance := self._create_module_instance(mi_elem)) is not None
         ]
 
-        channels = []
-        for channel_node_elem in device_element.findall(
-            "{*}GroupObjectTree//{*}Nodes/{*}Node[@Type='Channel']"
-        ):
-            if not (_gos := channel_node_elem.get("GroupObjectInstances")):
-                # parse only used channels
-                continue
-            channels.append(
-                ChannelNode(
-                    ref_id=channel_node_elem.get("RefId"),  # type: ignore[arg-type]
-                    name=channel_node_elem.get("Text", ""),
-                    group_object_instances=_gos.split(" "),
-                )
-            )
+        channels: list[ChannelNode] = []
+        group_object_tree = self._parse_group_object_tree_nodes(
+            device_element.find("{*}GroupObjectTree"), channels
+        )
 
         parameter_instances = {}
         for param_instance_node in device_element.findall(
@@ -307,6 +298,7 @@ class _TopologyLoader:
             manufacturer=product_ref.split("_", 1)[0],
             additional_addresses=additional_addresses,
             channels=channels,
+            group_object_tree=group_object_tree,
             com_object_instance_refs=com_obj_inst_refs,
             module_instances=module_instances,
             parameter_instance_refs=parameter_instances,
@@ -345,6 +337,55 @@ class _TopologyLoader:
             return []
 
         return links.split(" ")
+
+    @staticmethod
+    def _parse_group_object_tree_nodes(
+        parent_element: ElementTree.Element | None,
+        channels: list[ChannelNode],
+    ) -> list[ChannelNode | FolderNode]:
+        """
+        Parse the nodes of a GroupObjectTree recursively.
+
+        Returns the used nodes below `parent_element` and appends every used
+        channel - regardless of its depth - to `channels`. A node is used if it
+        or one of its child nodes lists a GroupObjectInstance.
+        """
+        nodes: list[ChannelNode | FolderNode] = []
+        if parent_element is None:
+            return nodes
+        for node_elem in parent_element.findall("{*}Nodes/{*}Node"):
+            # the channel has to precede its child channels in `channels`
+            child_channels: list[ChannelNode] = []
+            child_nodes = _TopologyLoader._parse_group_object_tree_nodes(
+                node_elem, child_channels
+            )
+            group_object_instances = (
+                _gos.split(" ")
+                if (_gos := node_elem.get("GroupObjectInstances"))
+                else []
+            )
+            if not group_object_instances and not child_nodes:
+                # parse only used nodes
+                continue
+            node: ChannelNode | FolderNode
+            if node_elem.get("Type") == "Channel":
+                node = ChannelNode(
+                    ref_id=node_elem.get("RefId"),  # type: ignore[arg-type]
+                    name=node_elem.get("Text", ""),
+                    group_object_instances=group_object_instances,
+                    nodes=child_nodes,
+                )
+                channels.append(node)
+            else:
+                node = FolderNode(
+                    ref_id=node_elem.get("RefId"),  # type: ignore[arg-type]
+                    name=node_elem.get("Text", ""),
+                    group_object_instances=group_object_instances,
+                    nodes=child_nodes,
+                )
+            channels.extend(child_channels)
+            nodes.append(node)
+        return nodes
 
     def _create_com_object_instance(
         self,

@@ -11,6 +11,7 @@ from xknxproject.models import (
     Allocator,
     ApplicationProgram,
     ApplicationProgramChannel,
+    ApplicationProgramParameterBlock,
     ComObject,
     ComObjectRef,
     DeviceInstance,
@@ -22,6 +23,7 @@ from xknxproject.util import (
     parse_semantics_dpas,
     parse_semantics_functional_blocks,
     parse_xml_flag,
+    strip_module_instance,
 )
 
 
@@ -57,6 +59,17 @@ class ApplicationProgramLoader:
         channels: dict[
             str, ApplicationProgramChannel
         ] = {}  # {Id: ApplicationProgramChannel}
+        # ParameterBlocks name the folders of the GroupObjectTree. An application
+        # may hold thousands of them - keep only those referenced by a folder.
+        used_parameter_block_ids = {
+            f"{device.application_program_ref}_"
+            f"{strip_module_instance(folder.ref_id, search_id='PB')}"
+            for device in devices
+            for folder in device.folders()
+        }
+        parameter_blocks: dict[
+            str, ApplicationProgramParameterBlock
+        ] = {}  # {Id: ApplicationProgramParameterBlock}
         allocators: dict[str, Allocator] = {}
         # `iterparse` yields `Any` since the type depends on the requested events;
         # with `events=("start",)` it is always an `Element`
@@ -75,6 +88,7 @@ class ApplicationProgramLoader:
             ns_argument = f"{namespace}Argument"
             ns_numeric_arg = f"{namespace}NumericArg"
             ns_channel = f"{namespace}Channel"
+            ns_parameter_block = f"{namespace}ParameterBlock"
             ns_languages = f"{namespace}Languages"
 
             for _, elem in tree_iterator:
@@ -132,6 +146,14 @@ class ApplicationProgramLoader:
                         ),
                     )
                     elem.clear()
+                elif elem.tag == ns_parameter_block:
+                    if (_id := elem.attrib.get("Id")) in used_parameter_block_ids:  # type: ignore[operator,assignment]
+                        parameter_blocks[_id] = ApplicationProgramParameterBlock(
+                            identifier=_id,
+                            name=elem.attrib.get("Name"),
+                            text=elem.attrib.get("Text"),
+                            text_parameter_ref_id=elem.attrib.get("TextParameterRefId"),
+                        )
                 elif elem.tag == ns_languages:
                     elem.clear()
                     # hold iterator for optional translation parsing
@@ -146,6 +168,7 @@ class ApplicationProgramLoader:
                     com_object_refs=com_object_refs,
                     used_com_object_ref_ids=used_com_object_ref_ids,
                     channels=channels,
+                    parameter_blocks=parameter_blocks,
                     language_code=language_code,
                 )
 
@@ -156,6 +179,7 @@ class ApplicationProgramLoader:
                 module_def_arguments=used_module_arguments,
                 numeric_args=numeric_args,
                 channels=channels,
+                parameter_blocks=parameter_blocks,
             )
 
     @staticmethod
@@ -166,6 +190,7 @@ class ApplicationProgramLoader:
         com_object_refs: dict[str, ComObjectRef],
         used_com_object_ref_ids: set[str],
         channels: dict[str, ApplicationProgramChannel],
+        parameter_blocks: dict[str, ApplicationProgramParameterBlock],
         language_code: str,
     ) -> None:
         """Parse translations. Replace translated text in com_objects and com_object_refs."""
@@ -173,7 +198,10 @@ class ApplicationProgramLoader:
             com_object_ref.ref_id for com_object_ref in com_object_refs.values()
         }
         used_translation_ids = (
-            _used_com_object_ids | used_com_object_ref_ids | channels.keys()
+            _used_com_object_ids
+            | used_com_object_ref_ids
+            | channels.keys()
+            | parameter_blocks.keys()
         )
         in_language = False
         in_translation_ref: str | None = None  # TranslationElement RefId
@@ -208,6 +236,7 @@ class ApplicationProgramLoader:
         ApplicationProgramLoader.apply_translations(com_object_refs, translation_map)
         ApplicationProgramLoader.apply_translations(com_objects, translation_map)
         ApplicationProgramLoader.apply_translations(channels, translation_map)
+        ApplicationProgramLoader.apply_translations(parameter_blocks, translation_map)
 
     @staticmethod
     def parse_com_object(
@@ -260,7 +289,8 @@ class ApplicationProgramLoader:
     def apply_translations(
         translatable_object_map: dict[str, ComObject]
         | dict[str, ComObjectRef]
-        | dict[str, ApplicationProgramChannel],
+        | dict[str, ApplicationProgramChannel]
+        | dict[str, ApplicationProgramParameterBlock],
         translation_map: dict[str, dict[str, str]],
     ) -> None:
         """Apply translations to Objects."""

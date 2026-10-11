@@ -13,10 +13,12 @@ import pytest
 from xknxproject import XKNXProj
 from xknxproject.models import KNXProject
 from xknxproject.models.knxproject import (
+    Channel,
     CommunicationObject,
     Device,
     Function,
     GroupAddress,
+    GroupObjectTreeNode,
     GroupRange,
     ProjectInfo,
     Space,
@@ -87,6 +89,19 @@ def test_stub_keys_match_typed_dicts(file_stem: str) -> None:
     for com_object in stub["communication_objects"].values():
         if (text_parameter := com_object["text_parameter"]) is not None:
             assert set(text_parameter) == set(TextParameter.__annotations__)
+
+    for device in stub["devices"].values():
+        for channel in device["channels"].values():
+            assert set(channel) == set(Channel.__annotations__)
+        for node in _iter_tree_nodes(device["group_object_tree"]):
+            assert set(node) == set(GroupObjectTreeNode.__annotations__)
+
+
+def _iter_tree_nodes(nodes: list[dict]) -> Iterator[dict]:
+    """Yield the nodes of a group object tree, descending into nested ones."""
+    for node in nodes:
+        yield node
+        yield from _iter_tree_nodes(node["nodes"])
 
 
 def _iter_items(section: dict, nested_key: str | None) -> Iterator[dict]:

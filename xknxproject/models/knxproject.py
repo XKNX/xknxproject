@@ -91,6 +91,11 @@ class Device(TypedDict):
     space_id: str | None
     communication_object_ids: list[str]
     channels: dict[str, Channel]  # id: Channel
+    # the communication objects of `communication_object_ids` structured as ETS
+    # shows them: channels and folders, nested. Nodes without any of these objects
+    # in themselves or below are omitted. Empty if the project does not hold a tree
+    # for the device or none of its communication objects is linked.
+    group_object_tree: list[GroupObjectTreeNode]
     serial_number: str
     last_download: str | None
     individual_address_loaded: bool
@@ -105,8 +110,25 @@ class Channel(TypedDict):
 
     identifier: str
     name: str
+    # communication objects listed directly in the channel - those in folders of
+    # the channel are found in `Device.group_object_tree`. Unlike there, objects
+    # not linked to a group address - not in `communication_objects` - are included.
     communication_object_ids: list[str]
     functional_blocks: list[str] | None
+
+
+class GroupObjectTreeNode(TypedDict):
+    """A channel or a folder in the tree of a devices communication objects."""
+
+    # "Channel" or "Folder"
+    type: str
+    # "RefId" of the node. For a channel the key in `Device.channels`, if the
+    # channel lists communication objects itself and not only in its folders.
+    identifier: str
+    name: str
+    # keys of `communication_objects` listed directly in this node
+    communication_object_ids: list[str]
+    nodes: list[GroupObjectTreeNode]
 
 
 class Line(TypedDict):

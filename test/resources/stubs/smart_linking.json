@@ -1355,6 +1355,7 @@
       "space_id": "P-04FF-0_BP-6",
       "communication_object_ids": [],
       "channels": {},
+      "group_object_tree": [],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,
@@ -1421,6 +1422,39 @@
           ]
         }
       },
+      "group_object_tree": [
+        {
+          "type": "Channel",
+          "identifier": "CH-1",
+          "name": "Ausgang A, CH1 Schalten SL",
+          "communication_object_ids": [
+            "1.0.1/O-0_R-1"
+          ],
+          "nodes": []
+        },
+        {
+          "type": "Channel",
+          "identifier": "CH-2",
+          "name": "Ausgang B, CH2 Schalten SL",
+          "communication_object_ids": [
+            "1.0.1/O-9_R-85",
+            "1.0.1/O-11_R-70"
+          ],
+          "nodes": []
+        },
+        {
+          "type": "Channel",
+          "identifier": "CH-3",
+          "name": "Ausgang C, CH3 Schalten SL",
+          "communication_object_ids": [
+            "1.0.1/O-18_R-98",
+            "1.0.1/O-20_R-88",
+            "1.0.1/O-21_R-90",
+            "1.0.1/O-23_R-100"
+          ],
+          "nodes": []
+        }
+      ],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,
@@ -1548,6 +1582,80 @@
           ]
         }
       },
+      "group_object_tree": [
+        {
+          "type": "Channel",
+          "identifier": "CH-1",
+          "name": "Master Ausgang 1 - Schalten ",
+          "communication_object_ids": [
+            "1.0.2/O-55_R-43",
+            "1.0.2/O-60_R-50",
+            "1.0.2/O-61_R-51"
+          ],
+          "nodes": []
+        },
+        {
+          "type": "Channel",
+          "identifier": "CH-4",
+          "name": "Master Ausgang 2 - Schalten ",
+          "communication_object_ids": [
+            "1.0.2/O-66_R-95",
+            "1.0.2/O-72_R-103"
+          ],
+          "nodes": []
+        },
+        {
+          "type": "Channel",
+          "identifier": "CH-8",
+          "name": "Master Ausgänge 3+4 - Rollladen ",
+          "communication_object_ids": [
+            "1.0.2/O-77_R-121",
+            "1.0.2/O-78_R-122",
+            "1.0.2/O-79_R-123",
+            "1.0.2/O-89_R-131",
+            "1.0.2/O-92_R-133",
+            "1.0.2/O-97_R-137",
+            "1.0.2/O-98_R-138"
+          ],
+          "nodes": []
+        },
+        {
+          "type": "Channel",
+          "identifier": "CH-15",
+          "name": "Master Ausgänge 5+6 - Jalousie ",
+          "communication_object_ids": [
+            "1.0.2/O-99_R-204",
+            "1.0.2/O-100_R-205",
+            "1.0.2/O-101_R-206",
+            "1.0.2/O-102_R-207",
+            "1.0.2/O-114_R-218",
+            "1.0.2/O-115_R-219",
+            "1.0.2/O-119_R-223",
+            "1.0.2/O-120_R-224"
+          ],
+          "nodes": []
+        },
+        {
+          "type": "Channel",
+          "identifier": "CH-19",
+          "name": "Master Ausgang 7 - Schalten ",
+          "communication_object_ids": [
+            "1.0.2/O-121_R-238",
+            "1.0.2/O-127_R-246"
+          ],
+          "nodes": []
+        },
+        {
+          "type": "Channel",
+          "identifier": "CH-22",
+          "name": "Master Ausgang 8 - Schalten ",
+          "communication_object_ids": [
+            "1.0.2/O-132_R-290",
+            "1.0.2/O-138_R-298"
+          ],
+          "nodes": []
+        }
+      ],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,
@@ -1571,6 +1679,7 @@
       "space_id": "P-04FF-0_BP-4",
       "communication_object_ids": [],
       "channels": {},
+      "group_object_tree": [],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,
@@ -1620,6 +1729,19 @@
           "functional_blocks": null
         }
       },
+      "group_object_tree": [
+        {
+          "type": "Channel",
+          "identifier": "CH-2",
+          "name": "Raumtemperaturregler extern",
+          "communication_object_ids": [
+            "1.1.1/O-4_R-7",
+            "1.1.1/O-2_R-11",
+            "1.1.1/O-3_R-12"
+          ],
+          "nodes": []
+        }
+      ],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,
@@ -1664,6 +1786,7 @@
           ]
         }
       },
+      "group_object_tree": [],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,
