@@ -38,6 +38,7 @@ from xknxproject.models import (
     ProjectInfo,
     Space,
     TextParameter,
+    Trade,
     XMLArea,
     XMLFunction,
     XMLGroupAddress,
@@ -45,6 +46,7 @@ from xknxproject.models import (
     XMLGroupRange,
     XMLProjectInformation,
     XMLSpace,
+    XMLTrade,
 )
 from xknxproject.zip.extractor import KNXProjContents
 
@@ -144,6 +146,22 @@ def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
     return result
 
 
+def _recursive_convert_trades(trades: list[XMLTrade]) -> list[Trade]:
+    """Convert trades to the final output format, in project file order."""
+    return [
+        Trade(
+            identifier=trade.identifier,
+            name=trade.name,
+            number=trade.number,
+            description=trade.description,
+            project_uid=trade.project_uid,
+            devices=trade.devices,
+            trades=_recursive_convert_trades(trade.trades),
+        )
+        for trade in trades
+    ]
+
+
 def _recursive_convert_group_range(
     group_ranges: list[XMLGroupRange],
     group_address_style: GroupAddressStyle,
@@ -185,6 +203,7 @@ class XMLParser:
 
         self.project_info: XMLProjectInformation
         self.functions: list[XMLFunction] = []
+        self.trades: list[XMLTrade] = []
 
     def parse(self, language: str | None = None) -> KNXProject:
         """Parse ETS project."""
@@ -210,6 +229,7 @@ class XMLParser:
             self.spaces,
             self.project_info,
             self.functions,
+            self.trades,
         ) = ProjectLoader.load(
             knx_proj_contents=self.knx_proj_contents,
             knx_master_data=knx_master_data,
@@ -307,6 +327,15 @@ class XMLParser:
                 recursive_sort_spaces(_space.spaces)
 
         recursive_sort_spaces(self.spaces)
+
+        def recursive_sort_trades(trades: list[XMLTrade]) -> None:
+            for _trade in trades:
+                _trade.devices.sort(
+                    key=lambda ia: tuple(ia.split("."))  # area > line > device
+                )
+                recursive_sort_trades(_trade.trades)
+
+        recursive_sort_trades(self.trades)
 
         self.group_addresses.sort(key=attrgetter("raw_address"))
 
@@ -482,5 +511,6 @@ class XMLParser:
             group_addresses=group_address_dict,
             group_ranges=group_range_dict,
             locations=space_dict,
+            trades=_recursive_convert_trades(self.trades),
             functions=functions_dict,
         )

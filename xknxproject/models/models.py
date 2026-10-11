@@ -951,6 +951,19 @@ class XMLSpace:
 
 
 @dataclass
+class XMLTrade:
+    """A trade in the trades XML."""
+
+    identifier: str
+    name: str
+    number: str  # default to ""
+    description: str  # default to ""
+    project_uid: int | None
+    trades: list[XMLTrade]
+    devices: list[str]  # [DeviceInstance.individual_address]
+
+
+@dataclass
 class XMLFunction:
     """A functions in the space XML."""
 

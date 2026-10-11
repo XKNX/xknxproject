@@ -21,6 +21,7 @@ from xknxproject.models.knxproject import (
     ProjectInfo,
     Space,
     TextParameter,
+    Trade,
 )
 
 from . import RESOURCES_PATH, STUBS_PATH
@@ -87,6 +88,9 @@ def test_stub_keys_match_typed_dicts(file_stem: str) -> None:
     for com_object in stub["communication_objects"].values():
         if (text_parameter := com_object["text_parameter"]) is not None:
             assert set(text_parameter) == set(TextParameter.__annotations__)
+
+    assert isinstance(stub["trades"], list)
+    assert all(set(trade) == set(Trade.__annotations__) for trade in stub["trades"])
 
 
 def _iter_items(section: dict, nested_key: str | None) -> Iterator[dict]:

@@ -25,6 +25,7 @@ from xknxproject.models import (
     XMLLine,
     XMLProjectInformation,
     XMLSpace,
+    XMLTrade,
 )
 from xknxproject.util import get_dpt_type, parse_dpt_types, parse_xml_flag
 from xknxproject.zip import KNXProjContents
@@ -45,6 +46,7 @@ class ProjectLoader:
         list[XMLSpace],
         XMLProjectInformation,
         list[XMLFunction],
+        list[XMLTrade],
     ]:
         """Load topology mappings."""
         areas: list[XMLArea] = []
@@ -53,6 +55,7 @@ class ProjectLoader:
         group_range_list: list[XMLGroupRange] = []
         spaces: list[XMLSpace] = []
         functions: list[XMLFunction] = []
+        trades: list[XMLTrade] = []
 
         with knx_proj_contents.open_project_meta() as project_file:
             tree = ElementTree.parse(project_file)
@@ -106,6 +109,13 @@ class ProjectLoader:
                     )
                 )
 
+            # Trades are available since ETS 5; ETS 4 projects have no such element
+            trade_loader = _TradeLoader(devices)
+            for trades_element in tree.findall(
+                "{*}Project/{*}Installations/{*}Installation/{*}Trades"
+            ):
+                trades.extend(trade_loader.load(trades_element=trades_element))
+
         for function in functions:
             function.usage_text = (
                 knx_master_data.get_function_type_name(function.function_type)
@@ -133,6 +143,7 @@ class ProjectLoader:
             spaces,
             project_info,
             functions,
+            trades,
         )
 
 
@@ -547,3 +558,43 @@ def load_project_info(tree: ElementTree.ElementTree) -> XMLProjectInformation:
             schema_version=schema_version,
             tool_version=tool_version,
         )
+
+
+class _TradeLoader:
+    """Load trade infos from KNX XML."""
+
+    def __init__(self, devices: list[DeviceInstance]) -> None:
+        """Initialize the TradeLoader."""
+        # keyed by the device instance Id, which DeviceInstanceRef refers to; an
+        # individual address is not unique in a project with an address conflict
+        self.devices: dict[str, DeviceInstance] = {
+            device.identifier: device for device in devices
+        }
+
+    def load(self, trades_element: ElementTree.Element) -> list[XMLTrade]:
+        """Load the trades of an installation."""
+        return [self.parse_trade(trade) for trade in trades_element.findall("{*}Trade")]
+
+    def parse_trade(self, node: ElementTree.Element) -> XMLTrade:
+        """Parse a trade and its nested trades from the document."""
+        project_uid = node.get("Puid")
+        trade = XMLTrade(
+            identifier=node.get("Id"),  # type: ignore[arg-type]
+            name=node.get("Name", ""),
+            number=node.get("Number", ""),
+            description=node.get("Description", ""),
+            project_uid=int(project_uid) if project_uid else None,
+            trades=[],
+            devices=[],
+        )
+
+        for sub_node in node:
+            if sub_node.tag.endswith("}Trade"):
+                # trades can be nested for an unbound depth
+                trade.trades.append(self.parse_trade(sub_node))
+            elif sub_node.tag.endswith("}DeviceInstanceRef") and (
+                device := self.devices.get(sub_node.get("RefId", ""))
+            ):
+                trade.devices.append(device.individual_address)
+
+        return trade

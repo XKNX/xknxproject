@@ -130,6 +130,7 @@
       "functions": []
     }
   },
+  "trades": [],
   "functions": {
     "F-1": {
       "function_type": "FT-1",

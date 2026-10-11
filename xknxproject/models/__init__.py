@@ -17,6 +17,7 @@ from .knxproject import (
     ProjectInfo,
     Space,
     TextParameter,
+    Trade,
 )
 from .models import (
     ApplicationProgram,
@@ -44,5 +45,6 @@ from .models import (
     XMLLine,
     XMLProjectInformation,
     XMLSpace,
+    XMLTrade,
 )
 from .static import MEDIUM_TYPES, GroupAddressStyle, SpaceType

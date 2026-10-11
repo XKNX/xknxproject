@@ -336,7 +336,7 @@ def test_load_sets_hardware_id_of_resolved_products(
     monkeypatch.setattr(
         ProjectLoader,
         "load",
-        lambda **_: ([], [], [], devices, [], Mock(), []),
+        lambda **_: ([], [], [], devices, [], Mock(), [], []),
     )
     monkeypatch.setattr(HardwareLoader, "get_hardware_files", lambda **_: [Mock()])
     monkeypatch.setattr(
