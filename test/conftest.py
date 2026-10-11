@@ -1,10 +1,26 @@
 """Conftest for xknxproject."""
 
 import json
+from pathlib import Path
+import zipfile
 
 from xknxproject.models import DeviceInstance, KNXProject, XMLArea, XMLLine
 
 from . import STUBS_PATH
+
+
+def copy_project_with_member(
+    source: Path, target: Path, member: str, content: bytes
+) -> Path:
+    """Copy a project archive, replacing one member without changing the fixture."""
+    with zipfile.ZipFile(source) as original:
+        assert member in original.namelist()
+        with zipfile.ZipFile(target, "w") as modified:
+            for name in original.namelist():
+                modified.writestr(
+                    name, content if name == member else original.read(name)
+                )
+    return target
 
 
 def assert_stub(to_be_verified: KNXProject, stub_name: str) -> None:

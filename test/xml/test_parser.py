@@ -14,8 +14,12 @@ from xknxproject.loader import (
     KNXMasterLoader,
     ProjectLoader,
 )
-from xknxproject.models import Product, SpaceType, XMLSpace
-from xknxproject.xml.parser import XMLParser, _recursive_convert_spaces
+from xknxproject.models import ParameterInstanceRef, Product, SpaceType, XMLSpace
+from xknxproject.xml.parser import (
+    XMLParser,
+    _recursive_convert_spaces,
+    _text_parameter,
+)
 from xknxproject.zip import KNXProjContents, extract
 
 from .. import RESOURCES_PATH
@@ -350,3 +354,19 @@ def test_load_sets_hardware_id_of_resolved_products(
     assert devices[0].hardware_id == "M-0083_H-1"
     assert devices[0].application_program_ref is None
     assert devices[1].hardware_id == ""
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [("Wohnzimmer", "Wohnzimmer"), ("", None), (None, None)],
+)
+def test_text_parameter_value(value: str | None, expected: str | None) -> None:
+    """An empty project value means the default text, like no value at all."""
+    parameter = ParameterInstanceRef(
+        ref_id="M-0083_A-0001-01-0001_P-1_R-1", value=value
+    )
+
+    assert _text_parameter(parameter, "M-0083_A-0001-01-0001") == {
+        "identifier": "P-1_R-1",
+        "value": expected,
+    }

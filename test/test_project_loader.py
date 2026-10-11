@@ -6,7 +6,14 @@ from unittest.mock import Mock
 from xml.etree import ElementTree
 
 from xknxproject.loader.project_loader import _LocationLoader
-from xknxproject.models import DeviceInstance, KNXMasterData
+from xknxproject.models import (
+    ApplicationProgram,
+    DeviceInstance,
+    KNXMasterData,
+    ModuleDefinitionNumericArg,
+    ModuleInstance,
+    ModuleInstanceArgument,
+)
 from xknxproject.zip import KNXProjContents
 
 from .conftest import build_devices
@@ -94,3 +101,61 @@ def test_devices_sharing_an_address_keep_their_own_space() -> None:
     )
 
     assert [device.space_id for device in devices] == ["P-1_BP-1", "P-1_BP-2"]
+
+
+def _argument(ref_id: str, name: str, value: str) -> ModuleInstanceArgument:
+    return ModuleInstanceArgument(ref_id=ref_id, value=value, name=name)
+
+
+def test_module_arguments_of_an_instance() -> None:
+    """Literal arguments apply, sub-modules override, computed ones are left out."""
+    (device,) = build_devices(("P-1_DI-1", 1))
+    device.module_instances = [
+        ModuleInstance(
+            identifier="MD-4_M-15_MI-1",
+            ref_id="MD-4_M-15",
+            arguments=[
+                _argument("A_MD-4_A-1", "PageNum", "L-9"),
+                _argument("A_MD-4_A-5", "ChNo", "A"),
+                _argument("A_MD-4_A-6", "Group", "1"),
+            ],
+        ),
+        ModuleInstance(
+            identifier="MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1",
+            ref_id="MD-4_SM-1_M-1",
+            arguments=[
+                _argument("A_MD-4_SM-1_A-1", "DevNum", "MD-4_L-1"),
+                _argument("A_MD-4_SM-1_A-4", "Group", "2"),
+                _argument("A_MD-4_SM-1_A-5", "ChNo", "B"),
+            ],
+        ),
+        ModuleInstance(identifier="MD-4_M-15_MI-10", ref_id="MD-4_M-15", arguments=[]),
+    ]
+    application = ApplicationProgram(
+        com_objects={},
+        com_object_refs={},
+        allocators={},
+        module_def_arguments={},
+        numeric_args={
+            "A_MD-4_A-1": ModuleDefinitionNumericArg(
+                allocator_ref_id="A_L-9", value=None, base_value=None
+            ),
+            "A_MD-4_SM-1_A-1": ModuleDefinitionNumericArg(
+                allocator_ref_id="A_MD-4_L-1", value=None, base_value=None
+            ),
+            "A_MD-4_SM-1_A-4": ModuleDefinitionNumericArg(
+                allocator_ref_id=None, value=0, base_value="A_MD-4_A-6"
+            ),
+        },
+        channels={},
+    )
+
+    # the sub-module's literal ChNo wins, its computed Group hides the base value
+    assert device.module_arguments(
+        "MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-1_R-2", application
+    ) == {"ChNo": "B"}
+    assert device.module_arguments("MD-4_M-15_MI-1_CH-1", application) == {
+        "ChNo": "A",
+        "Group": "1",
+    }
+    assert device.module_arguments("O-334_R-21", application) == {}

@@ -42,7 +42,8 @@
       ],
       "dpas": [
         "417.52"
-      ]
+      ],
+      "text_parameter": null
     },
     "1.0.1/O-9_R-85": {
       "name": "OtSwNo",
@@ -74,7 +75,8 @@
       ],
       "dpas": [
         "417.52"
-      ]
+      ],
+      "text_parameter": null
     },
     "1.0.1/O-11_R-70": {
       "name": "OtSt",
@@ -106,7 +108,8 @@
       ],
       "dpas": [
         "417.51"
-      ]
+      ],
+      "text_parameter": null
     },
     "1.0.1/O-18_R-98": {
       "name": "OtSwNo",
@@ -138,7 +141,8 @@
       ],
       "dpas": [
         "417.52"
-      ]
+      ],
+      "text_parameter": null
     },
     "1.0.1/O-20_R-88": {
       "name": "OtSt",
@@ -170,7 +174,8 @@
       ],
       "dpas": [
         "417.51"
-      ]
+      ],
+      "text_parameter": null
     },
     "1.0.1/O-21_R-90": {
       "name": "OtSc",
@@ -202,7 +207,8 @@
       ],
       "dpas": [
         "417.73"
-      ]
+      ],
+      "text_parameter": null
     },
     "1.0.1/O-23_R-100": {
       "name": "OtIn",
@@ -234,7 +240,8 @@
       ],
       "dpas": [
         "417.69"
-      ]
+      ],
+      "text_parameter": null
     },
     "1.0.2/O-55_R-43": {
       "name": "GO_SW8_SWITCH0",
@@ -270,7 +277,11 @@
       ],
       "dpas": [
         "417.52"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-147_R-147",
+        "value": null
+      }
     },
     "1.0.2/O-60_R-50": {
       "name": "GO_SW8_SCENE0",
@@ -306,7 +317,11 @@
       ],
       "dpas": [
         "417.73"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-147_R-147",
+        "value": null
+      }
     },
     "1.0.2/O-61_R-51": {
       "name": "GO_SW8_SWITCH_STATUS0",
@@ -342,7 +357,11 @@
       ],
       "dpas": [
         "417.51"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-147_R-147",
+        "value": null
+      }
     },
     "1.0.2/O-66_R-95": {
       "name": "GO_SW8_SWITCH1",
@@ -378,7 +397,11 @@
       ],
       "dpas": [
         "417.52"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-778_R-778",
+        "value": null
+      }
     },
     "1.0.2/O-72_R-103": {
       "name": "GO_SW8_SWITCH_STATUS1",
@@ -414,7 +437,11 @@
       ],
       "dpas": [
         "417.51"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-778_R-778",
+        "value": null
+      }
     },
     "1.0.2/O-77_R-121": {
       "name": "GO_SH_UP_DOWN2",
@@ -450,7 +477,11 @@
       ],
       "dpas": [
         "800.81"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-1109_R-1109",
+        "value": null
+      }
     },
     "1.0.2/O-78_R-122": {
       "name": "GO_SH_STEP2",
@@ -486,7 +517,11 @@
       ],
       "dpas": [
         "800.82"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-1109_R-1109",
+        "value": null
+      }
     },
     "1.0.2/O-79_R-123": {
       "name": "GO_SH_HEIGHT_POS2",
@@ -522,7 +557,11 @@
       ],
       "dpas": [
         "800.71"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-1109_R-1109",
+        "value": null
+      }
     },
     "1.0.2/O-89_R-131": {
       "name": "GO_SH_SCENE2",
@@ -558,7 +597,11 @@
       ],
       "dpas": [
         "800.75"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-1109_R-1109",
+        "value": null
+      }
     },
     "1.0.2/O-92_R-133": {
       "name": "GO_SH_HEIGHT_STATUS2",
@@ -594,7 +637,11 @@
       ],
       "dpas": [
         "800.85"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-1109_R-1109",
+        "value": null
+      }
     },
     "1.0.2/O-97_R-137": {
       "name": "GO_SH_STATUS_RUNNING2",
@@ -628,7 +675,11 @@
       "group_address_links": [
         "0/0/17"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "P-1109_R-1109",
+        "value": null
+      }
     },
     "1.0.2/O-98_R-138": {
       "name": "GO_SH_STATUS_DIRECTION2",
@@ -664,7 +715,11 @@
       ],
       "dpas": [
         "800.51"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-1109_R-1109",
+        "value": null
+      }
     },
     "1.0.2/O-99_R-204": {
       "name": "GO_BL_UP_DOWN4",
@@ -700,7 +755,11 @@
       ],
       "dpas": [
         "800.81"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-2116_R-2116",
+        "value": null
+      }
     },
     "1.0.2/O-100_R-205": {
       "name": "GO_BL_STEP4",
@@ -736,7 +795,11 @@
       ],
       "dpas": [
         "800.82"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-2116_R-2116",
+        "value": null
+      }
     },
     "1.0.2/O-101_R-206": {
       "name": "GO_BL_HEIGHT_POS4",
@@ -772,7 +835,11 @@
       ],
       "dpas": [
         "800.71"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-2116_R-2116",
+        "value": null
+      }
     },
     "1.0.2/O-102_R-207": {
       "name": "GO_BL_SLAT_POS4",
@@ -808,7 +875,11 @@
       ],
       "dpas": [
         "800.72"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-2116_R-2116",
+        "value": null
+      }
     },
     "1.0.2/O-114_R-218": {
       "name": "GO_BL_HEIGHT_STATUS4",
@@ -844,7 +915,11 @@
       ],
       "dpas": [
         "800.85"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-2116_R-2116",
+        "value": null
+      }
     },
     "1.0.2/O-115_R-219": {
       "name": "GO_BL_SLAT_STATUS4",
@@ -880,7 +955,11 @@
       ],
       "dpas": [
         "800.56"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-2116_R-2116",
+        "value": null
+      }
     },
     "1.0.2/O-119_R-223": {
       "name": "GO_BL_STATUS_RUNNING4",
@@ -914,7 +993,11 @@
       "group_address_links": [
         "0/0/25"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "P-2116_R-2116",
+        "value": null
+      }
     },
     "1.0.2/O-120_R-224": {
       "name": "GO_BL_STATUS_DIRECTION4",
@@ -950,7 +1033,11 @@
       ],
       "dpas": [
         "800.51"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-2116_R-2116",
+        "value": null
+      }
     },
     "1.0.2/O-121_R-238": {
       "name": "GO_SW8_SWITCH6",
@@ -986,7 +1073,11 @@
       ],
       "dpas": [
         "417.52"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-2538_R-2538",
+        "value": null
+      }
     },
     "1.0.2/O-127_R-246": {
       "name": "GO_SW8_SWITCH_STATUS6",
@@ -1022,7 +1113,11 @@
       ],
       "dpas": [
         "417.51"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-2538_R-2538",
+        "value": null
+      }
     },
     "1.0.2/O-132_R-290": {
       "name": "GO_SW8_SWITCH7",
@@ -1058,7 +1153,11 @@
       ],
       "dpas": [
         "417.52"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-3169_R-3169",
+        "value": null
+      }
     },
     "1.0.2/O-138_R-298": {
       "name": "GO_SW8_SWITCH_STATUS7",
@@ -1094,7 +1193,11 @@
       ],
       "dpas": [
         "417.51"
-      ]
+      ],
+      "text_parameter": {
+        "identifier": "P-3169_R-3169",
+        "value": null
+      }
     },
     "1.1.1/O-4_R-7": {
       "name": "CO_VALVE_POSITION_INPUT",
@@ -1126,7 +1229,8 @@
       ],
       "dpas": [
         "400.50"
-      ]
+      ],
+      "text_parameter": null
     },
     "1.1.1/O-2_R-11": {
       "name": "CO_TEMPERATURE_SETPOINT_OUTPUT_external",
@@ -1158,7 +1262,8 @@
       ],
       "dpas": [
         "101.51"
-      ]
+      ],
+      "text_parameter": null
     },
     "1.1.1/O-3_R-12": {
       "name": "CO_TEMPERATURE_SETPOINT_INPUT_external",
@@ -1190,7 +1295,8 @@
       ],
       "dpas": [
         "113.51"
-      ]
+      ],
+      "text_parameter": null
     }
   },
   "topology": {

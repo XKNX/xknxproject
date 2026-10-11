@@ -40,7 +40,8 @@
       "group_address_links": [
         "0/0/3"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": null
     },
     "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1": {
       "name": "IstWert",
@@ -73,7 +74,11 @@
       "group_address_links": [
         "0/0/1"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-2_M-1_MI-1_P-1_R-1",
+        "value": "Wohnzimmer"
+      }
     },
     "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3": {
       "name": "SollWert",
@@ -107,7 +112,11 @@
         "0/0/2",
         "0/7/2"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-2_M-1_MI-1_P-1_R-1",
+        "value": "Wohnzimmer"
+      }
     },
     "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1": {
       "name": "IstWert",
@@ -140,7 +149,11 @@
       "group_address_links": [
         "0/1/1"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-2_M-2_MI-1_P-1_R-1",
+        "value": "Küche"
+      }
     },
     "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3": {
       "name": "SollWert",
@@ -174,7 +187,11 @@
         "0/1/2",
         "0/7/2"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-2_M-2_MI-1_P-1_R-1",
+        "value": "Küche"
+      }
     },
     "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3": {
       "name": "SollWert",
@@ -208,7 +225,11 @@
         "0/2/2",
         "0/7/2"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-2_M-1_MI-1_P-1_R-1",
+        "value": "Bad"
+      }
     },
     "1.1.2/MD-2_M-1_MI-1_O-2-19_R-6": {
       "name": "ModeKomfort",
@@ -241,7 +262,11 @@
       "group_address_links": [
         "0/6/7"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-2_M-1_MI-1_P-1_R-1",
+        "value": "Bad"
+      }
     },
     "1.1.2/O-334_R-21": {
       "name": "FuehrungsWert",
@@ -271,7 +296,8 @@
       "group_address_links": [
         "0/6/10"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": null
     },
     "1.1.2/MD-2_M-5_MI-1_O-2-8_R-18": {
       "name": "SollwertAkt",
@@ -304,7 +330,11 @@
       "group_address_links": [
         "0/6/8"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-2_M-5_MI-1_P-1_R-1",
+        "value": null
+      }
     },
     "1.1.2/MD-2_M-6_MI-1_O-2-20_R-7": {
       "name": "Mode Nacht",
@@ -337,7 +367,11 @@
       "group_address_links": [
         "0/6/9"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-2_M-6_MI-1_P-1_R-1",
+        "value": null
+      }
     },
     "1.1.3/O-24_R-966": {
       "name": "Status On/Off (ECG1-ECG16)",
@@ -367,7 +401,8 @@
       "group_address_links": [
         "0/6/0"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": null
     },
     "1.1.3/MD-2_M-3_MI-2_O-2-1_R-11": {
       "name": "Group 1, Dimming",
@@ -400,7 +435,11 @@
       "group_address_links": [
         "0/6/1"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-2_M-3_MI-2_P-2_R-2",
+        "value": null
+      }
     },
     "1.1.3/MD-2_M-3_MI-3_O-2-0_R-10": {
       "name": "Group 1, Switching",
@@ -433,7 +472,11 @@
       "group_address_links": [
         "0/6/2"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-2_M-3_MI-3_P-2_R-2",
+        "value": null
+      }
     },
     "1.1.3/MD-1_M-1_MI-1_O-2-0_R-7": {
       "name": "ECG 1, Switching",
@@ -466,7 +509,11 @@
       "group_address_links": [
         "0/6/3"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-1_M-1_MI-1_P-27_R-27",
+        "value": null
+      }
     },
     "1.1.3/MD-1_M-1_MI-4_O-2-1_R-8": {
       "name": "ECG 1, Dimming",
@@ -499,7 +546,11 @@
       "group_address_links": [
         "0/6/4"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-1_M-1_MI-4_P-27_R-27",
+        "value": null
+      }
     },
     "1.1.3/MD-3_M-2_MI-2_O-2-4_R-5": {
       "name": "MD1, Error",
@@ -532,7 +583,11 @@
       "group_address_links": [
         "0/6/5"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-3_M-2_MI-2_P-1_R-1",
+        "value": null
+      }
     },
     "1.1.3/MD-3_M-2_MI-8_O-2-5_R-6": {
       "name": "MD1, BrightnessSwitch",
@@ -565,7 +620,11 @@
       "group_address_links": [
         "0/6/6"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-3_M-2_MI-8_P-1_R-1",
+        "value": null
+      }
     },
     "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-0_R-1": {
       "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
@@ -598,7 +657,11 @@
       "group_address_links": [
         "0/6/12"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_P-1_R-1",
+        "value": "Dev 1.1"
+      }
     },
     "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-1_R-2": {
       "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].power",
@@ -631,7 +694,11 @@
       "group_address_links": [
         "0/6/13"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_P-1_R-1",
+        "value": "Dev 1.1"
+      }
     },
     "1.1.4/O-256_R-36": {
       "name": "oEnMon.consumedEnergy",
@@ -661,7 +728,8 @@
       "group_address_links": [
         "0/6/11"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": null
     },
     "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-1_SM-1_O-3-0_R-1": {
       "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
@@ -694,7 +762,11 @@
       "group_address_links": [
         "0/6/15"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-1_SM-1_P-1_R-1",
+        "value": "Dev 2.1"
+      }
     },
     "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-0_R-1": {
       "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
@@ -727,7 +799,11 @@
       "group_address_links": [
         "0/6/14"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_P-1_R-1",
+        "value": "Dev 1.2"
+      }
     },
     "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-0_R-1": {
       "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
@@ -760,7 +836,11 @@
       "group_address_links": [
         "0/6/16"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_P-1_R-1",
+        "value": "Dev 2.2"
+      }
     },
     "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-1_R-2": {
       "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].power",
@@ -793,7 +873,11 @@
       "group_address_links": [
         "0/6/17"
       ],
-      "dpas": null
+      "dpas": null,
+      "text_parameter": {
+        "identifier": "MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_P-1_R-1",
+        "value": "Dev 2.2"
+      }
     }
   },
   "topology": {

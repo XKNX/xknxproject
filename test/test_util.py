@@ -73,6 +73,13 @@ def test_parse_dpt_types(
         ("Hi{{0:default}}again", ParameterInstanceRef("id", "test"), "Hitestagain"),
         ("{{1}}", ParameterInstanceRef("id", "test"), "{{1}}"),
         ("{{XY}}:{{0}}{{ZZ}}", ParameterInstanceRef("id", "test"), "{{XY}}:test{{ZZ}}"),
+        # a default holding a module argument without a literal value
+        ("Hi {{0:ECG {{ECG_NO}}}}", None, "Hi ECG {{ECG_NO}}"),
+        (
+            "PB{{ChNoGr}}: {{0:Buttons {{ChNoGr}}}}",
+            ParameterInstanceRef("id", "Heizung"),
+            "PB{{ChNoGr}}: Heizung",
+        ),
     ],
 )
 def test_text_parameter_template_replace(
@@ -80,6 +87,29 @@ def test_text_parameter_template_replace(
 ) -> None:
     """Test strip_module_instance."""
     assert util.text_parameter_template_replace(text, parameter) == expected
+
+
+@pytest.mark.parametrize(
+    ("text", "arguments", "expected"),
+    [
+        ("Channel {{ChNo}}", {"ChNo": "A"}, "Channel A"),
+        # an argument nested in the default of the text parameter
+        (
+            "PB{{ChNoGr}}: {{0:Buttons {{ChNoGr}}}}",
+            {"ChNoGr": "1"},
+            "PB1: {{0:Buttons 1}}",
+        ),
+        ("{{0}} {{0:default}}", {"ChNo": "A"}, "{{0}} {{0:default}}"),
+        # an argument without a literal value stays
+        ("ECG {{ECG_NO}}", {"ChNo": "A"}, "ECG {{ECG_NO}}"),
+        ("Channel A", {"ChNo": "B"}, "Channel A"),
+    ],
+)
+def test_module_argument_replace(
+    text: str, arguments: dict[str, str], expected: str
+) -> None:
+    """Test module_argument_replace."""
+    assert util.module_argument_replace(text, arguments) == expected
 
 
 @pytest.mark.parametrize(
