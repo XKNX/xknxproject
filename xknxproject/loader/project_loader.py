@@ -12,6 +12,7 @@ from xknxproject.models import (
     ComObjectInstanceRef,
     DeviceInstance,
     GroupAddressStyle,
+    IPConfig,
     KNXMasterData,
     ModuleInstance,
     ModuleInstanceArgument,
@@ -156,6 +157,9 @@ class _GroupAddressLoader:
             data_secure_key=group_address_element.get("Key"),
             comment=group_address_element.get("Comment", ""),
             style=group_address_style,
+            central=group_address_element.get("Central") == "true",
+            global_=group_address_element.get("Global") == "true",
+            security=group_address_element.get("Security", "Auto"),
         )
 
 
@@ -184,6 +188,7 @@ class _GroupAddressRangeLoader:
                 group_ranges=group_ranges,
                 comment=elem.get("Comment", ""),
                 style=group_address_style,
+                description=elem.get("Description", ""),
             )
 
         return create_xml_group_range(group_range_element)
@@ -209,7 +214,9 @@ class _TopologyLoader:
         address: int = int(area_element.get("Address", ""))
         name: str = area_element.get("Name", "")
         description: str | None = area_element.get("Description")
-        area: XMLArea = XMLArea(address, name, description, [])
+        area: XMLArea = XMLArea(
+            address, name, description, [], comment=area_element.get("Comment", "")
+        )
 
         for line_element in area_element:
             area.lines.append(self._create_line(line_element, area))
@@ -226,7 +233,15 @@ class _TopologyLoader:
             medium_type = segment.get("MediumTypeRefId", "")
         else:
             medium_type = line_element.get("MediumTypeRefId", "")
-        line: XMLLine = XMLLine(address, description, name, medium_type, [], area)
+        line: XMLLine = XMLLine(
+            address,
+            description,
+            name,
+            medium_type,
+            [],
+            area,
+            comment=line_element.get("Comment", ""),
+        )
 
         for device_element in line_element.findall(".//{*}DeviceInstance"):
             if device := self._create_device(device_element, line):
@@ -300,6 +315,7 @@ class _TopologyLoader:
             project_uid=int(project_uid) if project_uid else None,
             name=device_element.get("Name", ""),
             description=device_element.get("Description", ""),
+            comment=device_element.get("Comment", ""),
             last_modified=device_element.get("LastModified"),
             product_ref=product_ref,
             hardware_program_ref=device_element.get("Hardware2ProgramRefId", ""),
@@ -320,6 +336,22 @@ class _TopologyLoader:
             == "true",
             medium_config_loaded=device_element.get("MediumConfigLoaded") == "true",
             parameters_loaded=device_element.get("ParametersLoaded") == "true",
+            ip_config=self._create_ip_config(device_element.find("{*}IPConfig")),
+        )
+
+    @staticmethod
+    def _create_ip_config(
+        ip_config_element: ElementTree.Element | None,
+    ) -> IPConfig | None:
+        """Create the IP configuration of a device, if it has one."""
+        if ip_config_element is None:
+            return None
+        return IPConfig(
+            assign=ip_config_element.get("Assign", "Auto"),
+            ip_address=ip_config_element.get("IPAddress"),
+            subnet_mask=ip_config_element.get("SubnetMask"),
+            default_gateway=ip_config_element.get("DefaultGateway"),
+            mac_address=ip_config_element.get("MACAddress"),
         )
 
     @staticmethod
@@ -382,6 +414,7 @@ class _TopologyLoader:
             description=com_object.get("Description"),
             channel=com_object.get("ChannelId"),
             links=links,
+            priority=com_object.get("Priority"),
         )
 
     def _create_module_instance(
@@ -459,6 +492,7 @@ class _LocationLoader:
             spaces=[],
             devices=[],
             functions=[],
+            comment=node.get("Comment", ""),
         )
 
         for sub_node in node:
@@ -494,6 +528,9 @@ class _LocationLoader:
             group_addresses=[],
             usage_text="",
             space_id="",
+            number=node.get("Number", ""),
+            description=node.get("Description", ""),
+            comment=node.get("Comment", ""),
         )
 
         for sub_node in node:
@@ -534,6 +571,11 @@ def load_project_info(tree: ElementTree.ElementTree) -> XMLProjectInformation:
             project_id=identifier,
             name=info_node.get("Name", ""),
             last_modified=info_node.get("LastModified"),
+            project_start=info_node.get("ProjectStart"),
+            project_end=info_node.get("ProjectEnd"),
+            project_number=info_node.get("ProjectNumber", ""),
+            contract_number=info_node.get("ContractNumber", ""),
+            comment=info_node.get("Comment", ""),
             group_address_style=GroupAddressStyle(info_node.get("GroupAddressStyle")),
             guid=info_node.get("Guid"),  # type: ignore[arg-type]
             created_by=created_by,

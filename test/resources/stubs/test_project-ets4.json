@@ -3,6 +3,11 @@
     "project_id": "P-0600",
     "name": "Test Project XKNX",
     "last_modified": "2023-06-15T19:27:33",
+    "project_start": "2023-06-12T15:49:04",
+    "project_end": null,
+    "project_number": "",
+    "contract_number": "",
+    "comment": "",
     "group_address_style": "ThreeLevel",
     "guid": null,
     "created_by": "ETS4",
@@ -37,6 +42,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/1"
       ],
@@ -68,6 +74,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/2"
       ],
@@ -99,6 +106,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/3"
       ],
@@ -130,6 +138,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/1",
         "0/0/3"
@@ -162,6 +171,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/2"
       ],
@@ -173,10 +183,12 @@
     "0": {
       "name": "Backbone area",
       "description": null,
+      "comment": "",
       "lines": {
         "0": {
           "name": "Backbone line",
           "description": null,
+          "comment": "",
           "devices": [
             "0.0.1",
             "0.0.2"
@@ -192,6 +204,7 @@
       "hardware_name": "AKS-2016.02 Switch Actuator 20-fold, 12TE, 16A",
       "order_number": "AKS-2016.02",
       "description": "",
+      "comment": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "0.0.1",
       "application": "M-0083_A-0013-11-A9D6",
@@ -212,13 +225,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "0.0.2": {
       "name": "JRA/S4.230.5.1 Jal./Rol.Akt.Fahrzt.man.4f,230V,REG",
       "hardware_name": "JRA/S4.230.5.1 Jal./Rol.Akt.Fahrzt.man.4f,230V,REG",
       "order_number": "2CDG 110 125 R0011",
       "description": "",
+      "comment": "",
       "manufacturer_name": "ABB",
       "individual_address": "0.0.2",
       "application": "M-0002_A-A061-14-BE27",
@@ -238,7 +253,8 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     }
   },
   "group_addresses": {
@@ -258,7 +274,10 @@
         "0.0.2/M-0002_A-A061-14-BE27_O-10_R-485"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/2": {
       "name": "Test 2",
@@ -276,7 +295,10 @@
         "0.0.2/M-0002_A-A061-14-BE27_O-71_R-1506"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/3": {
       "name": "Test 3",
@@ -294,7 +316,10 @@
         "0.0.2/M-0002_A-A061-14-BE27_O-10_R-485"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     }
   },
   "group_ranges": {
@@ -303,6 +328,7 @@
       "address_start": 1,
       "address_end": 2047,
       "group_addresses": [],
+      "description": "",
       "comment": "",
       "group_ranges": {
         "0/0": {
@@ -314,6 +340,7 @@
             "0/0/2",
             "0/0/3"
           ],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         }
@@ -329,6 +356,7 @@
       "usage_text": "",
       "number": "",
       "description": "",
+      "comment": "",
       "project_uid": null,
       "devices": [],
       "spaces": {
@@ -340,6 +368,7 @@
           "usage_text": "",
           "number": "",
           "description": "",
+          "comment": "",
           "project_uid": null,
           "devices": [],
           "spaces": {
@@ -351,6 +380,7 @@
               "usage_text": "",
               "number": "",
               "description": "",
+              "comment": "",
               "project_uid": null,
               "devices": [
                 "0.0.2"
@@ -369,6 +399,7 @@
           "usage_text": "",
           "number": "",
           "description": "",
+          "comment": "",
           "project_uid": null,
           "devices": [],
           "spaces": {
@@ -380,6 +411,7 @@
               "usage_text": "",
               "number": "",
               "description": "",
+              "comment": "",
               "project_uid": null,
               "devices": [
                 "0.0.1"

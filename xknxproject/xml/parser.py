@@ -51,6 +51,13 @@ from xknxproject.zip.extractor import KNXProjContents
 _LOGGER = logging.getLogger("xknxproject.log")
 
 
+def _comment_text(comment: str) -> str:
+    """Convert a comment of the project file (rich text) to plain text."""
+    return html.unescape(
+        rtf_to_text(comment),  # type: ignore[no-untyped-call]
+    )
+
+
 def _text_parameter(
     parameter: ParameterInstanceRef | None, application_program_ref: str | None
 ) -> TextParameter | None:
@@ -88,6 +95,9 @@ def _convert_functions(function: XMLFunction) -> Function:
         group_addresses=ga_dict,
         identifier=function.identifier,
         name=function.name,
+        number=function.number,
+        description=function.description,
+        comment=_comment_text(function.comment),
         project_uid=function.project_uid,
         space_id=function.space_id,
         usage_text=function.usage_text,
@@ -136,6 +146,7 @@ def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
             usage_text=space.usage_text,
             number=space.number,
             description=space.description,
+            comment=_comment_text(space.comment),
             project_uid=space.project_uid,
             devices=space.devices,
             spaces=_recursive_convert_spaces(space.spaces),
@@ -158,9 +169,8 @@ def _recursive_convert_group_range(
                 XMLGroupAddress.str_address(ga, group_address_style)
                 for ga in group_range.group_addresses
             ],
-            comment=html.unescape(
-                rtf_to_text(group_range.comment),  # type: ignore[no-untyped-call]
-            ),
+            description=group_range.description,
+            comment=_comment_text(group_range.comment),
             group_ranges=_recursive_convert_group_range(
                 group_range.group_ranges,
                 group_address_style,
@@ -366,6 +376,7 @@ class XMLParser:
                         read_on_init=com_object.read_on_init_flag,  # type: ignore[typeddict-item]
                         transmit=com_object.transmit_flag,  # type: ignore[typeddict-item]
                     ),
+                    priority=com_object.priority,  # type: ignore[typeddict-item]
                     group_address_links=group_address_links,
                     dpas=com_object.dpas,
                     text_parameter=_text_parameter(
@@ -392,6 +403,7 @@ class XMLParser:
                 hardware_name=device.product_name,
                 order_number=device.order_number,
                 description=device.description,
+                comment=_comment_text(device.comment),
                 manufacturer_name=device.manufacturer_name,
                 individual_address=device.individual_address,
                 application=device.application_program_ref,
@@ -409,6 +421,7 @@ class XMLParser:
                 communication_part_loaded=device.communication_part_loaded,
                 medium_config_loaded=device.medium_config_loaded,
                 parameters_loaded=device.parameters_loaded,
+                ip_config=device.ip_config,
             )
 
         topology_dict: dict[str, Area] = {}
@@ -421,11 +434,15 @@ class XMLParser:
                 lines_dict[str(line.address)] = Line(
                     name=line.name,
                     description=line.description,
+                    comment=_comment_text(line.comment),
                     devices=devices_topology,
                     medium_type=MEDIUM_TYPES.get(line.medium_type, "Unknown"),
                 )
             topology_dict[str(area.address)] = Area(
-                name=area.name, description=area.description, lines=lines_dict
+                name=area.name,
+                description=area.description,
+                comment=_comment_text(area.comment),
+                lines=lines_dict,
             )
 
         group_address_dict: dict[str, GroupAddress] = {
@@ -443,9 +460,10 @@ class XMLParser:
                     if group_address.address in com_object["group_address_links"]
                 ],
                 description=group_address.description,
-                comment=html.unescape(
-                    rtf_to_text(group_address.comment),  # type: ignore[no-untyped-call]
-                ),
+                comment=_comment_text(group_address.comment),
+                central=group_address.central,
+                global_=group_address.global_,
+                security=group_address.security,
             )
             for group_address in self.group_addresses
         }
@@ -465,6 +483,11 @@ class XMLParser:
             project_id=self.project_info.project_id,
             name=self.project_info.name,
             last_modified=self.project_info.last_modified,
+            project_start=self.project_info.project_start,
+            project_end=self.project_info.project_end,
+            project_number=self.project_info.project_number,
+            contract_number=self.project_info.contract_number,
+            comment=_comment_text(self.project_info.comment),
             group_address_style=self.project_info.group_address_style.value,
             guid=self.project_info.guid,
             created_by=self.project_info.created_by,

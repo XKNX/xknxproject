@@ -3,6 +3,11 @@
     "project_id": "P-0242",
     "name": "xknx test project",
     "last_modified": "2024-02-16T18:17:22.3052256Z",
+    "project_start": "2022-03-28T18:50:15.2307616Z",
+    "project_end": null,
+    "project_number": "",
+    "contract_number": "",
+    "comment": "",
     "group_address_style": "ThreeLevel",
     "guid": "7aceb083-274e-4568-806f-b8f9df992873",
     "created_by": "ETS5",
@@ -37,6 +42,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "1/0/5"
       ],
@@ -68,6 +74,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "1/0/4"
       ],
@@ -99,6 +106,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "1/0/3"
       ],
@@ -130,6 +138,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "1/0/2"
       ],
@@ -161,6 +170,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "1/0/1"
       ],
@@ -192,6 +202,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "1/0/0"
       ],
@@ -223,6 +234,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "2/0/6"
       ],
@@ -249,6 +261,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "2/1/22"
       ],
@@ -280,6 +293,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "2/1/10"
       ],
@@ -403,6 +417,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "2/1/21",
         "2/1/22",
@@ -436,6 +451,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "2/1/23",
         "7/1/2"
@@ -471,6 +487,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "7/1/1"
       ],
@@ -508,6 +525,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "7/1/0"
       ],
@@ -545,6 +563,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "7/0/0"
       ],
@@ -582,6 +601,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "7/1/2"
       ],
@@ -619,6 +639,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "2/0/1"
       ],
@@ -653,6 +674,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "2/0/0"
       ],
@@ -664,10 +686,12 @@
     "0": {
       "name": "Backbone Bereich",
       "description": null,
+      "comment": "",
       "lines": {
         "0": {
           "name": "Bereichslinie",
           "description": null,
+          "comment": "",
           "devices": [],
           "medium_type": "KNXnet/IP (IP)"
         }
@@ -676,16 +700,19 @@
     "1": {
       "name": "Neuer Bereich",
       "description": null,
+      "comment": "",
       "lines": {
         "0": {
           "name": "Hauptlinie",
           "description": null,
+          "comment": "",
           "devices": [],
           "medium_type": "KNXnet/IP (IP)"
         },
         "1": {
           "name": "Neue Linie",
           "description": null,
+          "comment": "",
           "devices": [
             "1.1.0",
             "1.1.5",
@@ -703,6 +730,7 @@
       "hardware_name": "SCN-IP100.03 IP Router with Secure",
       "order_number": "SCN-IP100.03",
       "description": "",
+      "comment": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.0",
       "application": "M-0083_A-0139-22-F35B-O0072",
@@ -719,13 +747,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.1.5": {
       "name": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
       "hardware_name": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
       "order_number": "2CDG 110 121 R0011",
       "description": "",
+      "comment": "",
       "manufacturer_name": "ABB",
       "individual_address": "1.1.5",
       "application": "M-0002_A-A066-14-550B",
@@ -750,13 +780,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.1.6": {
       "name": "AE/S4.2 Analogue Input,4-fold,MDRC",
       "hardware_name": "AE/S4.2 Analogue Input,4-fold,MDRC",
       "order_number": "2CDG 110 030 R0011",
       "description": "",
+      "comment": "",
       "manufacturer_name": "ABB",
       "individual_address": "1.1.6",
       "application": "M-0002_A-A01B-14-1B7C",
@@ -778,13 +810,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.1.7": {
       "name": "Custom name prefix - Heizungsaktor 6fach mit Regler",
       "hardware_name": "Heating actuator 6-gang with controller",
       "order_number": "2139 00",
       "description": "",
+      "comment": "",
       "manufacturer_name": "GIRA Giersiepen",
       "individual_address": "1.1.7",
       "application": "M-0008_A-20E0-21-9997-O000A",
@@ -941,7 +975,8 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     }
   },
   "group_addresses": {
@@ -960,7 +995,10 @@
         "1.1.5/O-101_R-1578"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "1/0/1": {
       "name": "Behang D auf/ab",
@@ -977,7 +1015,10 @@
         "1.1.5/O-100_R-1577"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "1/0/2": {
       "name": "Lamelle C auf/ab",
@@ -994,7 +1035,10 @@
         "1.1.5/O-71_R-1506"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "1/0/3": {
       "name": "Behang C auf/ab",
@@ -1011,7 +1055,10 @@
         "1.1.5/O-70_R-1505"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "1/0/4": {
       "name": "Lamelle B auf/ab",
@@ -1028,7 +1075,10 @@
         "1.1.5/O-41_R-1434"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "1/0/5": {
       "name": "BehangB auf/ab",
@@ -1045,7 +1095,10 @@
         "1.1.5/O-40_R-1433"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "2/0/0": {
       "name": "channel-test",
@@ -1062,7 +1115,10 @@
         "1.1.7/O-3_R-3"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "2/0/1": {
       "name": "Temperature",
@@ -1079,7 +1135,10 @@
         "1.1.7/MD-2_M-4_MI-1_O-7-1_R-45"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "2/0/6": {
       "name": "Windalarm",
@@ -1096,7 +1155,10 @@
         "1.1.5/O-4_R-1417"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "2/1/1": {
       "name": "Not linked to a comm object",
@@ -1108,7 +1170,10 @@
       "data_secure": false,
       "communication_object_ids": [],
       "description": "no dpt",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "2/1/2": {
       "name": "Not linked to a comm object 2",
@@ -1123,7 +1188,10 @@
       "data_secure": false,
       "communication_object_ids": [],
       "description": "temperature",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "2/1/10": {
       "name": "generic 1-bit",
@@ -1140,7 +1208,10 @@
         "1.1.6/O-20_R-8108"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "2/1/21": {
       "name": "No DPT in GA",
@@ -1157,7 +1228,10 @@
         "1.1.6/O-9_R-9073"
       ],
       "description": "multiple DPT 9 in 1 CO",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "2/1/22": {
       "name": "No DPT in GA 2",
@@ -1175,7 +1249,10 @@
         "1.1.6/O-9_R-9073"
       ],
       "description": "multiple DPT 9 and not defined in COs",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "2/1/23": {
       "name": "No DPT in GA 3",
@@ -1193,7 +1270,10 @@
         "1.1.6/O-18_R-7994"
       ],
       "description": "DPT 9 generic and multiple in COs",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "7/0/0": {
       "name": "ds 0",
@@ -1210,7 +1290,10 @@
         "1.1.7/MD-2_M-20_MI-1_O-5-10_R-18"
       ],
       "description": "security: off (inherited from middle group)",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "7/1/0": {
       "name": "ds 1",
@@ -1227,7 +1310,10 @@
         "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17"
       ],
       "description": "security: auto",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "7/1/1": {
       "name": "ds 2",
@@ -1244,7 +1330,10 @@
         "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3"
       ],
       "description": "security: on",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "On"
     },
     "7/1/2": {
       "name": "ds + non ds",
@@ -1262,7 +1351,10 @@
         "1.1.7/MD-2_M-20_MI-1_O-7-1_R-45"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     }
   },
   "group_ranges": {
@@ -1271,6 +1363,7 @@
       "address_start": 2048,
       "address_end": 4095,
       "group_addresses": [],
+      "description": "",
       "comment": "",
       "group_ranges": {
         "1/0": {
@@ -1285,6 +1378,7 @@
             "1/0/4",
             "1/0/5"
           ],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         }
@@ -1295,6 +1389,7 @@
       "address_start": 4096,
       "address_end": 6143,
       "group_addresses": [],
+      "description": "",
       "comment": "",
       "group_ranges": {
         "2/0": {
@@ -1306,6 +1401,7 @@
             "2/0/1",
             "2/0/0"
           ],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         },
@@ -1321,6 +1417,7 @@
             "2/1/21",
             "2/1/10"
           ],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         }
@@ -1331,6 +1428,7 @@
       "address_start": 14336,
       "address_end": 16383,
       "group_addresses": [],
+      "description": "",
       "comment": "",
       "group_ranges": {
         "7/0": {
@@ -1340,6 +1438,7 @@
           "group_addresses": [
             "7/0/0"
           ],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         },
@@ -1352,6 +1451,7 @@
             "7/1/1",
             "7/1/2"
           ],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         }
@@ -1367,6 +1467,7 @@
       "usage_text": "",
       "number": "",
       "description": "",
+      "comment": "",
       "project_uid": 6,
       "devices": [],
       "spaces": {},
