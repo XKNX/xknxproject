@@ -50,16 +50,40 @@ class KNXProjContents:
 
     def open_project_0(self) -> IO[bytes]:
         """Open the project 0.xml file."""
-        return self._project_archive.open(
-            f"{self._project_relative_path}0.xml",
-            mode="r",
-        )
+        return self.open_project_file("0.xml")
 
     def open_project_meta(self) -> IO[bytes]:
         """Open the project.xml file."""
         project_filename = "Project.xml" if self.is_ets4_project() else "project.xml"
+        return self.open_project_file(project_filename)
+
+    def list_project_files(self) -> list[str]:
+        """
+        Return the names of all files in the project folder.
+
+        Names are relative to the project folder and use "/" as separator,
+        eg. "0.xml" or "BinaryData/<name>.dat". Folders are not listed. This
+        works the same for password protected and unprotected projects.
+        """
+        prefix = self._project_relative_path
+        return [
+            info.filename.removeprefix(prefix)
+            for info in self._project_archive.infolist()
+            if info.filename.startswith(prefix) and not info.is_dir()
+        ]
+
+    def open_project_file(self, name: str) -> IO[bytes]:
+        """
+        Open a file of the project folder for reading.
+
+        `name` is relative to the project folder, as returned by
+        `list_project_files()`. Raises ValueError if `name` does not point
+        inside the project folder and KeyError if the file does not exist.
+        """
+        if any(part in ("", ".", "..") for part in name.split("/")):
+            raise ValueError(f"Invalid project file name: {name!r}")
         return self._project_archive.open(
-            f"{self._project_relative_path}{project_filename}",
+            f"{self._project_relative_path}{name}",
             mode="r",
         )
 
