@@ -168,6 +168,24 @@ class Space(TypedDict):
     functions: list[str]
 
 
+class Trade(TypedDict):
+    """
+    Trade typed dict.
+
+    Trades ("Gewerke") are a tree ETS offers next to the locations to organise
+    the devices of a project by discipline - lighting, heating, shading, ...
+    """
+
+    identifier: str
+    name: str
+    number: str
+    description: str
+    project_uid: int | None
+    # individual addresses of the devices assigned to this trade - not to its sub-trades
+    devices: list[str]
+    trades: list[Trade]
+
+
 class Function(TypedDict):
     """Function typed dict."""
 
@@ -212,6 +230,9 @@ class KNXProject(TypedDict):
     devices: dict[str, Device]
     topology: dict[str, Area]
     locations: dict[str, Space]
+    # top level trades in project file order; empty if the project uses none.
+    # A list as ETS does not require sibling trades to have distinct names.
+    trades: list[Trade]
     group_addresses: dict[str, GroupAddress]
     group_ranges: dict[str, GroupRange]
     functions: dict[str, Function]
