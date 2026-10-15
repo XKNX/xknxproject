@@ -4,6 +4,7 @@ from pathlib import Path
 import struct
 import zipfile
 
+import pytest
 from pytest import raises
 
 from xknxproject.exceptions import InvalidPasswordException, InvalidProjectArchive
@@ -15,6 +16,7 @@ from .. import RESOURCES_PATH
 xknx_test_project_protected_ets5 = RESOURCES_PATH / "xknx_test_project.knxproj"
 xknx_test_project_ets5 = RESOURCES_PATH / "xknx_test_project_no_password.knxproj"
 xknx_test_project_protected_ets6 = RESOURCES_PATH / "testprojekt-ets6.knxproj"
+module_definition_test_project = RESOURCES_PATH / "module-definition-test.knxproj"
 
 
 def test_extract_knx_project_ets5() -> None:
@@ -165,3 +167,85 @@ def test_project_file_failing_checksum(tmp_path: Path) -> None:
         with extract(damaged) as knx_project_contents:
             with knx_project_contents.open_project_0() as proj_0:
                 proj_0.read()
+
+
+@pytest.mark.parametrize(
+    ("project_path", "password", "expected_files"),
+    [
+        (xknx_test_project_ets5, None, ["project.xml", "0.xml"]),
+        (xknx_test_project_protected_ets5, "test", ["project.xml", "0.xml"]),
+        (xknx_test_project_protected_ets6, "test", ["0.xml", "project.xml"]),
+        (
+            module_definition_test_project,
+            None,
+            ["UserFiles/M0083-A0096.etsapp", "project.xml", "0.xml"],
+        ),
+    ],
+)
+def test_list_project_files(
+    project_path: Path, password: str | None, expected_files: list[str]
+) -> None:
+    """Test listing the files of the project folder."""
+    with extract(project_path, password) as knx_project_contents:
+        assert knx_project_contents.list_project_files() == expected_files
+
+
+def test_open_project_file() -> None:
+    """Test reading files of an unprotected project folder."""
+    with extract(xknx_test_project_ets5) as knx_project_contents:
+        with knx_project_contents.open_project_file("0.xml") as proj_0:
+            assert proj_0.read() == knx_project_contents.root.read("P-01D2/0.xml")
+        with knx_project_contents.open_project_file("project.xml") as project:
+            assert project.read() == knx_project_contents.root.read(
+                "P-01D2/project.xml"
+            )
+
+
+def test_open_project_file_in_subfolder() -> None:
+    """Test reading a file from a subfolder of the project folder."""
+    with extract(module_definition_test_project) as knx_project_contents:
+        with knx_project_contents.open_project_file(
+            "UserFiles/M0083-A0096.etsapp"
+        ) as user_file:
+            assert user_file.read(2) == b"PK"
+
+
+@pytest.mark.parametrize(
+    "project_path", [xknx_test_project_protected_ets5, xknx_test_project_protected_ets6]
+)
+def test_open_protected_project_file(project_path: Path) -> None:
+    """Test reading every file of a password protected project folder."""
+    with extract(project_path, "test") as knx_project_contents:
+        for name in knx_project_contents.list_project_files():
+            with knx_project_contents.open_project_file(name) as project_file:
+                assert b"<?xml" in project_file.readline()
+        with knx_project_contents.open_project_file("0.xml") as proj_0:
+            with knx_project_contents.open_project_0() as expected:
+                assert proj_0.read() == expected.read()
+
+
+def test_open_missing_project_file() -> None:
+    """Test opening a file that is not in the project folder."""
+    with extract(xknx_test_project_ets5) as knx_project_contents:
+        with raises(KeyError):
+            knx_project_contents.open_project_file("BinaryData/missing.dat")
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "",
+        "/0.xml",
+        "./0.xml",
+        "../knx_master.xml",
+        "../P-01D2.signature",
+        "BinaryData/../../knx_master.xml",
+        "BinaryData//0.xml",
+        "BinaryData/",
+    ],
+)
+def test_open_project_file_outside_project_folder(name: str) -> None:
+    """Test rejecting names that don't point inside the project folder."""
+    with extract(xknx_test_project_ets5) as knx_project_contents:
+        with raises(ValueError):
+            knx_project_contents.open_project_file(name)
