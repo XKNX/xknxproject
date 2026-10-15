@@ -13,6 +13,7 @@ This project aims to provide a library that can be used to extract and parse KNX
 Currently, xknxproject supports extracting (password protected) ETS 4, 5 and 6 projects and can obtain the following information:
 
 * Areas, Lines, Devices and their individual address and channels
+* The tree of channels and folders ETS shows the communication objects of a device in
 * CommunicationObjectInstance references for their devices (GA assignments)
 * Group Addresses and their DPT type if set
 * The application programs communication objects, their respective flags and the DPT Type

@@ -990,6 +990,28 @@
           "functional_blocks": null
         }
       },
+      "group_object_tree": [
+        {
+          "type": "Channel",
+          "identifier": "MD-2_M-1_MI-1_CH-1",
+          "name": "Kanal A: Wohnzimmer",
+          "communication_object_ids": [
+            "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1",
+            "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3"
+          ],
+          "nodes": []
+        },
+        {
+          "type": "Channel",
+          "identifier": "MD-2_M-2_MI-1_CH-1",
+          "name": "Kanal B: Küche",
+          "communication_object_ids": [
+            "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1",
+            "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"
+          ],
+          "nodes": []
+        }
+      ],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,
@@ -1091,6 +1113,36 @@
           "functional_blocks": null
         }
       },
+      "group_object_tree": [
+        {
+          "type": "Channel",
+          "identifier": "MD-2_M-1_MI-1_CH-1",
+          "name": "Kanal A: Bad",
+          "communication_object_ids": [
+            "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3",
+            "1.1.2/MD-2_M-1_MI-1_O-2-19_R-6"
+          ],
+          "nodes": []
+        },
+        {
+          "type": "Channel",
+          "identifier": "MD-2_M-5_MI-1_CH-1",
+          "name": "Kanal E: ",
+          "communication_object_ids": [
+            "1.1.2/MD-2_M-5_MI-1_O-2-8_R-18"
+          ],
+          "nodes": []
+        },
+        {
+          "type": "Channel",
+          "identifier": "MD-2_M-6_MI-1_CH-1",
+          "name": "Kanal F: ",
+          "communication_object_ids": [
+            "1.1.2/MD-2_M-6_MI-1_O-2-20_R-7"
+          ],
+          "nodes": []
+        }
+      ],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,
@@ -1122,6 +1174,135 @@
         "1.1.3/MD-3_M-2_MI-8_O-2-5_R-6"
       ],
       "channels": {},
+      "group_object_tree": [
+        {
+          "type": "Channel",
+          "identifier": "CH-0",
+          "name": "ALLGEMEIN",
+          "communication_object_ids": [],
+          "nodes": [
+            {
+              "type": "Folder",
+              "identifier": "PB-9",
+              "name": "Analyse und Wartung",
+              "communication_object_ids": [
+                "1.1.3/O-24_R-966"
+              ],
+              "nodes": []
+            }
+          ]
+        },
+        {
+          "type": "Channel",
+          "identifier": "MD-2_M-3_MI-2_CH-1",
+          "name": "G{{GRP_NO}}, ",
+          "communication_object_ids": [],
+          "nodes": [
+            {
+              "type": "Folder",
+              "identifier": "MD-2_M-3_MI-2_PB-2",
+              "name": "Verhalten",
+              "communication_object_ids": [
+                "1.1.3/MD-2_M-3_MI-2_O-2-1_R-11"
+              ],
+              "nodes": []
+            }
+          ]
+        },
+        {
+          "type": "Channel",
+          "identifier": "MD-2_M-3_MI-3_CH-1",
+          "name": "G{{GRP_NO}}, ",
+          "communication_object_ids": [],
+          "nodes": [
+            {
+              "type": "Folder",
+              "identifier": "MD-2_M-3_MI-3_PB-2",
+              "name": "Verhalten",
+              "communication_object_ids": [
+                "1.1.3/MD-2_M-3_MI-3_O-2-0_R-10"
+              ],
+              "nodes": []
+            }
+          ]
+        },
+        {
+          "type": "Channel",
+          "identifier": "CH-17",
+          "name": "EVG",
+          "communication_object_ids": [],
+          "nodes": [
+            {
+              "type": "Folder",
+              "identifier": "MD-1_M-1_MI-1_PB-1",
+              "name": "EVG {{ECG_NO}}, ",
+              "communication_object_ids": [],
+              "nodes": [
+                {
+                  "type": "Folder",
+                  "identifier": "MD-1_M-1_MI-1_PB-3",
+                  "name": "Verhalten",
+                  "communication_object_ids": [
+                    "1.1.3/MD-1_M-1_MI-1_O-2-0_R-7"
+                  ],
+                  "nodes": []
+                }
+              ]
+            },
+            {
+              "type": "Folder",
+              "identifier": "MD-1_M-1_MI-4_PB-1",
+              "name": "EVG {{ECG_NO}}, ",
+              "communication_object_ids": [],
+              "nodes": [
+                {
+                  "type": "Folder",
+                  "identifier": "MD-1_M-1_MI-4_PB-3",
+                  "name": "Verhalten",
+                  "communication_object_ids": [
+                    "1.1.3/MD-1_M-1_MI-4_O-2-1_R-8"
+                  ],
+                  "nodes": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Channel",
+          "identifier": "CH-84",
+          "name": "Bewegungsmelder",
+          "communication_object_ids": [],
+          "nodes": [
+            {
+              "type": "Folder",
+              "identifier": "MD-3_M-2_MI-2_PB-1",
+              "name": "BM {{MD_NO}}, ",
+              "communication_object_ids": [
+                "1.1.3/MD-3_M-2_MI-2_O-2-4_R-5"
+              ],
+              "nodes": []
+            },
+            {
+              "type": "Folder",
+              "identifier": "MD-3_M-2_MI-8_PB-1",
+              "name": "BM {{MD_NO}}, ",
+              "communication_object_ids": [],
+              "nodes": [
+                {
+                  "type": "Folder",
+                  "identifier": "MD-3_M-2_MI-8_PB-2",
+                  "name": "Helligkeit",
+                  "communication_object_ids": [
+                    "1.1.3/MD-3_M-2_MI-8_O-2-5_R-6"
+                  ],
+                  "nodes": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,
@@ -1184,6 +1365,23 @@
           "functional_blocks": null
         }
       },
+      "group_object_tree": [
+        {
+          "type": "Channel",
+          "identifier": "CH-1",
+          "name": "Allgemein",
+          "communication_object_ids": [
+            "1.1.4/O-256_R-36",
+            "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-0_R-1",
+            "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-1_R-2",
+            "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-0_R-1",
+            "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-1_R-2",
+            "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-0_R-1",
+            "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-1_SM-1_O-3-0_R-1"
+          ],
+          "nodes": []
+        }
+      ],
       "serial_number": "",
       "last_download": null,
       "individual_address_loaded": false,
