@@ -257,3 +257,151 @@ def test_text_parameters_of_a_program_without_channels(tmp_path: Path) -> None:
         "1.1.5/O-101_R-1578": None,
         "1.1.5/O-4_R-1417": None,
     }
+
+
+def test_project_details(tmp_path: Path) -> None:
+    """Numbers, comments and descriptions of the project file are exported."""
+    source = RESOURCES_PATH / "testprojekt-ets6-functions.knxproj"
+    project_member = "P-05C0/0.xml"
+    meta_member = "P-05C0/project.xml"
+    with zipfile.ZipFile(source) as archive:
+        instances = archive.read(project_member)
+        meta = archive.read(meta_member)
+    meta = _replace_once(
+        meta,
+        rb'(<ProjectInformation [^>]*?)Comment=""',
+        rb'\1ProjectNumber="2023-17" ContractNumber="C-42"'
+        rb' ProjectEnd="2023-08-01T00:00:00Z" Comment="Customer project"',
+    )
+    instances = _replace_once(
+        instances,
+        rb'(<Function Id="P-05C0-0_F-1" [^>]*?) Puid=',
+        rb'\1 Number="F1" Description="Ceiling light"'
+        rb' Comment="{\\rtf1\\ansi Dimmed in the evening\\par}" Puid=',
+    )
+    instances = _replace_once(
+        instances,
+        rb'(<GroupAddress Id="P-05C0-0_GA-1" [^>]*?) Puid=',
+        rb'\1 Central="true" Global="true" Security="Off" Puid=',
+    )
+    instances = _replace_once(
+        instances,
+        rb'(<Area Id="P-05C0-0_A-2" [^>]*?) Puid=',
+        rb'\1 Comment="Area comment" Puid=',
+    )
+    instances = _replace_once(
+        instances,
+        rb'(<Line Id="P-05C0-0_L-3" [^>]*?) Puid=',
+        rb'\1 Comment="Line comment" Puid=',
+    )
+    modified = copy_project_with_member(
+        source, tmp_path / "meta.knxproj", meta_member, meta
+    )
+    modified = copy_project_with_member(
+        modified, tmp_path / "details.knxproj", project_member, instances
+    )
+    project = XKNXProj(modified, language="De").parse()
+
+    info = project["info"]
+    assert info["project_number"] == "2023-17"
+    assert info["contract_number"] == "C-42"
+    assert info["project_start"] == "2023-07-07T12:39:39.0080948Z"
+    assert info["project_end"] == "2023-08-01T00:00:00Z"
+    assert info["comment"] == "Customer project"
+
+    function = project["functions"]["F-1"]
+    assert function["number"] == "F1"
+    assert function["description"] == "Ceiling light"
+    assert function["comment"] == "Dimmed in the evening\n"
+
+    group_addresses = project["group_addresses"]
+    assert group_addresses["0/0/1"]["central"] is True
+    assert group_addresses["0/0/1"]["global_"] is True
+    assert group_addresses["0/0/1"]["security"] == "Off"
+    assert group_addresses["0/0/2"]["central"] is False
+    assert group_addresses["0/0/2"]["global_"] is False
+    assert group_addresses["0/0/2"]["security"] == "Auto"
+
+    assert project["topology"]["1"]["comment"] == "Area comment"
+    assert project["topology"]["1"]["lines"]["1"]["comment"] == "Line comment"
+    assert project["topology"]["1"]["lines"]["0"]["comment"] == ""
+
+
+def test_device_details(tmp_path: Path) -> None:
+    """The comment and the IP configuration of devices are exported."""
+    source = RESOURCES_PATH / "module-definition-test.knxproj"
+    project_member = "P-0810/0.xml"
+    with zipfile.ZipFile(source) as archive:
+        instances = archive.read(project_member)
+    instances = _replace_once(
+        instances,
+        rb'(<DeviceInstance Id="P-0810-0_DI-1" [^>]*?)Comment=""([^>]*>)',
+        rb'\1Comment="Mounted in the cabinet"\2'
+        rb'<IPConfig Assign="Fixed" IPAddress="192.168.1.10" SubnetMask="255.255.255.0"'
+        rb' DefaultGateway="192.168.1.1" MACAddress="00:24:6D:01:02:03" />',
+    )
+    instances = _replace_once(
+        instances,
+        rb'(<DeviceInstance Id="P-0810-0_DI-2" [^>]*>)',
+        rb"\1<IPConfig />",
+    )
+    modified = copy_project_with_member(
+        source, tmp_path / "devices.knxproj", project_member, instances
+    )
+    devices = XKNXProj(modified, language="De").parse()["devices"]
+
+    assert devices["1.1.1"]["comment"] == "Mounted in the cabinet"
+    assert devices["1.1.1"]["ip_config"] == {
+        "assign": "Fixed",
+        "ip_address": "192.168.1.10",
+        "subnet_mask": "255.255.255.0",
+        "default_gateway": "192.168.1.1",
+        "mac_address": "00:24:6D:01:02:03",
+    }
+    assert devices["1.1.2"]["comment"] == ""
+    assert devices["1.1.2"]["ip_config"] == {
+        "assign": "Auto",
+        "ip_address": None,
+        "subnet_mask": None,
+        "default_gateway": None,
+        "mac_address": None,
+    }
+    assert devices["1.1.3"]["ip_config"] is None
+
+
+def test_communication_object_priority(tmp_path: Path) -> None:
+    """The priority is taken from the instance, its reference or the object."""
+    source = RESOURCES_PATH / "module-definition-test.knxproj"
+    program = "M-0083/M-0083_A-013A-32-DCC1.xml"
+    project_member = "P-0810/0.xml"
+    with zipfile.ZipFile(source) as archive:
+        application = archive.read(program)
+        instances = archive.read(project_member)
+    application = _replace_once(
+        application,
+        rb'(<ComObject Id="M-0083_A-013A-32-DCC1_O-334" )',
+        rb'\1Priority="Alert" ',
+    )
+    application = _replace_once(
+        application,
+        rb'(<ComObjectRef Id="M-0083_A-013A-32-DCC1_MD-2_O-2-1_R-1" )',
+        rb'\1Priority="High" ',
+    )
+    instances = _replace_once(
+        instances,
+        rb'(<ComObjectInstanceRef RefId="MD-2_M-1_MI-1_O-2-1_R-1" )'
+        rb'(Text="Kanal A: Wohnzimmer")',
+        rb'\1Priority="Low" \2',
+    )
+    modified = copy_project_with_member(
+        source, tmp_path / "program.knxproj", program, application
+    )
+    modified = copy_project_with_member(
+        modified, tmp_path / "priority.knxproj", project_member, instances
+    )
+    objects = XKNXProj(modified, language="De").parse()["communication_objects"]
+
+    assert objects["1.1.1/O-334_R-21"]["priority"] == "Alert"
+    assert objects["1.1.1/MD-2_M-2_MI-1_O-2-1_R-1"]["priority"] == "High"
+    assert objects["1.1.1/MD-2_M-1_MI-1_O-2-1_R-1"]["priority"] == "Low"
+    assert objects["1.1.1/MD-2_M-1_MI-1_O-2-2_R-3"]["priority"] == "Low"

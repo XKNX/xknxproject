@@ -9,7 +9,7 @@ import re
 
 from xknxproject import util
 from xknxproject.exceptions import UnexpectedDataError
-from xknxproject.models.knxproject import DPTType, ModuleInstanceInfos
+from xknxproject.models.knxproject import DPTType, IPConfig, ModuleInstanceInfos
 from xknxproject.models.static import GroupAddressStyle, SpaceType
 from xknxproject.zip import KNXProjContents
 
@@ -32,6 +32,9 @@ class XMLGroupAddress:
         data_secure_key: str | None,
         comment: str,
         style: GroupAddressStyle,
+        central: bool = False,
+        global_: bool = False,
+        security: str = "Auto",
     ) -> None:
         """Initialize a group address."""
         self.name = name
@@ -43,6 +46,9 @@ class XMLGroupAddress:
         self.data_secure_key = data_secure_key  # Key as base64 encoded string or None
         self.comment = comment
         self.style = style
+        self.central = central  # "Central"
+        self.global_ = global_  # "Global"
+        self.security = security  # "Security" - Auto, On or Off
         self.address = XMLGroupAddress.str_address(self.raw_address, self.style)
 
     @staticmethod
@@ -78,6 +84,7 @@ class XMLGroupRange:
     group_ranges: list[XMLGroupRange]
     comment: str
     style: GroupAddressStyle
+    description: str = ""
 
     def str_address(self) -> str:
         """Generate a string representation for the range."""
@@ -105,6 +112,7 @@ class XMLArea:
     name: str
     description: str | None
     lines: list[XMLLine]
+    comment: str = ""
 
 
 @dataclass
@@ -117,6 +125,7 @@ class XMLLine:
     medium_type: str
     devices: list[DeviceInstance]
     area: XMLArea
+    comment: str = ""
 
 
 class DeviceInstance:
@@ -148,12 +157,16 @@ class DeviceInstance:
         communication_part_loaded: bool = False,
         medium_config_loaded: bool = False,
         parameters_loaded: bool = False,
+        comment: str = "",
+        ip_config: IPConfig | None = None,
     ) -> None:
         """Initialize a Device Instance."""
         self.identifier = identifier
         self.address = address
         self.name = name  # empty string if not customized in project
         self.description = description
+        self.comment = comment
+        self.ip_config = ip_config  # "IPConfig" element, only for IP devices
         self.project_uid = project_uid
         self.last_modified = last_modified
         self.product_ref = product_ref
@@ -429,6 +442,7 @@ class ComObjectInstanceRef:
     description: str | None  # "Description" - language dependent
     channel: str | None  # "ChannelId" - knx:IDREFS
     links: list[str]  # "Links" - knx:RELIDREFS (always a list; empty when link-less)
+    priority: str | None = None  # "Priority" - knx:ComObjectPriority_t
 
     # resolved via Hardware.xml from the containing DeviceInstance
     application_program_id_prefix: str = (
@@ -571,6 +585,8 @@ class ComObjectInstanceRef:
             self.update_flag = com_object.update_flag
         if self.read_on_init_flag is None:
             self.read_on_init_flag = com_object.read_on_init_flag
+        if self.priority is None:
+            self.priority = com_object.priority
         if not self.datapoint_types:
             self.datapoint_types = com_object.datapoint_types
         if isinstance(com_object, ComObject):
@@ -797,6 +813,7 @@ class ComObject:
         "name",
         "number",
         "object_size",
+        "priority",
         "read_flag",
         "read_on_init_flag",
         "text",
@@ -818,6 +835,7 @@ class ComObject:
     transmit_flag: bool  # "TransmitFlag" - knx:Enable_t
     update_flag: bool  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool  # "ReadOnInitFlag" - knx:Enable_t
+    priority: str  # "Priority" - knx:ComObjectPriority_t - optional, default "Low"
     datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS - optional
     # "BaseNumber" - knx:IDREF - optional - schema version >= 20
     # ModuleArgument identifier that holds value to add for
@@ -836,6 +854,7 @@ class ComObjectRef:
         "identifier",
         "name",
         "object_size",
+        "priority",
         "read_flag",
         "read_on_init_flag",
         "ref_id",
@@ -859,6 +878,7 @@ class ComObjectRef:
     transmit_flag: bool | None  # "TransmitFlag" - knx:Enable_t
     update_flag: bool | None  # "UpdateFlag" - knx:Enable_t
     read_on_init_flag: bool | None  # "ReadOnInitFlag" - knx:Enable_t
+    priority: str | None  # "Priority" - knx:ComObjectPriority_t
     datapoint_types: list[DPTType]  # "DataPointType" - knx:IDREFS
     text_parameter_ref_id: str | None  #  type="knx:IDREF" use="optional"
     semantics: list[str] | None  # "Semantics" - optional
@@ -948,6 +968,7 @@ class XMLSpace:
     spaces: list[XMLSpace]
     devices: list[str]  # [DeviceInstance.individual_address]
     functions: list[str]
+    comment: str = ""
 
 
 @dataclass
@@ -961,6 +982,9 @@ class XMLFunction:
     project_uid: int | None
     space_id: str
     usage_text: str
+    number: str = ""
+    description: str = ""
+    comment: str = ""
 
 
 @dataclass
@@ -997,6 +1021,11 @@ class XMLProjectInformation:
     project_id: str = ""
     name: str = ""
     last_modified: str | None = None
+    project_start: str | None = None
+    project_end: str | None = None
+    project_number: str = ""
+    contract_number: str = ""
+    comment: str = ""
     group_address_style: GroupAddressStyle = GroupAddressStyle.THREELEVEL
     guid: str = ""
     created_by: str = ""

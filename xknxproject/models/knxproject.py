@@ -39,6 +39,7 @@ class CommunicationObject(TypedDict):
     object_size: str
     group_address_links: list[str]
     flags: Flags
+    priority: str  # "Low", "High" or "Alert"
     dpas: list[str] | None
     # the parameter filling "{{0}}" of the text. A hint for grouping, not a
     # channel: a channel may use several parameters, and a parameter may serve
@@ -73,6 +74,7 @@ class Device(TypedDict):
     hardware_name: str
     order_number: str
     description: str
+    comment: str
     manufacturer_name: str
     individual_address: str
     application: str | None
@@ -98,6 +100,18 @@ class Device(TypedDict):
     communication_part_loaded: bool
     medium_config_loaded: bool
     parameters_loaded: bool
+    # IP settings of devices with an IP interface; None for other devices
+    ip_config: IPConfig | None
+
+
+class IPConfig(TypedDict):
+    """IP configuration of a device."""
+
+    assign: str  # "Fixed" or "Auto" (default)
+    ip_address: str | None
+    subnet_mask: str | None
+    default_gateway: str | None
+    mac_address: str | None
 
 
 class Channel(TypedDict):
@@ -115,6 +129,7 @@ class Line(TypedDict):
     name: str
     medium_type: str
     description: str | None
+    comment: str
     devices: list[str]
 
 
@@ -123,6 +138,7 @@ class Area(TypedDict):
 
     name: str
     description: str | None
+    comment: str
     lines: dict[str, Line]
 
 
@@ -139,6 +155,9 @@ class GroupAddress(TypedDict):
     communication_object_ids: list[str]
     description: str
     comment: str
+    central: bool
+    global_: bool  # "Global" attribute
+    security: str  # "Auto" (default), "On" or "Off"
 
 
 class GroupRange(TypedDict):
@@ -147,6 +166,7 @@ class GroupRange(TypedDict):
     name: str
     address_start: int
     address_end: int
+    description: str
     comment: str
     group_addresses: list[str]
     group_ranges: dict[str, GroupRange]
@@ -162,6 +182,7 @@ class Space(TypedDict):
     usage_text: str
     number: str
     description: str
+    comment: str
     project_uid: int | None
     devices: list[str]
     spaces: dict[str, Space]
@@ -175,6 +196,9 @@ class Function(TypedDict):
     group_addresses: dict[str, GroupAddressRef]
     identifier: str
     name: str
+    number: str
+    description: str
+    comment: str
     project_uid: int | None
     space_id: str
     usage_text: str
@@ -195,6 +219,11 @@ class ProjectInfo(TypedDict):
     project_id: str
     name: str
     last_modified: str | None
+    project_start: str | None
+    project_end: str | None
+    project_number: str
+    contract_number: str
+    comment: str
     group_address_style: str
     guid: str
     created_by: str

@@ -3,6 +3,11 @@
     "project_id": "P-0810",
     "name": "ModuleDefinitionTest",
     "last_modified": "2024-04-06T19:56:10.5912809Z",
+    "project_start": "2022-10-09T17:45:30.2312035Z",
+    "project_end": null,
+    "project_number": "",
+    "contract_number": "",
+    "comment": "",
     "group_address_style": "ThreeLevel",
     "guid": "26520acd-6231-4fe4-a409-4d1610e7a251",
     "created_by": "ETS5",
@@ -37,6 +42,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/3"
       ],
@@ -71,6 +77,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/1"
       ],
@@ -108,6 +115,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/2",
         "0/7/2"
@@ -146,6 +154,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/1/1"
       ],
@@ -183,6 +192,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/1/2",
         "0/7/2"
@@ -221,6 +231,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/2/2",
         "0/7/2"
@@ -259,6 +270,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/7"
       ],
@@ -293,6 +305,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/10"
       ],
@@ -327,6 +340,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/8"
       ],
@@ -364,6 +378,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/9"
       ],
@@ -398,6 +413,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/0"
       ],
@@ -432,6 +448,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/1"
       ],
@@ -469,6 +486,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/2"
       ],
@@ -506,6 +524,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/3"
       ],
@@ -543,6 +562,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/4"
       ],
@@ -580,6 +600,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/5"
       ],
@@ -617,6 +638,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/6"
       ],
@@ -654,6 +676,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/12"
       ],
@@ -691,6 +714,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/13"
       ],
@@ -725,6 +749,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/11"
       ],
@@ -759,6 +784,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/15"
       ],
@@ -796,6 +822,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/14"
       ],
@@ -833,6 +860,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/16"
       ],
@@ -870,6 +898,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/6/17"
       ],
@@ -884,10 +913,12 @@
     "0": {
       "name": "Backbone Bereich",
       "description": null,
+      "comment": "",
       "lines": {
         "0": {
           "name": "Bereichslinie",
           "description": null,
+          "comment": "",
           "devices": [],
           "medium_type": "KNXnet/IP (IP)"
         }
@@ -896,16 +927,19 @@
     "1": {
       "name": "Neuer Bereich",
       "description": null,
+      "comment": "",
       "lines": {
         "0": {
           "name": "Hauptlinie",
           "description": null,
+          "comment": "",
           "devices": [],
           "medium_type": "KNXnet/IP (IP)"
         },
         "1": {
           "name": "Neue Linie",
           "description": null,
+          "comment": "",
           "devices": [
             "1.1.1",
             "1.1.2",
@@ -923,6 +957,7 @@
       "hardware_name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "order_number": "AKH-0800.03",
       "description": "",
+      "comment": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.1",
       "application": "M-0083_A-013A-32-DCC1",
@@ -996,13 +1031,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.1.2": {
       "name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "hardware_name": "AKH-0800.03 Heizungsaktor 8-fach, 4TE, 24/230VAC",
       "order_number": "AKH-0800.03",
       "description": "Modules use ObjBaseNumber argument",
+      "comment": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.2",
       "application": "M-0083_A-013A-32-DCC1",
@@ -1097,13 +1134,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.1.3": {
       "name": "DALI Control Pro64 Gateway",
       "hardware_name": "DALI Control Pro64 Gateway",
       "order_number": "SCN-DA641P.04S",
       "description": "Modules use Allocators for ObjBaseNumber ",
+      "comment": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.3",
       "application": "M-0083_A-0153-10-297A-O00EF",
@@ -1128,13 +1167,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.1.4": {
       "name": "Z70 v2",
       "hardware_name": "Z70 v2",
       "order_number": "ZVIZ70V2",
       "description": "SubModules with Allocators",
+      "comment": "",
       "manufacturer_name": "Zennio",
       "individual_address": "1.1.4",
       "application": "M-0071_A-5531-37-FDF4",
@@ -1190,7 +1231,8 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     }
   },
   "group_addresses": {
@@ -1209,7 +1251,10 @@
         "1.1.1/MD-2_M-1_MI-1_O-2-1_R-1"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/2": {
       "name": "Temperatur Soll",
@@ -1226,7 +1271,10 @@
         "1.1.1/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/3": {
       "name": "Reglerwert",
@@ -1243,7 +1291,10 @@
         "1.1.1/O-334_R-21"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/1/1": {
       "name": "Temperatur Ist",
@@ -1260,7 +1311,10 @@
         "1.1.1/MD-2_M-2_MI-1_O-2-1_R-1"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/1/2": {
       "name": "Temperatur Soll",
@@ -1277,7 +1331,10 @@
         "1.1.1/MD-2_M-2_MI-1_O-2-2_R-3"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/2/2": {
       "name": "Temperatur Soll",
@@ -1294,7 +1351,10 @@
         "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/0": {
       "name": "Object number 24",
@@ -1311,7 +1371,10 @@
         "1.1.3/O-24_R-966"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/1": {
       "name": "Object number 80",
@@ -1328,7 +1391,10 @@
         "1.1.3/MD-2_M-3_MI-2_O-2-1_R-11"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/2": {
       "name": "Object number 111",
@@ -1345,7 +1411,10 @@
         "1.1.3/MD-2_M-3_MI-3_O-2-0_R-10"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/3": {
       "name": "Object number 559",
@@ -1362,7 +1431,10 @@
         "1.1.3/MD-1_M-1_MI-1_O-2-0_R-7"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/4": {
       "name": "Object number 629",
@@ -1379,7 +1451,10 @@
         "1.1.3/MD-1_M-1_MI-4_O-2-1_R-8"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/5": {
       "name": "Object number 2041",
@@ -1396,7 +1471,10 @@
         "1.1.3/MD-3_M-2_MI-2_O-2-4_R-5"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/6": {
       "name": "Object number 2078",
@@ -1413,7 +1491,10 @@
         "1.1.3/MD-3_M-2_MI-8_O-2-5_R-6"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/7": {
       "name": "Object number 19",
@@ -1430,7 +1511,10 @@
         "1.1.2/MD-2_M-1_MI-1_O-2-19_R-6"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/8": {
       "name": "Object number 168",
@@ -1447,7 +1531,10 @@
         "1.1.2/MD-2_M-5_MI-1_O-2-8_R-18"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/9": {
       "name": "Object number 220",
@@ -1464,7 +1551,10 @@
         "1.1.2/MD-2_M-6_MI-1_O-2-20_R-7"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/10": {
       "name": "Object number 334",
@@ -1481,7 +1571,10 @@
         "1.1.2/O-334_R-21"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/11": {
       "name": "SM Object number 256",
@@ -1498,7 +1591,10 @@
         "1.1.4/O-256_R-36"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/12": {
       "name": "SM Object number 263",
@@ -1515,7 +1611,10 @@
         "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-0_R-1"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/13": {
       "name": "SM Object number 264",
@@ -1532,7 +1631,10 @@
         "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-1_SM-1_O-3-1_R-2"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/14": {
       "name": "SM Object number 265",
@@ -1549,7 +1651,10 @@
         "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-0_R-1"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/15": {
       "name": "SM Object number 275",
@@ -1566,7 +1671,10 @@
         "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-1_SM-1_O-3-0_R-1"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/16": {
       "name": "SM Object number 277",
@@ -1583,7 +1691,10 @@
         "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-0_R-1"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/6/17": {
       "name": "SM Object number 278",
@@ -1600,7 +1711,10 @@
         "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-2_SM-1_O-3-1_R-2"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/7/2": {
       "name": "Temperatur Soll",
@@ -1619,7 +1733,10 @@
         "1.1.2/MD-2_M-1_MI-1_O-2-2_R-3"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     }
   },
   "group_ranges": {
@@ -1628,6 +1745,7 @@
       "address_start": 1,
       "address_end": 2047,
       "group_addresses": [],
+      "description": "",
       "comment": "",
       "group_ranges": {
         "0/0": {
@@ -1639,6 +1757,7 @@
             "0/0/2",
             "0/0/3"
           ],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         },
@@ -1650,6 +1769,7 @@
             "0/1/2",
             "0/1/1"
           ],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         },
@@ -1660,6 +1780,7 @@
           "group_addresses": [
             "0/2/2"
           ],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         },
@@ -1687,6 +1808,7 @@
             "0/6/16",
             "0/6/17"
           ],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         },
@@ -1697,6 +1819,7 @@
           "group_addresses": [
             "0/7/2"
           ],
+          "description": "alle Sollwerte setzen",
           "comment": "",
           "group_ranges": {}
         }
@@ -1707,6 +1830,7 @@
       "address_start": 2048,
       "address_end": 4095,
       "group_addresses": [],
+      "description": "",
       "comment": "",
       "group_ranges": {}
     },
@@ -1715,6 +1839,7 @@
       "address_start": 4096,
       "address_end": 6143,
       "group_addresses": [],
+      "description": "",
       "comment": "",
       "group_ranges": {
         "2/0": {
@@ -1722,6 +1847,7 @@
           "address_start": 4096,
           "address_end": 4351,
           "group_addresses": [],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         }
@@ -1737,6 +1863,7 @@
       "usage_text": "",
       "number": "",
       "description": "",
+      "comment": "",
       "project_uid": 6,
       "devices": [],
       "spaces": {
@@ -1748,6 +1875,7 @@
           "usage_text": "",
           "number": "first floor number",
           "description": "first floor comment",
+          "comment": "",
           "project_uid": 21,
           "devices": [],
           "spaces": {
@@ -1759,6 +1887,7 @@
               "usage_text": "Büro",
               "number": "office number",
               "description": "office description",
+              "comment": "office comment\nis this markdown?\n",
               "project_uid": 22,
               "devices": [],
               "spaces": {},
