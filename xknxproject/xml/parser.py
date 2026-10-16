@@ -24,6 +24,7 @@ from xknxproject.models import (
     CommunicationObject,
     Device,
     DeviceInstance,
+    DeviceSecurity,
     Flags,
     Function,
     GroupAddress,
@@ -61,6 +62,26 @@ def _text_parameter(
         identifier=parameter.ref_id.removeprefix(f"{application_program_ref}_"),
         # an empty value shows the default text, like no value at all
         value=parameter.value or None,
+    )
+
+
+def _device_security(
+    security: DeviceSecurity | None, application_program_ref: str | None
+) -> DeviceSecurity | None:
+    """Convert the security data of a device to the final output format."""
+    if security is None:
+        return None
+    return DeviceSecurity(
+        tool_key=security["tool_key"],
+        loaded_tool_key=security["loaded_tool_key"],
+        sequence_number=security["sequence_number"],
+        sequence_number_timestamp=security["sequence_number_timestamp"],
+        device_authentication_code=security["device_authentication_code"],
+        device_management_password=security["device_management_password"],
+        bus_interface_passwords={
+            ref_id.removeprefix(f"{application_program_ref}_"): password
+            for ref_id, password in security["bus_interface_passwords"].items()
+        },
     )
 
 
@@ -409,6 +430,9 @@ class XMLParser:
                 communication_part_loaded=device.communication_part_loaded,
                 medium_config_loaded=device.medium_config_loaded,
                 parameters_loaded=device.parameters_loaded,
+                security=_device_security(
+                    device.security, device.application_program_ref
+                ),
             )
 
         topology_dict: dict[str, Area] = {}
@@ -483,4 +507,8 @@ class XMLParser:
             group_ranges=group_range_dict,
             locations=space_dict,
             functions=functions_dict,
+            device_certificates={
+                certificate["serial_number"]: certificate
+                for certificate in self.project_info.device_certificates
+            },
         )

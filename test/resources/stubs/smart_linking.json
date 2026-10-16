@@ -1361,7 +1361,25 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "security": {
+        "tool_key": "S4k8UaOioHWkxUdPdkKFZw==",
+        "loaded_tool_key": null,
+        "sequence_number": null,
+        "sequence_number_timestamp": null,
+        "device_authentication_code": "e>*g7C$_",
+        "device_management_password": "rNzD)DB*",
+        "bus_interface_passwords": {
+          "BI-1": "W.<halJ0",
+          "BI-2": "!m@OkuqO",
+          "BI-3": "y<qNu?Ea",
+          "BI-4": "<;H)TWNm",
+          "BI-5": "\" @BILq!",
+          "BI-6": "=#Uk OjK",
+          "BI-7": "f+QWj Q2",
+          "BI-8": "/J_e2(D1"
+        }
+      }
     },
     "1.0.1": {
       "name": "AH3F16H-SEC Schaltaktor 3f",
@@ -1427,7 +1445,16 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "security": {
+        "tool_key": "Hn9EcM1p7mkExVyrxwOq7g==",
+        "loaded_tool_key": null,
+        "sequence_number": null,
+        "sequence_number_timestamp": null,
+        "device_authentication_code": null,
+        "device_management_password": null,
+        "bus_interface_passwords": {}
+      }
     },
     "1.0.2": {
       "name": "SpaceLogic KNX, Secure, Schalter/Jalousie 8-fach, Master",
@@ -1554,7 +1581,16 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "security": {
+        "tool_key": "rX5eWlJ/tU6YcrKvvRxtIg==",
+        "loaded_tool_key": null,
+        "sequence_number": null,
+        "sequence_number_timestamp": null,
+        "device_authentication_code": null,
+        "device_management_password": null,
+        "bus_interface_passwords": {}
+      }
     },
     "1.1.0": {
       "name": "KNX RF Multi/TP Medienkoppler",
@@ -1577,7 +1613,16 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "security": {
+        "tool_key": "Oni+0TDMn0+njWrgUE9yIg==",
+        "loaded_tool_key": null,
+        "sequence_number": null,
+        "sequence_number_timestamp": null,
+        "device_authentication_code": null,
+        "device_management_password": null,
+        "bus_interface_passwords": {}
+      }
     },
     "1.1.1": {
       "name": "KNX RF+ Heizkörperthermostat mit Display und Longlife-Batterie, Secure",
@@ -1626,7 +1671,16 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "security": {
+        "tool_key": "jtM+o7k1Pd2d7l8ZLaRhWw==",
+        "loaded_tool_key": null,
+        "sequence_number": null,
+        "sequence_number_timestamp": null,
+        "device_authentication_code": null,
+        "device_management_password": null,
+        "bus_interface_passwords": {}
+      }
     },
     "1.1.2": {
       "name": "KNX RF+ LED Controller CC/CV 60W / 230V 2-Kanäle, Secure",
@@ -1670,7 +1724,16 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "security": {
+        "tool_key": "avTBj/i11EixQbukEtcf7g==",
+        "loaded_tool_key": null,
+        "sequence_number": null,
+        "sequence_number_timestamp": null,
+        "device_authentication_code": null,
+        "device_management_password": null,
+        "bus_interface_passwords": {}
+      }
     }
   },
   "group_addresses": {
@@ -2448,5 +2511,6 @@
       "space_id": "P-04FF-0_BP-4",
       "usage_text": "Licht schalten"
     }
-  }
+  },
+  "device_certificates": {}
 }

@@ -10,7 +10,9 @@ from xknxproject.exceptions import UnexpectedDataError
 from xknxproject.models import (
     ChannelNode,
     ComObjectInstanceRef,
+    DeviceCertificate,
     DeviceInstance,
+    DeviceSecurity,
     GroupAddressStyle,
     KNXMasterData,
     ModuleInstance,
@@ -320,7 +322,51 @@ class _TopologyLoader:
             == "true",
             medium_config_loaded=device_element.get("MediumConfigLoaded") == "true",
             parameters_loaded=device_element.get("ParametersLoaded") == "true",
+            security=self._create_security(device_element),
         )
+
+    @staticmethod
+    def _create_security(device_element: ElementTree.Element) -> DeviceSecurity | None:
+        """
+        Create the KNX Data Secure / KNX IP Secure data of a device.
+
+        The values are stored in the clear in the project XML - a project holding
+        them is password protected as a whole. Bus interface passwords are keyed by
+        their full "RefId". Return None when the device has no such data.
+        """
+        bus_interface_passwords = {
+            bus_interface.get("RefId", ""): password
+            for bus_interface in device_element.findall(
+                "{*}BusInterfaces/{*}BusInterface"
+            )
+            if (password := bus_interface.get("Password"))
+        }
+        security_element = device_element.find("{*}Security")
+        # an empty `<Security />` element - eg. of a project exported without a
+        # password - holds no data
+        attributes = security_element.attrib if security_element is not None else {}
+        if not attributes and not bus_interface_passwords:
+            return None
+        sequence_number = attributes.get("SequenceNumber")
+        security = DeviceSecurity(
+            tool_key=attributes.get("ToolKey") or None,
+            loaded_tool_key=attributes.get("LoadedToolKey") or None,
+            sequence_number=int(sequence_number) if sequence_number else None,
+            sequence_number_timestamp=attributes.get("SequenceNumberTimestamp"),
+            device_authentication_code=attributes.get("DeviceAuthenticationCode")
+            or None,
+            device_management_password=attributes.get("DeviceManagementPassword")
+            or None,
+            bus_interface_passwords=bus_interface_passwords,
+        )
+        if bus_interface_passwords or any(
+            value is not None
+            for key, value in security.items()
+            if key != "bus_interface_passwords"
+        ):
+            return security
+        # only attributes not exported, eg. hashes of the passwords
+        return None
 
     @staticmethod
     def __get_links_from_schema_1x(com_object: ElementTree.Element) -> list[str]:
@@ -539,6 +585,15 @@ def load_project_info(tree: ElementTree.ElementTree) -> XMLProjectInformation:
             created_by=created_by,
             schema_version=schema_version,
             tool_version=tool_version,
+            device_certificates=[
+                DeviceCertificate(
+                    serial_number=certificate.get("SerialNumber", ""),
+                    fdsk=certificate.get("FDSK") or None,
+                )
+                for certificate in info_node.findall(
+                    "{*}DeviceCertificates/{*}DeviceCertificate"
+                )
+            ],
         )
     except AttributeError:
         # Project or ProjectInformation tag not found

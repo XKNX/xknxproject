@@ -122,5 +122,6 @@
       "functions": []
     }
   },
-  "functions": {}
+  "functions": {},
+  "device_certificates": {}
 }

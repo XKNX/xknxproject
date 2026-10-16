@@ -98,6 +98,34 @@ class Device(TypedDict):
     communication_part_loaded: bool
     medium_config_loaded: bool
     parameters_loaded: bool
+    # KNX Data Secure and KNX IP Secure data of the device; None when the project
+    # holds none for it. Projects exported without a password hold no such data.
+    security: DeviceSecurity | None
+
+
+class DeviceSecurity(TypedDict):
+    """KNX Data Secure and KNX IP Secure data of a device, as stored in the project."""
+
+    # keys are base64 encoded 16 octets, as stored in the project
+    tool_key: str | None  # the tool key the project assigns to the device
+    loaded_tool_key: str | None  # the tool key last downloaded to the device
+    sequence_number: int | None  # the last known sequence number of the device
+    sequence_number_timestamp: str | None
+    # KNX IP Secure
+    device_authentication_code: str | None
+    device_management_password: str | None  # the commissioning password
+    # password of each bus interface (eg. a tunnelling interface) by its identifier:
+    # the "RefId" without the application program id, in the style of
+    # `CommunicationObject.channel`: "BI-1". Bus interfaces without a password are
+    # not listed.
+    bus_interface_passwords: dict[str, str]
+
+
+class DeviceCertificate(TypedDict):
+    """A device certificate of the project: the FDSK of a KNX Secure device."""
+
+    serial_number: str  # base64 encoded, like `Device.serial_number`
+    fdsk: str | None  # Factory Default Setup Key, base64 encoded 16 octets
 
 
 class Channel(TypedDict):
@@ -215,3 +243,5 @@ class KNXProject(TypedDict):
     group_addresses: dict[str, GroupAddress]
     group_ranges: dict[str, GroupRange]
     functions: dict[str, Function]
+    # serial number: DeviceCertificate. Empty for projects exported without a password.
+    device_certificates: dict[str, DeviceCertificate]
