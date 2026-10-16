@@ -15,6 +15,8 @@ from xknxproject.models import KNXProject
 from xknxproject.models.knxproject import (
     CommunicationObject,
     Device,
+    DeviceCertificate,
+    DeviceSecurity,
     Function,
     GroupAddress,
     GroupRange,
@@ -87,6 +89,71 @@ def test_stub_keys_match_typed_dicts(file_stem: str) -> None:
     for com_object in stub["communication_objects"].values():
         if (text_parameter := com_object["text_parameter"]) is not None:
             assert set(text_parameter) == set(TextParameter.__annotations__)
+    for device in stub["devices"].values():
+        if (security := device["security"]) is not None:
+            assert set(security) == set(DeviceSecurity.__annotations__)
+    for certificate in stub["device_certificates"].values():
+        assert set(certificate) == set(DeviceCertificate.__annotations__)
+
+
+def test_device_security() -> None:
+    """Test the KNX Secure data of devices and the device certificates are exported."""
+    project = XKNXProj(RESOURCES_PATH / "xknx_test_project.knxproj", "test").parse()
+
+    ip_secure_device = project["devices"]["1.1.0"]
+    assert ip_secure_device["application"] == "M-0083_A-0139-22-F35B-O0072"
+    assert ip_secure_device["security"] == DeviceSecurity(
+        tool_key="1qyNXOniHEoF1EaeGm9O1Q==",
+        loaded_tool_key=None,
+        sequence_number=None,
+        sequence_number_timestamp=None,
+        device_authentication_code="authcode",
+        device_management_password="test1234",
+        bus_interface_passwords={
+            "BI-0": " z(Y>_=0",
+            "BI-1": "s86;7DI9",
+            "BI-2": "%x8>_y_V",
+            "BI-3": "B_FCoE<p",
+            "BI-4": ':OvY_54"',
+        },
+    )
+    assert [
+        address
+        for address, device in project["devices"].items()
+        if device["security"] is not None
+    ] == ["1.1.0", "1.1.7"]
+    # certificates are keyed by serial number, like `Device.serial_number`
+    assert ip_secure_device["serial_number"] == "AIN6QBMW"
+    assert project["device_certificates"] == {
+        "AIN6QBMW": DeviceCertificate(
+            serial_number="AIN6QBMW", fdsk="1ybOU2AaRw1PlQXdrBc1AA=="
+        )
+    }
+
+
+@pytest.mark.parametrize(
+    ("file_stem", "password"),
+    [("testprojekt-ets6", "test"), ("xknx_test_project_no_password", None)],
+)
+def test_device_security_of_protected_projects_only(
+    file_stem: str, password: str | None
+) -> None:
+    """Test projects exported without a password hold no KNX Secure data."""
+    project = XKNXProj(RESOURCES_PATH / f"{file_stem}.knxproj", password).parse()
+
+    secure_devices = {
+        address: device["security"]
+        for address, device in project["devices"].items()
+        if device["security"] is not None
+    }
+    if password is None:
+        assert not secure_devices
+    else:  # an ETS 6 project with AES encrypted project data
+        assert secure_devices["1.1.0"]["device_management_password"] == (
+            "inbetriebnahme"
+        )
+        assert secure_devices["1.1.0"]["bus_interface_passwords"]["BI-1"] == "tunnel1"
+    assert project["device_certificates"] == {}
 
 
 def _iter_items(section: dict, nested_key: str | None) -> Iterator[dict]:

@@ -719,7 +719,22 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "security": {
+        "tool_key": "1qyNXOniHEoF1EaeGm9O1Q==",
+        "loaded_tool_key": null,
+        "sequence_number": null,
+        "sequence_number_timestamp": null,
+        "device_authentication_code": "authcode",
+        "device_management_password": "test1234",
+        "bus_interface_passwords": {
+          "BI-0": " z(Y>_=0",
+          "BI-1": "s86;7DI9",
+          "BI-2": "%x8>_y_V",
+          "BI-3": "B_FCoE<p",
+          "BI-4": ":OvY_54\""
+        }
+      }
     },
     "1.1.5": {
       "name": "JRA/S4.230.2.1 Blind/RollerShutterAct,M,4f,230V",
@@ -750,7 +765,8 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "security": null
     },
     "1.1.6": {
       "name": "AE/S4.2 Analogue Input,4-fold,MDRC",
@@ -778,7 +794,8 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "security": null
     },
     "1.1.7": {
       "name": "Custom name prefix - Heizungsaktor 6fach mit Regler",
@@ -941,7 +958,16 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "security": {
+        "tool_key": "/UzpUMEBmHLsvvQC9He8/w==",
+        "loaded_tool_key": null,
+        "sequence_number": null,
+        "sequence_number_timestamp": null,
+        "device_authentication_code": null,
+        "device_management_password": null,
+        "bus_interface_passwords": {}
+      }
     }
   },
   "group_addresses": {
@@ -1373,5 +1399,11 @@
       "functions": []
     }
   },
-  "functions": {}
+  "functions": {},
+  "device_certificates": {
+    "AIN6QBMW": {
+      "serial_number": "AIN6QBMW",
+      "fdsk": "1ybOU2AaRw1PlQXdrBc1AA=="
+    }
+  }
 }

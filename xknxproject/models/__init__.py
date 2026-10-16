@@ -6,6 +6,8 @@ from .knxproject import (
     Channel,
     CommunicationObject,
     Device,
+    DeviceCertificate,
+    DeviceSecurity,
     DPTType,
     Flags,
     Function,

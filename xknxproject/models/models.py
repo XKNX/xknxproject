@@ -9,7 +9,12 @@ import re
 
 from xknxproject import util
 from xknxproject.exceptions import UnexpectedDataError
-from xknxproject.models.knxproject import DPTType, ModuleInstanceInfos
+from xknxproject.models.knxproject import (
+    DeviceCertificate,
+    DeviceSecurity,
+    DPTType,
+    ModuleInstanceInfos,
+)
 from xknxproject.models.static import GroupAddressStyle, SpaceType
 from xknxproject.zip import KNXProjContents
 
@@ -148,6 +153,7 @@ class DeviceInstance:
         communication_part_loaded: bool = False,
         medium_config_loaded: bool = False,
         parameters_loaded: bool = False,
+        security: DeviceSecurity | None = None,
     ) -> None:
         """Initialize a Device Instance."""
         self.identifier = identifier
@@ -169,6 +175,8 @@ class DeviceInstance:
         self.communication_part_loaded = communication_part_loaded
         self.medium_config_loaded = medium_config_loaded
         self.parameters_loaded = parameters_loaded
+        # bus interface passwords are keyed by their full "RefId" here
+        self.security = security
         self.line = line
         self.area_address = line.area.address  # used for sorting
         self.line_address = line.address  # used for sorting
@@ -1002,3 +1010,4 @@ class XMLProjectInformation:
     created_by: str = ""
     schema_version: str = ""
     tool_version: str = ""
+    device_certificates: list[DeviceCertificate] = field(default_factory=list)

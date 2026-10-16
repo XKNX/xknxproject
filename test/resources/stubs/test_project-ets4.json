@@ -212,7 +212,8 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "security": null
     },
     "0.0.2": {
       "name": "JRA/S4.230.5.1 Jal./Rol.Akt.Fahrzt.man.4f,230V,REG",
@@ -238,7 +239,8 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "security": null
     }
   },
   "group_addresses": {
@@ -394,5 +396,6 @@
       "functions": []
     }
   },
-  "functions": {}
+  "functions": {},
+  "device_certificates": {}
 }

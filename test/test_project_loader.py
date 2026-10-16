@@ -5,10 +5,13 @@ from __future__ import annotations
 from unittest.mock import Mock
 from xml.etree import ElementTree
 
-from xknxproject.loader.project_loader import _LocationLoader
+import pytest
+
+from xknxproject.loader.project_loader import _LocationLoader, _TopologyLoader
 from xknxproject.models import (
     ApplicationProgram,
     DeviceInstance,
+    DeviceSecurity,
     KNXMasterData,
     ModuleDefinitionNumericArg,
     ModuleInstance,
@@ -159,3 +162,77 @@ def test_module_arguments_of_an_instance() -> None:
         "Group": "1",
     }
     assert device.module_arguments("O-334_R-21", application) == {}
+
+
+def _device_security(device_children: str) -> DeviceSecurity | None:
+    """Load the security data of an ETS 6 `DeviceInstance` with the given children."""
+    return _TopologyLoader._create_security(  # pylint: disable=protected-access
+        ElementTree.fromstring(
+            f'<DeviceInstance xmlns="{_NS}" Id="P-1_DI-1" Address="1">'
+            f"{device_children}</DeviceInstance>"
+        )
+    )
+
+
+def test_device_security() -> None:
+    """Keys, passwords and the sequence number are read; hashes are left out."""
+    assert _device_security(
+        """
+        <Security ToolKey="1qyNXOniHEoF1EaeGm9O1Q==" LoadedToolKey="/UzpUMEBmHLsvvQC9He8/w=="
+          SequenceNumber="1234" SequenceNumberTimestamp="2024-05-01T10:00:00Z"
+          DeviceAuthenticationCode="authcode" DeviceAuthenticationCodeHash="2W7vedSbsgBROAkSj5XhEg=="
+          DeviceManagementPassword="test1234" DeviceManagementPasswordHash="hVH0H6qL7jwBo8nJHdnx7g==" />
+        <BusInterfaces>
+          <BusInterface RefId="M-0083_A-0139-22-F35B-O0072_BI-1" Password="s86;7DI9"
+            PasswordHash="X8G1lwCTHbSC4pt5/BmmDg==" />
+          <BusInterface RefId="M-0083_A-0139-22-F35B-O0072_BI-2" Name="no password" />
+        </BusInterfaces>
+        """
+    ) == DeviceSecurity(
+        tool_key="1qyNXOniHEoF1EaeGm9O1Q==",
+        loaded_tool_key="/UzpUMEBmHLsvvQC9He8/w==",
+        sequence_number=1234,
+        sequence_number_timestamp="2024-05-01T10:00:00Z",
+        device_authentication_code="authcode",
+        device_management_password="test1234",
+        # keyed by the full RefId until the application program is known
+        bus_interface_passwords={"M-0083_A-0139-22-F35B-O0072_BI-1": "s86;7DI9"},
+    )
+
+
+def test_device_security_of_bus_interfaces_only() -> None:
+    """Bus interface passwords make security data also without a `Security` element."""
+    assert _device_security(
+        '<BusInterfaces><BusInterface RefId="A-1_BI-1" Password="tunnel1" />'
+        "</BusInterfaces>"
+    ) == DeviceSecurity(
+        tool_key=None,
+        loaded_tool_key=None,
+        sequence_number=None,
+        sequence_number_timestamp=None,
+        device_authentication_code=None,
+        device_management_password=None,
+        bus_interface_passwords={"A-1_BI-1": "tunnel1"},
+    )
+
+
+def test_device_security_sequence_number_zero() -> None:
+    """A sequence number of 0 is data."""
+    security = _device_security('<Security SequenceNumber="0" />')
+    assert security is not None
+    assert security["sequence_number"] == 0
+
+
+@pytest.mark.parametrize(
+    "device_children",
+    [
+        "",
+        # projects exported without a password keep empty elements
+        '<Security /><BusInterfaces><BusInterface RefId="A-1_BI-1" /></BusInterfaces>',
+        '<Security DeviceAuthenticationCodeHash="2W7vedSbsgBROAkSj5XhEg==" />',
+        '<Security ToolKey="" />',
+    ],
+)
+def test_device_without_security(device_children: str) -> None:
+    """A device without keys, passwords or a sequence number has no security data."""
+    assert _device_security(device_children) is None
