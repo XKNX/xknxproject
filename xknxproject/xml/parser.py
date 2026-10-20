@@ -429,6 +429,7 @@ class XMLParser:
                 hardware_id=device.hardware_id,
                 hardware_program_id=device.hardware_program_ref,
                 space_id=device.space_id,
+                trade_id=device.trade_id,
                 communication_object_ids=device_com_objects,
                 channels=channels,
                 serial_number=device.serial_number,

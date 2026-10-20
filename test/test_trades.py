@@ -2,16 +2,12 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 from xml.etree import ElementTree
-from zipfile import ZIP_DEFLATED, ZipFile
 
-from xknxproject import XKNXProj
 from xknxproject.loader.project_loader import _TradeLoader
 from xknxproject.models import DeviceInstance, XMLTrade
 from xknxproject.xml.parser import _recursive_convert_trades
 
-from . import RESOURCES_PATH
 from .conftest import build_devices
 
 # ETS 6 project schema namespace; the loader matches any namespace (`{*}`)
@@ -93,6 +89,12 @@ def test_trades_are_nested_and_list_their_devices() -> None:
             "trades": [],
         },
     ]
+    # a device maps to the trade listing it, not its ancestors, or else to None
+    assert {device.identifier: device.trade_id for device in devices} == {
+        "P-1_DI-6": "P-1_T-1",
+        "P-1_DI-2": "P-1_T-5",
+        "P-1_DI-9": None,
+    }
 
 
 def test_sibling_trades_may_share_a_name() -> None:
@@ -126,62 +128,9 @@ def test_unknown_device_references_are_skipped() -> None:
     )
 
     assert trade.devices == ["1.1.1"]
+    assert devices[0].trade_id == "P-1_T-1"
 
 
 def test_project_without_trades() -> None:
     """An empty `Trades` element yields no trades."""
     assert _load_trades(f'<Trades xmlns="{_NS}" />', devices=[]) == []
-
-
-def test_trades_of_parsed_project(tmp_path: Path) -> None:
-    """
-    Trades of a project file end up in the parsed project.
-
-    No fixture contains trades, so they are added to the project XML of an
-    unprotected one - as ETS writes them, after the locations of the installation.
-    """
-    source = RESOURCES_PATH / "xknx_test_project_no_password.knxproj"
-    project_path = tmp_path / "trades.knxproj"
-    with ZipFile(source) as archive, ZipFile(project_path, "w", ZIP_DEFLATED) as copy:
-        for name in archive.namelist():
-            content = archive.read(name)
-            if name.endswith("/0.xml"):
-                project_xml = content.decode("utf-8")
-                assert "</Locations>" in project_xml
-                content = project_xml.replace(
-                    "</Locations>",
-                    """</Locations>
-                    <Trades>
-                      <Trade Id="P-01D2-0_T-1" Name="Beleuchtung" Puid="31">
-                        <Trade Id="P-01D2-0_T-2" Name="Innen" Puid="32">
-                          <DeviceInstanceRef RefId="P-01D2-0_DI-1" />
-                        </Trade>
-                      </Trade>
-                    </Trades>""",
-                ).encode("utf-8")
-            copy.writestr(name, content)
-
-    project = XKNXProj(project_path).parse()
-
-    (device_address,) = project["devices"]
-    assert project["trades"] == [
-        {
-            "identifier": "P-01D2-0_T-1",
-            "name": "Beleuchtung",
-            "number": "",
-            "description": "",
-            "project_uid": 31,
-            "devices": [],
-            "trades": [
-                {
-                    "identifier": "P-01D2-0_T-2",
-                    "name": "Innen",
-                    "number": "",
-                    "description": "",
-                    "project_uid": 32,
-                    "devices": [device_address],
-                    "trades": [],
-                }
-            ],
-        }
-    ]

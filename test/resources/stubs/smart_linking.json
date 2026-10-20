@@ -2,7 +2,7 @@
   "info": {
     "project_id": "P-04FF",
     "name": "Smart Linking Test",
-    "last_modified": "2026-03-17T21:58:52.2104946Z",
+    "last_modified": "2026-10-20T20:31:44.9444291Z",
     "group_address_style": "ThreeLevel",
     "guid": "240a1887-0faa-409b-86cb-8318a87c530a",
     "created_by": "ETS6",
@@ -1332,7 +1332,9 @@
           "devices": [
             "1.1.0",
             "1.1.1",
-            "1.1.2"
+            "1.1.2",
+            "1.1.3",
+            "1.1.4"
           ],
           "medium_type": "KNX RF (RF)"
         }
@@ -1353,6 +1355,7 @@
       "hardware_id": "M-00C5_H-KNX.20IP.20Router.20752.20secure-256",
       "hardware_program_id": "M-00C5_H-KNX.20IP.20Router.20752.20secure-256_HP-0717-11-0D5A",
       "space_id": "P-04FF-0_BP-6",
+      "trade_id": null,
       "communication_object_ids": [],
       "channels": {},
       "serial_number": "",
@@ -1376,6 +1379,7 @@
       "hardware_id": "M-00E1_H-2036.2D10-1",
       "hardware_program_id": "M-00E1_H-2036.2D10-1_HP-2036-40-865C",
       "space_id": "P-04FF-0_BP-6",
+      "trade_id": null,
       "communication_object_ids": [
         "1.0.1/O-0_R-1",
         "1.0.1/O-9_R-85",
@@ -1442,6 +1446,7 @@
       "hardware_id": "M-0064_H-SpaceLogic.20KNX.20Switch.20Secure-1",
       "hardware_program_id": "M-0064_H-SpaceLogic.20KNX.20Switch.20Secure-1_HP-5810-12-2E9D",
       "space_id": "P-04FF-0_BP-6",
+      "trade_id": null,
       "communication_object_ids": [
         "1.0.2/O-55_R-43",
         "1.0.2/O-60_R-50",
@@ -1569,6 +1574,7 @@
       "hardware_id": "M-007C_H-ISTPRFMK01-1",
       "hardware_program_id": "M-007C_H-ISTPRFMK01-1_HP-001C-14-E802",
       "space_id": "P-04FF-0_BP-4",
+      "trade_id": null,
       "communication_object_ids": [],
       "channels": {},
       "serial_number": "",
@@ -1592,6 +1598,7 @@
       "hardware_id": "M-0083_H-265-1",
       "hardware_program_id": "M-0083_H-265-1_HP-00F3-10-1728",
       "space_id": "P-04FF-0_BP-4",
+      "trade_id": null,
       "communication_object_ids": [
         "1.1.1/O-4_R-7",
         "1.1.1/O-2_R-11",
@@ -1641,6 +1648,7 @@
       "hardware_id": "M-0083_H-248-1",
       "hardware_program_id": "M-0083_H-248-1_HP-00ED-10-33FD",
       "space_id": "P-04FF-0_BP-5",
+      "trade_id": null,
       "communication_object_ids": [],
       "channels": {
         "CH-2": {
@@ -1661,6 +1669,136 @@
           ],
           "functional_blocks": [
             "427"
+          ]
+        }
+      },
+      "serial_number": "",
+      "last_download": null,
+      "individual_address_loaded": false,
+      "application_program_loaded": false,
+      "communication_part_loaded": false,
+      "medium_config_loaded": false,
+      "parameters_loaded": false
+    },
+    "1.1.3": {
+      "name": "Schalter 1",
+      "hardware_name": "PB.rf",
+      "order_number": "PB.rf",
+      "description": "",
+      "manufacturer_name": "KNX Association",
+      "individual_address": "1.1.3",
+      "application": "M-00FA_A-2526-90-5B4B",
+      "project_uid": 73,
+      "product_id": "M-00FA_H-00FA00252600-1_P-PB.2Erf",
+      "hardware_id": "M-00FA_H-00FA00252600-1",
+      "hardware_program_id": "M-00FA_H-00FA00252600-1_HP-2526-90-5B4B",
+      "space_id": null,
+      "trade_id": "P-04FF-0_T-3",
+      "communication_object_ids": [],
+      "channels": {
+        "MD-1_M-1_MI-1_CH-argCH": {
+          "identifier": "MD-1_M-1_MI-1_CH-argCH",
+          "name": "CH-1",
+          "communication_object_ids": [
+            "1.1.3/MD-1_M-1_MI-1_O-2-0_R-4"
+          ],
+          "functional_blocks": [
+            "421"
+          ]
+        },
+        "MD-1_M-2_MI-1_CH-argCH": {
+          "identifier": "MD-1_M-2_MI-1_CH-argCH",
+          "name": "CH-2",
+          "communication_object_ids": [
+            "1.1.3/MD-1_M-2_MI-1_O-2-0_R-4"
+          ],
+          "functional_blocks": [
+            "421"
+          ]
+        },
+        "MD-1_M-3_MI-1_CH-argCH": {
+          "identifier": "MD-1_M-3_MI-1_CH-argCH",
+          "name": "CH-3",
+          "communication_object_ids": [
+            "1.1.3/MD-1_M-3_MI-1_O-2-0_R-4"
+          ],
+          "functional_blocks": [
+            "421"
+          ]
+        },
+        "MD-1_M-4_MI-1_CH-argCH": {
+          "identifier": "MD-1_M-4_MI-1_CH-argCH",
+          "name": "CH-4",
+          "communication_object_ids": [
+            "1.1.3/MD-1_M-4_MI-1_O-2-0_R-4"
+          ],
+          "functional_blocks": [
+            "421"
+          ]
+        }
+      },
+      "serial_number": "",
+      "last_download": null,
+      "individual_address_loaded": false,
+      "application_program_loaded": false,
+      "communication_part_loaded": false,
+      "medium_config_loaded": false,
+      "parameters_loaded": false
+    },
+    "1.1.4": {
+      "name": "Schalter 2",
+      "hardware_name": "PB.rf",
+      "order_number": "PB.rf",
+      "description": "",
+      "manufacturer_name": "KNX Association",
+      "individual_address": "1.1.4",
+      "application": "M-00FA_A-2526-90-5B4B",
+      "project_uid": 76,
+      "product_id": "M-00FA_H-00FA00252600-1_P-PB.2Erf",
+      "hardware_id": "M-00FA_H-00FA00252600-1",
+      "hardware_program_id": "M-00FA_H-00FA00252600-1_HP-2526-90-5B4B",
+      "space_id": null,
+      "trade_id": "P-04FF-0_T-4",
+      "communication_object_ids": [],
+      "channels": {
+        "MD-1_M-1_MI-1_CH-argCH": {
+          "identifier": "MD-1_M-1_MI-1_CH-argCH",
+          "name": "CH-1",
+          "communication_object_ids": [
+            "1.1.4/MD-1_M-1_MI-1_O-2-0_R-4"
+          ],
+          "functional_blocks": [
+            "421"
+          ]
+        },
+        "MD-1_M-2_MI-1_CH-argCH": {
+          "identifier": "MD-1_M-2_MI-1_CH-argCH",
+          "name": "CH-2",
+          "communication_object_ids": [
+            "1.1.4/MD-1_M-2_MI-1_O-2-0_R-4"
+          ],
+          "functional_blocks": [
+            "421"
+          ]
+        },
+        "MD-1_M-3_MI-1_CH-argCH": {
+          "identifier": "MD-1_M-3_MI-1_CH-argCH",
+          "name": "CH-3",
+          "communication_object_ids": [
+            "1.1.4/MD-1_M-3_MI-1_O-2-0_R-4"
+          ],
+          "functional_blocks": [
+            "421"
+          ]
+        },
+        "MD-1_M-4_MI-1_CH-argCH": {
+          "identifier": "MD-1_M-4_MI-1_CH-argCH",
+          "name": "CH-4",
+          "communication_object_ids": [
+            "1.1.4/MD-1_M-4_MI-1_O-2-0_R-4"
+          ],
+          "functional_blocks": [
+            "421"
           ]
         }
       },
@@ -2425,7 +2563,69 @@
       "functions": []
     }
   },
-  "trades": [],
+  "trades": [
+    {
+      "identifier": "P-04FF-0_T-1",
+      "name": "Licht",
+      "number": "1",
+      "description": "",
+      "project_uid": 70,
+      "devices": [],
+      "trades": [
+        {
+          "identifier": "P-04FF-0_T-2",
+          "name": "Licht EG",
+          "number": "2",
+          "description": "",
+          "project_uid": 71,
+          "devices": [],
+          "trades": [
+            {
+              "identifier": "P-04FF-0_T-3",
+              "name": "Schalter",
+              "number": "3",
+              "description": "An und aus",
+              "project_uid": 72,
+              "devices": [
+                "1.1.3"
+              ],
+              "trades": []
+            }
+          ]
+        },
+        {
+          "identifier": "P-04FF-0_T-4",
+          "name": "Licht OG",
+          "number": "4",
+          "description": "",
+          "project_uid": 74,
+          "devices": [
+            "1.1.4"
+          ],
+          "trades": [
+            {
+              "identifier": "P-04FF-0_T-5",
+              "name": "Schalter",
+              "number": "5",
+              "description": "",
+              "project_uid": 75,
+              "devices": [],
+              "trades": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "identifier": "P-04FF-0_T-6",
+      "name": "Sanitär",
+      "number": "",
+      "description": "",
+      "project_uid": 77,
+      "devices": [],
+      "trades": []
+    }
+  ],
   "functions": {
     "F-1": {
       "function_type": "FT-1",

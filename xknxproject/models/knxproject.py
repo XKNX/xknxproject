@@ -89,6 +89,9 @@ class Device(TypedDict):
     # placed in, not one of its ancestors (the first in project file order if several
     # list it); None when no space lists it. Same meaning as `Function.space_id`.
     space_id: str | None
+    # `identifier` of the trade in `trades` listing the device - not one of its
+    # ancestors; None when no trade lists it. ETS assigns a device to one trade at most.
+    trade_id: str | None
     communication_object_ids: list[str]
     channels: dict[str, Channel]  # id: Channel
     serial_number: str

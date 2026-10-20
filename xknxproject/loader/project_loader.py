@@ -576,7 +576,12 @@ class _TradeLoader:
         return [self.parse_trade(trade) for trade in trades_element.findall("{*}Trade")]
 
     def parse_trade(self, node: ElementTree.Element) -> XMLTrade:
-        """Parse a trade and its nested trades from the document."""
+        """
+        Parse a trade and its nested trades from the document.
+
+        Every device the trade lists gets the trade's `Id` as `trade_id`, unless an
+        earlier trade in project file order already listed it.
+        """
         project_uid = node.get("Puid")
         trade = XMLTrade(
             identifier=node.get("Id"),  # type: ignore[arg-type]
@@ -596,5 +601,9 @@ class _TradeLoader:
                 device := self.devices.get(sub_node.get("RefId", ""))
             ):
                 trade.devices.append(device.individual_address)
+                # ETS lists a device in one trade; should it be listed in more,
+                # the first listing in project file order wins
+                if device.trade_id is None:
+                    device.trade_id = trade.identifier
 
         return trade

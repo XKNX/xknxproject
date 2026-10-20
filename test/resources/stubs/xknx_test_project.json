@@ -711,6 +711,7 @@
       "hardware_id": "M-0083_H-136-5-O0072",
       "hardware_program_id": "M-0083_H-136-5-O0072_HP-0139-22-F35B-O0072",
       "space_id": null,
+      "trade_id": null,
       "communication_object_ids": [],
       "channels": {},
       "serial_number": "AIN6QBMW",
@@ -734,6 +735,7 @@
       "hardware_id": "M-0002_H-2CDG.20110.20121.20R0011-1",
       "hardware_program_id": "M-0002_H-2CDG.20110.20121.20R0011-1_HP-A066-14-550B",
       "space_id": null,
+      "trade_id": null,
       "communication_object_ids": [
         "1.1.5/O-40_R-1433",
         "1.1.5/O-41_R-1434",
@@ -765,6 +767,7 @@
       "hardware_id": "M-0002_H-2CDG.20110.20030.20R0011-1",
       "hardware_program_id": "M-0002_H-2CDG.20110.20030.20R0011-1_HP-A01B-14-1B7C",
       "space_id": null,
+      "trade_id": null,
       "communication_object_ids": [
         "1.1.6/O-0_R-665",
         "1.1.6/O-20_R-8108",
@@ -793,6 +796,7 @@
       "hardware_id": "M-0008_H-8.20.2F.2F.202139.2000-0-O000A",
       "hardware_program_id": "M-0008_H-8.20.2F.2F.202139.2000-0-O000A_HP-20E0-21-9997-O000A",
       "space_id": null,
+      "trade_id": null,
       "communication_object_ids": [
         "1.1.7/MD-2_M-20_MI-1_O-2-2_R-3",
         "1.1.7/MD-2_M-20_MI-1_O-5-0_R-17",

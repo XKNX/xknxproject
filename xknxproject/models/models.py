@@ -188,6 +188,7 @@ class DeviceInstance:
         self.hardware_name: str = ""  # untranslatable name from hardware.xml
         self.hardware_id: str = ""  # "Id" of the product's Hardware element
         self.space_id: str | None = None  # "Id" of the first space listing the device
+        self.trade_id: str | None = None  # "Id" of the first trade listing the device
         self.order_number: str = ""
         self.manufacturer_name: str = ""
 
