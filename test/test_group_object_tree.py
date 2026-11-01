@@ -302,9 +302,18 @@ def test_group_object_tree_of_parsed_project() -> None:
     ).parse()
 
     # all linked communication objects of this device sit in folders of channels
-    # listing none themselves - `channels` does not know about them
+    # listing none themselves - the channels are exported for them, without ids
     device = project["devices"]["1.1.3"]
-    assert device["channels"] == {}
+    assert {
+        identifier: (channel["name"], channel["communication_object_ids"])
+        for identifier, channel in device["channels"].items()
+    } == {
+        "CH-0": ("ALLGEMEIN", []),
+        "MD-2_M-3_MI-2_CH-1": ("G2, ", []),
+        "MD-2_M-3_MI-3_CH-1": ("G3, ", []),
+        "CH-17": ("EVG", []),
+        "CH-84": ("Bewegungsmelder", []),
+    }
 
     ecg = _find_node(device["group_object_tree"], "CH-17")
     assert (ecg["type"], ecg["name"]) == ("Channel", "EVG")
@@ -315,9 +324,10 @@ def test_group_object_tree_of_parsed_project() -> None:
         "MD-1_M-1_MI-4_PB-1",
     ]
     ecg_1 = ecg["nodes"][0]
-    # "EVG {{ECG_NO}}, {{0}}" - the text parameter is resolved; the module argument
-    # is computed from an allocator and keeps its placeholder, like in channel names
-    assert (ecg_1["type"], ecg_1["name"]) == ("Folder", "EVG {{ECG_NO}}, ")
+    # "EVG {{ECG_NO}}, {{0}}" - ECG_NO is allocated per module instance (Start 1,
+    # Allocates 1), the text parameter is empty
+    assert (ecg_1["type"], ecg_1["name"]) == ("Folder", "EVG 1, ")
+    assert ecg["nodes"][1]["name"] == "EVG 4, "
     (behaviour,) = ecg_1["nodes"]
     assert behaviour["name"] == "Verhalten"
     assert behaviour["communication_object_ids"] == ["1.1.3/MD-1_M-1_MI-1_O-2-0_R-7"]
@@ -357,9 +367,8 @@ def test_group_object_tree_lists_exported_communication_objects_only() -> None:
             in_trees += _check(
                 device["group_object_tree"], set(device["communication_object_ids"])
             )
-            # channels are exported as before: those listing objects themselves
-            assert all(
-                channel["communication_object_ids"]
-                for channel in device["channels"].values()
-            )
+            # the channel of every exported communication object is exported
+            for com_object_id in device["communication_object_ids"]:
+                channel = project["communication_objects"][com_object_id]["channel"]
+                assert channel is None or channel in device["channels"]
         assert in_trees > 0

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter
+from collections.abc import Iterator
 import html
 import logging
 from operator import attrgetter
@@ -134,6 +135,14 @@ def _transform_group_object_tree(
             )
         )
     return result
+
+
+def _channel_ids(nodes: list[GroupObjectTreeNode]) -> Iterator[str]:
+    """Iterate the identifiers of all channels in an exported GroupObjectTree."""
+    for node in nodes:
+        if node["type"] == "Channel":
+            yield node["identifier"]
+        yield from _channel_ids(node["nodes"])
 
 
 def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
@@ -443,6 +452,12 @@ class XMLParser:
                 )
                 device_com_objects.append(com_object_key)
 
+            group_object_tree = _transform_group_object_tree(
+                device.group_object_tree,
+                individual_address=device.individual_address,
+                communication_object_ids=set(device_com_objects),
+            )
+            tree_channel_ids = set(_channel_ids(group_object_tree))
             channels = {
                 channel.ref_id: Channel(
                     identifier=channel.ref_id,
@@ -454,9 +469,9 @@ class XMLParser:
                     functional_blocks=channel.functional_blocks,
                 )
                 for channel in device.channels
-                # channels listing their communication objects in folders only
-                # are found in `group_object_tree`
-                if channel.group_object_instances
+                # a channel listing its communication objects in folders only is
+                # exported if one of them is - `CommunicationObject.channel` refers to it
+                if channel.group_object_instances or channel.ref_id in tree_channel_ids
             }
 
             devices_dict[device.individual_address] = Device(
@@ -475,11 +490,7 @@ class XMLParser:
                 trade_id=device.trade_id,
                 communication_object_ids=device_com_objects,
                 channels=channels,
-                group_object_tree=_transform_group_object_tree(
-                    device.group_object_tree,
-                    individual_address=device.individual_address,
-                    communication_object_ids=set(device_com_objects),
-                ),
+                group_object_tree=group_object_tree,
                 serial_number=device.serial_number,
                 last_download=device.last_download,
                 individual_address_loaded=device.individual_address_loaded,

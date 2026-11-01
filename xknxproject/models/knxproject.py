@@ -116,6 +116,8 @@ class Channel(TypedDict):
     # communication objects listed directly in the channel - those in folders of
     # the channel are found in `Device.group_object_tree`. Unlike there, objects
     # not linked to a group address - not in `communication_objects` - are included.
+    # Empty for a channel holding its objects in folders only: it is exported if
+    # one of them is, as `CommunicationObject.channel` refers to it.
     communication_object_ids: list[str]
     functional_blocks: list[str] | None
 
@@ -125,8 +127,7 @@ class GroupObjectTreeNode(TypedDict):
 
     # "Channel" or "Folder"
     type: str
-    # "RefId" of the node. For a channel the key in `Device.channels`, if the
-    # channel lists communication objects itself and not only in its folders.
+    # "RefId" of the node. For a channel its key in `Device.channels`.
     identifier: str
     name: str
     # keys of `communication_objects` listed directly in this node

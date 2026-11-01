@@ -222,8 +222,10 @@ class DeviceInstance:
 
         The arguments of every module instance containing the instance apply,
         the base module first and its sub-modules overriding it. An argument
-        whose value the application computes - from an allocator or a base
-        value - has no literal value: its placeholder stays in texts.
+        whose value the application computes from an allocator gets the value
+        allocated to the module instance. Other computed arguments - of
+        sub-modules or from a base value - have no literal value: their
+        placeholder stays in texts.
         """
         if not instance_ref_id.startswith("MD-"):
             return {}
@@ -238,11 +240,15 @@ class DeviceInstance:
         ):
             for argument in module_instance.arguments:
                 numeric_arg = application.numeric_args.get(argument.ref_id)
-                computed = numeric_arg is not None and (
-                    numeric_arg.allocator_ref_id is not None
-                    or numeric_arg.base_value is not None
-                )
-                values[argument.name] = None if computed else argument.value
+                if numeric_arg is None or (
+                    numeric_arg.allocator_ref_id is None
+                    and numeric_arg.base_value is None
+                ):
+                    values[argument.name] = argument.value
+                else:
+                    values[argument.name] = _allocated_argument_value(
+                        module_instance, argument, numeric_arg, application
+                    )
         return {name: value for name, value in values.items() if value is not None}
 
     def folders(self) -> Iterator[FolderNode]:
@@ -489,6 +495,35 @@ class ModuleInstanceArgument:
             self.ref_id = f"{application_program_ref}_{module_def_id}_{self.ref_id}"
         else:
             self.ref_id = f"{application_program_ref}_{self.ref_id}"
+
+
+def _allocated_argument_value(
+    module_instance: ModuleInstance,
+    argument: ModuleInstanceArgument,
+    numeric_arg: ModuleDefinitionNumericArg,
+    application: ApplicationProgram,
+) -> str | None:
+    """
+    Return the value an allocator assigns to an argument of a module instance.
+
+    Every instance of a module gets `Allocates` values of the allocator, in the
+    order of the instances, starting at the allocators "Start" - the same as
+    for the base number of communication objects. Arguments of sub-modules and
+    from a base value are not resolved: None.
+    """
+    if (
+        module_instance.base_module is not None
+        or numeric_arg.base_value is not None
+        or numeric_arg.allocator_ref_id is None
+        or argument.allocates is None
+        or (allocator := application.allocators.get(numeric_arg.allocator_ref_id))
+        is None
+    ):
+        return None
+    module_instance_index = module_instance.identifier.rsplit("_MI-", maxsplit=1)[1]
+    if not module_instance_index.isdigit():
+        return None
+    return str(allocator.start + argument.allocates * (int(module_instance_index) - 1))
 
 
 @dataclass

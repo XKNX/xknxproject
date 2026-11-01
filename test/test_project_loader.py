@@ -7,6 +7,7 @@ from xml.etree import ElementTree
 
 from xknxproject.loader.project_loader import _LocationLoader
 from xknxproject.models import (
+    Allocator,
     ApplicationProgram,
     DeviceInstance,
     KNXMasterData,
@@ -159,3 +160,35 @@ def test_module_arguments_of_an_instance() -> None:
         "Group": "1",
     }
     assert device.module_arguments("O-334_R-21", application) == {}
+
+
+def test_module_arguments_from_an_allocator() -> None:
+    """Each module instance gets the next `Allocates` values of the allocator."""
+    (device,) = build_devices(("P-1_DI-1", 1))
+    device.module_instances = [
+        ModuleInstance(
+            identifier=f"MD-1_M-1_MI-{index}",
+            ref_id="MD-1_M-1",
+            arguments=[_argument("A_MD-1_A-3", "ECG_NO", "L-3")],
+        )
+        for index in (1, 4)
+    ]
+    for module_instance in device.module_instances:
+        module_instance.arguments[0].allocates = 2
+    application = ApplicationProgram(
+        com_objects={},
+        com_object_refs={},
+        allocators={
+            "A_L-3": Allocator(identifier="A_L-3", name="ECG_NO", start=1, end=65)
+        },
+        module_def_arguments={},
+        numeric_args={
+            "A_MD-1_A-3": ModuleDefinitionNumericArg(
+                allocator_ref_id="A_L-3", value=None, base_value=None
+            ),
+        },
+        channels={},
+    )
+
+    assert device.module_arguments("MD-1_M-1_MI-1_CH-1", application) == {"ECG_NO": "1"}
+    assert device.module_arguments("MD-1_M-1_MI-4_PB-1", application) == {"ECG_NO": "7"}
