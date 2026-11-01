@@ -5,7 +5,7 @@ pytest==9.2.0
 pytest-cov==7.1.0
 pytest-icdiff==0.9
 ruff==0.17.3
-setuptools==84.0.0
+setuptools==84.2.1
 tox==4.65.0
 tox-gh-actions==3.5.0
 mypy==2.4.1
