@@ -240,6 +240,27 @@ def test_folder_name_text_parameter() -> None:
     ]
 
 
+def test_folder_name_falls_back_to_the_parameter_block_name() -> None:
+    """A text resolving to nothing uses the name of the ParameterBlock."""
+    (device,) = build_devices(("P-1_DI-1", 1))
+    device.application_program_ref = _APPLICATION
+    device.group_object_tree = [
+        FolderNode(ref_id="PB-9", name="", group_object_instances=["O-1_R-1"]),
+    ]
+    device.merge_application_program_info(
+        _application(
+            ApplicationProgramParameterBlock(
+                identifier=f"{_APPLICATION}_PB-9",
+                name="LOG_Channel",
+                text="{{0}}",
+                text_parameter_ref_id=f"{_APPLICATION}_P-9_R-9",  # not set in device
+            ),
+        )
+    )
+
+    assert [folder.name for folder in device.folders()] == ["LOG_Channel"]
+
+
 def test_folder_name_in_module_instance() -> None:
     """Folders of modules resolve the ParameterBlock and arguments of their instance."""
     (device,) = build_devices(("P-1_DI-1", 1))
@@ -340,6 +361,34 @@ def test_group_object_tree_of_parsed_project() -> None:
     ]
     assert motion["nodes"][1]["communication_object_ids"] == []
     assert [node["name"] for node in motion["nodes"][1]["nodes"]] == ["Helligkeit"]
+
+
+def test_objects_directly_below_the_device_are_in_no_node() -> None:
+    """Objects at the root of the GroupObjectTree are exported, but not in a node."""
+    project = XKNXProj(
+        RESOURCES_PATH / "module-definition-test.knxproj", language="De"
+    ).parse()
+
+    def _tree_ids(nodes: list[GroupObjectTreeNode]) -> set[str]:
+        return {
+            identifier
+            for node in nodes
+            for identifier in (
+                *node["communication_object_ids"],
+                *_tree_ids(node["nodes"]),
+            )
+        }
+
+    untreed = {
+        address: set(device["communication_object_ids"])
+        - _tree_ids(device["group_object_tree"])
+        for address, device in project["devices"].items()
+        if device["group_object_tree"]
+    }
+    assert {address: ids for address, ids in untreed.items() if ids} == {
+        "1.1.1": {"1.1.1/O-334_R-21"},
+        "1.1.2": {"1.1.2/O-334_R-21"},
+    }
 
 
 def test_group_object_tree_lists_exported_communication_objects_only() -> None:

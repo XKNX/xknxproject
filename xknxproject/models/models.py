@@ -247,7 +247,11 @@ class DeviceInstance:
                     values[argument.name] = argument.value
                 else:
                     values[argument.name] = _allocated_argument_value(
-                        module_instance, argument, numeric_arg, application
+                        module_instance,
+                        argument,
+                        numeric_arg,
+                        application,
+                        f"{self.application_program_ref}_",
                     )
         return {name: value for name, value in values.items() if value is not None}
 
@@ -431,21 +435,23 @@ class FolderNode:
         if not self.name and parameter_block is not None:
             self.name = parameter_block.text or parameter_block.name or ""
 
-        if "{{" not in self.name:
-            return
-        self.name = util.module_argument_replace(self.name, module_arguments)
-
-        parameter: ParameterInstanceRef | None = None
-        if parameter_block is not None and parameter_block.text_parameter_ref_id:
-            parameter = device_instance.parameter_instance_refs.get(
-                util.text_parameter_insert_module_instance(
-                    instance_ref=self.ref_id,
-                    instance_next_id="PB",
-                    text_parameter_ref_id=parameter_block.text_parameter_ref_id,
+        if "{{" in self.name:
+            self.name = util.module_argument_replace(self.name, module_arguments)
+            parameter: ParameterInstanceRef | None = None
+            if parameter_block is not None and parameter_block.text_parameter_ref_id:
+                parameter = device_instance.parameter_instance_refs.get(
+                    util.text_parameter_insert_module_instance(
+                        instance_ref=self.ref_id,
+                        instance_next_id="PB",
+                        text_parameter_ref_id=parameter_block.text_parameter_ref_id,
+                    )
                 )
-            )
-        # "{{0}}" or "{{0:default}}" - falls back to the default without a parameter
-        self.name = util.text_parameter_template_replace(self.name, parameter)
+            # "{{0}}" or "{{0:default}}" - falls back to the default without a parameter
+            self.name = util.text_parameter_template_replace(self.name, parameter)
+        if not self.name.strip() and parameter_block is not None:
+            # eg. a text of only "{{0}}" without a parameter instance in the project,
+            # like channels falling back to the name of the application channel
+            self.name = parameter_block.name or ""
 
 
 @dataclass
@@ -502,22 +508,27 @@ def _allocated_argument_value(
     argument: ModuleInstanceArgument,
     numeric_arg: ModuleDefinitionNumericArg,
     application: ApplicationProgram,
+    application_program_id_prefix: str,
 ) -> str | None:
     """
     Return the value an allocator assigns to an argument of a module instance.
 
-    Every instance of a module gets `Allocates` values of the allocator, in the
-    order of the instances, starting at the allocators "Start" - the same as
-    for the base number of communication objects. Arguments of sub-modules and
-    from a base value are not resolved: None.
+    The instance argument names the allocator ("L-3"). Every instance of a
+    module gets `Allocates` values of it, in the order of the instances,
+    starting at the allocators "Start". This only holds while a single Module
+    element draws from the allocator: when several do (eg. one Module per page
+    of controls), how ETS numbers the instances across them is unknown, so the
+    value is not resolved. Arguments of sub-modules and from a base value are
+    not resolved either: None.
     """
+    allocator_id = f"{application_program_id_prefix}{argument.value}"
     if (
         module_instance.base_module is not None
         or numeric_arg.base_value is not None
         or numeric_arg.allocator_ref_id is None
         or argument.allocates is None
-        or (allocator := application.allocators.get(numeric_arg.allocator_ref_id))
-        is None
+        or application.allocator_modules.get(allocator_id) != 1
+        or (allocator := application.allocators.get(allocator_id)) is None
     ):
         return None
     module_instance_index = module_instance.identifier.rsplit("_MI-", maxsplit=1)[1]
@@ -848,6 +859,8 @@ class ApplicationProgram:
     parameter_blocks: dict[str, ApplicationProgramParameterBlock] = field(
         default_factory=dict
     )  # {Id: ApplicationProgramParameterBlock}
+    # number of Module elements whose arguments draw from an allocator
+    allocator_modules: dict[str, int] = field(default_factory=dict)  # {Id: count}
 
 
 @dataclass

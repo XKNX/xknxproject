@@ -56,6 +56,8 @@ class ApplicationProgramLoader:
             for attribute in device.module_instance_arguments()
         }
         numeric_args: dict[str, ModuleDefinitionNumericArg] = {}
+        # number of Module elements drawing from each allocator
+        allocator_modules: dict[str, int] = {}
         channels: dict[
             str, ApplicationProgramChannel
         ] = {}  # {Id: ApplicationProgramChannel}
@@ -125,6 +127,12 @@ class ApplicationProgramLoader:
                     elem.clear()
                 elif elem.tag == ns_numeric_arg:
                     # in dynamic section of Modules
+                    if (
+                        allocator_ref_id := elem.attrib.get("AllocatorRefId")
+                    ) is not None:
+                        allocator_modules[allocator_ref_id] = (
+                            allocator_modules.get(allocator_ref_id, 0) + 1
+                        )
                     if (_id := elem.attrib.get("RefId")) in used_module_arguments:  # type: ignore[operator,assignment]
                         value = elem.attrib.get("Value")
                         numeric_args[_id] = ModuleDefinitionNumericArg(
@@ -180,6 +188,7 @@ class ApplicationProgramLoader:
                 numeric_args=numeric_args,
                 channels=channels,
                 parameter_blocks=parameter_blocks,
+                allocator_modules=allocator_modules,
             )
 
     @staticmethod
