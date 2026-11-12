@@ -37,10 +37,9 @@ class KNXProjContents:
         xml_namespace: str,
     ) -> None:
         """Initialize a KNXProjContents."""
-        self._project_archive = project_archive
-        self._project_relative_path = project_relative_path
         self.root = root_zip
         self.root_path = ZipPath(root_zip)
+        self.project_path = ArchivePath(project_archive, project_relative_path)
         self.xml_namespace = xml_namespace
         self.schema_version = _get_schema_version(xml_namespace)
 
@@ -50,42 +49,78 @@ class KNXProjContents:
 
     def open_project_0(self) -> IO[bytes]:
         """Open the project 0.xml file."""
-        return self.open_project_file("0.xml")
+        return (self.project_path / "0.xml").open()
 
     def open_project_meta(self) -> IO[bytes]:
-        """Open the project.xml file."""
+        """Open the project.xml file (Project.xml up to schema version 11)."""
         project_filename = "Project.xml" if self.is_ets4_project() else "project.xml"
-        return self.open_project_file(project_filename)
+        return (self.project_path / project_filename).open()
 
-    def list_project_files(self) -> list[str]:
-        """
-        Return the names of all files in the project folder.
 
-        Names are relative to the project folder and use "/" as separator,
-        eg. "0.xml" or "BinaryData/<name>.dat". Folders are not listed. This
-        works the same for password protected and unprotected projects.
-        """
-        prefix = self._project_relative_path
-        return [
-            info.filename.removeprefix(prefix)
-            for info in self._project_archive.infolist()
-            if info.filename.startswith(prefix) and not info.is_dir()
-        ]
+class ArchivePath:
+    """
+    A file or folder inside a ZIP archive.
 
-    def open_project_file(self, name: str) -> IO[bytes]:
-        """
-        Open a file of the project folder for reading.
+    Works with archives of `zipfile` and of `pyzipper` (the AES encrypted archive
+    of a protected project from schema version 21 on), as it only relies on
+    `namelist()` and `open()`. Names are case-sensitive and use "/" as separator,
+    eg. "BinaryData/<name>.dat".
+    """
 
-        `name` is relative to the project folder, as returned by
-        `list_project_files()`. Raises ValueError if `name` does not point
-        inside the project folder and KeyError if the file does not exist.
-        """
-        if any(part in ("", ".", "..") for part in name.split("/")):
-            raise ValueError(f"Invalid project file name: {name!r}")
-        return self._project_archive.open(
-            f"{self._project_relative_path}{name}",
-            mode="r",
+    def __init__(self, archive: ZipFile, at: str = "") -> None:
+        """Initialize an ArchivePath for the member `at` of `archive`."""
+        self._archive = archive
+        self._at = at.strip("/")
+
+    @property
+    def name(self) -> str:
+        """Return the last part of the path."""
+        return self._at.rpartition("/")[2]
+
+    def __truediv__(self, child: str) -> ArchivePath:
+        """Return the path of `child` in this folder."""
+        return ArchivePath(self._archive, f"{self._at}/{child}" if self._at else child)
+
+    def __str__(self) -> str:
+        """Return the member name in the archive."""
+        return self._at
+
+    def __repr__(self) -> str:
+        """Return a representation of the path."""
+        return f"ArchivePath({self._at!r})"
+
+    def is_file(self) -> bool:
+        """Return whether the path is a file in the archive."""
+        return self._at in self._archive.namelist()
+
+    def is_dir(self) -> bool:
+        """Return whether the path is a folder in the archive."""
+        return not self._at or any(
+            name.startswith(f"{self._at}/") for name in self._archive.namelist()
         )
+
+    def exists(self) -> bool:
+        """Return whether the path is a file or a folder in the archive."""
+        return self.is_file() or self.is_dir()
+
+    def iterdir(self) -> Iterator[ArchivePath]:
+        """Yield the files and folders in this folder, in archive order."""
+        prefix = f"{self._at}/" if self._at else ""
+        children = dict.fromkeys(
+            name.removeprefix(prefix).partition("/")[0]
+            for name in self._archive.namelist()
+            if name.startswith(prefix) and name != prefix
+        )
+        return (self / child for child in children)
+
+    def open(self) -> IO[bytes]:
+        """Open the file for reading. Raises KeyError if it does not exist."""
+        return self._archive.open(self._at, mode="r")
+
+    def read_bytes(self) -> bytes:
+        """Return the content of the file."""
+        with self.open() as file:
+            return file.read()
 
 
 @contextmanager
@@ -123,8 +158,8 @@ def extract(
             with _extract_protected_project_file(
                 zip_archive, protected_info, password, schema_version
             ) as project_zip:
-                # ZipPath is not supported by pyzipper thus we use
-                # string name for project_relative_path
+                # ZipPath is not supported by pyzipper thus KNXProjContents
+                # uses an ArchivePath for the project folder
                 yield KNXProjContents(
                     root_zip=zip_archive,
                     project_archive=project_zip,
