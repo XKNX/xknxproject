@@ -6,10 +6,12 @@ import base64
 from collections.abc import Iterator
 from contextlib import contextmanager
 import hashlib
+import io
 import logging
 from pathlib import Path
 import re
-from typing import IO
+import sys
+from typing import IO, Any, Literal, overload
 from zipfile import BadZipFile, Path as ZipPath, ZipFile, ZipInfo
 import zlib
 
@@ -22,6 +24,12 @@ from xknxproject.exceptions import (
     ProjectNotFoundException,
     UnexpectedFileContent,
 )
+
+if sys.version_info >= (3, 11):
+    from importlib.resources.abc import Traversable
+else:
+    # the location before Python 3.11
+    from importlib.abc import Traversable  # pylint: disable=deprecated-class
 
 _LOGGER = logging.getLogger("xknxproject.log")
 
@@ -37,10 +45,13 @@ class KNXProjContents:
         xml_namespace: str,
     ) -> None:
         """Initialize a KNXProjContents."""
-        self._project_archive = project_archive
-        self._project_relative_path = project_relative_path
         self.root = root_zip
         self.root_path = ZipPath(root_zip)
+        # the project folder - in the root archive, or the root of a protected
+        # project's nested archive
+        self.project_path: Traversable = ArchivePath(
+            project_archive, project_relative_path
+        )
         self.xml_namespace = xml_namespace
         self.schema_version = _get_schema_version(xml_namespace)
 
@@ -50,18 +61,123 @@ class KNXProjContents:
 
     def open_project_0(self) -> IO[bytes]:
         """Open the project 0.xml file."""
-        return self._project_archive.open(
-            f"{self._project_relative_path}0.xml",
-            mode="r",
-        )
+        return (self.project_path / "0.xml").open(mode="rb")
 
     def open_project_meta(self) -> IO[bytes]:
-        """Open the project.xml file."""
+        """Open the project.xml file (Project.xml up to schema version 11)."""
         project_filename = "Project.xml" if self.is_ets4_project() else "project.xml"
-        return self._project_archive.open(
-            f"{self._project_relative_path}{project_filename}",
-            mode="r",
+        return (self.project_path / project_filename).open(mode="rb")
+
+
+class ArchivePath(Traversable):
+    """
+    A file or folder inside a ZIP archive, as a `Traversable` like `zipfile.Path`.
+
+    Works with archives of `zipfile` and of `pyzipper` (the AES encrypted archive
+    of a protected project from schema version 21 on), which `zipfile.Path` can't
+    wrap, as it only relies on `namelist()`, `getinfo()` and `open()`. Names are
+    case-sensitive and use "/" as separator, eg. "BinaryData/<name>.dat".
+    Consumers should rely on the `Traversable` protocol only, so the class can be
+    replaced by another implementation of it.
+    """
+
+    def __init__(self, archive: ZipFile, at: str = "") -> None:
+        """Initialize an ArchivePath for the member `at` of `archive`."""
+        self._archive = archive
+        self._at = at.strip("/")
+
+    @property
+    def name(self) -> str:
+        """Return the last part of the path."""
+        return self._at.rpartition("/")[2]
+
+    def joinpath(self, *descendants: str) -> ArchivePath:
+        """Return the path of `descendants` in this folder."""
+        return ArchivePath(self._archive, "/".join((self._at, *descendants)))
+
+    def __repr__(self) -> str:
+        """Return a representation of the path."""
+        return f"ArchivePath({self._at!r})"
+
+    def is_file(self) -> bool:
+        """Return whether the path is a file in the archive."""
+        if not self._at:
+            return False
+        try:
+            self._archive.getinfo(self._at)
+        except KeyError:
+            return False
+        return True
+
+    def is_dir(self) -> bool:
+        """Return whether the path is a folder (with or without an entry of its own)."""
+        return not self._at or any(
+            name.startswith(f"{self._at}/") for name in self._archive.namelist()
         )
+
+    def exists(self) -> bool:
+        """Return whether the path is a file or a folder in the archive."""
+        return self.is_file() or self.is_dir()
+
+    def iterdir(self) -> Iterator[ArchivePath]:
+        """
+        Yield the files and folders in this folder, in archive order (unspecified).
+
+        Raises ValueError for a file or a missing folder, as `zipfile.Path` does.
+        """
+        if not self.is_dir():
+            raise ValueError(f"Can't listdir a file: {self._at}")
+        prefix = f"{self._at}/" if self._at else ""
+        children = dict.fromkeys(
+            name.removeprefix(prefix).partition("/")[0]
+            for name in self._archive.namelist()
+            if name.startswith(prefix) and name != prefix
+        )
+        return (self.joinpath(child) for child in children)
+
+    @overload
+    def open(
+        self,
+        mode: Literal["r"] = "r",
+        *,
+        encoding: str | None = None,
+        errors: str | None = None,
+    ) -> IO[str]: ...
+
+    @overload
+    def open(self, mode: Literal["rb"]) -> IO[bytes]: ...
+
+    def open(
+        self,
+        mode: str = "r",
+        *,
+        encoding: str | None = None,
+        errors: str | None = None,
+    ) -> IO[Any]:
+        """
+        Open the file for reading, as text by default, as bytes with mode "rb".
+
+        Raises FileNotFoundError for a missing file and IsADirectoryError for a
+        folder, as `zipfile.Path` does.
+        """
+        if self.is_dir():
+            raise IsADirectoryError(self._at)
+        if not self.is_file():
+            raise FileNotFoundError(self._at)
+        stream = self._archive.open(self._at, mode="r")
+        if "b" in mode:
+            return stream
+        return io.TextIOWrapper(stream, encoding=encoding, errors=errors)
+
+    def read_bytes(self) -> bytes:
+        """Return the content of the file."""
+        with self.open("rb") as file:
+            return file.read()
+
+    def read_text(self, encoding: str | None = None, errors: str | None = None) -> str:
+        """Return the content of the file as text."""
+        with self.open(encoding=encoding, errors=errors) as file:
+            return file.read()
 
 
 @contextmanager
@@ -99,8 +215,8 @@ def extract(
             with _extract_protected_project_file(
                 zip_archive, protected_info, password, schema_version
             ) as project_zip:
-                # ZipPath is not supported by pyzipper thus we use
-                # string name for project_relative_path
+                # ZipPath is not supported by pyzipper thus KNXProjContents
+                # uses an ArchivePath for the project folder
                 yield KNXProjContents(
                     root_zip=zip_archive,
                     project_archive=project_zip,
