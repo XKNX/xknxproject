@@ -237,3 +237,21 @@ def test_allocator_modules_are_counted() -> None:
     # one Module element per page of controls, all numbered from "Ctrl_num"
     assert application.allocator_modules["M-0071_A-5531-37-FDF4_L-4"] == 12
     assert application.allocator_modules["M-0071_A-5531-37-FDF4_L-9"] == 1
+
+
+def test_module_arguments_with_the_allocated_number_stored() -> None:
+    """A number stored in the instance argument (ETS 6) is used as is."""
+    (device,) = build_devices(("P-1_DI-1", 1))
+    device.application_program_ref = "A"
+    device.module_instances = [
+        ModuleInstance(
+            identifier="MD-1_M-1_MI-2",
+            ref_id="MD-1_M-1",
+            arguments=[_argument("A_MD-1_A-3", "ECG_NO", "9")],
+        )
+    ]
+
+    # also with an allocator shared by several Module elements
+    assert device.module_arguments(
+        "MD-1_M-1_MI-2_CH-1", _allocator_application(allocator_modules=12)
+    ) == {"ECG_NO": "9"}

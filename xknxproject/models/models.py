@@ -513,19 +513,23 @@ def _allocated_argument_value(
     """
     Return the value an allocator assigns to an argument of a module instance.
 
-    The instance argument names the allocator ("L-3"). Every instance of a
-    module gets `Allocates` values of it, in the order of the instances,
-    starting at the allocators "Start". This only holds while a single Module
-    element draws from the allocator: when several do (eg. one Module per page
-    of controls), how ETS numbers the instances across them is unknown, so the
-    value is not resolved. Arguments of sub-modules and from a base value are
-    not resolved either: None.
+    Projects may store the allocated number in the instance argument (ETS 6
+    does), which is used as is. Otherwise the argument names the allocator
+    ("L-3"): every instance of a module gets `Allocates` values of it, in the
+    order of the instances, starting at the allocators "Start". This only holds
+    while a single Module element draws from the allocator: when several do
+    (eg. one Module per page of controls), how ETS numbers the instances across
+    them is unknown, so the value is not resolved. Arguments of sub-modules and
+    from a base value are not resolved either: None.
     """
+    if module_instance.base_module is not None or numeric_arg.base_value is not None:
+        # a sub-module argument or an offset to a base value, also when a number
+        return None
+    if argument.value.isdigit():
+        return argument.value
     allocator_id = f"{application_program_id_prefix}{argument.value}"
     if (
-        module_instance.base_module is not None
-        or numeric_arg.base_value is not None
-        or numeric_arg.allocator_ref_id is None
+        numeric_arg.allocator_ref_id is None
         or argument.allocates is None
         or application.allocator_modules.get(allocator_id) != 1
         or (allocator := application.allocators.get(allocator_id)) is None
