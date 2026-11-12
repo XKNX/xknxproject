@@ -4,9 +4,12 @@ from __future__ import annotations
 
 from unittest.mock import Mock
 from xml.etree import ElementTree
+from zipfile import Path as ZipPath, ZipFile
 
+from xknxproject.loader.application_program_loader import ApplicationProgramLoader
 from xknxproject.loader.project_loader import _LocationLoader
 from xknxproject.models import (
+    Allocator,
     ApplicationProgram,
     DeviceInstance,
     KNXMasterData,
@@ -16,6 +19,7 @@ from xknxproject.models import (
 )
 from xknxproject.zip import KNXProjContents
 
+from . import RESOURCES_PATH
 from .conftest import build_devices
 
 # ETS 6 project schema namespace; the loader matches any namespace (`{*}`)
@@ -159,3 +163,95 @@ def test_module_arguments_of_an_instance() -> None:
         "Group": "1",
     }
     assert device.module_arguments("O-334_R-21", application) == {}
+
+
+def _allocator_application(allocator_modules: int) -> ApplicationProgram:
+    return ApplicationProgram(
+        com_objects={},
+        com_object_refs={},
+        allocators={
+            "A_L-3": Allocator(identifier="A_L-3", name="ECG_NO", start=1, end=65)
+        },
+        module_def_arguments={},
+        numeric_args={
+            "A_MD-1_A-3": ModuleDefinitionNumericArg(
+                allocator_ref_id="A_L-3", value=None, base_value=None
+            ),
+        },
+        channels={},
+        allocator_modules={"A_L-3": allocator_modules},
+    )
+
+
+def test_module_arguments_from_an_allocator() -> None:
+    """Each module instance gets the next `Allocates` values of the allocator."""
+    (device,) = build_devices(("P-1_DI-1", 1))
+    device.application_program_ref = "A"
+    device.module_instances = [
+        ModuleInstance(
+            identifier=f"MD-1_M-1_MI-{index}",
+            ref_id="MD-1_M-1",
+            arguments=[_argument("A_MD-1_A-3", "ECG_NO", "L-3")],
+        )
+        for index in (1, 4)
+    ]
+    for module_instance in device.module_instances:
+        module_instance.arguments[0].allocates = 2
+    application = _allocator_application(allocator_modules=1)
+
+    assert device.module_arguments("MD-1_M-1_MI-1_CH-1", application) == {"ECG_NO": "1"}
+    assert device.module_arguments("MD-1_M-1_MI-4_PB-1", application) == {"ECG_NO": "7"}
+
+
+def test_module_arguments_from_an_allocator_of_several_modules() -> None:
+    """An allocator shared by several Module elements is not resolved."""
+    (device,) = build_devices(("P-1_DI-1", 1))
+    device.application_program_ref = "A"
+    device.module_instances = [
+        ModuleInstance(
+            identifier="MD-1_M-1_MI-1",
+            ref_id="MD-1_M-1",
+            arguments=[_argument("A_MD-1_A-3", "ECG_NO", "L-3")],
+        )
+    ]
+    device.module_instances[0].arguments[0].allocates = 2
+
+    # how ETS numbers instances across the Module elements is unknown
+    assert (
+        device.module_arguments(
+            "MD-1_M-1_MI-1_CH-1", _allocator_application(allocator_modules=12)
+        )
+        == {}
+    )
+
+
+def test_allocator_modules_are_counted() -> None:
+    """The loader counts the Module elements drawing from each allocator."""
+    with ZipFile(RESOURCES_PATH / "module-definition-test.knxproj") as archive:
+        application = ApplicationProgramLoader.load(
+            ZipPath(archive, "M-0071/M-0071_A-5531-37-FDF4.xml"),
+            devices=[],
+            language_code=None,
+        )
+
+    # one Module element per page of controls, all numbered from "Ctrl_num"
+    assert application.allocator_modules["M-0071_A-5531-37-FDF4_L-4"] == 12
+    assert application.allocator_modules["M-0071_A-5531-37-FDF4_L-9"] == 1
+
+
+def test_module_arguments_with_the_allocated_number_stored() -> None:
+    """A number stored in the instance argument (ETS 6) is used as is."""
+    (device,) = build_devices(("P-1_DI-1", 1))
+    device.application_program_ref = "A"
+    device.module_instances = [
+        ModuleInstance(
+            identifier="MD-1_M-1_MI-2",
+            ref_id="MD-1_M-1",
+            arguments=[_argument("A_MD-1_A-3", "ECG_NO", "9")],
+        )
+    ]
+
+    # also with an allocator shared by several Module elements
+    assert device.module_arguments(
+        "MD-1_M-1_MI-2_CH-1", _allocator_application(allocator_modules=12)
+    ) == {"ECG_NO": "9"}
