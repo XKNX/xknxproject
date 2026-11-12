@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import struct
+import sys
 import zipfile
 
 import pytest
@@ -9,7 +10,12 @@ from pytest import raises
 
 from xknxproject.exceptions import InvalidPasswordException, InvalidProjectArchive
 from xknxproject.zip import extract
-from xknxproject.zip.extractor import _generate_ets6_zip_password
+from xknxproject.zip.extractor import ArchivePath, _generate_ets6_zip_password
+
+if sys.version_info >= (3, 11):
+    from importlib.resources.abc import Traversable
+else:
+    from importlib.abc import Traversable
 
 from .. import RESOURCES_PATH
 
@@ -210,7 +216,7 @@ def test_project_path_is_case_sensitive(
     with extract(project_path, password) as knx_project_contents:
         project = knx_project_contents.project_path
         assert (project / "Project.xml").is_file()
-        assert not (project / "project.xml").exists()
+        assert not (project / "project.xml").is_file()
         with knx_project_contents.open_project_meta() as meta:
             assert meta.read() == (project / "Project.xml").read_bytes()
 
@@ -219,11 +225,38 @@ def test_project_path_unprotected() -> None:
     """Test that the project folder of an unprotected project is in the root archive."""
     with extract(xknx_test_project_ets5) as knx_project_contents:
         project = knx_project_contents.project_path
-        assert str(project) == "P-01D2"
-        assert str(project / "0.xml") == "P-01D2/0.xml"
         assert (project / "0.xml").read_bytes() == knx_project_contents.root.read(
             "P-01D2/0.xml"
         )
+
+
+@pytest.mark.parametrize(
+    ("project_path", "password"),
+    [
+        (xknx_test_project_ets5, None),
+        (xknx_test_project_protected_ets5, "test"),
+        (xknx_test_project_protected_ets6, "test"),
+    ],
+)
+def test_project_path_is_traversable(project_path: Path, password: str | None) -> None:
+    """Test that project_path offers the Traversable protocol, as root_path does."""
+    with extract(project_path, password) as knx_project_contents:
+        for folder in (
+            knx_project_contents.root_path,
+            knx_project_contents.project_path,
+        ):
+            assert isinstance(folder, Traversable)
+        project = knx_project_contents.project_path
+        file = project.joinpath("0.xml")
+        assert file.name == "0.xml"
+        with file.open("rb") as binary:
+            raw = binary.read()
+        assert raw == file.read_bytes()
+        # text with universal newlines, as zipfile.Path
+        text = raw.decode("utf-8-sig").replace("\r\n", "\n")
+        with file.open(encoding="utf-8-sig") as text_file:
+            assert text_file.read() == text
+        assert file.read_text(encoding="utf-8-sig") == text
 
 
 def test_project_path_subfolder() -> None:
@@ -240,10 +273,59 @@ def test_project_path_subfolder() -> None:
 
 
 def test_project_path_missing_file() -> None:
-    """Test a path to a file that is not in the project folder."""
+    """Test a path to a file or folder that is not in the project folder, as zipfile.Path."""
     with extract(xknx_test_project_ets5) as knx_project_contents:
-        missing = knx_project_contents.project_path / "BinaryData" / "missing.dat"
-        assert not missing.exists()
-        assert list((knx_project_contents.project_path / "BinaryData").iterdir()) == []
-        with raises(KeyError):
-            missing.open()
+        project = knx_project_contents.project_path
+        missing = project / "BinaryData" / "missing.dat"
+        assert not missing.is_file()
+        assert not missing.is_dir()
+        with raises(FileNotFoundError):
+            missing.open("rb")
+        with raises(IsADirectoryError):
+            project.open("rb")
+        with raises(ValueError):
+            list((project / "BinaryData").iterdir())
+        with raises(ValueError):
+            list((project / "0.xml").iterdir())
+        # the same as on root_path
+        root = knx_project_contents.root_path
+        with raises(FileNotFoundError):
+            (root / "missing.xml").open("rb")
+        with raises(ValueError):
+            list((root / "knx_master.xml").iterdir())
+
+
+def test_archive_path_explicit_folder_entries(tmp_path: Path) -> None:
+    """Test an archive with entries of its own for folders, eg. "P-1/BinaryData/"."""
+    archive_file = tmp_path / "folders.zip"
+    with zipfile.ZipFile(archive_file, "w") as archive:
+        archive.writestr("P-1/", b"")
+        archive.writestr("P-1/BinaryData/", b"")
+        archive.writestr("P-1/BinaryData/a.dat", b"a")
+        archive.writestr("P-1/Empty/", b"")
+        archive.writestr("P-1/0.xml", b"<x/>")
+    with zipfile.ZipFile(archive_file) as archive:
+        project = ArchivePath(archive, "P-1/")
+        assert project.is_dir()
+        assert not project.is_file()
+        assert sorted(child.name for child in project.iterdir()) == [
+            "0.xml",
+            "BinaryData",
+            "Empty",
+        ]
+        binary_data = project.joinpath("BinaryData")
+        assert binary_data.is_dir()
+        assert not binary_data.is_file()
+        assert [child.name for child in binary_data.iterdir()] == ["a.dat"]
+        assert (binary_data / "a.dat").read_bytes() == b"a"
+        empty = project.joinpath("Empty")
+        assert empty.is_dir()
+        assert list(empty.iterdir()) == []
+        assert repr(empty) == "ArchivePath('P-1/Empty')"
+        # exists() is not part of the Traversable protocol, only of ArchivePath
+        assert empty.exists()
+        assert binary_data.joinpath("a.dat").exists()
+        assert not binary_data.joinpath("b.dat").exists()
+        # the root of the archive
+        assert ArchivePath(archive).is_dir()
+        assert not ArchivePath(archive).is_file()
