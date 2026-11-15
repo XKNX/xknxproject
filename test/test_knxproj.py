@@ -23,6 +23,7 @@ from xknxproject.models.knxproject import (
     ProjectInfo,
     Space,
     TextParameter,
+    Trade,
 )
 
 from . import RESOURCES_PATH, STUBS_PATH
@@ -94,6 +95,9 @@ def test_stub_keys_match_typed_dicts(file_stem: str) -> None:
             assert set(security) == set(DeviceSecurity.__annotations__)
     for certificate in stub["device_certificates"].values():
         assert set(certificate) == set(DeviceCertificate.__annotations__)
+
+    assert isinstance(stub["trades"], list)
+    assert all(set(trade) == set(Trade.__annotations__) for trade in stub["trades"])
 
 
 def test_device_security() -> None:

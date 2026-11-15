@@ -17,6 +17,7 @@ Currently, xknxproject supports extracting (password protected) ETS 4, 5 and 6 p
 * Group Addresses and their DPT type if set
 * The application programs communication objects, their respective flags and the DPT Type
 * Location information of devices (in which rooms they are)
+* Trades and the devices assigned to them
 * Functions assigned to rooms
 * KNX Data Secure and KNX IP Secure keys and passwords of devices, and the device certificates (FDSK) - only password protected projects hold these
 

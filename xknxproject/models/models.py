@@ -196,6 +196,7 @@ class DeviceInstance:
         self.hardware_name: str = ""  # untranslatable name from hardware.xml
         self.hardware_id: str = ""  # "Id" of the product's Hardware element
         self.space_id: str | None = None  # "Id" of the first space listing the device
+        self.trade_id: str | None = None  # "Id" of the first trade listing the device
         self.order_number: str = ""
         self.manufacturer_name: str = ""
 
@@ -956,6 +957,19 @@ class XMLSpace:
     spaces: list[XMLSpace]
     devices: list[str]  # [DeviceInstance.individual_address]
     functions: list[str]
+
+
+@dataclass
+class XMLTrade:
+    """A trade in the trades XML."""
+
+    identifier: str
+    name: str
+    number: str  # default to ""
+    description: str  # default to ""
+    project_uid: int | None
+    trades: list[XMLTrade]
+    devices: list[str]  # [DeviceInstance.individual_address]
 
 
 @dataclass
