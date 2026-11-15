@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter
+from collections.abc import Iterator
 import html
 import logging
 from operator import attrgetter
@@ -21,14 +22,17 @@ from xknxproject.models import (
     ApplicationProgram,
     Area,
     Channel,
+    ChannelNode,
     CommunicationObject,
     Device,
     DeviceInstance,
     Flags,
+    FolderNode,
     Function,
     GroupAddress,
     GroupAddressRef,
     GroupAddressStyle,
+    GroupObjectTreeNode,
     GroupRange,
     HardwareToPrograms,
     KNXProject,
@@ -94,6 +98,51 @@ def _convert_functions(function: XMLFunction) -> Function:
         space_id=function.space_id,
         usage_text=function.usage_text,
     )
+
+
+def _transform_group_object_tree(
+    nodes: list[ChannelNode | FolderNode],
+    individual_address: str,
+    communication_object_ids: set[str],
+) -> list[GroupObjectTreeNode]:
+    """
+    Convert the nodes of a devices GroupObjectTree recursively.
+
+    Only communication objects of `communication_object_ids` - those exported
+    in `communication_objects` - are listed. Nodes left without any, in
+    themselves and below, are omitted.
+    """
+    result: list[GroupObjectTreeNode] = []
+    for node in nodes:
+        node_communication_object_ids = [
+            com_object_id
+            for go_instance_id in node.group_object_instances
+            if (com_object_id := f"{individual_address}/{go_instance_id}")
+            in communication_object_ids
+        ]
+        child_nodes = _transform_group_object_tree(
+            node.nodes, individual_address, communication_object_ids
+        )
+        if not node_communication_object_ids and not child_nodes:
+            continue
+        result.append(
+            GroupObjectTreeNode(
+                type="Channel" if isinstance(node, ChannelNode) else "Folder",
+                identifier=node.ref_id,
+                name=node.name,
+                communication_object_ids=node_communication_object_ids,
+                nodes=child_nodes,
+            )
+        )
+    return result
+
+
+def _channel_ids(nodes: list[GroupObjectTreeNode]) -> Iterator[str]:
+    """Iterate the identifiers of all channels in an exported GroupObjectTree."""
+    for node in nodes:
+        if node["type"] == "Channel":
+            yield node["identifier"]
+        yield from _channel_ids(node["nodes"])
 
 
 def _recursive_convert_spaces(spaces: list[XMLSpace]) -> dict[str, Space]:
@@ -403,6 +452,12 @@ class XMLParser:
                 )
                 device_com_objects.append(com_object_key)
 
+            group_object_tree = _transform_group_object_tree(
+                device.group_object_tree,
+                individual_address=device.individual_address,
+                communication_object_ids=set(device_com_objects),
+            )
+            tree_channel_ids = set(_channel_ids(group_object_tree))
             channels = {
                 channel.ref_id: Channel(
                     identifier=channel.ref_id,
@@ -414,6 +469,9 @@ class XMLParser:
                     functional_blocks=channel.functional_blocks,
                 )
                 for channel in device.channels
+                # a channel listing its communication objects in folders only is
+                # exported if one of them is - `CommunicationObject.channel` refers to it
+                if channel.group_object_instances or channel.ref_id in tree_channel_ids
             }
 
             devices_dict[device.individual_address] = Device(
@@ -432,6 +490,7 @@ class XMLParser:
                 trade_id=device.trade_id,
                 communication_object_ids=device_com_objects,
                 channels=channels,
+                group_object_tree=group_object_tree,
                 serial_number=device.serial_number,
                 last_download=device.last_download,
                 individual_address_loaded=device.individual_address_loaded,
