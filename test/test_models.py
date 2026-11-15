@@ -55,6 +55,7 @@ def _com_object_ref(
         transmit_flag=None,
         update_flag=None,
         read_on_init_flag=None,
+        priority=None,
         datapoint_types=[],
         text_parameter_ref_id=None,
         semantics=None,
@@ -75,6 +76,7 @@ def _com_object() -> ComObject:
         transmit_flag=False,
         update_flag=False,
         read_on_init_flag=False,
+        priority="Low",
         datapoint_types=[],
         base_number_argument_ref=None,
     )

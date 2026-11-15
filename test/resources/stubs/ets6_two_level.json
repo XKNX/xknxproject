@@ -3,6 +3,11 @@
     "project_id": "P-05B2",
     "name": "ets6_two_level",
     "last_modified": "2023-09-11T19:50:35.2470606Z",
+    "project_start": "2023-09-10T10:06:43.9696354Z",
+    "project_end": null,
+    "project_number": "",
+    "contract_number": "",
+    "comment": "",
     "group_address_style": "TwoLevel",
     "guid": "8e781d27-6dd1-4bf5-a13e-147665a77462",
     "created_by": "ETS6",
@@ -16,10 +21,12 @@
     "0": {
       "name": "",
       "description": null,
+      "comment": "",
       "lines": {
         "0": {
           "name": "",
           "description": null,
+          "comment": "",
           "devices": [],
           "medium_type": "Twisted Pair (TP)"
         }
@@ -28,22 +35,26 @@
     "1": {
       "name": "Main",
       "description": null,
+      "comment": "",
       "lines": {
         "0": {
           "name": "",
           "description": null,
+          "comment": "",
           "devices": [],
           "medium_type": "Twisted Pair (TP)"
         },
         "1": {
           "name": "1st floor",
           "description": null,
+          "comment": "",
           "devices": [],
           "medium_type": "Twisted Pair (TP)"
         },
         "2": {
           "name": "2nd floor",
           "description": null,
+          "comment": "",
           "devices": [],
           "medium_type": "Twisted Pair (TP)"
         }
@@ -62,7 +73,10 @@
       "data_secure": false,
       "communication_object_ids": [],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "1/1": {
       "name": "Bar",
@@ -74,7 +88,10 @@
       "data_secure": false,
       "communication_object_ids": [],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     }
   },
   "group_ranges": {
@@ -85,6 +102,7 @@
       "group_addresses": [
         "0/1"
       ],
+      "description": "",
       "comment": "",
       "group_ranges": {}
     },
@@ -95,6 +113,7 @@
       "group_addresses": [
         "1/1"
       ],
+      "description": "",
       "comment": "",
       "group_ranges": {}
     },
@@ -103,6 +122,7 @@
       "address_start": 4096,
       "address_end": 6143,
       "group_addresses": [],
+      "description": "",
       "comment": "",
       "group_ranges": {}
     }
@@ -116,6 +136,7 @@
       "usage_text": "",
       "number": "",
       "description": "",
+      "comment": "",
       "project_uid": 4,
       "devices": [],
       "spaces": {},

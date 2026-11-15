@@ -228,6 +228,7 @@ class ApplicationProgramLoader:
             transmit_flag=parse_xml_flag(elem.get("TransmitFlag"), False),
             update_flag=parse_xml_flag(elem.get("UpdateFlag"), False),
             read_on_init_flag=parse_xml_flag(elem.get("ReadOnInitFlag"), False),
+            priority=elem.get("Priority", "Low"),
             datapoint_types=parse_dpt_types(elem.get("DatapointType")),
             base_number_argument_ref=elem.get("BaseNumber"),
         )
@@ -251,6 +252,7 @@ class ApplicationProgramLoader:
             transmit_flag=parse_xml_flag(elem.get("TransmitFlag")),
             update_flag=parse_xml_flag(elem.get("UpdateFlag")),
             read_on_init_flag=parse_xml_flag(elem.get("ReadOnInitFlag")),
+            priority=elem.get("Priority"),
             datapoint_types=parse_dpt_types(elem.get("DatapointType")),
             text_parameter_ref_id=elem.get("TextParameterRefId"),
             semantics=parse_semantics_dpas(elem.get("Semantics")),

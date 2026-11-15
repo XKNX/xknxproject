@@ -12,6 +12,7 @@ from .knxproject import (
     GroupAddress,
     GroupAddressRef,
     GroupRange,
+    IPConfig,
     KNXProject,
     Line,
     ProjectInfo,
