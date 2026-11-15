@@ -250,7 +250,7 @@ def test_communication_object_summary_exposes_semantics(smart: KNXProject) -> No
 def test_list_channels_filters(smart: KNXProject) -> None:
     """Channels are listed and filterable by device, functional block and text."""
     everything = asyncio.run(list_channels(smart))
-    assert everything.total_count == 12
+    assert everything.total_count == 20
     assert all(ch.device_address for ch in everything.channels)
 
     by_fb = asyncio.run(list_channels(smart, ChannelFilter(functional_block="417")))

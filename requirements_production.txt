@@ -1,2 +1,2 @@
 pyzipper==0.4.0
-striprtf==0.0.33
+striprtf==0.0.35
