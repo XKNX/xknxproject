@@ -123,5 +123,6 @@
     }
   },
   "trades": [],
-  "functions": {}
+  "functions": {},
+  "device_certificates": {}
 }
