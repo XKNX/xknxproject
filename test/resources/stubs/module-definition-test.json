@@ -638,7 +638,7 @@
         "definition": "MD-4_SM-1",
         "root_number": 0
       },
-      "channel": null,
+      "channel": "CH-1",
       "dpts": [
         {
           "main": 13,
@@ -675,7 +675,7 @@
         "definition": "MD-4_SM-1",
         "root_number": 1
       },
-      "channel": null,
+      "channel": "CH-1",
       "dpts": [
         {
           "main": 14,
@@ -743,7 +743,7 @@
         "definition": "MD-4_SM-1",
         "root_number": 0
       },
-      "channel": null,
+      "channel": "CH-1",
       "dpts": [
         {
           "main": 13,
@@ -780,7 +780,7 @@
         "definition": "MD-4_SM-1",
         "root_number": 0
       },
-      "channel": null,
+      "channel": "CH-1",
       "dpts": [
         {
           "main": 13,
@@ -817,7 +817,7 @@
         "definition": "MD-4_SM-1",
         "root_number": 0
       },
-      "channel": null,
+      "channel": "CH-1",
       "dpts": [
         {
           "main": 13,
@@ -854,7 +854,7 @@
         "definition": "MD-4_SM-1",
         "root_number": 1
       },
-      "channel": null,
+      "channel": "CH-1",
       "dpts": [
         {
           "main": 14,

@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from xml.etree import ElementTree
+
+import pytest
 
 from xknxproject import XKNXProj
 from xknxproject.loader.project_loader import _TopologyLoader
@@ -15,10 +19,13 @@ from xknxproject.models import (
     ModuleInstanceArgument,
     ParameterInstanceRef,
 )
-from xknxproject.models.knxproject import GroupObjectTreeNode
-from xknxproject.xml.parser import _folder_group_object_instances
+from xknxproject.models.knxproject import GroupObjectTreeNode, KNXProject
+from xknxproject.xml.parser import (
+    _folder_group_object_instances,
+    _group_object_channels,
+)
 
-from . import RESOURCES_PATH
+from . import RESOURCES_PATH, STUBS_PATH
 from .conftest import build_devices
 
 # ETS 6 project schema namespace; the loader matches any namespace (`{*}`)
@@ -181,6 +188,67 @@ def test_objects_of_nested_folders_belong_to_the_channel() -> None:
         "O-3_R-3",
     ]
     assert list(_folder_group_object_instances(channel_2.nodes)) == ["O-5_R-5"]
+
+
+def test_objects_are_mapped_to_the_nearest_channel_above() -> None:
+    """Objects in folders and channels below a channel belong to the nearest one."""
+    nodes, _ = _parse_tree(
+        f"""
+        <GroupObjectTree xmlns="{_NS}">
+          <Nodes>
+            <Node Type="Folder" RefId="PB-1" GroupObjectInstances="O-1_R-1">
+              <Nodes>
+                <Node Type="Channel" RefId="CH-1" GroupObjectInstances="O-2_R-2">
+                  <Nodes>
+                    <Node Type="Folder" RefId="PB-2" GroupObjectInstances="O-3_R-3">
+                      <Nodes>
+                        <Node Type="Channel" RefId="CH-2" GroupObjectInstances="O-4_R-4" />
+                      </Nodes>
+                    </Node>
+                  </Nodes>
+                </Node>
+              </Nodes>
+            </Node>
+          </Nodes>
+        </GroupObjectTree>
+        """
+    )
+
+    # O-1_R-1 is in a folder directly below the device - in no channel
+    assert _group_object_channels(nodes) == {
+        "O-2_R-2": "CH-1",
+        "O-3_R-3": "CH-1",
+        "O-4_R-4": "CH-2",
+    }
+
+
+def _tree_channels(
+    nodes: list[GroupObjectTreeNode], channel: str | None = None
+) -> dict[str, str | None]:
+    """Map the communication objects of an exported tree to their nearest channel."""
+    result: dict[str, str | None] = {}
+    for node in nodes:
+        node_channel = node["identifier"] if node["type"] == "Channel" else channel
+        result |= dict.fromkeys(node["communication_object_ids"], node_channel)
+        result |= _tree_channels(node["nodes"], node_channel)
+    return result
+
+
+@pytest.mark.parametrize(
+    "stub", sorted(STUBS_PATH.glob("*.json")), ids=lambda stub: stub.stem
+)
+def test_channel_of_objects_agrees_with_tree_and_channels(stub: Path) -> None:
+    """`channel`, `Device.channels` and the tree tell the same channel of an object."""
+    project: KNXProject = json.loads(stub.read_text(encoding="utf8"))
+    for device in project["devices"].values():
+        tree_channels = _tree_channels(device["group_object_tree"])
+        for com_object_id, channel in tree_channels.items():
+            assert project["communication_objects"][com_object_id]["channel"] == (
+                channel
+            ), com_object_id
+        for identifier, channel_ in device["channels"].items():
+            for com_object_id in channel_["communication_object_ids"]:
+                assert tree_channels[com_object_id] == identifier, com_object_id
 
 
 def test_device_without_group_object_tree() -> None:

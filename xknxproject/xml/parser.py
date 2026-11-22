@@ -152,6 +152,24 @@ def _folder_group_object_instances(
             yield from _folder_group_object_instances(node.nodes)
 
 
+def _group_object_channels(
+    nodes: list[ChannelNode | FolderNode], channel: str | None = None
+) -> dict[str, str]:
+    """
+    Map the group object instances of `nodes` to the nearest channel above them.
+
+    Objects of nodes outside any channel - folders directly below the device -
+    are not included.
+    """
+    result: dict[str, str] = {}
+    for node in nodes:
+        node_channel = node.ref_id if isinstance(node, ChannelNode) else channel
+        if node_channel is not None:
+            result |= dict.fromkeys(node.group_object_instances, node_channel)
+        result |= _group_object_channels(node.nodes, node_channel)
+    return result
+
+
 def _channel_ids(nodes: list[GroupObjectTreeNode]) -> Iterator[str]:
     """Iterate the identifiers of all channels in an exported GroupObjectTree."""
     for node in nodes:
@@ -426,6 +444,8 @@ class XMLParser:
         devices_dict: dict[str, Device] = {}
         for device in self.devices:
             device_com_objects: list[str] = []
+            # ETS leaves "ChannelId" unset for some objects, e.g. of sub-modules
+            tree_channels = _group_object_channels(device.group_object_tree)
             for com_object in device.com_object_instance_refs:
                 if not com_object.links:
                     continue
@@ -448,7 +468,7 @@ class XMLParser:
                     device_address=device.individual_address,
                     device_application=device.application_program_ref,
                     module_def=com_object.module,
-                    channel=com_object.channel,
+                    channel=com_object.channel or tree_channels.get(com_object.ref_id),
                     dpts=com_object.datapoint_types,
                     object_size=com_object.object_size,  # type: ignore[typeddict-item]
                     flags=Flags(

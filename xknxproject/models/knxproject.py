@@ -34,6 +34,9 @@ class CommunicationObject(TypedDict):
     device_address: str
     device_application: str | None
     module_def: ModuleInstanceInfos | None
+    # key in `Device.channels` of the channel holding the object: "ChannelId" of
+    # the object, or - if ETS did not set it - the nearest channel above the object
+    # in the GroupObjectTree. None if the object is in no channel.
     channel: str | None
     dpts: list[DPTType]
     object_size: str
