@@ -783,7 +783,7 @@ class ComObjectInstanceRef:
                             base_number_argument_ref=base_value_ref,
                         )
                 return result + self._base_number_from_allocator(
-                    base_number_argument, application.allocators
+                    module_instance, base_number_argument, application.allocators
                 )
 
         try:
@@ -809,6 +809,7 @@ class ComObjectInstanceRef:
 
     def _base_number_from_allocator(
         self,
+        module_instance: ModuleInstance,
         base_number_argument: ModuleInstanceArgument,
         application_allocators: dict[str, Allocator],
     ) -> int:
@@ -833,8 +834,12 @@ class ComObjectInstanceRef:
                 base_number_argument,
             )
             return 0
+        # the index of the instance drawing from the allocator - for a sub-module
+        # its own ("MI-1-1-2": 2), not the one of the module it is part of
         module_instance_index = int(
-            self.ref_id.split("_MI-", maxsplit=1)[1].split("_", maxsplit=1)[0]
+            module_instance.identifier.rsplit("_MI-", maxsplit=1)[1].rsplit(
+                "-", maxsplit=1
+            )[-1]
         )
         return allocator_object_base.start + (
             allocator_size * (module_instance_index - 1)
