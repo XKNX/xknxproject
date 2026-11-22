@@ -733,7 +733,7 @@
     },
     "1.1.4/MD-4_M-15_MI-2_SM-1_M-1_MI-2-1-1_SM-1_O-3-0_R-1": {
       "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
-      "number": 277,
+      "number": 275,
       "text": "[EM][IC2][Dev 2.1] Verbrauchte Energie",
       "function_text": "W·h",
       "description": "",
@@ -770,7 +770,7 @@
     },
     "1.1.4/MD-4_M-15_MI-1_SM-1_M-1_MI-1-1-2_SM-1_O-3-0_R-1": {
       "name": "oEnMon.devicePage[{{EnMonPageNum}}][{{EnMonDevNameNum}}].energy",
-      "number": 263,
+      "number": 265,
       "text": "[EM][IC1][Dev 1.2] Verbrauchte Energie",
       "function_text": "W·h",
       "description": "",
