@@ -141,6 +141,7 @@ class DeviceInstance:
         module_instances: list[ModuleInstance],
         parameter_instance_refs: dict[str, ParameterInstanceRef],
         com_objects: list[ComObject] | None = None,
+        group_object_tree: list[ChannelNode | FolderNode] | None = None,
         serial_number: str = "",
         last_download: str | None = None,
         individual_address_loaded: bool = False,
@@ -174,7 +175,10 @@ class DeviceInstance:
         self.line_address = line.address  # used for sorting
         self.manufacturer = manufacturer
         self.additional_addresses = additional_addresses
+        # all used channels of the device, regardless of their depth in the tree
         self.channels: list[ChannelNode] = channels
+        # top level nodes of the GroupObjectTree - channels and folders, nested
+        self.group_object_tree: list[ChannelNode | FolderNode] = group_object_tree or []
         self.com_object_instance_refs = com_object_instance_refs
         self.module_instances = module_instances
         self.com_objects = com_objects or []
@@ -218,8 +222,10 @@ class DeviceInstance:
 
         The arguments of every module instance containing the instance apply,
         the base module first and its sub-modules overriding it. An argument
-        whose value the application computes - from an allocator or a base
-        value - has no literal value: its placeholder stays in texts.
+        whose value the application computes from an allocator gets the value
+        allocated to the module instance. Other computed arguments - of
+        sub-modules or from a base value - have no literal value: their
+        placeholder stays in texts.
         """
         if not instance_ref_id.startswith("MD-"):
             return {}
@@ -234,12 +240,33 @@ class DeviceInstance:
         ):
             for argument in module_instance.arguments:
                 numeric_arg = application.numeric_args.get(argument.ref_id)
-                computed = numeric_arg is not None and (
-                    numeric_arg.allocator_ref_id is not None
-                    or numeric_arg.base_value is not None
-                )
-                values[argument.name] = None if computed else argument.value
+                if numeric_arg is None or (
+                    numeric_arg.allocator_ref_id is None
+                    and numeric_arg.base_value is None
+                ):
+                    values[argument.name] = argument.value
+                else:
+                    values[argument.name] = _allocated_argument_value(
+                        module_instance,
+                        argument,
+                        numeric_arg,
+                        application,
+                        f"{self.application_program_ref}_",
+                    )
         return {name: value for name, value in values.items() if value is not None}
+
+    def folders(self) -> Iterator[FolderNode]:
+        """Iterate all folders of the GroupObjectTree, regardless of their depth."""
+
+        def _iter_folders(
+            nodes: list[ChannelNode | FolderNode],
+        ) -> Iterator[FolderNode]:
+            for node in nodes:
+                if isinstance(node, FolderNode):
+                    yield node
+                yield from _iter_folders(node.nodes)
+
+        yield from _iter_folders(self.group_object_tree)
 
     def merge_application_program_info(self, application: ApplicationProgram) -> None:
         """Merge items with their parent objects from the application program."""
@@ -269,6 +296,13 @@ class DeviceInstance:
             )
             channel.resolve_channel_module_placeholders(module_arguments)
 
+        for folder in self.folders():
+            folder.resolve_folder_attributes(
+                device_instance=self,
+                application=application,
+                module_arguments=self.module_arguments(folder.ref_id, application),
+            )
+
     def __str__(self) -> str:
         """Return string representation."""
         return (
@@ -289,6 +323,8 @@ class ChannelNode:
         str
     ]  # name="GroupObjectInstances" type="knx:RELIDREFS" use="optional"
     functional_blocks: list[str] | None = None
+    # child nodes - folders structuring the channel
+    nodes: list[ChannelNode | FolderNode] = field(default_factory=list)
 
     def resolve_channel_attributes(
         self,
@@ -362,6 +398,63 @@ class ChannelNode:
 
 
 @dataclass
+class FolderNode:
+    """
+    Class that represents a Node with Type Folder.
+
+    Folders structure the communication objects of a device or a channel in
+    the GroupObjectTree. They originate from ParameterBlocks of the application
+    program having `ShowInComObjectTree` set.
+    """
+
+    ref_id: str  # name="RefId" type="knx:RELIDREF" use="required"
+    name: str  # name="Text" type="xs:string" use="optional"
+    group_object_instances: list[
+        str
+    ]  # name="GroupObjectInstances" type="knx:RELIDREFS" use="optional"
+    nodes: list[ChannelNode | FolderNode] = field(default_factory=list)
+
+    def resolve_folder_attributes(
+        self,
+        device_instance: DeviceInstance,
+        application: ApplicationProgram,
+        module_arguments: dict[str, str],
+    ) -> None:
+        """
+        Resolve the folder name from device instance and application infos.
+
+        Use the text of the applications ParameterBlock if the node has none.
+        Replace module argument placeholders and the TextParameter template in
+        the name with the actual values of the device instance - the module
+        arguments first, as a text parameter default may contain them.
+        """
+        parameter_block = application.parameter_blocks.get(
+            f"{device_instance.application_program_ref}_"
+            f"{util.strip_module_instance(self.ref_id, search_id='PB')}"
+        )
+        if not self.name and parameter_block is not None:
+            self.name = parameter_block.text or parameter_block.name or ""
+
+        if "{{" in self.name:
+            self.name = util.module_argument_replace(self.name, module_arguments)
+            parameter: ParameterInstanceRef | None = None
+            if parameter_block is not None and parameter_block.text_parameter_ref_id:
+                parameter = device_instance.parameter_instance_refs.get(
+                    util.text_parameter_insert_module_instance(
+                        instance_ref=self.ref_id,
+                        instance_next_id="PB",
+                        text_parameter_ref_id=parameter_block.text_parameter_ref_id,
+                    )
+                )
+            # "{{0}}" or "{{0:default}}" - falls back to the default without a parameter
+            self.name = util.text_parameter_template_replace(self.name, parameter)
+        if not self.name.strip() and parameter_block is not None:
+            # eg. a text of only "{{0}}" without a parameter instance in the project,
+            # like channels falling back to the name of the application channel
+            self.name = parameter_block.name or ""
+
+
+@dataclass
 class ModuleInstance:
     """Class that represents a ModuleInstance."""
 
@@ -408,6 +501,44 @@ class ModuleInstanceArgument:
             self.ref_id = f"{application_program_ref}_{module_def_id}_{self.ref_id}"
         else:
             self.ref_id = f"{application_program_ref}_{self.ref_id}"
+
+
+def _allocated_argument_value(
+    module_instance: ModuleInstance,
+    argument: ModuleInstanceArgument,
+    numeric_arg: ModuleDefinitionNumericArg,
+    application: ApplicationProgram,
+    application_program_id_prefix: str,
+) -> str | None:
+    """
+    Return the value an allocator assigns to an argument of a module instance.
+
+    Projects may store the allocated number in the instance argument (ETS 6
+    does), which is used as is. Otherwise the argument names the allocator
+    ("L-3"): every instance of a module gets `Allocates` values of it, in the
+    order of the instances, starting at the allocators "Start". This only holds
+    while a single Module element draws from the allocator: when several do
+    (eg. one Module per page of controls), how ETS numbers the instances across
+    them is unknown, so the value is not resolved. Arguments of sub-modules and
+    from a base value are not resolved either: None.
+    """
+    if module_instance.base_module is not None or numeric_arg.base_value is not None:
+        # a sub-module argument or an offset to a base value, also when a number
+        return None
+    if argument.value.isdigit():
+        return argument.value
+    allocator_id = f"{application_program_id_prefix}{argument.value}"
+    if (
+        numeric_arg.allocator_ref_id is None
+        or argument.allocates is None
+        or application.allocator_modules.get(allocator_id) != 1
+        or (allocator := application.allocators.get(allocator_id)) is None
+    ):
+        return None
+    module_instance_index = module_instance.identifier.rsplit("_MI-", maxsplit=1)[1]
+    if not module_instance_index.isdigit():
+        return None
+    return str(allocator.start + argument.allocates * (int(module_instance_index) - 1))
 
 
 @dataclass
@@ -728,6 +859,12 @@ class ApplicationProgram:
     module_def_arguments: dict[str, ModuleDefinitionArgumentInfo]  # {Id: ...}
     numeric_args: dict[str, ModuleDefinitionNumericArg]  # {RefId: ...}
     channels: dict[str, ApplicationProgramChannel]  # {Id: ApplicationProgramChannel}
+    # only ParameterBlocks referenced by folders of the devices GroupObjectTrees
+    parameter_blocks: dict[str, ApplicationProgramParameterBlock] = field(
+        default_factory=dict
+    )  # {Id: ApplicationProgramParameterBlock}
+    # number of Module elements whose arguments draw from an allocator
+    allocator_modules: dict[str, int] = field(default_factory=dict)  # {Id: count}
 
 
 @dataclass
@@ -758,6 +895,27 @@ class ModuleDefinitionNumericArg:
     value: int | None
     # RefId to Argument (<application>_MD-<int>_A-<int>) - Base value for arguments used in SubModules
     base_value: str | None
+
+
+@dataclass
+class ApplicationProgramParameterBlock:
+    """ParameterBlock of an application program - holds the name of a folder."""
+
+    __slots__ = (
+        "identifier",
+        "name",
+        "text",
+        "text_parameter_ref_id",
+    )
+
+    identifier: str  # name="Id" type="xs:ID" use="required"
+    name: str | None  # name="Name" type="knx:String255_t" use="optional"
+    text: (
+        str | None
+    )  # name="Text" type="knx:LanguageDependentString255_t" use="optional"
+    text_parameter_ref_id: (
+        str | None
+    )  # name="TextParameterRefId" type="knx:IDREF" use="optional"
 
 
 @dataclass

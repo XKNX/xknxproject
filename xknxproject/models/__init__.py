@@ -11,6 +11,7 @@ from .knxproject import (
     Function,
     GroupAddress,
     GroupAddressRef,
+    GroupObjectTreeNode,
     GroupRange,
     KNXProject,
     Line,
@@ -22,6 +23,7 @@ from .knxproject import (
 from .models import (
     ApplicationProgram,
     ApplicationProgramChannel,
+    ApplicationProgramParameterBlock,
     ParameterInstanceRef,
     Allocator,
     ChannelNode,
@@ -29,6 +31,7 @@ from .models import (
     ComObjectInstanceRef,
     ComObjectRef,
     DeviceInstance,
+    FolderNode,
     HardwareToPrograms,
     KNXMasterData,
     ModuleInstance,

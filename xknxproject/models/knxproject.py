@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import Literal, TypedDict
 
 
 class DPTType(TypedDict):
@@ -94,6 +94,12 @@ class Device(TypedDict):
     trade_id: str | None
     communication_object_ids: list[str]
     channels: dict[str, Channel]  # id: Channel
+    # the communication objects of `communication_object_ids` structured as ETS
+    # shows them: channels and folders, nested. Nodes without any of these objects
+    # in themselves or below are omitted. Objects ETS shows directly under the
+    # device are in no node. Empty if the project does not hold a tree for the
+    # device or none of its communication objects is linked.
+    group_object_tree: list[GroupObjectTreeNode]
     serial_number: str
     last_download: str | None
     individual_address_loaded: bool
@@ -108,8 +114,24 @@ class Channel(TypedDict):
 
     identifier: str
     name: str
+    # keys of `communication_objects` of the channel: those listed directly in it
+    # and in its folders, nested - not those of channels below it. Objects not
+    # linked to a group address are not included. `Device.group_object_tree`
+    # shows how they are structured.
     communication_object_ids: list[str]
     functional_blocks: list[str] | None
+
+
+class GroupObjectTreeNode(TypedDict):
+    """A channel or a folder in the tree of a devices communication objects."""
+
+    type: Literal["Channel", "Folder"]
+    # "RefId" of the node. For a channel its key in `Device.channels`.
+    identifier: str
+    name: str
+    # keys of `communication_objects` listed directly in this node
+    communication_object_ids: list[str]
+    nodes: list[GroupObjectTreeNode]
 
 
 class Line(TypedDict):
