@@ -114,11 +114,10 @@ class Channel(TypedDict):
 
     identifier: str
     name: str
-    # communication objects listed directly in the channel - those in folders of
-    # the channel are found in `Device.group_object_tree`. Unlike there, objects
-    # not linked to a group address - not in `communication_objects` - are included.
-    # Empty for a channel holding its objects in folders only: it is exported if
-    # one of them is, as `CommunicationObject.channel` refers to it.
+    # keys of `communication_objects` of the channel: those listed directly in it
+    # and in its folders, nested - not those of channels below it. Objects not
+    # linked to a group address are not included. `Device.group_object_tree`
+    # shows how they are structured.
     communication_object_ids: list[str]
     functional_blocks: list[str] | None
 

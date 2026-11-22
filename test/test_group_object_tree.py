@@ -16,6 +16,7 @@ from xknxproject.models import (
     ParameterInstanceRef,
 )
 from xknxproject.models.knxproject import GroupObjectTreeNode
+from xknxproject.xml.parser import _folder_group_object_instances
 
 from . import RESOURCES_PATH
 from .conftest import build_devices
@@ -147,6 +148,39 @@ def test_channels_below_folders_are_listed_in_document_order() -> None:
         (ChannelNode, "CH-3"),
     ]
     assert [node.ref_id for node in nodes[0].nodes] == ["CH-1", "CH-2"]
+
+
+def test_objects_of_nested_folders_belong_to_the_channel() -> None:
+    """A channel holds the objects of its folders, nested - not of channels below."""
+    _, channels = _parse_tree(
+        f"""
+        <GroupObjectTree xmlns="{_NS}">
+          <Nodes>
+            <Node Type="Channel" RefId="CH-1" GroupObjectInstances="O-1_R-1">
+              <Nodes>
+                <Node Type="Folder" RefId="PB-1" GroupObjectInstances="O-2_R-2">
+                  <Nodes>
+                    <Node Type="Folder" RefId="PB-2" GroupObjectInstances="O-3_R-3" />
+                    <Node Type="Channel" RefId="CH-2" GroupObjectInstances="O-4_R-4">
+                      <Nodes>
+                        <Node Type="Folder" RefId="PB-3" GroupObjectInstances="O-5_R-5" />
+                      </Nodes>
+                    </Node>
+                  </Nodes>
+                </Node>
+              </Nodes>
+            </Node>
+          </Nodes>
+        </GroupObjectTree>
+        """
+    )
+
+    channel_1, channel_2 = channels
+    assert list(_folder_group_object_instances(channel_1.nodes)) == [
+        "O-2_R-2",
+        "O-3_R-3",
+    ]
+    assert list(_folder_group_object_instances(channel_2.nodes)) == ["O-5_R-5"]
 
 
 def test_device_without_group_object_tree() -> None:
@@ -323,18 +357,30 @@ def test_group_object_tree_of_parsed_project() -> None:
     ).parse()
 
     # all linked communication objects of this device sit in folders of channels
-    # listing none themselves - the channels are exported for them, without ids
+    # listing none themselves - the channels list those of their folders
     device = project["devices"]["1.1.3"]
     assert {
         identifier: (channel["name"], channel["communication_object_ids"])
         for identifier, channel in device["channels"].items()
     } == {
-        "CH-0": ("ALLGEMEIN", []),
-        "MD-2_M-3_MI-2_CH-1": ("G2, ", []),
-        "MD-2_M-3_MI-3_CH-1": ("G3, ", []),
-        "CH-17": ("EVG", []),
-        "CH-84": ("Bewegungsmelder", []),
+        "CH-0": ("ALLGEMEIN", ["1.1.3/O-24_R-966"]),
+        "MD-2_M-3_MI-2_CH-1": ("G2, ", ["1.1.3/MD-2_M-3_MI-2_O-2-1_R-11"]),
+        "MD-2_M-3_MI-3_CH-1": ("G3, ", ["1.1.3/MD-2_M-3_MI-3_O-2-0_R-10"]),
+        "CH-17": (
+            "EVG",
+            ["1.1.3/MD-1_M-1_MI-1_O-2-0_R-7", "1.1.3/MD-1_M-1_MI-4_O-2-1_R-8"],
+        ),
+        "CH-84": (
+            "Bewegungsmelder",
+            ["1.1.3/MD-3_M-2_MI-2_O-2-4_R-5", "1.1.3/MD-3_M-2_MI-8_O-2-5_R-6"],
+        ),
     }
+    # the lists agree with the channel of each communication object
+    for identifier, channel in device["channels"].items():
+        for com_object_id in channel["communication_object_ids"]:
+            assert project["communication_objects"][com_object_id]["channel"] == (
+                identifier
+            )
 
     ecg = _find_node(device["group_object_tree"], "CH-17")
     assert (ecg["type"], ecg["name"]) == ("Channel", "EVG")

@@ -137,6 +137,21 @@ def _transform_group_object_tree(
     return result
 
 
+def _folder_group_object_instances(
+    nodes: list[ChannelNode | FolderNode],
+) -> Iterator[str]:
+    """
+    Iterate the group object instances listed in folders of `nodes`, nested.
+
+    Folders of channels below are not descended into - their objects belong to
+    that channel.
+    """
+    for node in nodes:
+        if isinstance(node, FolderNode):
+            yield from node.group_object_instances
+            yield from _folder_group_object_instances(node.nodes)
+
+
 def _channel_ids(nodes: list[GroupObjectTreeNode]) -> Iterator[str]:
     """Iterate the identifiers of all channels in an exported GroupObjectTree."""
     for node in nodes:
@@ -452,26 +467,35 @@ class XMLParser:
                 )
                 device_com_objects.append(com_object_key)
 
+            linked_com_object_ids = set(device_com_objects)
             group_object_tree = _transform_group_object_tree(
                 device.group_object_tree,
                 individual_address=device.individual_address,
-                communication_object_ids=set(device_com_objects),
+                communication_object_ids=linked_com_object_ids,
             )
+            # a channel is exported if one of its communication objects is, or one
+            # of a channel below it - as a node of `group_object_tree` then
             tree_channel_ids = set(_channel_ids(group_object_tree))
             channels = {
                 channel.ref_id: Channel(
                     identifier=channel.ref_id,
                     name=channel.name,
                     communication_object_ids=[
-                        f"{device.individual_address}/{go_instance_id}"
-                        for go_instance_id in channel.group_object_instances
+                        com_object_id
+                        for go_instance_id in (
+                            *channel.group_object_instances,
+                            *_folder_group_object_instances(channel.nodes),
+                        )
+                        if (
+                            com_object_id
+                            := f"{device.individual_address}/{go_instance_id}"
+                        )
+                        in linked_com_object_ids
                     ],
                     functional_blocks=channel.functional_blocks,
                 )
                 for channel in device.channels
-                # a channel listing its communication objects in folders only is
-                # exported if one of them is - `CommunicationObject.channel` refers to it
-                if channel.group_object_instances or channel.ref_id in tree_channel_ids
+                if channel.ref_id in tree_channel_ids
             }
 
             devices_dict[device.individual_address] = Device(
