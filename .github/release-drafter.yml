@@ -1,8 +1,9 @@
 categories:
   - title: '⬆️ Dependencies'
     collapse-after: 3
-    labels:
-      - 'dependencies'
+    when:
+      labels:
+        - 'dependencies'
 template: |
   ## What’s Changed
 
