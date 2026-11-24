@@ -1175,7 +1175,7 @@ class XMLProjectInformation:
     name: str = ""
     last_modified: str | None = None
     group_address_style: GroupAddressStyle = GroupAddressStyle.THREELEVEL
-    guid: str = ""
+    guid: str | None = ""
     created_by: str = ""
     schema_version: str = ""
     tool_version: str = ""

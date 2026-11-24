@@ -6,6 +6,8 @@ from collections.abc import Iterator
 import json
 from pathlib import Path
 import re
+import types
+from typing import get_args, get_type_hints
 import zipfile
 
 import pytest
@@ -98,6 +100,28 @@ def test_stub_keys_match_typed_dicts(file_stem: str) -> None:
             assert set(channel) == set(Channel.__annotations__)
         for node in _iter_tree_nodes(device["group_object_tree"]):
             assert set(node) == set(GroupObjectTreeNode.__annotations__)
+
+
+@pytest.mark.parametrize("file_stem", [fixture[0] for fixture in PROJECT_FIXTURES])
+def test_stub_info_matches_its_types(file_stem: str) -> None:
+    """
+    Test the project info of a parse has the value types `ProjectInfo` declares.
+
+    Consumers validate project data against these types. A project of schema
+    version 11, for example, has no `Guid`.
+    """
+    with (STUBS_PATH / f"{file_stem}.json").open(encoding="utf-8") as stub_file:
+        info = json.load(stub_file)["info"]
+
+    for key, hint in get_type_hints(ProjectInfo).items():
+        assert isinstance(info[key], _value_types(hint)), key
+
+
+def _value_types(hint: type | types.UnionType) -> tuple[type, ...]:
+    """Return the types a value of a simple type hint (eg. `str | None`) can have."""
+    if isinstance(hint, types.UnionType):
+        return get_args(hint)
+    return (hint,)
 
 
 def _iter_tree_nodes(nodes: list[dict]) -> Iterator[dict]:
