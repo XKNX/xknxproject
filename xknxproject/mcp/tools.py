@@ -12,7 +12,7 @@ MCP tool libraries, even though project introspection is purely in-memory.
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from typing import TypeVar
 
 from ..models import (
@@ -57,6 +57,11 @@ from .types import (
     ModuleRef,
     ProjectInfoResult,
     SimilarChannel,
+    SpaceDetail,
+    SpaceEntry,
+    SpaceFilter,
+    SpaceListResult,
+    SpaceRef,
     SpaceSummary,
     TopologyResult,
 )
@@ -145,7 +150,7 @@ def _summarize_channel(device_address: str, channel: Channel) -> ChannelSummary:
     )
 
 
-def _summarize_device(device: Device) -> DeviceSummary:
+def _summarize_device(device: Device, space_id: str | None) -> DeviceSummary:
     return DeviceSummary(
         individual_address=device["individual_address"],
         name=device["name"],
@@ -159,6 +164,7 @@ def _summarize_device(device: Device) -> DeviceSummary:
             _summarize_channel(device["individual_address"], channel)
             for channel in (device.get("channels") or {}).values()
         ],
+        space_id=space_id,
     )
 
 
@@ -248,18 +254,29 @@ async def describe_group_address(
 async def list_devices(
     project: KNXProject, filters: DeviceFilter | None = None
 ) -> DeviceListResult:
-    """List topology devices, optionally filtered by text."""
+    """List topology devices, optionally filtered by text and/or space."""
     filters = filters or DeviceFilter()
     needle = filters.text.lower() if filters.text else None
+    space_ids = _space_scope(project, filters.space_id, filters.include_subspaces)
+
+    # projects parsed before devices carried ``space_id`` are resolved from the tree
+    listed_in: dict[str, str] | None = None
 
     matches: list[DeviceSummary] = []
     for device in project["devices"].values():
+        space_id = device.get("space_id")
+        if space_id is None:
+            if listed_in is None:
+                listed_in = _device_space_ids(project)
+            space_id = listed_in.get(device["individual_address"])
+        if space_ids is not None and space_id not in space_ids:
+            continue
         if needle is not None and needle not in (
             f"{device['individual_address']}\n{device['name']}\n{device['hardware_name']}\n"
             f"{device['manufacturer_name']}\n{device['order_number']}".lower()
         ):
             continue
-        matches.append(_summarize_device(device))
+        matches.append(_summarize_device(device, space_id))
 
     window, limit_reached = _paginate(matches, filters.limit, filters.offset)
     return DeviceListResult(
@@ -339,13 +356,153 @@ def _summarize_space(space: Space) -> SpaceSummary:
         devices=list(space["devices"]),
         functions=list(space["functions"]),
         spaces=[_summarize_space(child) for child in space["spaces"].values()],
+        identifier=space["identifier"],
     )
 
 
 async def list_locations(project: KNXProject) -> LocationsResult:
-    """Return the building/location tree (spaces, nested, with devices and functions)."""
+    """
+    Return the building/location tree (spaces, nested, with devices and functions).
+
+    The result holds the whole tree and grows with the project; use
+    :func:`list_spaces` for a bounded, paginated listing.
+    """
     return LocationsResult(
         spaces=[_summarize_space(space) for space in project["locations"].values()]
+    )
+
+
+def _walk_spaces(
+    spaces: dict[str, Space], ancestors: tuple[Space, ...] = ()
+) -> Iterator[tuple[Space, tuple[Space, ...]]]:
+    """Yield every space with its ancestors (outermost first), parents before children."""
+    for space in spaces.values():
+        yield space, ancestors
+        yield from _walk_spaces(space["spaces"], (*ancestors, space))
+
+
+def _find_space(
+    project: KNXProject, identifier: str
+) -> tuple[Space, tuple[Space, ...]] | None:
+    """Return the space with ``identifier`` and its ancestors, if it exists."""
+    return next(
+        (
+            (space, ancestors)
+            for space, ancestors in _walk_spaces(project["locations"])
+            if space["identifier"] == identifier
+        ),
+        None,
+    )
+
+
+def _device_space_ids(project: KNXProject) -> dict[str, str]:
+    """Map each device address to the identifier of the first space listing it."""
+    listed_in: dict[str, str] = {}
+    for space, _ in _walk_spaces(project["locations"]):
+        for address in space["devices"]:
+            listed_in.setdefault(address, space["identifier"])
+    return listed_in
+
+
+def _space_scope(
+    project: KNXProject, space_id: str | None, include_subspaces: bool
+) -> set[str] | None:
+    """
+    Return the space identifiers a ``space_id`` filter selects.
+
+    ``None`` means unrestricted. An unknown ``space_id`` selects only itself, so
+    it matches nothing.
+    """
+    if space_id is None:
+        return None
+    scope = {space_id}
+    if include_subspaces and (found := _find_space(project, space_id)) is not None:
+        scope.update(
+            space["identifier"] for space, _ in _walk_spaces(found[0]["spaces"])
+        )
+    return scope
+
+
+def _space_entry(space: Space, ancestors: tuple[Space, ...]) -> SpaceEntry:
+    return SpaceEntry(
+        identifier=space["identifier"],
+        type=space["type"],
+        name=space["name"],
+        number=space["number"],
+        description=space["description"],
+        usage_text=space["usage_text"],
+        parent_id=ancestors[-1]["identifier"] if ancestors else None,
+        path=[ancestor["name"] for ancestor in ancestors],
+        devices=list(space["devices"]),
+        functions=list(space["functions"]),
+        child_count=len(space["spaces"]),
+    )
+
+
+def _space_ref(space: Space) -> SpaceRef:
+    return SpaceRef(
+        identifier=space["identifier"], type=space["type"], name=space["name"]
+    )
+
+
+async def list_spaces(
+    project: KNXProject, filters: SpaceFilter | None = None
+) -> SpaceListResult:
+    """
+    List location spaces (buildings, floors, rooms, ...) as a flat, paginated list.
+
+    Spaces come in tree order, each parent before its sub-spaces. Optionally
+    filtered by text, type and/or an enclosing space.
+    """
+    filters = filters or SpaceFilter()
+    needle = filters.text.lower() if filters.text else None
+    wanted_type = filters.type.lower() if filters.type else None
+
+    # nesting depth of the direct children of ``parent_id`` (top level: 0)
+    child_depth = 0
+    if filters.parent_id is not None:
+        parent = _find_space(project, filters.parent_id)
+        child_depth = len(parent[1]) + 1 if parent is not None else 0
+
+    matches: list[SpaceEntry] = []
+    for space, ancestors in _walk_spaces(project["locations"]):
+        if filters.parent_id is not None and not any(
+            ancestor["identifier"] == filters.parent_id for ancestor in ancestors
+        ):
+            continue
+        if not filters.recursive and len(ancestors) != child_depth:
+            continue
+        if wanted_type is not None and space["type"].lower() != wanted_type:
+            continue
+        if needle is not None and needle not in (
+            f"{space['identifier']}\n{space['name']}\n{space['type']}\n{space['number']}\n"
+            f"{space['description']}\n{space['usage_text']}".lower()
+        ):
+            continue
+        matches.append(_space_entry(space, ancestors))
+
+    window, limit_reached = _paginate(matches, filters.limit, filters.offset)
+    return SpaceListResult(
+        spaces=window,
+        total_count=len(matches),
+        offset=filters.offset,
+        next_offset=filters.offset + len(window) if limit_reached else None,
+        limit_reached=limit_reached,
+    )
+
+
+async def describe_space(project: KNXProject, identifier: str) -> SpaceDetail:
+    """Resolve a location space by its identifier to its place in the building tree."""
+    found = _find_space(project, identifier)
+    if found is None:
+        return SpaceDetail(found=False, space=None, ancestors=[], children=[])
+
+    space, ancestors = found
+    return SpaceDetail(
+        found=True,
+        space=_space_entry(space, ancestors),
+        ancestors=[_space_ref(ancestor) for ancestor in ancestors],
+        children=[_space_ref(child) for child in space["spaces"].values()],
     )
 
 
@@ -368,9 +525,10 @@ async def list_functions(
     needle = filters.text.lower() if filters.text else None
 
     matches: list[FunctionSummary] = []
+    space_ids = _space_scope(project, filters.space_id, filters.include_subspaces)
     functions_dict = project.get("functions", {})
     for func in functions_dict.values():
-        if filters.space_id is not None and func["space_id"] != filters.space_id:
+        if space_ids is not None and func["space_id"] not in space_ids:
             continue
         if needle is not None and needle not in (
             f"{func['identifier']}\n{func['name']}\n{func['function_type']}\n{func['usage_text']}".lower()

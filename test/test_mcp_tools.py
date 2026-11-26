@@ -1,6 +1,7 @@
 """Tests for the host-agnostic xknxproject MCP tool functions."""
 
 import asyncio
+from dataclasses import asdict
 import json
 from typing import cast
 
@@ -13,9 +14,11 @@ from xknxproject.mcp import (
     FindSimilarChannelsInput,
     FunctionFilter,
     GroupAddressFilter,
+    SpaceFilter,
     describe_channel,
     describe_function,
     describe_group_address,
+    describe_space,
     find_similar_channels,
     get_project_info,
     get_topology,
@@ -25,6 +28,7 @@ from xknxproject.mcp import (
     list_functions,
     list_group_addresses,
     list_locations,
+    list_spaces,
 )
 from xknxproject.models import KNXProject
 
@@ -151,6 +155,7 @@ def test_list_locations(project: KNXProject) -> None:
     locations = asyncio.run(list_locations(project))
     assert len(locations.spaces) == 1
     assert locations.spaces[0].type == "Building"
+    assert locations.spaces[0].identifier == "P-0242-0_BP-1"
 
 
 @pytest.fixture(name="project_with_functions")
@@ -437,3 +442,180 @@ def test_find_similar_channels_by_module() -> None:
     assert "num:2" in keys  # the object with neither DPA nor module
     root_slot = next(a for a in result.aligned_group_objects if a.key == "root:0")
     assert {e.device_address for e in root_slot.entries} == {"1.1.1", "1.1.2"}
+
+
+def test_list_spaces(smart: KNXProject) -> None:
+    """Spaces are listed flat, in tree order, with identifier, parent and path."""
+    everything = asyncio.run(list_spaces(smart))
+    assert everything.total_count == 6
+    assert everything.offset == 0
+    assert everything.next_offset is None
+    assert not everything.limit_reached
+    assert [space.identifier for space in everything.spaces] == [
+        f"P-04FF-0_BP-{index}" for index in range(1, 7)
+    ]
+
+    building = everything.spaces[0]
+    assert building.type == "Building"
+    assert building.parent_id is None
+    assert building.path == []
+    assert building.child_count == 1
+
+    corridor = everything.spaces[3]
+    assert corridor.type == "Corridor"
+    assert corridor.name == "Flur"
+    assert corridor.parent_id == "P-04FF-0_BP-3"
+    assert corridor.path == ["Neues Projekt", "Teil 1", "Etage 1"]
+    assert corridor.devices == ["1.1.0", "1.1.1"]
+    assert corridor.functions == ["F-1"]
+    assert corridor.child_count == 0
+
+    # the result is plain JSON
+    assert json.loads(json.dumps(asdict(everything)))["spaces"][3]["name"] == "Flur"
+
+
+def test_list_spaces_pagination(smart: KNXProject) -> None:
+    """Limit and offset window the spaces and report whether more remain."""
+    seen: list[str] = []
+    offset: int | None = 0
+    while offset is not None:
+        page = asyncio.run(list_spaces(smart, SpaceFilter(limit=4, offset=offset)))
+        assert page.total_count == 6
+        assert page.offset == offset
+        assert page.limit_reached is (page.next_offset is not None)
+        seen.extend(space.identifier for space in page.spaces)
+        offset = page.next_offset
+    assert seen == [f"P-04FF-0_BP-{index}" for index in range(1, 7)]
+
+    first_page = asyncio.run(list_spaces(smart, SpaceFilter(limit=4)))
+    assert len(first_page.spaces) == 4
+    assert first_page.next_offset == 4
+
+
+def test_list_spaces_filters(smart: KNXProject) -> None:
+    """Spaces filter by text, type and enclosing space."""
+    by_text = asyncio.run(list_spaces(smart, SpaceFilter(text="büro")))
+    assert [space.name for space in by_text.spaces] == ["Büro"]
+
+    by_type = asyncio.run(list_spaces(smart, SpaceFilter(type="room")))
+    assert [space.name for space in by_type.spaces] == ["Büro", "Technikraum"]
+
+    top_level = asyncio.run(list_spaces(smart, SpaceFilter(recursive=False)))
+    assert [space.identifier for space in top_level.spaces] == ["P-04FF-0_BP-1"]
+
+    subtree = asyncio.run(list_spaces(smart, SpaceFilter(parent_id="P-04FF-0_BP-2")))
+    assert [space.name for space in subtree.spaces] == [
+        "Etage 1",
+        "Flur",
+        "Büro",
+        "Technikraum",
+    ]
+    # the path stays complete when listing below a space
+    assert subtree.spaces[0].path == ["Neues Projekt", "Teil 1"]
+
+    children = asyncio.run(
+        list_spaces(smart, SpaceFilter(parent_id="P-04FF-0_BP-2", recursive=False))
+    )
+    assert [space.name for space in children.spaces] == ["Etage 1"]
+
+    combined = asyncio.run(
+        list_spaces(smart, SpaceFilter(parent_id="P-04FF-0_BP-3", type="Room"))
+    )
+    assert combined.total_count == 2
+
+    for recursive in (True, False):
+        unknown = asyncio.run(
+            list_spaces(
+                smart, SpaceFilter(parent_id="does-not-exist", recursive=recursive)
+            )
+        )
+        assert unknown.total_count == 0
+        assert unknown.spaces == []
+
+
+def test_describe_space(smart: KNXProject) -> None:
+    """A known space resolves to its entry, ancestors and direct children."""
+    detail = asyncio.run(describe_space(smart, "P-04FF-0_BP-3"))
+    assert detail.found
+    assert detail.space is not None
+    assert detail.space.name == "Etage 1"
+    assert detail.space.type == "Floor"
+    assert detail.space.parent_id == "P-04FF-0_BP-2"
+    assert detail.space.child_count == 3
+    assert [(ref.identifier, ref.type, ref.name) for ref in detail.ancestors] == [
+        ("P-04FF-0_BP-1", "Building", "Neues Projekt"),
+        ("P-04FF-0_BP-2", "BuildingPart", "Teil 1"),
+    ]
+    assert [ref.name for ref in detail.children] == ["Flur", "Büro", "Technikraum"]
+
+
+def test_describe_space_missing(smart: KNXProject) -> None:
+    """An unknown space returns an empty, not-found result."""
+    detail = asyncio.run(describe_space(smart, "P-04FF-0_BP-999"))
+    assert not detail.found
+    assert detail.space is None
+    assert detail.ancestors == []
+    assert detail.children == []
+
+
+def test_space_ids_resolve(smart: KNXProject) -> None:
+    """Space identifiers handed out by devices and functions resolve to a space."""
+    function = asyncio.run(list_functions(smart)).functions[0]
+    assert function.space_id == "P-04FF-0_BP-4"
+    resolved = asyncio.run(describe_space(smart, function.space_id))
+    assert resolved.space is not None
+    assert resolved.space.name == "Flur"
+    assert function.identifier in resolved.space.functions
+
+    devices = {
+        device.individual_address: device.space_id
+        for device in asyncio.run(list_devices(smart)).devices
+    }
+    assert devices["1.1.2"] == "P-04FF-0_BP-5"
+    assert devices["1.1.3"] is None
+
+
+def test_list_devices_space_filter(smart: KNXProject) -> None:
+    """Devices filter by the space they are placed in, optionally with sub-spaces."""
+
+    def addresses(filters: DeviceFilter) -> list[str]:
+        result = asyncio.run(list_devices(smart, filters))
+        return [device.individual_address for device in result.devices]
+
+    assert addresses(DeviceFilter(space_id="P-04FF-0_BP-4")) == ["1.1.0", "1.1.1"]
+    # devices are placed in the rooms, not in the floor itself
+    assert addresses(DeviceFilter(space_id="P-04FF-0_BP-3")) == []
+    assert addresses(
+        DeviceFilter(space_id="P-04FF-0_BP-3", include_subspaces=True)
+    ) == ["1.0.0", "1.0.1", "1.0.2", "1.1.0", "1.1.1", "1.1.2"]
+    assert (
+        addresses(DeviceFilter(space_id="does-not-exist", include_subspaces=True)) == []
+    )
+    assert addresses(DeviceFilter(space_id="P-04FF-0_BP-6", text="1.0.1")) == ["1.0.1"]
+
+
+def test_list_functions_include_subspaces(smart: KNXProject) -> None:
+    """Functions of nested spaces are found from an enclosing space on request."""
+    direct = asyncio.run(
+        list_functions(smart, FunctionFilter(space_id="P-04FF-0_BP-1"))
+    )
+    assert direct.total_count == 0
+
+    nested = asyncio.run(
+        list_functions(
+            smart, FunctionFilter(space_id="P-04FF-0_BP-1", include_subspaces=True)
+        )
+    )
+    assert [function.identifier for function in nested.functions] == ["F-1"]
+
+
+def test_device_space_of_older_parse(smart: KNXProject) -> None:
+    """Devices of a project parsed without ``space_id`` resolve from the locations."""
+    expected = asyncio.run(list_devices(smart)).devices
+    for device in smart["devices"].values():
+        del device["space_id"]  # type: ignore[misc]
+
+    assert asyncio.run(list_devices(smart)).devices == expected
+    in_room = asyncio.run(list_devices(smart, DeviceFilter(space_id="P-04FF-0_BP-5")))
+    assert [device.individual_address for device in in_room.devices] == ["1.1.2"]
+    assert in_room.devices[0].space_id == "P-04FF-0_BP-5"
