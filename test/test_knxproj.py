@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 import json
+import logging
 from pathlib import Path
 import re
 import zipfile
@@ -239,26 +240,49 @@ def test_module_arguments_in_texts(tmp_path: Path) -> None:
     assert objects["1.1.1/O-334_R-21"]["text_parameter"] is None
 
 
-def test_link_less_object_of_a_removed_module_instance(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    ("attributes", "log_level"),
+    [
+        # changed flags of the object are kept - without links
+        (b'TransmitFlag="Enabled" ReadOnInitFlag="Enabled"', logging.DEBUG),
+        # links of the object are kept
+        (b'Text="Kanal C: Bad" Links="GA-1"', logging.WARNING),
+    ],
+)
+def test_object_of_a_removed_module_instance(
+    tmp_path: Path,
+    caplog: pytest.LogCaptureFixture,
+    attributes: bytes,
+    log_level: int,
+) -> None:
     """A leftover object of a module instance the device no longer has is skipped."""
     source = RESOURCES_PATH / "module-definition-test.knxproj"
     project_member = "P-0810/0.xml"
     with zipfile.ZipFile(source) as archive:
         instances = archive.read(project_member)
     # device 1.1.1 has no module instance "MD-2_M-3_MI-1": ETS removed it, but
-    # kept the changed flags of one of its objects - without links
+    # kept one of its objects
     instances = _replace_once(
         instances,
         rb'(<ComObjectInstanceRef RefId="O-334_R-21" Links="GA-3" />)',
-        rb'\1<ComObjectInstanceRef RefId="MD-2_M-3_MI-1_O-2-2_R-3"'
-        rb' TransmitFlag="Enabled" ReadOnInitFlag="Enabled" />',
+        rb'\1<ComObjectInstanceRef RefId="MD-2_M-3_MI-1_O-2-2_R-3" '
+        + attributes
+        + b" />",
     )
     modified = copy_project_with_member(
         source, tmp_path / "leftover.knxproj", project_member, instances
     )
-    with extract(modified) as contents:
+    with (
+        caplog.at_level(logging.DEBUG, logger="xknxproject.log"),
+        extract(modified) as contents,
+    ):
         parser = XMLParser(contents)
         parser.parse("De")
+    assert [
+        record.levelno
+        for record in caplog.records
+        if "MD-2_M-3_MI-1_O-2-2_R-3" in record.getMessage()
+    ] == [log_level]
     device = next(
         device for device in parser.devices if device.individual_address == "1.1.1"
     )
