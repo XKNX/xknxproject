@@ -5,10 +5,11 @@ All fields are JSON-native, so a consumer can build inputs directly from tool
 arguments and serialise outputs with :func:`dataclasses.asdict` without custom
 encoders. DPTs are rendered as ``"main"`` or ``"main.sub"`` strings.
 
-Input fields carry their human-readable description as :data:`typing.Annotated`
-metadata (a plain string). This keeps the library free of any schema/validation
-dependency while letting a consumer surface per-parameter descriptions in its
-tool schema via ``typing.get_type_hints(..., include_extras=True)``.
+Input fields carry their human-readable description as dataclass field metadata
+(``field(metadata={"description": ...})``, a plain string). This keeps the
+library free of any schema/validation dependency while letting a consumer
+surface per-parameter descriptions in its tool schema via
+``dataclasses.fields(...)`` and each field's ``metadata["description"]``.
 """
 
 from __future__ import annotations
