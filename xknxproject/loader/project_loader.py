@@ -621,7 +621,7 @@ def load_project_info(tree: ElementTree.ElementTree) -> XMLProjectInformation:
             name=info_node.get("Name", ""),
             last_modified=info_node.get("LastModified"),
             group_address_style=GroupAddressStyle(info_node.get("GroupAddressStyle")),
-            guid=info_node.get("Guid"),  # type: ignore[arg-type]
+            guid=info_node.get("Guid"),
             created_by=created_by,
             schema_version=schema_version,
             tool_version=tool_version,

@@ -242,7 +242,7 @@ class ProjectInfo(TypedDict):
     name: str
     last_modified: str | None
     group_address_style: str
-    guid: str
+    guid: str | None
     created_by: str
     schema_version: str
     tool_version: str
