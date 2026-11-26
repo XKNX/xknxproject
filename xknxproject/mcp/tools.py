@@ -150,7 +150,7 @@ def _summarize_channel(device_address: str, channel: Channel) -> ChannelSummary:
     )
 
 
-def _summarize_device(device: Device) -> DeviceSummary:
+def _summarize_device(device: Device, space_id: str | None) -> DeviceSummary:
     return DeviceSummary(
         individual_address=device["individual_address"],
         name=device["name"],
@@ -164,7 +164,7 @@ def _summarize_device(device: Device) -> DeviceSummary:
             _summarize_channel(device["individual_address"], channel)
             for channel in (device.get("channels") or {}).values()
         ],
-        space_id=device.get("space_id"),
+        space_id=space_id,
     )
 
 
@@ -259,16 +259,24 @@ async def list_devices(
     needle = filters.text.lower() if filters.text else None
     space_ids = _space_scope(project, filters.space_id, filters.include_subspaces)
 
+    # projects parsed before devices carried ``space_id`` are resolved from the tree
+    listed_in: dict[str, str] | None = None
+
     matches: list[DeviceSummary] = []
     for device in project["devices"].values():
-        if space_ids is not None and device.get("space_id") not in space_ids:
+        space_id = device.get("space_id")
+        if space_id is None:
+            if listed_in is None:
+                listed_in = _device_space_ids(project)
+            space_id = listed_in.get(device["individual_address"])
+        if space_ids is not None and space_id not in space_ids:
             continue
         if needle is not None and needle not in (
             f"{device['individual_address']}\n{device['name']}\n{device['hardware_name']}\n"
             f"{device['manufacturer_name']}\n{device['order_number']}".lower()
         ):
             continue
-        matches.append(_summarize_device(device))
+        matches.append(_summarize_device(device, space_id))
 
     window, limit_reached = _paginate(matches, filters.limit, filters.offset)
     return DeviceListResult(
@@ -342,13 +350,13 @@ async def get_topology(project: KNXProject) -> TopologyResult:
 def _summarize_space(space: Space) -> SpaceSummary:
     return SpaceSummary(
         type=space["type"],
-        identifier=space["identifier"],
         name=space["name"],
         number=space["number"],
         description=space["description"],
         devices=list(space["devices"]),
         functions=list(space["functions"]),
         spaces=[_summarize_space(child) for child in space["spaces"].values()],
+        identifier=space["identifier"],
     )
 
 
@@ -385,6 +393,15 @@ def _find_space(
         ),
         None,
     )
+
+
+def _device_space_ids(project: KNXProject) -> dict[str, str]:
+    """Map each device address to the identifier of the first space listing it."""
+    listed_in: dict[str, str] = {}
+    for space, _ in _walk_spaces(project["locations"]):
+        for address in space["devices"]:
+            listed_in.setdefault(address, space["identifier"])
+    return listed_in
 
 
 def _space_scope(

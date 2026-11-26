@@ -607,3 +607,15 @@ def test_list_functions_include_subspaces(smart: KNXProject) -> None:
         )
     )
     assert [function.identifier for function in nested.functions] == ["F-1"]
+
+
+def test_device_space_of_older_parse(smart: KNXProject) -> None:
+    """Devices of a project parsed without ``space_id`` resolve from the locations."""
+    expected = asyncio.run(list_devices(smart)).devices
+    for device in smart["devices"].values():
+        del device["space_id"]  # type: ignore[misc]
+
+    assert asyncio.run(list_devices(smart)).devices == expected
+    in_room = asyncio.run(list_devices(smart, DeviceFilter(space_id="P-04FF-0_BP-5")))
+    assert [device.individual_address for device in in_room.devices] == ["1.1.2"]
+    assert in_room.devices[0].space_id == "P-04FF-0_BP-5"

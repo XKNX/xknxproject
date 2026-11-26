@@ -282,13 +282,13 @@ class SpaceSummary:
     """
 
     type: str
-    identifier: str
     name: str
     number: str
     description: str
     devices: list[str]
     functions: list[str]
     spaces: list[SpaceSummary]
+    identifier: str  # appended last to keep the order of the earlier fields
 
 
 @dataclass(frozen=True)
