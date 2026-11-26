@@ -25,6 +25,8 @@ from xknxproject.models.knxproject import (
     TextParameter,
     Trade,
 )
+from xknxproject.xml import XMLParser
+from xknxproject.zip import extract
 
 from . import RESOURCES_PATH, STUBS_PATH
 from .conftest import assert_stub, copy_project_with_member
@@ -235,6 +237,39 @@ def test_module_arguments_in_texts(tmp_path: Path) -> None:
         "value": "Wohnzimmer",
     }
     assert objects["1.1.1/O-334_R-21"]["text_parameter"] is None
+
+
+def test_link_less_object_of_a_removed_module_instance(tmp_path: Path) -> None:
+    """A leftover object of a module instance the device no longer has is skipped."""
+    source = RESOURCES_PATH / "module-definition-test.knxproj"
+    project_member = "P-0810/0.xml"
+    with zipfile.ZipFile(source) as archive:
+        instances = archive.read(project_member)
+    # device 1.1.1 has no module instance "MD-2_M-3_MI-1": ETS removed it, but
+    # kept the changed flags of one of its objects - without links
+    instances = _replace_once(
+        instances,
+        rb'(<ComObjectInstanceRef RefId="O-334_R-21" Links="GA-3" />)',
+        rb'\1<ComObjectInstanceRef RefId="MD-2_M-3_MI-1_O-2-2_R-3"'
+        rb' TransmitFlag="Enabled" ReadOnInitFlag="Enabled" />',
+    )
+    modified = copy_project_with_member(
+        source, tmp_path / "leftover.knxproj", project_member, instances
+    )
+    with extract(modified) as contents:
+        parser = XMLParser(contents)
+        parser.parse("De")
+    device = next(
+        device for device in parser.devices if device.individual_address == "1.1.1"
+    )
+    instance_ref_ids = {instance.ref_id for instance in device.com_object_instance_refs}
+    assert "MD-2_M-3_MI-1_O-2-2_R-3" not in instance_ref_ids
+    # a link-less object of a module instance the device has is kept
+    assert "MD-2_M-1_MI-1_O-2-9_R-4" in instance_ref_ids
+    # the project parses as if the leftover was not there
+    assert_stub(
+        XKNXProj(modified, language="De").parse(), "module-definition-test.json"
+    )
 
 
 def test_text_parameters_of_a_program_without_channels(tmp_path: Path) -> None:

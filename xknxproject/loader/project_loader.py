@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from xml.etree import ElementTree
 
@@ -30,6 +31,8 @@ from xknxproject.models import (
 )
 from xknxproject.util import get_dpt_type, parse_dpt_types, parse_xml_flag
 from xknxproject.zip import KNXProjContents
+
+_LOGGER = logging.getLogger("xknxproject.log")
 
 
 class ProjectLoader:
@@ -266,13 +269,6 @@ class _TopologyLoader:
             if (add_addr := address_elem.get("Address")) is not None
         ]
 
-        com_obj_inst_refs = [
-            self._create_com_object_instance(elem)
-            for elem in device_element.findall(
-                "{*}ComObjectInstanceRefs/{*}ComObjectInstanceRef"
-            )
-        ]
-
         module_instances = [
             module_instance
             for mi_elem in device_element.findall(
@@ -280,6 +276,21 @@ class _TopologyLoader:
             )
             if (module_instance := self._create_module_instance(mi_elem)) is not None
         ]
+
+        com_obj_inst_refs: list[ComObjectInstanceRef] = []
+        for elem in device_element.findall(
+            "{*}ComObjectInstanceRefs/{*}ComObjectInstanceRef"
+        ):
+            com_object_instance = self._create_com_object_instance(elem)
+            if self._is_module_leftover(com_object_instance, module_instances):
+                _LOGGER.debug(
+                    "Skipping ComObjectInstanceRef %s of device %s: "
+                    "it has no links and its ModuleInstance does not exist",
+                    com_object_instance.ref_id,
+                    device_element.get("Id"),
+                )
+                continue
+            com_obj_inst_refs.append(com_object_instance)
 
         channels: list[ChannelNode] = []
         group_object_tree = self._parse_group_object_tree_nodes(
@@ -434,6 +445,30 @@ class _TopologyLoader:
             description=com_object.get("Description"),
             channel=com_object.get("ChannelId"),
             links=links,
+        )
+
+    @staticmethod
+    def _is_module_leftover(
+        com_object_instance: ComObjectInstanceRef,
+        module_instances: list[ModuleInstance],
+    ) -> bool:
+        """
+        Return True for a link-less object of a module instance the device does not have.
+
+        ETS keeps a ``ComObjectInstanceRef`` holding changed attributes (eg. flags)
+        when the ``ModuleInstance`` it belongs to is removed again - like by a
+        parameter change no longer instantiating the module. Such an object is not
+        part of the device anymore: without its module instance neither the number
+        nor the module arguments of its texts can be resolved.
+        A linked object is kept - its module instance is expected to exist.
+        """
+        return (
+            not com_object_instance.links
+            and com_object_instance.ref_id.startswith("MD-")
+            and not any(
+                com_object_instance.ref_id.startswith(f"{module_instance.identifier}_")
+                for module_instance in module_instances
+            )
         )
 
     def _create_module_instance(
