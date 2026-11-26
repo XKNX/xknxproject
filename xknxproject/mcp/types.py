@@ -55,6 +55,23 @@ class DeviceFilter:
             )
         },
     )
+    space_id: str | None = field(
+        default=None,
+        metadata={
+            "description": (
+                "Restrict to devices placed in the space (building, floor, room, ...) "
+                "with this identifier, as returned by list_spaces."
+            )
+        },
+    )
+    include_subspaces: bool = field(
+        default=False,
+        metadata={
+            "description": (
+                "With space_id: also include devices placed in any space nested below it."
+            )
+        },
+    )
     limit: int = field(
         default=100,
         metadata={"description": "Maximum number of results to return."},
@@ -212,6 +229,9 @@ class DeviceSummary:
     communication_object_ids: list[str]
     application: str | None  # same application program => same channel layout
     channels: list[ChannelSummary]
+    # identifier of the space the device is placed in; ``None`` when unplaced.
+    # Resolve it with ``describe_space``.
+    space_id: str | None
 
 
 @dataclass(frozen=True)
@@ -255,9 +275,14 @@ class TopologyResult:
 
 @dataclass(frozen=True)
 class SpaceSummary:
-    """A JSON-serialisable, recursive view of a location space."""
+    """
+    A JSON-serialisable, recursive view of a location space.
+
+    Nests the whole subtree; see :class:`SpaceEntry` for the flat, pageable view.
+    """
 
     type: str
+    identifier: str
     name: str
     number: str
     description: str
@@ -271,6 +296,117 @@ class LocationsResult:
     """Result of :func:`~xknxproject.mcp.tools.list_locations`."""
 
     spaces: list[SpaceSummary]
+
+
+@dataclass(frozen=True)
+class SpaceFilter:
+    """Filters for :func:`~xknxproject.mcp.tools.list_spaces`."""
+
+    text: str | None = field(
+        default=None,
+        metadata={
+            "description": (
+                "Case-insensitive match on the identifier, name, type, number, "
+                "description and usage_text."
+            )
+        },
+    )
+    type: str | None = field(
+        default=None,
+        metadata={
+            "description": (
+                'Restrict to spaces of this type, e.g. "Building", "Floor" or "Room" '
+                "(case-insensitive)."
+            )
+        },
+    )
+    parent_id: str | None = field(
+        default=None,
+        metadata={
+            "description": (
+                "Restrict to spaces below the space with this identifier; the space "
+                "itself is not included. Omit to start at the top level."
+            )
+        },
+    )
+    recursive: bool = field(
+        default=True,
+        metadata={
+            "description": (
+                "Include spaces of every nesting level below parent_id (or below the "
+                "top level). Set to false for direct children (or top-level spaces) only."
+            )
+        },
+    )
+    limit: int = field(
+        default=100,
+        metadata={"description": "Maximum number of results to return."},
+    )
+    offset: int = field(
+        default=0,
+        metadata={"description": "Number of results to skip, for pagination."},
+    )
+
+
+@dataclass(frozen=True)
+class SpaceEntry:
+    """
+    A JSON-serialisable, flat view of one location space.
+
+    ``path`` holds the names of the ancestors, outermost first, and ``parent_id``
+    the identifier of the enclosing space (``None`` for a top-level space).
+    ``devices`` (individual addresses) and ``functions`` (function identifiers)
+    list only what is assigned to this space directly, not to its sub-spaces;
+    ``child_count`` is the number of direct sub-spaces.
+    """
+
+    identifier: str
+    type: str
+    name: str
+    number: str
+    description: str
+    usage_text: str
+    parent_id: str | None
+    path: list[str]
+    devices: list[str]
+    functions: list[str]
+    child_count: int
+
+
+@dataclass(frozen=True)
+class SpaceListResult:
+    """Result of :func:`~xknxproject.mcp.tools.list_spaces`."""
+
+    spaces: list[SpaceEntry]
+    total_count: int
+    offset: int
+    next_offset: int | None
+    limit_reached: bool
+
+
+@dataclass(frozen=True)
+class SpaceRef:
+    """A short reference to a location space."""
+
+    identifier: str
+    type: str
+    name: str
+
+
+@dataclass(frozen=True)
+class SpaceDetail:
+    """
+    Result of :func:`~xknxproject.mcp.tools.describe_space`.
+
+    ``ancestors`` are the enclosing spaces, outermost first; ``children`` the
+    direct sub-spaces. ``found`` is ``False`` when no space with the requested
+    identifier exists, in which case the remaining fields are empty.
+    """
+
+    found: bool
+    space: SpaceEntry | None
+    ancestors: list[SpaceRef]
+    children: list[SpaceRef]
 
 
 @dataclass(frozen=True)
@@ -305,6 +441,14 @@ class FunctionFilter:
         default=None,
         metadata={
             "description": "Optional parent space identifier to restrict results to a specific floor or room."
+        },
+    )
+    include_subspaces: bool = field(
+        default=False,
+        metadata={
+            "description": (
+                "With space_id: also include functions of any space nested below it."
+            )
         },
     )
     limit: int = field(
