@@ -3,6 +3,11 @@
     "project_id": "P-04FF",
     "name": "Smart Linking Test",
     "last_modified": "2026-10-20T22:17:20.1230612Z",
+    "project_start": "2026-03-15T21:12:10.0454345Z",
+    "project_end": null,
+    "project_number": "",
+    "contract_number": "",
+    "comment": "",
     "group_address_style": "ThreeLevel",
     "guid": "240a1887-0faa-409b-86cb-8318a87c530a",
     "created_by": "ETS6",
@@ -37,6 +42,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/1"
       ],
@@ -70,6 +76,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/1/0"
       ],
@@ -103,6 +110,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/1/1"
       ],
@@ -136,6 +144,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/7"
       ],
@@ -169,6 +178,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/4"
       ],
@@ -202,6 +212,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/5"
       ],
@@ -235,6 +246,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/6"
       ],
@@ -272,6 +284,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/8"
       ],
@@ -312,6 +325,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/15"
       ],
@@ -352,6 +366,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/9"
       ],
@@ -392,6 +407,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/10"
       ],
@@ -432,6 +448,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/11"
       ],
@@ -472,6 +489,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/12"
       ],
@@ -512,6 +530,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/13"
       ],
@@ -552,6 +571,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/14"
       ],
@@ -592,6 +612,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/15"
       ],
@@ -632,6 +653,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/16"
       ],
@@ -672,6 +694,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/17"
       ],
@@ -710,6 +733,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/18"
       ],
@@ -750,6 +774,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/19"
       ],
@@ -790,6 +815,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/20"
       ],
@@ -830,6 +856,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/21"
       ],
@@ -870,6 +897,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/22"
       ],
@@ -910,6 +938,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/23"
       ],
@@ -950,6 +979,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/24"
       ],
@@ -990,6 +1020,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/25"
       ],
@@ -1028,6 +1059,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/26"
       ],
@@ -1068,6 +1100,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/27"
       ],
@@ -1108,6 +1141,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/28"
       ],
@@ -1148,6 +1182,7 @@
         "read_on_init": false,
         "transmit": false
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/29"
       ],
@@ -1188,6 +1223,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/30"
       ],
@@ -1224,6 +1260,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/33"
       ],
@@ -1257,6 +1294,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/31"
       ],
@@ -1290,6 +1328,7 @@
         "read_on_init": false,
         "transmit": true
       },
+      "priority": "Low",
       "group_address_links": [
         "0/0/32"
       ],
@@ -1303,10 +1342,12 @@
     "0": {
       "name": "",
       "description": null,
+      "comment": "",
       "lines": {
         "0": {
           "name": "",
           "description": null,
+          "comment": "",
           "devices": [],
           "medium_type": "KNXnet/IP (IP)"
         }
@@ -1315,10 +1356,12 @@
     "1": {
       "name": "",
       "description": null,
+      "comment": "",
       "lines": {
         "0": {
           "name": "",
           "description": null,
+          "comment": "",
           "devices": [
             "1.0.0",
             "1.0.1",
@@ -1329,6 +1372,7 @@
         "1": {
           "name": "",
           "description": null,
+          "comment": "",
           "devices": [
             "1.1.0",
             "1.1.1",
@@ -1347,6 +1391,7 @@
       "hardware_name": "KNX IP Router 752 secure",
       "order_number": "KNX IP Router 752 secure",
       "description": "",
+      "comment": "",
       "manufacturer_name": "Weinzierl Engineering GmbH",
       "individual_address": "1.0.0",
       "application": "M-00C5_A-0717-11-0D5A",
@@ -1365,13 +1410,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.0.1": {
       "name": "AH3F16H-SEC Schaltaktor 3f",
       "hardware_name": "AH3F16H-SEC Schaltaktor 3f",
       "order_number": "79236-SEC",
       "description": "",
+      "comment": "",
       "manufacturer_name": "Lingg & Janke",
       "individual_address": "1.0.1",
       "application": "M-00E1_A-2036-40-865C",
@@ -1465,13 +1512,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.0.2": {
       "name": "SpaceLogic KNX, Secure, Schalter/Jalousie 8-fach, Master",
       "hardware_name": "SpaceLogic KNX, Secure, Schalter/Jalousie 8-fach, Master",
       "order_number": "MTN6705-0008S",
       "description": "",
+      "comment": "",
       "manufacturer_name": "Schneider Electric Industries SAS",
       "individual_address": "1.0.2",
       "application": "M-0064_A-5810-12-2E9D",
@@ -1667,13 +1716,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.1.0": {
       "name": "KNX RF Multi/TP Medienkoppler",
       "hardware_name": "KNX RF Multi/TP Medienkoppler",
       "order_number": "3-0002-005",
       "description": "",
+      "comment": "",
       "manufacturer_name": "ise GmbH",
       "individual_address": "1.1.0",
       "application": "M-007C_A-001C-14-E802",
@@ -1692,13 +1743,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.1.1": {
       "name": "KNX RF+ Heizkörperthermostat mit Display und Longlife-Batterie, Secure",
       "hardware_name": "KNX RF+ Heizkörperthermostat mit Display und Longlife-Batterie, Secure",
       "order_number": "RF-HVA1DLB.01S",
       "description": "",
+      "comment": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.1",
       "application": "M-0083_A-00F3-10-1728",
@@ -1746,13 +1799,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.1.2": {
       "name": "KNX RF+ LED Controller CC/CV 60W / 230V 2-Kanäle, Secure",
       "hardware_name": "KNX RF+ LED Controller CC/CV 60W / 230V 2-Kanäle, Secure",
       "order_number": "RF-AKD260CC.02S",
       "description": "",
+      "comment": "",
       "manufacturer_name": "MDT technologies",
       "individual_address": "1.1.2",
       "application": "M-0083_A-00ED-10-33FD",
@@ -1771,13 +1826,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.1.3": {
       "name": "Schalter 1",
       "hardware_name": "PB.rf",
       "order_number": "PB.rf",
       "description": "",
+      "comment": "",
       "manufacturer_name": "KNX Association",
       "individual_address": "1.1.3",
       "application": "M-00FA_A-2526-90-5B4B",
@@ -1796,13 +1853,15 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     },
     "1.1.4": {
       "name": "Schalter 2",
       "hardware_name": "PB.rf",
       "order_number": "PB.rf",
       "description": "",
+      "comment": "",
       "manufacturer_name": "KNX Association",
       "individual_address": "1.1.4",
       "application": "M-00FA_A-2526-90-5B4B",
@@ -1821,7 +1880,8 @@
       "application_program_loaded": false,
       "communication_part_loaded": false,
       "medium_config_loaded": false,
-      "parameters_loaded": false
+      "parameters_loaded": false,
+      "ip_config": null
     }
   },
   "group_addresses": {
@@ -1840,7 +1900,10 @@
         "1.0.1/O-0_R-1"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/2": {
       "name": "CH2 SW",
@@ -1855,7 +1918,10 @@
       "data_secure": false,
       "communication_object_ids": [],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/3": {
       "name": "CH2 SW RM",
@@ -1870,7 +1936,10 @@
       "data_secure": false,
       "communication_object_ids": [],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/4": {
       "name": "CH 3 SW",
@@ -1887,7 +1956,10 @@
         "1.0.1/O-20_R-88"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/5": {
       "name": "CH 3 SW RM",
@@ -1904,7 +1976,10 @@
         "1.0.1/O-21_R-90"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/6": {
       "name": "CH 3 Szene",
@@ -1921,7 +1996,10 @@
         "1.0.1/O-23_R-100"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/7": {
       "name": "CH 3 Sperren",
@@ -1938,7 +2016,10 @@
         "1.0.1/O-18_R-98"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/8": {
       "name": "GA 1",
@@ -1955,7 +2036,10 @@
         "1.0.2/O-55_R-43"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/9": {
       "name": "GA 2",
@@ -1972,7 +2056,10 @@
         "1.0.2/O-61_R-51"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/10": {
       "name": "GA 3",
@@ -1989,7 +2076,10 @@
         "1.0.2/O-66_R-95"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/11": {
       "name": "GA 4",
@@ -2006,7 +2096,10 @@
         "1.0.2/O-72_R-103"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/12": {
       "name": "GA 5",
@@ -2023,7 +2116,10 @@
         "1.0.2/O-77_R-121"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/13": {
       "name": "GA 6",
@@ -2040,7 +2136,10 @@
         "1.0.2/O-78_R-122"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/14": {
       "name": "GA 7",
@@ -2057,7 +2156,10 @@
         "1.0.2/O-79_R-123"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/15": {
       "name": "GA 8",
@@ -2075,7 +2177,10 @@
         "1.0.2/O-89_R-131"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/16": {
       "name": "GA 9",
@@ -2092,7 +2197,10 @@
         "1.0.2/O-92_R-133"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/17": {
       "name": "GA 10",
@@ -2109,7 +2217,10 @@
         "1.0.2/O-97_R-137"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/18": {
       "name": "GA 11",
@@ -2126,7 +2237,10 @@
         "1.0.2/O-98_R-138"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/19": {
       "name": "GA 12",
@@ -2143,7 +2257,10 @@
         "1.0.2/O-99_R-204"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/20": {
       "name": "GA 13",
@@ -2160,7 +2277,10 @@
         "1.0.2/O-100_R-205"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/21": {
       "name": "GA 14",
@@ -2177,7 +2297,10 @@
         "1.0.2/O-101_R-206"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/22": {
       "name": "GA 15",
@@ -2194,7 +2317,10 @@
         "1.0.2/O-102_R-207"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/23": {
       "name": "GA 16",
@@ -2211,7 +2337,10 @@
         "1.0.2/O-114_R-218"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/24": {
       "name": "GA 17",
@@ -2228,7 +2357,10 @@
         "1.0.2/O-115_R-219"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/25": {
       "name": "GA 18",
@@ -2245,7 +2377,10 @@
         "1.0.2/O-119_R-223"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/26": {
       "name": "GA 19",
@@ -2262,7 +2397,10 @@
         "1.0.2/O-120_R-224"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/27": {
       "name": "GA 20",
@@ -2279,7 +2417,10 @@
         "1.0.2/O-121_R-238"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/28": {
       "name": "GA 21",
@@ -2296,7 +2437,10 @@
         "1.0.2/O-127_R-246"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/29": {
       "name": "GA 22",
@@ -2313,7 +2457,10 @@
         "1.0.2/O-132_R-290"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/30": {
       "name": "GA 23",
@@ -2330,7 +2477,10 @@
         "1.0.2/O-138_R-298"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/31": {
       "name": "GA 24",
@@ -2347,7 +2497,10 @@
         "1.1.1/O-2_R-11"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/32": {
       "name": "GA 25",
@@ -2364,7 +2517,10 @@
         "1.1.1/O-3_R-12"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/0/33": {
       "name": "GA 26",
@@ -2381,7 +2537,10 @@
         "1.1.1/O-4_R-7"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/1/0": {
       "name": "Schalten",
@@ -2398,7 +2557,10 @@
         "1.0.1/O-9_R-85"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     },
     "0/1/1": {
       "name": "Status",
@@ -2415,7 +2577,10 @@
         "1.0.1/O-11_R-70"
       ],
       "description": "",
-      "comment": ""
+      "comment": "",
+      "central": false,
+      "global_": false,
+      "security": "Auto"
     }
   },
   "group_ranges": {
@@ -2424,6 +2589,7 @@
       "address_start": 1,
       "address_end": 2047,
       "group_addresses": [],
+      "description": "",
       "comment": "",
       "group_ranges": {
         "0/0": {
@@ -2465,6 +2631,7 @@
             "0/0/32",
             "0/0/33"
           ],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         },
@@ -2476,6 +2643,7 @@
             "0/1/0",
             "0/1/1"
           ],
+          "description": "",
           "comment": "",
           "group_ranges": {}
         }
@@ -2491,6 +2659,7 @@
       "usage_text": "",
       "number": "",
       "description": "",
+      "comment": "",
       "project_uid": 9,
       "devices": [],
       "spaces": {
@@ -2502,6 +2671,7 @@
           "usage_text": "",
           "number": "",
           "description": "",
+          "comment": "",
           "project_uid": 65,
           "devices": [],
           "spaces": {
@@ -2513,6 +2683,7 @@
               "usage_text": "",
               "number": "",
               "description": "",
+              "comment": "",
               "project_uid": 66,
               "devices": [],
               "spaces": {
@@ -2524,6 +2695,7 @@
                   "usage_text": "",
                   "number": "",
                   "description": "",
+                  "comment": "",
                   "project_uid": 67,
                   "devices": [
                     "1.1.0",
@@ -2542,6 +2714,7 @@
                   "usage_text": "",
                   "number": "",
                   "description": "",
+                  "comment": "",
                   "project_uid": 68,
                   "devices": [
                     "1.1.2"
@@ -2557,6 +2730,7 @@
                   "usage_text": "",
                   "number": "",
                   "description": "",
+                  "comment": "",
                   "project_uid": 69,
                   "devices": [
                     "1.0.0",
@@ -2659,6 +2833,9 @@
       },
       "identifier": "F-1",
       "name": "Licht 1",
+      "number": "",
+      "description": "",
+      "comment": "",
       "project_uid": 59,
       "space_id": "P-04FF-0_BP-4",
       "usage_text": "Licht schalten"
